@@ -1,7 +1,641 @@
+import math
 import random
 import re
+from dataclasses import dataclass, field
+from typing import Dict, List, Set, Tuple
+
 import requests
 import streamlit as strlit
+import pandas as pd
+
+# ==========================================
+# 1. ARCHETYPE & ENABLER REGISTRY
+# ==========================================
+ARCHETYPE_DEFINITIONS = {
+    "Tailwind Enabler": {
+        "abilities": ["Prankster", "Gale Wings", "Wind Power"],
+        "moves": ["Tailwind"],
+        "role_label": "Dedicated Speed Control / Tailwind Lead",
+        "boost": 25
+    },
+    "Rain Setter": {
+        "abilities": ["Drizzle"],
+        "moves": ["Rain Dance"],
+        "role_label": "Weather Anchor (Rain)",
+        "boost": 20
+    },
+    "Sun Setter": {
+        "abilities": ["Drought", "Orichalcum Pulse"],
+        "moves": ["Sunny Day"],
+        "role_label": "Weather Anchor (Sun)",
+        "boost": 20
+    },
+    "Terrain Anchor": {
+        "abilities": ["Psychic Surge", "Grassy Surge", "Electric Surge", "Misty Surge", "Sand Stream"],
+        "moves": ["Psychic Terrain", "Grassy Terrain", "Electric Terrain", "Misty Terrain", "Sandstorm"],
+        "role_label": "Terrain / Weather Anchor",
+        "boost": 20
+    },
+    "Priority Blocker": {
+        "abilities": ["Armor Tail", "Queenly Majesty", "Psychic Surge"],
+        "moves": [],
+        "role_label": "Defensive Utility / Anti-Priority",
+        "boost": 18
+    }
+}
+
+# Fallback Smogon Usage Database
+SMOGON_USAGE_DB = {
+    "Pelipper": {"meta_usage_tier": 0.85, "common_moves": {"Surf": 0.9, "U-turn": 0.8}, "common_abilities": {"Drizzle": 1.0}},
+    "Torkoal": {"meta_usage_tier": 0.75, "common_moves": {"Eruption": 0.9, "Stealth Rock": 0.7}, "common_abilities": {"Drought": 1.0}},
+    "Whimsicott": {"meta_usage_tier": 0.65, "common_moves": {"Tailwind": 0.95, "Moonblast": 0.8}, "common_abilities": {"Prankster": 1.0}}
+}
+CHAMPIONS_META_DATA = {
+    # Example structure.
+    # Replace these values with your actual collected
+    # Champions tournament/meta dataset.
+
+    "whimsicott": {
+        "usage_rate": 0.0,
+        "win_rate": 0.0,
+        "top_cut_rate": 0.0,
+        "tournament_score": 0.0,
+        "top_partners": {}
+    },
+
+    "farigiraf": {
+        "usage_rate": 0.0,
+        "win_rate": 0.0,
+        "top_cut_rate": 0.0,
+        "tournament_score": 0.0,
+        "top_partners": {}
+    }
+}
+def get_smogon_stats_for(mon_name):
+    if mon_name in SMOGON_USAGE_DB:
+        return SMOGON_USAGE_DB[mon_name]
+    return {
+        "meta_usage_tier": 0.20,
+        "common_moves": {},
+        "common_abilities": {},
+        "common_items": {},
+        "top_partners": {}
+    }
+
+def get_hardcoded_move_type(move_name):
+    move_map = {
+        "Tailwind": "Flying", "Trick Room": "Psychic", "Rain Dance": "Water",
+        "Sunny Day": "Fire", "Protect": "Normal", "Surf": "Water", "Eruption": "Fire"
+    }
+    return move_map.get(move_name, "Normal")
+
+def fetch_move_type(move_name):
+    return get_hardcoded_move_type(move_name)
+
+def detect_archetypes(pkmn_data):
+    """
+    Scans a Pokémon's ability pool and relevant moveset to identify functional archetypes.
+    Uses OR logic so anchors like Pelipper (Drizzle) are detected correctly.
+    """
+    matched_archetypes = []
+    abilities = [str(a).lower() for a in pkmn_data.get("abilities", [])]
+    moves = [str(m).lower() for m in pkmn_data.get("moves", [])]
+    
+    for arch_name, criteria in ARCHETYPE_DEFINITIONS.items():
+        req_abs = [str(a).lower() for a in criteria.get("abilities", [])]
+        req_moves = [str(m).lower() for m in criteria.get("moves", [])]
+        
+        has_ability = any(ab in abilities for ab in req_abs) if req_abs else False
+        has_move = any(mv in moves for mv in req_moves) if req_moves else False
+        
+        # Match if EITHER ability or move condition is met
+        if has_ability or has_move:
+            matched_archetypes.append({
+                "name": arch_name,
+                "role_label": criteria.get("role_label", "Balanced Pick"),
+                "boost": criteria.get("boost", 20)
+            })
+            
+    return matched_archetypes
+
+# ==========================================
+# 2. META-INDEX AWARE VIABILITY & TIERING
+# ==========================================
+def calculate_meta_viability(pkmn_data, selected_format="Gen 9 OU"):
+    pkmn_name = pkmn_data["name"]
+    archetypes = detect_archetypes(pkmn_data)
+    
+    smogon_stats = get_smogon_stats_for(pkmn_name)
+    usage_tier = smogon_stats.get("meta_usage_tier", 0.15)
+    
+    base_score = int(min(1.0, usage_tier) * 75)
+    if base_score <= 10:
+        base_score = pkmn_data.get("default_score", 35)
+        tier_label = "RU / Niche Pick"
+    elif base_score >= 55:
+        tier_label = "OU / Elite Meta Staple"
+    else:
+        tier_label = "UU / Viable Competitor"
+
+    archetype_boost = max([a["boost"] for a in archetypes], default=0)
+    final_score = min(100, int(base_score + archetype_boost))
+    
+    if final_score >= 85:
+        tier_label = f"{selected_format} Core Anchor"
+    elif final_score >= 70:
+        tier_label = f"{selected_format} Viable"
+
+    team_role = " / ".join(list(dict.fromkeys([a["role_label"] for a in archetypes]))) if archetypes else pkmn_data.get("fallback_role", "Balanced Pick")
+        
+    return {
+        "viability_index": final_score,
+        "tier_display": tier_label,
+        "recommended_role": team_role,
+        "archetypes_detected": [a["name"] for a in archetypes]
+    }
+
+# ==========================================
+# 3. META-GATED CHECKS & COUNTERS
+# ==========================================
+
+
+
+# ==========================================
+# 2. META-INDEX AWARE VIABILITY & TIERING
+# ==========================================
+
+
+
+# ==========================================
+# 3. META-GATED CHECKS, COUNTERS & SYNERGY
+# ==========================================
+
+def get_meta_relevant_checks(
+    pkmn_data,
+    meta_pool,
+    min_viability_threshold=0,
+    top_n=3
+):
+    """
+    Finds actual Champions checks/counters.
+
+    Counter score considers:
+    - STAB against target weakness
+    - actual offensive moves
+    - defensive resistance
+    - speed
+    - viability
+    - ability interaction
+    """
+
+    target_types = set(pkmn_data.get("types", []))
+    target_weaknesses = set(pkmn_data.get("weaknesses", []))
+    target_moves = {
+        str(m).lower()
+        for m in pkmn_data.get("moves", [])
+    }
+
+    valid_checks = []
+
+    for candidate_name, candidate_info in meta_pool.items():
+
+        candidate_types = set(
+            candidate_info.get("types", [])
+        )
+
+        candidate_moves = {
+            str(m).lower()
+            for m in candidate_info.get("moves", [])
+        }
+
+        candidate_abilities = {
+            str(a).lower()
+            for a in candidate_info.get("abilities", [])
+        }
+
+        candidate_stats = candidate_info.get(
+            "stats",
+            {}
+        )
+
+        candidate_speed = candidate_stats.get(
+            "speed",
+            0
+        )
+
+        viability = float(
+            candidate_info.get(
+                "viability_index",
+                0
+            )
+        )
+
+        score = 0.0
+        reasons = []
+
+        # -------------------------------------------------
+        # 1. STAB TYPE ADVANTAGE
+        # -------------------------------------------------
+
+        stab_hits = candidate_types & target_weaknesses
+
+        if stab_hits:
+            score += len(stab_hits) * 25
+            reasons.append(
+                "STAB: " + ", ".join(sorted(stab_hits))
+            )
+
+        # -------------------------------------------------
+        # 2. ACTUAL MOVE COVERAGE
+        # -------------------------------------------------
+
+        move_hits = set()
+
+        for move in candidate_moves:
+
+            move_type = fetch_move_type(move)
+
+            if move_type in target_weaknesses:
+                move_hits.add(move_type)
+
+        if move_hits:
+            score += len(move_hits) * 15
+            reasons.append(
+                "Coverage: "
+                + ", ".join(sorted(move_hits))
+            )
+
+        # -------------------------------------------------
+        # 3. SPEED ADVANTAGE
+        # -------------------------------------------------
+
+        target_speed = pkmn_data.get(
+            "stats",
+            {}
+        ).get(
+            "speed",
+            100
+        )
+
+        if candidate_speed > target_speed:
+            score += 10
+            reasons.append("Speed advantage")
+
+        # -------------------------------------------------
+        # 4. DEFENSIVE PRESSURE
+        # -------------------------------------------------
+
+        defensive_score = 0
+
+        for candidate_type in candidate_types:
+
+            relations = get_type_relationships(
+                candidate_type
+            )
+
+            resisted = {
+                r["name"].title()
+                for r in relations.get(
+                    "half_damage_from",
+                    []
+                )
+            }
+
+            if any(
+                weakness in resisted
+                for weakness in target_weaknesses
+            ):
+                defensive_score += 5
+
+        score += defensive_score
+
+        # -------------------------------------------------
+        # 5. ABILITY INTERACTION
+        # -------------------------------------------------
+
+        target_abilities = {
+            str(a).lower()
+            for a in pkmn_data.get(
+                "abilities",
+                []
+            )
+        }
+
+        if "prankster" in target_abilities:
+
+            if (
+                "armor tail" in candidate_abilities
+                or
+                "queenly majesty"
+                in candidate_abilities
+            ):
+                score += 20
+                reasons.append(
+                    "Anti-Prankster ability"
+                )
+
+        # -------------------------------------------------
+        # 6. VIABILITY RANKING
+        # -------------------------------------------------
+
+        score += viability * 0.25
+
+        # -------------------------------------------------
+        # 7. REQUIRE ACTUAL COUNTERPLAY
+        # -------------------------------------------------
+
+        if not stab_hits and not move_hits:
+            continue
+
+        valid_checks.append({
+            "name": candidate_name,
+            "score": score,
+            "viability": viability,
+            "reason": (
+                " • ".join(reasons)
+                if reasons
+                else "Competitive check"
+            )
+        })
+
+    valid_checks.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    return valid_checks[:top_n]
+
+
+# -----------------------------------------------------------------------------
+# 0. COMPETITIVE META EVALUATION ENGINE & DATA MODELS
+# -----------------------------------------------------------------------------
+
+CHAMPIONS_META_DB = {}
+
+CURRENT_REGULATION = "M-B"
+
+@dataclass
+class MoveProfile:
+    name: str
+    category: str  # "Physical", "Special", "Status"
+    type: str
+    base_power: int
+    accuracy: float
+    usage_rate: float  # e.g., 0.85 for 85%
+    tags: Set[str] = field(default_factory=set)  # {"priority", "setup", "spread", "speed_control", "redirection"}
+
+@dataclass
+class MonMetaProfile:
+    name: str
+    types: List[str]
+    base_stats: Dict[str, int]
+    common_moves: Dict[str, MoveProfile]  # Move name -> MoveProfile
+    common_abilities: Dict[str, float]   # Ability -> usage rate
+    common_items: Dict[str, float]       # Item -> usage rate
+    meta_usage_tier: float               # Usage percentage in meta (0.0 to 1.0)
+    top_partners: Dict[str, float]       # Partner name -> usage rate together
+
+# Complete standard Type Chart Matrix mapping (Attacker -> Defender -> Multiplier)
+TYPE_CHART_DATA: Dict[str, Dict[str, float]] = {
+    "Normal": {"Rock": 0.5, "Ghost": 0.0, "Steel": 0.5},
+    "Fire": {"Fire": 0.5, "Water": 0.5, "Grass": 2.0, "Ice": 2.0, "Bug": 2.0, "Rock": 0.5, "Dragon": 0.5, "Steel": 2.0},
+    "Water": {"Fire": 2.0, "Water": 0.5, "Grass": 0.5, "Ground": 2.0, "Rock": 2.0, "Dragon": 0.5},
+    "Electric": {"Water": 2.0, "Electric": 0.5, "Grass": 0.5, "Ground": 0.0, "Flying": 2.0, "Dragon": 0.5},
+    "Grass": {"Fire": 0.5, "Water": 2.0, "Grass": 0.5, "Poison": 0.5, "Ground": 2.0, "Flying": 0.5, "Bug": 0.5, "Rock": 2.0, "Dragon": 0.5, "Steel": 0.5},
+    "Ice": {"Fire": 0.5, "Water": 0.5, "Grass": 2.0, "Ice": 0.5, "Ground": 2.0, "Flying": 2.0, "Dragon": 2.0, "Steel": 0.5},
+    "Fighting": {"Normal": 2.0, "Ice": 2.0, "Poison": 0.5, "Flying": 0.5, "Psychic": 0.5, "Bug": 0.5, "Rock": 2.0, "Ghost": 0.0, "Dark": 2.0, "Steel": 2.0, "Fairy": 0.5},
+    "Poison": {"Grass": 2.0, "Poison": 0.5, "Ground": 0.5, "Rock": 0.5, "Ghost": 0.5, "Steel": 0.0, "Fairy": 2.0},
+    "Ground": {"Fire": 2.0, "Electric": 2.0, "Grass": 0.5, "Poison": 2.0, "Flying": 0.0, "Bug": 0.5, "Rock": 2.0, "Steel": 2.0},
+    "Flying": {"Electric": 0.5, "Grass": 2.0, "Fighting": 2.0, "Bug": 2.0, "Rock": 0.5, "Steel": 0.5},
+    "Psychic": {"Fighting": 2.0, "Poison": 2.0, "Psychic": 0.5, "Steel": 0.5, "Dark": 0.0},
+    "Bug": {"Fire": 0.5, "Grass": 2.0, "Fighting": 0.5, "Poison": 0.5, "Flying": 0.5, "Psychic": 2.0, "Ghost": 0.5, "Dark": 2.0, "Steel": 0.5, "Fairy": 0.5},
+    "Rock": {"Fire": 2.0, "Ice": 2.0, "Fighting": 0.5, "Ground": 0.5, "Flying": 2.0, "Bug": 2.0, "Steel": 0.5},
+    "Ghost": {"Normal": 0.0, "Psychic": 2.0, "Ghost": 2.0, "Dark": 0.5},
+    "Dragon": {"Dragon": 2.0, "Steel": 0.5, "Fairy": 0.0},
+    "Dark": {"Fighting": 0.5, "Psychic": 2.0, "Ghost": 2.0, "Dark": 0.5, "Fairy": 0.5},
+    "Steel": {"Fire": 0.5, "Water": 0.5, "Electric": 0.5, "Ice": 2.0, "Rock": 2.0, "Steel": 0.5, "Fairy": 2.0},
+    "Fairy": {"Fire": 0.5, "Fighting": 2.0, "Poison": 0.5, "Dragon": 2.0, "Dark": 2.0, "Steel": 0.5}
+}
+
+class TeamEvaluator:
+    TYPE_CHART: Dict[str, Dict[str, float]] = TYPE_CHART_DATA
+
+    def __init__(self, meta_profiles: Dict[str, MonMetaProfile]):
+        self.meta = meta_profiles
+
+    def evaluate_candidate(
+        self, 
+        candidate_name: str, 
+        current_team: List[str]
+    ) -> Dict[str, float]:
+        candidate = self.meta.get(candidate_name)
+        if not candidate:
+            raise ValueError(f"Candidate {candidate_name} not found in meta profile.")
+
+        team_profiles = [self.meta[name] for name in current_team if name in self.meta]
+
+        defensive_score = self._calc_defensive_synergy(candidate, team_profiles)
+        threat_coverage_score = self._calc_moveset_threat_coverage(candidate)
+        archetype_synergy_score = self._calc_archetype_synergy(candidate, team_profiles)
+        counter_index = self._calc_counter_index(candidate, team_profiles)
+
+        raw_score = (
+            (defensive_score * 0.30) +
+            (threat_coverage_score * 0.25) +
+            (archetype_synergy_score * 0.25) +
+            (counter_index * 0.20)
+        )
+
+        sharpened_score = self._apply_variance_scaling(raw_score)
+
+        return {
+            "final_rating": round(sharpened_score, 2),
+            "defensive_fit": round(defensive_score, 2),
+            "meta_coverage": round(threat_coverage_score, 2),
+            "synergy_index": round(archetype_synergy_score, 2),
+            "counter_utility": round(counter_index, 2),
+            "recommendation_class": self._classify_rating(sharpened_score)
+        }
+
+    def _calc_defensive_synergy(
+        self, 
+        candidate: MonMetaProfile, 
+        team: List[MonMetaProfile]
+    ) -> float:
+        if not team:
+            return 50.0
+
+        type_vulnerabilities: Dict[str, float] = {}
+
+        for atk_type in self.TYPE_CHART.keys():
+            vulnerability_sum = 0.0
+            for member in team:
+                mult = self._get_defensive_multiplier(atk_type, member.types)
+                if mult > 1.0:
+                    vulnerability_sum += (mult - 1.0)
+                elif mult < 1.0:
+                    vulnerability_sum -= (1.0 - mult)
+            type_vulnerabilities[atk_type] = vulnerability_sum
+
+        synergy_points = 0.0
+        for atk_type, team_vuln in type_vulnerabilities.items():
+            cand_mult = self._get_defensive_multiplier(atk_type, candidate.types)
+
+            if team_vuln > 0:
+                if cand_mult == 0.0:
+                    synergy_points += (team_vuln ** 1.5) * 25.0
+                elif cand_mult < 1.0:
+                    synergy_points += team_vuln * 12.0
+                elif cand_mult > 1.0:
+                    synergy_points -= (team_vuln * cand_mult) ** 2 * 8.0
+
+        return self._normalize(synergy_points, min_val=-100, max_val=100)
+
+    def _calc_moveset_threat_coverage(self, candidate: MonMetaProfile) -> float:
+        coverage_score = 0.0
+
+        for target_name, target_mon in self.meta.items():
+            if target_name == candidate.name:
+                continue
+
+            meta_weight = target_mon.meta_usage_tier
+
+            best_effective_power = 0.0
+            for move_name, move in candidate.common_moves.items():
+                if move.category == "Status":
+                    continue
+
+                eff = self._get_offensive_multiplier(move.type, target_mon.types)
+                stab = 1.5 if move.type in candidate.types else 1.0
+                
+                effective_power = move.base_power * eff * stab * move.usage_rate
+                if effective_power > best_effective_power:
+                    best_effective_power = effective_power
+
+            coverage_score += (best_effective_power / 100.0) * meta_weight
+
+        return self._normalize(coverage_score, min_val=0, max_val=10)
+
+    def _calc_archetype_synergy(
+        self, 
+        candidate: MonMetaProfile, 
+        team: List[MonMetaProfile]
+    ) -> float:
+        if not team:
+            return 50.0
+
+        synergy_score = 50.0
+        candidate_tags = self._extract_mon_tags(candidate)
+
+        for member in team:
+            member_tags = self._extract_mon_tags(member)
+
+            if member.name in candidate.top_partners:
+                synergy_score += candidate.top_partners[member.name] * 20.0
+
+            if "trick_room" in candidate_tags and member.base_stats.get("spe", 0) < 50:
+                synergy_score += 15.0
+            if "tailwind" in candidate_tags and 70 <= member.base_stats.get("spe", 0) <= 110:
+                synergy_score += 10.0
+            if "redirection" in candidate_tags and self._is_setup_sweeper(member):
+                synergy_score += 15.0
+
+        return max(0.0, min(100.0, synergy_score))
+
+    def _calc_counter_index(
+        self, 
+        candidate: MonMetaProfile, 
+        team: List[MonMetaProfile]
+    ) -> float:
+        counter_score = 0.0
+        
+        for meta_mon_name, meta_mon in self.meta.items():
+            threat_to_team = 0.0
+            for team_member in team:
+                if self._mon_beats_mon(meta_mon, team_member):
+                    threat_to_team += 1.0
+
+            if threat_to_team > 0:
+                if self._mon_beats_mon(candidate, meta_mon):
+                    counter_score += threat_to_team * meta_mon.meta_usage_tier * 30.0
+
+        return self._normalize(counter_score, min_val=0, max_val=50)
+
+    def _apply_variance_scaling(self, score: float) -> float:
+        centered = (score - 50.0) / 50.0
+        sharpened = math.copysign(abs(centered) ** 1.35, centered)
+        final_score = (sharpened * 50.0) + 50.0
+        return max(0.0, min(100.0, final_score))
+
+    def _classify_rating(self, score: float) -> str:
+        if score >= 82.0:
+            return "Core Synergistic Pick"
+        elif score >= 65.0:
+            return "Strong Meta Counter / Tech"
+        elif score <= 35.0:
+            return "Anti-Synergistic / High Vulnerability Risk"
+        else:
+            return "Situational / Niche Specialist"
+
+    def _get_defensive_multiplier(self, atk_type: str, def_types: List[str]) -> float:
+        mult = 1.0
+        for dt in def_types:
+            mult *= self.TYPE_CHART.get(atk_type, {}).get(dt, 1.0)
+        return mult
+
+    def _get_offensive_multiplier(self, atk_type: str, def_types: List[str]) -> float:
+        return self._get_defensive_multiplier(atk_type, def_types)
+
+    def _extract_mon_tags(self, mon: MonMetaProfile) -> Set[str]:
+        tags = set()
+        for move in mon.common_moves.values():
+            tags.update(move.tags)
+        return tags
+
+    def _is_setup_sweeper(self, mon: MonMetaProfile) -> bool:
+        return any("setup" in move.tags for move in mon.common_moves.values())
+
+    def _mon_beats_mon(self, attacker: MonMetaProfile, defender: MonMetaProfile) -> bool:
+        stabs = [m for m in attacker.common_moves.values() if m.type in attacker.types and m.category != "Status"]
+        if not stabs:
+            return False
+        max_eff = max([self._get_offensive_multiplier(m.type, defender.types) for m in stabs], default=1.0)
+        return max_eff >= 2.0
+
+    def _normalize(self, val: float, min_val: float, max_val: float) -> float:
+        clamped = max(min_val, min(max_val, val))
+        return ((clamped - min_val) / (max_val - min_val)) * 100.0
+
+def create_move_profile(name: str, raw_move_data: dict) -> MoveProfile:
+    return MoveProfile(
+        name=name,
+        category=raw_move_data.get("category", "Physical"),
+        type=raw_move_data.get("type", "Normal"),
+        base_power=raw_move_data.get("base_power", 0),
+        accuracy=raw_move_data.get("accuracy", 1.0),
+        usage_rate=raw_move_data.get("usage_rate", 0.5),
+        tags=set(raw_move_data.get("tags", []))
+    )
+
+def build_meta_profiles_from_data(raw_meta_db: dict) -> Dict[str, MonMetaProfile]:
+    meta_profiles = {}
+    for mon_name, data in raw_meta_db.items():
+        moves = {
+            m_name: create_move_profile(m_name, m_data)
+            for m_name, m_data in data.get("common_moves", {}).items()
+        }
+
+        meta_profiles[mon_name] = MonMetaProfile(
+            name=mon_name,
+            types=data.get("types", []),
+            base_stats=data.get("base_stats", {}),
+            common_moves=moves,
+            common_abilities=data.get("common_abilities", {}),
+            common_items=data.get("common_items", {}),
+            meta_usage_tier=data.get("meta_usage_tier", 0.1),
+            top_partners=data.get("top_partners", {})
+        )
+    return meta_profiles
 
 # -----------------------------------------------------------------------------
 # 1. CONFIG & VISUAL STYLING
@@ -52,18 +686,76 @@ NATURES = [
 ]
 
 SPECIES_DISPLAY_OVERRIDES = {
-    "charizardmegax": "Mega Charizard X", "charizardmegay": "Mega Charizard Y",
-    "meowsticmale": "Mega Meowstic (Male)", "meowsticfemale": "Mega Meowstic (Female)",
-    "mrmime": "Mr. Mime", "mimejr": "Mime Jr.", "hooh": "Ho-Oh",
-    "nidoranf": "Nidoran♀", "nidoranm": "Nidoran♂", "farfetchd": "Farfetch'd",
-    "sirfetchd": "Sirfetch'd", "flabebe": "Flabébé", "typenull": "Type: Null",
-    "zoroarkhisui": "Zoroark Hisui", "samurotthisui": "Samurott Hisui",
-    "typhlosionhisui": "Typhlosion Hisui", "growlithehisui": "Growlithe Hisui",
-    "qwilfishhisui": "Qwilfish Hisui", "decidueyehisui": "Decidueye Hisui",
-    "gourgeistsmall": "Small Size Gourgeist", "gourgeistlarge": "Large Size Gourgeist",
-    "gourgeistsuper": "Super Size Gourgeist", "rotomwash": "Rotom Wash",
-    "rotomheat": "Rotom Heat", "rotomfrost": "Rotom Frost",
-    "rotomfan": "Rotom Fan", "rotommow": "Rotom Mow",
+
+    # =========================================================
+    # PALDEA FORMS
+    # =========================================================
+
+    "taurospaldea": "Tauros Paldea Combat",
+    "taurospaldeafire": "Tauros Paldea Blaze",
+    "taurospaldeawater": "Tauros Paldea Aqua",
+
+    "tauros-paldea-combat": "Tauros Paldea Combat",
+    "tauros-paldea-blaze": "Tauros Paldea Blaze",
+    "tauros-paldea-aqua": "Tauros Paldea Aqua",
+
+    # =========================================================
+    # BASCULEGION
+    # =========================================================
+
+    "basculegion": "Basculegion",
+    "basculegionm": "Basculegion",
+    "basculegion-f": "Basculegion Female",
+    "basculegion-female": "Basculegion Female",
+    "basculegionf": "Basculegion Female",
+
+    # =========================================================
+    # INDEEDEE
+    # =========================================================
+
+    "indeedeef": "Indeedee Female",
+    "indeedee-f": "Indeedee Female",
+    "indeedee-female": "Indeedee Female",
+
+    "indeedeem": "Indeedee",
+    "indeedee-m": "Indeedee",
+    "indeedee-male": "Indeedee",
+
+    # =========================================================
+    # MEOWSTIC
+    # =========================================================
+
+    "meowsticmale": "Meowstic",
+    "meowstic-m": "Meowstic",
+    "meowstic-male": "Meowstic",
+
+    "meowsticfemale": "Meowstic Female",
+    "meowstic-f": "Meowstic Female",
+    "meowstic-female": "Meowstic Female",
+
+    # =========================================================
+    # OINKOLOGNE
+    # =========================================================
+
+    "oinkolognem": "Oinkologne",
+    "oinkologne-m": "Oinkologne",
+
+    "oinkolognef": "Oinkologne Female",
+    "oinkologne-f": "Oinkologne Female",
+
+    # =========================================================
+    # EXISTING SPECIAL NAMES
+    # =========================================================
+
+    "mr-mime": "Mr. Mime",
+    "mime-jr": "Mime Jr.",
+    "ho-oh": "Ho-Oh",
+    "nidoran-f": "Nidoran Female",
+    "nidoran-m": "Nidoran Male",
+    "farfetchd": "Farfetch'd",
+    "sirfetchd": "Sirfetch'd",
+    "flabebe": "Flabébé",
+    "type-null": "Type: Null",
 }
 
 strlit.markdown("""
@@ -177,42 +869,6 @@ strlit.markdown("""
         color: #e6edf3;
     }
 
-    .type-matchup-container {
-        background: rgba(18, 23, 35, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-left: 4px solid #A98FF3;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        margin-top: 14px;
-        padding: 16px;
-    }
-
-    .type-matchup-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-        margin-top: 12px;
-    }
-
-    .type-matchup-group {
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 6px;
-        min-height: 76px;
-        padding: 10px 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-
-    .type-chart-row {
-        margin-top: 9px;
-    }
-
-    .type-chart-label {
-        color: #8b949e;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
-
     .type-chip {
         display: inline-flex;
         align-items: center;
@@ -248,10 +904,6 @@ strlit.markdown("""
         margin-top: 4px;
     }
 
-    @media (max-width: 700px) {
-        .type-matchup-grid { grid-template-columns: 1fr; }
-    }
-
     .entity-pill {
         display: inline-flex;
         align-items: center;
@@ -281,10 +933,6 @@ strlit.markdown("""
 # -----------------------------------------------------------------------------
 @strlit.cache_data(ttl=86400, show_spinner=False)
 def fetch_master_move_dictionary():
-    """
-    Dynamically fetches all canonical move display names from Pokémon Showdown's
-    master GitHub repository, solving the 1000+ move formatting issue programmatically.
-    """
     urls = [
         "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/moves.ts",
         "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/moves.ts"
@@ -303,17 +951,93 @@ def fetch_master_move_dictionary():
 
 MASTER_MOVE_DICTIONARY = fetch_master_move_dictionary()
 
+MOVE_DISPLAY_OVERRIDES = {
+    "storedpower": "Stored Power",
+    "stompingtantrum": "Stomping Tantrum",
+    "doubleironbash": "Double Iron Bash",
+    "populationbomb": "Population Bomb",
+    "gigatonhammer": "Gigaton Hammer",
+}
+
+def canonical_species_key(name):
+    """
+    Converts a Champions display name into the canonical
+    internal species key while preserving important forms.
+    """
+
+    if not name:
+        return ""
+
+    value = str(name).strip().lower()
+
+    replacements = {
+        "basculegion male": "basculegion-male",
+        "basculegion female": "basculegion-female",
+
+        "hisuian arcanine": "arcanine-hisui",
+        "hisuian braviary": "braviary-hisui",
+        "hisuian decidueye": "decidueye-hisui",
+        "hisuian electrode": "electrode-hisui",
+        "hisuian goodra": "goodra-hisui",
+        "hisuian growlithe": "growlithe-hisui",
+        "hisuian lilligant": "lilligant-hisui",
+        "hisuian qwilfish": "qwilfish-hisui",
+        "hisuian samurott": "samurott-hisui",
+        "hisuian sliggoo": "sliggoo-hisui",
+        "hisuian sneasel": "sneasel-hisui",
+        "hisuian typhlosion": "typhlosion-hisui",
+        "hisuian avalugg": "avalugg-hisui",
+        "hisuian zoroark": "zoroark-hisui",
+        "hisuian zorua": "zorua-hisui",
+
+        "tauros paldea combat": "tauros-paldea-combat",
+        "tauros paldea blaze": "tauros-paldea-blaze",
+        "tauros paldea aqua": "tauros-paldea-aqua",
+
+        "eternal flower floette": "floette-eternal",
+    }
+
+    if value in replacements:
+        return replacements[value]
+
+    value = value.replace("♀", "-female")
+    value = value.replace("♂", "-male")
+
+    return value.replace(" ", "-")
+
 def display_name_for_move(move_id):
     if not move_id:
         return ""
-    clean_id = str(move_id).strip().lower().replace("_", "").replace("-", "").replace(" ", "")
+
+    raw = str(move_id).strip()
+
+    clean_id = (
+        raw
+        .lower()
+        .replace("_", "")
+        .replace("-", "")
+        .replace(" ", "")
+    )
+
+    # 1. Explicit canonical edge cases
+    if clean_id in MOVE_DISPLAY_OVERRIDES:
+        return MOVE_DISPLAY_OVERRIDES[clean_id]
+
+    # 2. Canonical Pokémon Showdown dictionary
     if clean_id in MASTER_MOVE_DICTIONARY:
         return MASTER_MOVE_DICTIONARY[clean_id]
-    
-    # Algorithmic fallback for any unmapped or edge-case moves
-    slug = get_move_api_slug(move_id)
 
-    return slug.replace("-", " ").title()
+    # 3. Readable fallback
+    spaced = re.sub(
+        r'([a-z])([A-Z])',
+        r'\1 \2',
+        raw
+    )
+
+    return " ".join(
+        part.title()
+        for part in spaced.replace("-", " ").split()
+    )
 
 CUSTOM_MEGAS_DATA = {
     "Mega Venusaur": {"ability": "Thick Fat", "hp": 80, "atk": 100, "def": 123, "spa": 122, "spd": 120, "spd_stat": 80},
@@ -376,14 +1100,7 @@ CUSTOM_MEGAS_DATA = {
 
 MEGA_STONE_MAP = {name: f"{name.replace('Mega ', '')}ite" for name in CUSTOM_MEGAS_DATA.keys()}
 
-def filter_valid_champions(team_list):
-    return [
-        pokemon
-        for pokemon in team_list
-        if pokemon[0] in VALID_CHAMPIONS
-    ]
 @strlit.cache_data(ttl=86400, show_spinner=False)
-
 def fetch_champions_learnsets():
     url = "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts"
     try:
@@ -465,20 +1182,202 @@ def fetch_champions_pokedex_entries():
         return []
 
 def display_name_for_species_key(species_key):
+    """
+    Convert a Champions/Showdown species ID into a stable,
+    human-readable Pokémon name while preserving forms.
+    """
+
     if not species_key:
         return species_key
-    raw = species_key.strip().lower()
+
+    raw = str(species_key).strip().lower()
+
+    FORM_NAMES = {
+
+        # =====================================================
+        # TAUROS
+        # =====================================================
+
+        "taurospaldea": "Tauros Paldea Combat",
+        "taurospaldeacombat": "Tauros Paldea Combat",
+        "taurospaldeablaze": "Tauros Paldea Blaze",
+        "taurospaldeafire": "Tauros Paldea Blaze",
+        "taurospaldeaaqua": "Tauros Paldea Aqua",
+        "taurospaldeawater": "Tauros Paldea Aqua",
+
+        # =====================================================
+        # BASCULEGION
+        # =====================================================
+
+        "basculegion": "Basculegion Male",
+        "basculegionm": "Basculegion Male",
+        "basculegionmale": "Basculegion Male",
+        "basculegionf": "Basculegion Female",
+        "basculegionfemale": "Basculegion Female",
+
+        # =====================================================
+        # FLOETTE
+        # =====================================================
+
+        "floette": "Floette",
+        "floetteeternal": "Floette Eternal",
+        "floette-eternal": "Floette Eternal",
+
+        # =====================================================
+        # INDEEDEE
+        # =====================================================
+
+        "indeedee": "Indeedee",
+        "indeedeem": "Indeedee Male",
+        "indeedeemale": "Indeedee Male",
+        "indeedeef": "Indeedee Female",
+        "indeedeefemale": "Indeedee Female",
+
+        # =====================================================
+        # MEOWSTIC
+        # =====================================================
+
+        "meowstic": "Meowstic",
+        "meowsticm": "Meowstic Male",
+        "meowsticmale": "Meowstic Male",
+        "meowsticf": "Meowstic Female",
+        "meowsticfemale": "Meowstic Female",
+
+        # =====================================================
+        # OINKOLOGNE
+        # =====================================================
+
+        "oinkologne": "Oinkologne",
+        "oinkolognem": "Oinkologne Male",
+        "oinkolognemale": "Oinkologne Male",
+        "oinkolognef": "Oinkologne Female",
+        "oinkolognefemale": "Oinkologne Female",
+
+        # =====================================================
+        # LYCANROC
+        # =====================================================
+
+        "lycanroc": "Lycanroc Midday",
+        "lycanrocmidday": "Lycanroc Midday",
+        "lycanrocday": "Lycanroc Midday",
+
+        "lycanrocmidnight": "Lycanroc Midnight",
+        "lycanrocnight": "Lycanroc Midnight",
+
+        "lycanrocdusk": "Lycanroc Dusk",
+
+        # =====================================================
+        # HISUI
+        # =====================================================
+
+        "growlithehisui": "Growlithe Hisui",
+        "growlithe-hisui": "Growlithe Hisui",
+
+        "arcaninehisui": "Arcanine Hisui",
+        "arcanine-hisui": "Arcanine Hisui",
+
+        "voltorbhisui": "Voltorb Hisui",
+        "voltorb-hisui": "Voltorb Hisui",
+
+        "electrodehisui": "Electrode Hisui",
+        "electrode-hisui": "Electrode Hisui",
+
+        "qwilfishhisui": "Qwilfish Hisui",
+        "qwilfish-hisui": "Qwilfish Hisui",
+
+        "sneaselhisui": "Sneasel Hisui",
+        "sneasel-hisui": "Sneasel Hisui",
+
+        "samurotthisui": "Samurott Hisui",
+        "samurott-hisui": "Samurott Hisui",
+
+        "lilligantihisui": "Lilligant Hisui",
+        "lilliganthisui": "Lilligant Hisui",
+        "lilligant-hisui": "Lilligant Hisui",
+
+        "zorua-hisui": "Zorua Hisui",
+        "zoruahisui": "Zorua Hisui",
+
+        "zoroarkhisui": "Zoroark Hisui",
+        "zoroark-hisui": "Zoroark Hisui",
+
+        "braviaryhisui": "Braviary Hisui",
+        "braviary-hisui": "Braviary Hisui",
+
+        "sliggoohisui": "Sliggoo Hisui",
+        "sliggoo-hisui": "Sliggoo Hisui",
+
+        "goodrahisui": "Goodra Hisui",
+        "goodra-hisui": "Goodra Hisui",
+
+        "avalugghisui": "Avalugg Hisui",
+        "avalugg-hisui": "Avalugg Hisui",
+
+        "decidueyehisui": "Decidueye Hisui",
+        "decidueye-hisui": "Decidueye Hisui",
+
+        "typhlosionhisui": "Typhlosion Hisui",
+        "typhlosion-hisui": "Typhlosion Hisui",
+
+        # =====================================================
+        # ALOLA
+        # =====================================================
+
+        "growlithealola": "Growlithe Alola",
+        "arcaninealola": "Arcanine Alola",
+        "geodudealola": "Geodude Alola",
+        "graveleralola": "Graveler Alola",
+        "golemalola": "Golem Alola",
+        "vulpixalola": "Vulpix Alola",
+        "ninetalesalola": "Ninetales Alola",
+        "sandshrewalola": "Sandshrew Alola",
+        "sandslashalola": "Sandslash Alola",
+        "meowthalola": "Meowth Alola",
+        "persianalola": "Persian Alola",
+        "diglettalola": "Diglett Alola",
+        "dugtrioalola": "Dugtrio Alola",
+        "grimeralola": "Grimer Alola",
+        "mukalola": "Muk Alola",
+        "raichualola": "Raichu Alola",
+
+        # =====================================================
+        # GALAR
+        # =====================================================
+
+        "meowthgalar": "Meowth Galar",
+        "ponytagalar": "Ponyta Galar",
+        "rapidashgalar": "Rapidash Galar",
+        "farfetchdgalar": "Farfetch'd Galar",
+        "weezinggalar": "Weezing Galar",
+        "mrmimegalar": "Mr. Mime Galar",
+        "mr-mimegalar": "Mr. Mime Galar",
+        "corsolagalar": "Corsola Galar",
+        "zigzagoongalar": "Zigzagoon Galar",
+        "linoonegalar": "Linoone Galar",
+        "darumakagalar": "Darumaka Galar",
+        "darmanitan galar": "Darmanitan Galar",
+        "darmanitangalar": "Darmanitan Galar",
+        "yamaskgalar": "Yamask Galar",
+        "stunfiskgalar": "Stunfisk Galar",
+    }
+
+    if raw in FORM_NAMES:
+        return FORM_NAMES[raw]
+
     if raw in SPECIES_DISPLAY_OVERRIDES:
         return SPECIES_DISPLAY_OVERRIDES[raw]
-    for form_suffix in ["hisui", "alola", "galar", "paldea"]:
-        if raw.endswith(form_suffix) and not raw.endswith(f"-{form_suffix}"):
-            base = raw[:-len(form_suffix)]
-            return f"{display_name_for_species_key(base)} {form_suffix.title()}"
-    raw = raw.replace("’", "'").replace("♀", "-f").replace("♂", "-m").replace("_", "-")
-    pretty = raw.replace("-", " ")
-    if pretty in SPECIES_DISPLAY_OVERRIDES:
-        return SPECIES_DISPLAY_OVERRIDES[pretty]
-    return " ".join(p.title() for p in pretty.split())
+
+    pretty = (
+        raw
+        .replace("_", "-")
+        .replace("-", " ")
+        .replace("’", "'")
+    )
+
+    return " ".join(
+        word.title()
+        for word in pretty.split()
+    )
 
 CHAMPIONS_LEARNSETS = fetch_champions_learnsets()
 CHAMPIONS_ROSTER = fetch_champions_pokedex_entries()
@@ -563,57 +1462,345 @@ def fetch_move_type(move_name):
     return "Normal"
 
 def get_clean_api_name(mon_name):
+    """
+    Convert the app's human-readable Pokémon name into
+    the exact PokeAPI species/form slug.
+    """
+
     if not mon_name or mon_name == "-- Choose a Pokémon --":
         return "charizard-mega-x"
-    name_str = str(mon_name).strip()
-    custom_lookup = {
-        "Mega Charizard X": "charizard-mega-x", "Mega Charizard Y": "charizard-mega-y",
-        "Mega Meowstic (Male)": "meowstic-male", "Mega Meowstic (Female)": "meowstic-female",
-        "Mr. Mime": "mr-mime", "Mime Jr.": "mime-jr", "Ho-Oh": "ho-oh",
-        "Nidoran♀": "nidoran-f", "Nidoran♂": "nidoran-m", "Farfetch'd": "farfetchd",
-        "Sirfetch'd": "sirfetchd", "Flabébé": "flabebe", "Type: Null": "type-null",
+
+    name = str(mon_name).strip()
+
+    FORM_API_NAMES = {
+
+        # =====================================================
+        # SPECIAL / GENDER FORMS
+        # =====================================================
+
+        "Mr. Mime": "mr-mime",
+        "Mime Jr.": "mime-jr",
+        "Ho-Oh": "ho-oh",
+
+        "Nidoran♀": "nidoran-f",
+        "Nidoran♂": "nidoran-m",
+
+        "Farfetch'd": "farfetchd",
+        "Sirfetch'd": "sirfetchd",
+
+        "Flabébé": "flabebe",
+        "Type: Null": "type-null",
+
+        # =====================================================
+        # TAUROS
+        # =====================================================
+
+        "Tauros Paldea Combat": "tauros-paldea-combat",
+        "Tauros Paldea Blaze": "tauros-paldea-blaze",
+        "Tauros Paldea Aqua": "tauros-paldea-aqua",
+
+        # =====================================================
+        # BASCULEGION
+        # =====================================================
+
+        "Basculegion": "basculegion",
+        "Basculegion Male": "basculegion",
+        "Basculegion Female": "basculegion-f",
+
+        # =====================================================
+        # FLOETTE
+        # =====================================================
+
+        "Floette Eternal": "floette-eternal",
+
+        # =====================================================
+        # INDEEDEE
+        # =====================================================
+
+        "Indeedee Male": "indeedee-male",
+        "Indeedee Female": "indeedee-female",
+
+        # =====================================================
+        # MEOWSTIC
+        # =====================================================
+
+        "Meowstic Male": "meowstic-male",
+        "Meowstic Female": "meowstic-female",
+
+        # =====================================================
+        # OINKOLOGNE
+        # =====================================================
+
+        "Oinkologne Male": "oinkologne-male",
+        "Oinkologne Female": "oinkologne-female",
+
+        # =====================================================
+        # LYCANROC
+        # =====================================================
+
+        "Lycanroc Midday": "lycanroc-midday",
+        "Lycanroc Midnight": "lycanroc-midnight",
+        "Lycanroc Dusk": "lycanroc-dusk",
+
+        # =====================================================
+        # HISUI
+        # =====================================================
+
+        "Growlithe Hisui": "growlithe-hisui",
+        "Arcanine Hisui": "arcanine-hisui",
+        "Voltorb Hisui": "voltorb-hisui",
+        "Electrode Hisui": "electrode-hisui",
+        "Qwilfish Hisui": "qwilfish-hisui",
+        "Sneasel Hisui": "sneasel-hisui",
+        "Samurott Hisui": "samurott-hisui",
+        "Lilligant Hisui": "lilligant-hisui",
+        "Zorua Hisui": "zorua-hisui",
+        "Zoroark Hisui": "zoroark-hisui",
+        "Braviary Hisui": "braviary-hisui",
+        "Sliggoo Hisui": "sliggoo-hisui",
+        "Goodra Hisui": "goodra-hisui",
+        "Avalugg Hisui": "avalugg-hisui",
+        "Decidueye Hisui": "decidueye-hisui",
+        "Typhlosion Hisui": "typhlosion-hisui",
+
+        # =====================================================
+        # ALOLA
+        # =====================================================
+
+        "Growlithe Alola": "growlithe-alola",
+        "Arcanine Alola": "arcanine-alola",
+        "Geodude Alola": "geodude-alola",
+        "Graveler Alola": "graveler-alola",
+        "Golem Alola": "golem-alola",
+        "Vulpix Alola": "vulpix-alola",
+        "Ninetales Alola": "ninetales-alola",
+        "Sandshrew Alola": "sandshrew-alola",
+        "Sandslash Alola": "sandslash-alola",
+        "Meowth Alola": "meowth-alola",
+        "Persian Alola": "persian-alola",
+        "Diglett Alola": "diglett-alola",
+        "Dugtrio Alola": "dugtrio-alola",
+        "Grimer Alola": "grimer-alola",
+        "Muk Alola": "muk-alola",
+        "Raichu Alola": "raichu-alola",
+
+        # =====================================================
+        # GALAR
+        # =====================================================
+
+        "Meowth Galar": "meowth-galar",
+        "Ponyta Galar": "ponyta-galar",
+        "Rapidash Galar": "rapidash-galar",
+        "Farfetch'd Galar": "farfetchd-galar",
+        "Weezing Galar": "weezing-galar",
+        "Mr. Mime Galar": "mr-mime-galar",
+        "Corsola Galar": "corsola-galar",
+        "Zigzagoon Galar": "zigzagoon-galar",
+        "Linoone Galar": "linoone-galar",
+        "Darumaka Galar": "darumaka-galar",
+        "Darmanitan Galar": "darmanitan-galar",
+        "Yamask Galar": "yamask-galar",
+        "Stunfisk Galar": "stunfisk-galar",
     }
-    if name_str in custom_lookup:
-        return custom_lookup[name_str]
-    lower_name = name_str.lower()
+
+    if name in FORM_API_NAMES:
+        return FORM_API_NAMES[name]
+
+    # =====================================================
+    # MEGA POKÉMON
+    # =====================================================
+
+    lower_name = name.lower()
+
     if lower_name.startswith("mega "):
-        base = name_str[5:].strip()
-        if " x" in base.lower():
-            return f"{base.lower().replace(' x', '').strip()}-mega-x"
-        elif " y" in base.lower():
-            return f"{base.lower().replace(' y', '').strip()}-mega-y"
-        else:
-            return f"{base.lower().replace(' ', '-')}-mega"
-    clean = lower_name.replace("’", "").replace("'", "").replace(".", "")
-    return clean.replace(" (", "-").replace(")", "").replace(" ", "-")
+
+        base = name[5:].strip()
+
+        if base.lower().endswith(" x"):
+            base = base[:-2].strip()
+            return f"{base.lower().replace(' ', '-')}-mega-x"
+
+        if base.lower().endswith(" y"):
+            base = base[:-2].strip()
+            return f"{base.lower().replace(' ', '-')}-mega-y"
+
+        return f"{base.lower().replace(' ', '-')}-mega"
+
+    # =====================================================
+    # STANDARD FALLBACK
+    # =====================================================
+
+    clean = (
+        lower_name
+        .replace("’", "")
+        .replace("'", "")
+        .replace(".", "")
+    )
+
+    return (
+        clean
+        .replace(" (", "-")
+        .replace(")", "")
+        .replace(" ", "-")
+    )
 
 def get_champions_species_key(mon_name):
-    clean = mon_name.strip().lower().replace("’", "'").replace("♀", "f").replace("♂", "m")
-    clean = clean.replace(".", "").replace("'", "").replace(" ", "").replace("-", "")
-    if clean.startswith("mega"):
-        clean = clean.replace("mega", "")
+    """
+    Convert a displayed Pokémon name into the exact
+    Champions/Showdown species key.
+
+    IMPORTANT:
+    Forms are deliberately preserved.
+    """
+
+    if not mon_name:
+        return ""
+
+    name = str(mon_name).strip()
+
+    SPECIES_KEYS = {
+
+        # =====================================================
+        # TAUROS
+        # =====================================================
+
+        "Tauros Paldea Combat": "taurospaldeacombat",
+        "Tauros Paldea Blaze": "taurospaldeablaze",
+        "Tauros Paldea Aqua": "taurospaldeaaqua",
+
+        # =====================================================
+        # BASCULEGION
+        # =====================================================
+
+        "Basculegion": "basculegion",
+        "Basculegion Male": "basculegionm",
+        "Basculegion Female": "basculegionf",
+
+        # =====================================================
+        # FLOETTE
+        # =====================================================
+
+        "Floette Eternal": "floetteeternal",
+
+        # =====================================================
+        # INDEEDEE
+        # =====================================================
+
+        "Indeedee Male": "indeedeem",
+        "Indeedee Female": "indeedeef",
+
+        # =====================================================
+        # MEOWSTIC
+        # =====================================================
+
+        "Meowstic Male": "meowsticm",
+        "Meowstic Female": "meowsticf",
+
+        # =====================================================
+        # OINKOLOGNE
+        # =====================================================
+
+        "Oinkologne Male": "oinkolognem",
+        "Oinkologne Female": "oinkolognef",
+
+        # =====================================================
+        # LYCANROC
+        # =====================================================
+
+        "Lycanroc Midday": "lycanrocmidday",
+        "Lycanroc Midnight": "lycanrocmidnight",
+        "Lycanroc Dusk": "lycanrocdusk",
+
+        # =====================================================
+        # HISUI
+        # =====================================================
+
+        "Growlithe Hisui": "growlithehisui",
+        "Arcanine Hisui": "arcaninehisui",
+        "Voltorb Hisui": "voltorbhisui",
+        "Electrode Hisui": "electrodehisui",
+        "Qwilfish Hisui": "qwilfishhisui",
+        "Sneasel Hisui": "sneaselhisui",
+        "Samurott Hisui": "samurotthisui",
+        "Lilligant Hisui": "lilliganthisui",
+        "Zorua Hisui": "zoruahisui",
+        "Zoroark Hisui": "zoroarkhisui",
+        "Braviary Hisui": "braviaryhisui",
+        "Sliggoo Hisui": "sliggoohisui",
+        "Goodra Hisui": "goodrahisui",
+        "Avalugg Hisui": "avalugghisui",
+        "Decidueye Hisui": "decidueyehisui",
+        "Typhlosion Hisui": "typhlosionhisui",
+    }
+
+    if name in SPECIES_KEYS:
+        return SPECIES_KEYS[name]
+
+    # =====================================================
+    # NORMAL SPECIES
+    # =====================================================
+
+    clean = (
+        name
+        .lower()
+        .replace("’", "")
+        .replace("'", "")
+        .replace(".", "")
+        .replace("♀", "f")
+        .replace("♂", "m")
+    )
+
+    # Preserve the form separator rather than deleting it.
+    clean = clean.replace(" ", "-")
+
+    # Remove Mega prefix only for Mega lookup compatibility.
+    if clean.startswith("mega-"):
+        clean = clean[5:]
+
     return clean
 
 def get_base_api_name(mon_name):
-    """Return a PokeAPI-compatible base species for custom Mega forms."""
     base_name = re.sub(r"^Mega\s+", "", mon_name).strip()
     base_name = re.sub(r"\s*\([^)]*\)$", "", base_name)
     base_name = re.sub(r"\s+[XY]$", "", base_name, flags=re.IGNORECASE)
     return get_clean_api_name(base_name)
 
 def get_champion_moves_for(mon_name):
+    """
+    Return the Champions learnset for the exact Pokémon/form.
+    """
+
     if not CHAMPIONS_LEARNSETS:
         return []
+
     species_key = get_champions_species_key(mon_name)
+
+    # Exact form match first
     if species_key in CHAMPIONS_LEARNSETS:
-        return [display_name_for_move(m_id) for m_id in CHAMPIONS_LEARNSETS[species_key]]
+        return [
+            display_name_for_move(move_id)
+            for move_id in CHAMPIONS_LEARNSETS[species_key]
+        ]
+
+    # Mega Pokémon use their base species learnset
     if mon_name.startswith("Mega "):
-        base_name = mon_name.replace("Mega ", "", 1)
-        base_key = get_champions_species_key(base_name)
+
+        base_name = mon_name.replace(
+            "Mega ",
+            "",
+            1
+        ).strip()
+
+        base_key = get_champions_species_key(
+            base_name
+        )
+
         if base_key in CHAMPIONS_LEARNSETS:
-            return [display_name_for_move(m_id) for m_id in CHAMPIONS_LEARNSETS[base_key]]
-    if mon_name in CHAMPIONS_LEARNSETS:
-        return [display_name_for_move(m_id) for m_id in CHAMPIONS_LEARNSETS[mon_name]]
+            return [
+                display_name_for_move(move_id)
+                for move_id in CHAMPIONS_LEARNSETS[base_key]
+            ]
+
     return []
 
 @strlit.cache_data(ttl=86400, show_spinner=False)
@@ -721,26 +1908,68 @@ def get_type_defense_summary(defending_types):
     }
 
 def get_offensive_type_summary(attacking_types):
+    """
+    Calculates the best offensive STAB multiplier against
+    every defending type.
+
+    Returns the multiplier alongside each category so the
+    UI can display x2, x1/2, x1/4 and x0.
+    """
+
     strong_against = []
     resisted_by = []
+
     for defending_type in TYPE_ORDER:
-        matchup = TYPE_DEFENSES[defending_type]
+
+        matchup = TYPE_DEFENSES.get(
+            defending_type,
+            {}
+        )
+
         multipliers = []
+
         for attacking_type in attacking_types:
-            if attacking_type in matchup.get("immune", []):
-                multipliers.append(0)
-            elif attacking_type in matchup.get("resist", []):
+
+            if attacking_type in matchup.get(
+                "immune",
+                []
+            ):
+                multipliers.append(0.0)
+
+            elif attacking_type in matchup.get(
+                "resist",
+                []
+            ):
                 multipliers.append(0.5)
-            elif attacking_type in matchup.get("weak", []):
-                multipliers.append(2)
+
+            elif attacking_type in matchup.get(
+                "weak",
+                []
+            ):
+                multipliers.append(2.0)
+
             else:
-                multipliers.append(1)
-        best_multiplier = max(multipliers, default=1)
+                multipliers.append(1.0)
+
+        best_multiplier = max(
+            multipliers,
+            default=1.0
+        )
+
         if best_multiplier > 1:
-            strong_against.append(defending_type)
+            strong_against.append(
+                (defending_type, best_multiplier)
+            )
+
         elif best_multiplier < 1:
-            resisted_by.append(defending_type)
-    return {"strong_against": strong_against, "resisted_by": resisted_by}
+            resisted_by.append(
+                (defending_type, best_multiplier)
+            )
+
+    return {
+        "strong_against": strong_against,
+        "resisted_by": resisted_by
+    }
 
 def format_type_multiplier(multiplier):
     if multiplier == 0:
@@ -761,12 +1990,9 @@ def render_type_chips(type_names, multipliers=None):
         f'<img src="{TYPE_SVG_URLS[type_name]}" alt="" /></span>'
         for type_name in type_names
     )
+
 @strlit.cache_data(ttl=86400, show_spinner=False)
 def get_type_relationships(type_name):
-    """
-    Fetches and caches one Pokémon type's damage relationships.
-    """
-
     try:
         url = f"https://pokeapi.co/api/v2/type/{type_name.lower()}"
         response = requests.get(url, timeout=5)
@@ -776,236 +2002,1152 @@ def get_type_relationships(type_name):
 
     except Exception:
         pass
-
     return {}
 
-
+# -----------------------------------------------------------------------------
+# 3.5 SMOGON COMPETITIVE USAGE DATA SOURCE ENGINE
+# -----------------------------------------------------------------------------
 @strlit.cache_data(ttl=86400, show_spinner=False)
+def fetch_smogon_usage_stats() -> Dict[str, dict]:
+    """
+    Fetches real competitive usage statistics directly from Smogon's official
+    public Chaos JSON repository (Gen 9 OU usage benchmark).
+    Provides accurate move usage percentages, meta tiering weights, item/ability
+    spreads, and teammate synergy scores.
+    """
+    url = "https://smogon.com/stats/2024-05/chaos/gen9ou-1825.json"
+    usage_map = {}
+    try:
+        res = requests.get(url, timeout=15)
+        if res.status_code != 200:
+            return {}
+        data = res.json()
+        total_battles = max(1, data.get("info", {}).get("number of battles", 10000))
+        mon_data = data.get("data", {})
+
+        for raw_name, details in mon_data.items():
+            clean_key = raw_name.strip().lower()
+            usage_count = details.get("usage", 0)
+            meta_usage_tier = min(1.0, (usage_count / total_battles) * 2.0)
+
+            raw_moves = details.get("Moves", {})
+            move_sum = sum(raw_moves.values()) or 1
+            common_moves_rates = {
+                display_name_for_move(m_key): round(cnt / move_sum, 3)
+                for m_key, cnt in raw_moves.items()
+                if (cnt / move_sum) > 0.02
+            }
+
+            raw_abilities = details.get("Abilities", {})
+            ab_sum = sum(raw_abilities.values()) or 1
+            common_abilities_rates = {
+                ab_name: round(cnt / ab_sum, 3)
+                for ab_name, cnt in raw_abilities.items()
+            }
+
+            raw_items = details.get("Items", {})
+            item_sum = sum(raw_items.values()) or 1
+            common_items_rates = {
+                item_name: round(cnt / item_sum, 3)
+                for item_name, cnt in raw_items.items()
+            }
+
+            raw_teammates = details.get("Teammates", {})
+            top_partners_rates = {
+                tm_name.title(): min(1.0, val / usage_count)
+                for tm_name, val in raw_teammates.items()
+                if usage_count > 0 and (val / usage_count) > 0.05
+            }
+
+            usage_map[clean_key] = {
+                "meta_usage_tier": meta_usage_tier,
+                "common_moves": common_moves_rates,
+                "common_abilities": common_abilities_rates,
+                "common_items": common_items_rates,
+                "top_partners": top_partners_rates
+            }
+        return usage_map
+    except Exception:
+        return {}
+
+SMOGON_USAGE_DB = fetch_smogon_usage_stats()
+
+def get_smogon_stats_for(mon_name: str) -> dict:
+    clean = mon_name.strip().lower()
+    if clean in SMOGON_USAGE_DB:
+        return SMOGON_USAGE_DB[clean]
+    base = re.sub(r"^mega\s+", "", clean).strip()
+    if base in SMOGON_USAGE_DB:
+        return SMOGON_USAGE_DB[base]
+    return {
+        "meta_usage_tier": 0.15,
+        "common_moves": {},
+        "common_abilities": {},
+        "common_items": {},
+        "top_partners": {}
+    }
+@strlit.cache_data(
+    ttl=3600,
+    show_spinner=False
+)
+def get_cached_meta_candidate(name):
+
+    try:
+
+        c_data = fetch_pokemon_details(
+            name
+        )
+
+        if not c_data.get(
+            "types"
+        ):
+            return None
+
+        tournament = (
+            calculate_tournament_metrics(
+                name
+            )
+        )
+
+        if tournament["usage"] > 0:
+
+            tournament_viability = (
+                tournament[
+                    "tournament_score"
+                ]
+                * 100
+            )
+
+        else:
+
+            smogon = (
+                get_smogon_stats_for(
+                    name
+                )
+            )
+
+            tournament_viability = (
+                smogon.get(
+                    "meta_usage_tier",
+                    0.15
+                )
+                * 60
+            )
+
+        return {
+            "types":
+                c_data.get(
+                    "types",
+                    []
+                ),
+
+            "stats":
+                c_data.get(
+                    "stats",
+                    {}
+                ),
+
+            "abilities":
+                c_data.get(
+                    "abilities",
+                    []
+                ),
+
+            "moves":
+                c_data.get(
+                    "moves",
+                    []
+                ),
+
+            "viability_index":
+                int(
+                    max(
+                        0,
+                        min(
+                            100,
+                            tournament_viability
+                        )
+                    )
+                )
+        }
+
+    except Exception:
+
+        return None   
+
+@strlit.cache_data(
+    ttl=3600,
+    show_spinner=False
+)
 def compute_meta_analytics(mon_name):
-    """
-    Generates the Meta Profile using the actual Pokémon
-    Champions roster.
 
-    Megas are excluded from automatic recommendations.
-    """
-
-    if not mon_name or mon_name == "-- Choose a Pokémon --":
+    if (
+        not mon_name
+        or
+        mon_name == "-- Choose a Pokémon --"
+    ):
         return {
             "tier": "Unknown",
             "viability": "0 / 100",
+            "speed_tier": "Unknown",
+            "momentum_rating": "None",
+            "hazard_utility": "None",
+            "offensive_profile": "Balanced",
+            "role": "Balanced Pick",
             "teammates": [],
             "counters": []
         }
 
-    # ---------------------------------------------------------
-    # 1. Get selected Pokémon data
-    # ---------------------------------------------------------
+    # =====================================================
+    # 1. LOAD TARGET DATA
+    # =====================================================
 
-    mon_data = fetch_pokemon_details(mon_name)
+    mon_data = fetch_pokemon_details(
+        mon_name
+    )
 
-    types = mon_data.get("types", ["Normal"])
-    stats = mon_data.get("stats", {})
+    types = mon_data.get(
+        "types",
+        ["Normal"]
+    )
 
-    bst = sum(stats.values()) if stats else 500
+    stats = mon_data.get(
+        "stats",
+        {}
+    )
 
-    # ---------------------------------------------------------
-    # 2. Viability
-    # ---------------------------------------------------------
+    moves = mon_data.get(
+        "moves",
+        []
+    )
 
-    if bst >= 650:
-        tier = "S-Tier / Uber Threat"
-        viability = "95 / 100"
+    abilities = mon_data.get(
+        "abilities",
+        []
+    )
 
-    elif bst >= 580:
-        tier = "OU / High Viability"
-        viability = "85 / 100"
+    atk = stats.get(
+        "attack",
+        100
+    )
+
+    spa = stats.get(
+        "special-attack",
+        100
+    )
+
+    spe = stats.get(
+        "speed",
+        100
+    )
+
+    hp = stats.get(
+        "hp",
+        80
+    )
+
+    defense = stats.get(
+        "defense",
+        80
+    )
+
+    sp_def = stats.get(
+        "special-defense",
+        80
+    )
+
+    bst = sum(
+        stats.values()
+    ) if stats else 500
+
+    # =====================================================
+    # 2. TOURNAMENT METRICS
+    # =====================================================
+
+    tournament = calculate_tournament_metrics(
+        mon_name
+    )
+
+    tournament_score = (
+        tournament["tournament_score"]
+        * 100
+    )
+
+    usage_score = (
+        tournament["usage"]
+        * 100
+    )
+
+    win_score = (
+        tournament["win_rate"]
+        * 100
+    )
+
+    top_cut_score = (
+        tournament["top_cut_rate"]
+        * 100
+    )
+
+    # =====================================================
+    # 3. FALLBACK COMPETITIVE SIGNAL
+    # =====================================================
+
+    smogon = get_smogon_stats_for(
+        mon_name
+    )
+
+    smogon_signal = (
+        smogon.get(
+            "meta_usage_tier",
+            0.15
+        )
+        * 100
+    )
+
+    # Smogon is deliberately capped.
+    #
+    # Champions tournament data should dominate
+    # whenever tournament data exists.
+
+    if tournament["usage"] > 0:
+
+        external_signal = min(
+            60.0,
+            smogon_signal
+        )
 
     else:
-        tier = "UU / Niche Pick"
-        viability = "70 / 100"
 
-    # ---------------------------------------------------------
-    # 3. Find selected Pokémon's weaknesses
-    # ---------------------------------------------------------
+        external_signal = smogon_signal
 
-    weaknesses = set()
+    # =====================================================
+    # 4. BASE STRATEGIC SCORE
+    # =====================================================
 
-    for pokemon_type in types:
+    offensive_stat = max(
+        atk,
+        spa
+    )
 
-        relations = get_type_relationships(pokemon_type)
+    raw_strength = min(
+        100.0,
+        (
+            (bst / 720.0) * 50.0
+            +
+            (offensive_stat / 160.0) * 30.0
+        )
+    )
+    # =====================================================
+    # 5. TYPE MATCHUP PROFILE
+    # =====================================================
 
-        if not relations:
-            continue
+    type_multipliers = {}
 
-        for weakness in relations.get(
-            "double_damage_from",
-            []
-        ):
-            weaknesses.add(
-                weakness["name"].title()
+    for attacking_type in TYPE_CHART_DATA:
+
+        multiplier = 1.0
+
+        for defending_type in types:
+
+            relations = get_type_relationships(
+                attacking_type
             )
 
-    # ---------------------------------------------------------
-    # 4. Calculate useful resistance types ONCE
-    # ---------------------------------------------------------
+            if not relations:
+                continue
 
-    resistant_types = set()
+            double_damage = {
+                x["name"].title()
+                for x in relations.get(
+                    "double_damage_to",
+                    []
+                )
+            }
 
-    for weakness in weaknesses:
+            half_damage = {
+                x["name"].title()
+                for x in relations.get(
+                    "half_damage_to",
+                    []
+                )
+            }
 
-        relations = get_type_relationships(weakness)
+            no_damage = {
+                x["name"].title()
+                for x in relations.get(
+                    "no_damage_to",
+                    []
+                )
+            }
 
-        for resistant in relations.get(
-            "half_damage_from",
-            []
+            if attacking_type.title() in double_damage:
+                multiplier *= 2.0
+
+            elif attacking_type.title() in half_damage:
+                multiplier *= 0.5
+
+            elif attacking_type.title() in no_damage:
+                multiplier *= 0.0
+
+        type_multipliers[
+            attacking_type.title()
+        ] = multiplier
+
+    weaknesses = {
+        attacking_type
+        for attacking_type, multiplier
+        in type_multipliers.items()
+        if multiplier >= 2.0
+    }
+
+    # =====================================================
+    # 6. ARCHETYPE SCORE
+    # =====================================================
+
+    payload = {
+        "name": mon_name,
+        "types": types,
+        "abilities": abilities,
+        "moves": moves,
+        "default_score": raw_strength
+    }
+
+    archetypes = detect_archetypes(
+        payload
+    )
+
+    archetype_score = min(
+        100.0,
+        sum(
+            a.get(
+                "boost",
+                0
+            )
+            for a in archetypes
+        )
+    )
+
+    # =====================================================
+    # 6. FINAL VIABILITY
+    # =====================================================
+
+    if tournament["usage"] > 0:
+
+        viability_value = (
+            tournament_score * 0.40
+            +
+            usage_score * 0.20
+            +
+            top_cut_score * 0.15
+            +
+            win_score * 0.10
+            +
+            archetype_score * 0.10
+            +
+            raw_strength * 0.05
+        )
+
+    else:
+
+        viability_value = (
+            external_signal * 0.45
+            +
+            raw_strength * 0.35
+            +
+            archetype_score * 0.20
+        )
+
+    viability_value = int(
+        max(
+            0,
+            min(
+                100,
+                viability_value
+            )
+        )
+    )
+
+    # =====================================================
+    # 7. TIER LABEL
+    # =====================================================
+
+    if viability_value >= 90:
+
+        tier = (
+            "S+ / Tournament Defining"
+        )
+
+    elif viability_value >= 80:
+
+        tier = (
+            "S / Elite Meta"
+        )
+
+    elif viability_value >= 70:
+
+        tier = (
+            "A / High Viability"
+        )
+
+    elif viability_value >= 60:
+
+        tier = (
+            "B / Solid Meta Pick"
+        )
+
+    elif viability_value >= 45:
+
+        tier = (
+            "C / Niche Pick"
+        )
+
+    else:
+
+        tier = (
+            "D / Low Meta Presence"
+        )
+
+    # =====================================================
+    # 8. SPEED PROFILE
+    # =====================================================
+
+    if spe >= 130:
+        speed_tier = "Extremely Fast"
+
+    elif spe >= 110:
+        speed_tier = "Very Fast"
+
+    elif spe >= 90:
+        speed_tier = "Fast"
+
+    elif spe >= 70:
+        speed_tier = "Average"
+
+    elif spe >= 50:
+        speed_tier = "Slow"
+
+    else:
+        speed_tier = "Very Slow"
+
+    # =====================================================
+    # 9. OFFENSIVE PROFILE
+    # =====================================================
+
+    if atk >= spa + 20:
+        offensive_profile = (
+            "Physical Attacker"
+        )
+
+    elif spa >= atk + 20:
+        offensive_profile = (
+            "Special Attacker"
+        )
+
+    else:
+        offensive_profile = (
+            "Mixed / Flexible"
+        )
+
+    # =====================================================
+    # 10. MOMENTUM
+    # =====================================================
+
+    pivot_moves = {
+        "U-turn",
+        "Volt Switch",
+        "Flip Turn",
+        "Parting Shot"
+    }
+
+    if any(
+        move in pivot_moves
+        for move in moves
+    ):
+
+        momentum_rating = (
+            "High Momentum"
+        )
+
+    elif (
+        "Tailwind" in moves
+        or
+        "Trick Room" in moves
+    ):
+
+        momentum_rating = (
+            "Speed Control"
+        )
+
+    else:
+
+        momentum_rating = (
+            "Direct Pressure"
+        )
+
+    # =====================================================
+    # 11. HAZARD / UTILITY
+    # =====================================================
+
+    utility_tags = []
+
+    hazard_moves = {
+        "Stealth Rock",
+        "Spikes",
+        "Toxic Spikes"
+    }
+
+    removal_moves = {
+        "Rapid Spin",
+        "Defog"
+    }
+
+    if any(
+        move in hazard_moves
+        for move in moves
+    ):
+        utility_tags.append(
+            "Hazard Setter"
+        )
+
+    if any(
+        move in removal_moves
+        for move in moves
+    ):
+        utility_tags.append(
+            "Hazard Removal"
+        )
+
+    if any(
+        move in {
+            "Recover",
+            "Roost",
+            "Synthesis",
+            "Soft-Boiled"
+        }
+        for move in moves
+    ):
+        utility_tags.append(
+            "Reliable Recovery"
+        )
+
+    hazard_utility = (
+        ", ".join(utility_tags)
+        if utility_tags
+        else
+        "Direct Offensive / Defensive Focus"
+    )
+
+    # =====================================================
+    # 12. BUILD LEGAL CHAMPIONS POOL
+    # =====================================================
+
+    source_roster = (
+        CHAMPIONS_ROSTER
+        if CHAMPIONS_ROSTER
+        else
+        list(
+            CHAMPIONS_LEARNSETS.keys()
+        )
+    )
+
+    candidates = []
+
+    for species_key in source_roster:
+
+        candidate_name = (
+            display_name_for_species_key(
+                species_key
+            )
+        )
+
+        if not candidate_name:
+            continue
+
+        if (
+            candidate_name.lower()
+            ==
+            mon_name.lower()
         ):
-            resistant_types.add(
-                resistant["name"].title()
+            continue
+
+        if (
+            candidate_name.lower()
+            .startswith("mega ")
+        ):
+            continue
+
+        candidates.append(
+            candidate_name
+        )
+
+    candidates = list(
+        dict.fromkeys(
+            candidates
+        )
+    )
+
+    # =====================================================
+    # 13. BUILD META POOL
+    # =====================================================
+
+    meta_pool = {}
+
+    for candidate_name in candidates:
+
+        cached = get_cached_meta_candidate(
+            candidate_name
+        )
+
+        if not cached:
+            continue
+
+        meta_pool[candidate_name] = {
+            "viability_index":
+                cached.get(
+                    "viability_index",
+                    0
+                ),
+            "types":
+                cached.get(
+                    "types",
+                    []
+                ),
+            "stats":
+                cached.get(
+                    "stats",
+                    {}
+                ),
+            "abilities":
+                cached.get(
+                    "abilities",
+                    []
+                ),
+            "moves":
+                cached.get(
+                    "moves",
+                    []
+                )
+        }
+
+    # =====================================================
+    # 14. COUNTER ENGINE
+    # =====================================================
+
+    meta_checks = (
+        get_meta_relevant_checks(
+            pkmn_data=payload,
+            meta_pool=meta_pool,
+            min_viability_threshold=0,
+            top_n=3
+        )
+    )
+
+    counters = []
+
+    for check in meta_checks:
+
+        check_name = check[
+            "name"
+        ]
+
+        check_types = (
+            meta_pool
+            .get(
+                check_name,
+                {}
+            )
+            .get(
+                "types",
+                []
+            )
+        )
+
+        if check_types:
+
+            counters.append(
+                (
+                    check_name,
+                    check_types[0]
+                )
             )
 
-    # ---------------------------------------------------------
-    # 5. Build actual Champions recommendation pool
-    # ---------------------------------------------------------
+    # =====================================================
+    # 15. TOURNAMENT PARTNERS
+    # =====================================================
 
-    champions = []
-
-    for species_key in CHAMPIONS_ROSTER:
-
-        name = display_name_for_species_key(species_key)
-
-        # Never recommend Megas
-        if name.lower().startswith("mega "):
-            continue
-
-        # Never recommend the selected Pokémon itself
-        if name.lower() == mon_name.lower():
-            continue
-
-        champions.append(name)
-
-    # Remove duplicates
-    champions = list(dict.fromkeys(champions))
-
-    # ---------------------------------------------------------
-    # 6. Find teammates
-    # ---------------------------------------------------------
+    tournament_partners = dict(
+        get_tournament_partners(
+            mon_name,
+            top_n=10
+        )
+    )
 
     teammate_scores = []
 
-    for name in champions:
+    # =====================================================
+    # 16. TEAMMATE SCORING
+    # =====================================================
+
+    for candidate_name in candidates:
 
         try:
-            data = fetch_pokemon_details(name)
 
-            candidate_types = data.get(
-                "types",
-                []
+            cached = (
+                meta_pool.get(
+                    candidate_name
+                )
+            )
+
+            if not cached:
+                continue
+
+            candidate_types = (
+                cached["types"]
+            )
+
+            candidate_stats = (
+                cached["stats"]
             )
 
             if not candidate_types:
                 continue
 
-            score = 0
+            candidate_data = (
+                fetch_pokemon_details(
+                    candidate_name
+                )
+            )
+
+            score = 0.0
+
+            # ---------------------------------------------
+            # Tournament partnership
+            # ---------------------------------------------
+
+            candidate_key = (
+                get_champions_species_key(
+                    candidate_name
+                )
+            )
+
+            partner_frequency = (
+                tournament_partners.get(
+                    candidate_key,
+                    0
+                )
+            )
+
+            score += min(
+                40.0,
+                partner_frequency * 8.0
+            )
+
+            # ---------------------------------------------
+            # Archetype synergy
+            # ---------------------------------------------
+
+            target_archetypes = detect_archetypes(
+                mon_data
+            )
+
+            candidate_archetypes = detect_archetypes(
+                candidate_data
+            )
+
+            target_archetype_names = {
+                a.get("name")
+                for a in target_archetypes
+            }
+
+            candidate_archetype_names = {
+                a.get("name")
+                for a in candidate_archetypes
+            }
+
+            archetype_overlap = (
+                target_archetype_names
+                &
+                candidate_archetype_names
+            )
+
+            score += (
+                len(archetype_overlap) * 4.0
+            )
+
+            # ---------------------------------------------
+            # Defensive synergy
+            # ---------------------------------------------
 
             for candidate_type in candidate_types:
 
-                if candidate_type in resistant_types:
-                    score += 2
+                relations = (
+                    get_type_relationships(
+                        candidate_type
+                    )
+                )
+
+                resistances = {
+                    r["name"].title()
+                    for r in relations.get(
+                        "half_damage_from",
+                        []
+                    )
+                }
+
+                immunities = {
+                    r["name"].title()
+                    for r in relations.get(
+                        "no_damage_from",
+                        []
+                    )
+                }
+
+                for weakness in weaknesses:
+
+                    if weakness in immunities:
+
+                        score += 8.0
+
+                    elif weakness in resistances:
+
+                        score += 5.0
+
+            # ---------------------------------------------
+            # Offensive coverage
+            # ---------------------------------------------
+
+            for candidate_type in candidate_types:
+
+                relations = (
+                    get_type_relationships(
+                        candidate_type
+                    )
+                )
+
+                offensive_targets = {
+                    r["name"].title()
+                    for r in relations.get(
+                        "double_damage_to",
+                        []
+                    )
+                }
+
+                for weakness in weaknesses:
+
+                    if weakness in offensive_targets:
+
+                        score += 3.0
+
+            # ---------------------------------------------
+            # Role diversity
+            # ---------------------------------------------
+
+            candidate_atk = (
+                candidate_stats.get(
+                    "attack",
+                    100
+                )
+            )
+
+            candidate_spa = (
+                candidate_stats.get(
+                    "special-attack",
+                    100
+                )
+            )
+
+            target_physical = (
+                atk >= spa
+            )
+
+            candidate_physical = (
+                candidate_atk >= candidate_spa
+            )
+
+            if (
+                target_physical
+                !=
+                candidate_physical
+            ):
+                score += 2.0
+
+            # ---------------------------------------------
+            # Tournament viability
+            # ---------------------------------------------
+
+            candidate_viability = (
+                cached.get(
+                    "viability_index",
+                    0
+                )
+            )
+
+            score += (
+                float(
+                    candidate_viability
+                )
+                * 0.05
+            )
 
             if score > 0:
+
                 teammate_scores.append(
                     (
                         score,
-                        name,
+                        candidate_name,
                         candidate_types[0]
                     )
                 )
 
         except Exception:
+
             continue
 
     teammate_scores.sort(
-        key=lambda x: (-x[0], x[1])
+        key=lambda item: item[0],
+        reverse=True
     )
 
     teammates = [
-        (name, pokemon_type)
+        (
+            name,
+            pokemon_type
+        )
         for score, name, pokemon_type
         in teammate_scores[:3]
     ]
 
-    # ---------------------------------------------------------
-    # 7. Find counters
-    # ---------------------------------------------------------
-
-    counter_scores = []
-
-    for name in champions:
-
-        try:
-            data = fetch_pokemon_details(name)
-
-            candidate_types = data.get(
-                "types",
-                []
-            )
-
-            if not candidate_types:
-                continue
-
-            score = 0
-
-            # A Pokémon whose own typing matches
-            # one of the selected Pokémon's weaknesses
-            # gets a higher counter score.
-            for candidate_type in candidate_types:
-
-                if candidate_type in weaknesses:
-                    score += 3
-
-            if score > 0:
-                counter_scores.append(
-                    (
-                        score,
-                        name,
-                        candidate_types[0]
-                    )
-                )
-
-        except Exception:
-            continue
-
-    counter_scores.sort(
-        key=lambda x: (-x[0], x[1])
-    )
-
-    counters = [
-        (name, pokemon_type)
-        for score, name, pokemon_type
-        in counter_scores[:3]
-    ]
-
-    # ---------------------------------------------------------
-    # 8. Return data to GUI
-    # ---------------------------------------------------------
+    # =====================================================
+    # 17. RETURN COMPLETE PROFILE
+    # =====================================================
 
     return {
         "tier": tier,
-        "viability": viability,
+        "viability": (
+            f"{viability_value} / 100"
+        ),
+        "speed_tier": speed_tier,
+        "momentum_rating": momentum_rating,
+        "hazard_utility": hazard_utility,
+        "offensive_profile":
+            offensive_profile,
+        "role":
+            infer_slot_role({
+                "name": mon_name,
+                "moves": moves
+            }),
         "teammates": teammates,
         "counters": counters
     }
 
-
 def infer_slot_role(slot):
-    moves = slot.get("moves", [])
-    if any(m in moves for m in ["Swords Dance", "Dragon Dance", "Nasty Plot", "Calm Mind", "Quiver Dance"]):
+
+    name = slot.get(
+        "name",
+        ""
+    )
+
+    moves = set(
+        slot.get(
+            "moves",
+            []
+        )
+    )
+
+    details = fetch_pokemon_details(
+        name
+    )
+
+    stats = details.get(
+        "stats",
+        {}
+    )
+
+    atk = stats.get(
+        "attack",
+        100
+    )
+
+    spa = stats.get(
+        "special-attack",
+        100
+    )
+
+    spe = stats.get(
+        "speed",
+        100
+    )
+
+    hp = stats.get(
+        "hp",
+        100
+    )
+
+    defense = stats.get(
+        "defense",
+        100
+    )
+
+    sp_def = stats.get(
+        "special-defense",
+        100
+    )
+
+    # Speed control
+    if "Tailwind" in moves:
+        return "Speed Control / Support"
+
+    if "Trick Room" in moves:
+        return "Trick Room / Support"
+
+    # Setup sweepers
+    if moves & {
+        "Swords Dance",
+        "Dragon Dance",
+        "Nasty Plot",
+        "Quiver Dance",
+        "Calm Mind"
+    }:
         return "Setup Sweeper"
-    if any(m in moves for m in ["Stealth Rock", "Spikes", "Toxic Spikes", "Defog", "Rapid Spin", "Tidy Up"]):
-        return "Support"
-    if any(m in moves for m in ["U-turn", "Volt Switch", "Flip Turn", "Parting Shot"]):
+
+    # Pivot
+    if moves & {
+        "U-turn",
+        "Volt Switch",
+        "Flip Turn",
+        "Parting Shot"
+    }:
         return "Pivot"
-    return "Balanced Pick"
+
+    # Strong attackers
+    if max(atk, spa) >= 115:
+
+        if spe >= 90:
+
+            if atk >= spa:
+                return "Physical Attacker"
+
+            return "Special Attacker"
+
+    # Defensive support
+    if (
+        hp >= 100
+        or defense >= 100
+        or sp_def >= 100
+    ):
+
+        if moves & {
+            "Recover",
+            "Roost",
+            "Synthesis",
+            "Protect",
+            "Helping Hand",
+            "Follow Me",
+            "Rage Powder"
+        }:
+            return "Defensive / Support"
+
+    return "Balanced / Utility"
 
 def ensure_slot_structure(slot_idx, fallback_name="-- Choose a Pokémon --"):
     if "team_slots" not in strlit.session_state:
@@ -1022,7 +3164,6 @@ def ensure_slot_structure(slot_idx, fallback_name="-- Choose a Pokémon --"):
     return strlit.session_state.team_slots[slot_idx]
 
 def normalize_moves(moves, available_moves):
-    """Return exactly four valid move selections for a team slot."""
     available_moves = list(dict.fromkeys(available_moves)) or ["Protect"]
     valid_moves = [move for move in moves if move in available_moves]
     for move in available_moves:
@@ -1041,6 +3182,18 @@ def generate_synergistic_moveset(new_species, target_slot_idx):
     learnset = mon_data["moves"]
     mon_types = mon_data["types"]
     
+    # Check if authoritative Smogon move usage statistics exist for this species
+    smogon_stats = get_smogon_stats_for(new_species)
+    smogon_moves = smogon_stats.get("common_moves", {})
+    if smogon_moves:
+        sorted_by_usage = sorted(
+            [m for m in learnset if m in smogon_moves],
+            key=lambda x: smogon_moves.get(x, 0.0),
+            reverse=True
+        )
+        if len(sorted_by_usage) >= 4:
+            return sorted_by_usage[:4]
+
     priority_STABs = []
     priority_Coverage = []
     for m in learnset:
@@ -1077,6 +3230,456 @@ def on_species_change(slot_idx):
         "nature": nature, "moves": normalize_moves(recommended_moves, mon_data["moves"]), "evs": evs,
     })
 
+# Helper to convert slot state into MonMetaProfile for TeamEvaluator using real Smogon stats
+def slot_to_mon_meta_profile(slot) -> MonMetaProfile:
+    name = slot.get("name", "Unknown")
+    details = fetch_pokemon_details(name)
+    types = details.get("types", ["Normal"])
+    stats = details.get("stats", {})
+    
+    # 1. Run centralized archetype detection
+    pkmn_payload = {
+        "name": name,
+        "abilities": [slot.get("ability", "Standard")],
+        "moves": slot.get("moves", []),
+        "weaknesses": []
+    }
+    detected = detect_archetypes(pkmn_payload)
+    detected_names = {a["name"] for a in detected}
+
+    base_stats = {
+        "hp": stats.get("hp", 80),
+        "atk": stats.get("attack", 100),
+        "def": stats.get("defense", 100),
+        "spa": stats.get("special-attack", 100),
+        "spd": stats.get("special-defense", 100),
+        "spe": stats.get("speed", 100)
+    }
+    
+    smogon_stats = get_smogon_stats_for(name)
+    smogon_move_rates = smogon_stats.get("common_moves", {})
+
+    moves_dict = {}
+    for move_name in slot.get("moves", []):
+        m_type = get_hardcoded_move_type(move_name) or fetch_move_type(move_name)
+        tags = set()
+        m_lower = move_name.lower()
+        
+        # Inherit official archetype tags
+        if "Tailwind Enabler" in detected_names and "tailwind" in m_lower:
+            tags.add("tailwind")
+        if "Trick Room Setter" in detected_names and "trick room" in m_lower:
+            tags.add("trick_room")
+        if "Priority Blocker" in detected_names:
+            tags.add("anti_priority")
+            
+        # Move mechanics tags
+        if any(w in m_lower for w in ["dance", "plot", "calm mind", "swords"]):
+            tags.add("setup")
+        if any(w in m_lower for w in ["sucker", "extreme speed", "aqua jet", "bullet punch", "mach punch"]):
+            tags.add("priority")
+        if any(w in m_lower for w in ["follow me", "rage powder"]):
+            tags.add("redirection")
+
+        move_usage_val = smogon_move_rates.get(move_name, 0.5)
+
+        moves_dict[move_name] = MoveProfile(
+            name=move_name,
+            category="Status" if "protect" in m_lower or "substitute" in m_lower or "toxic" in m_lower else "Physical",
+            type=m_type,
+            base_power=80,
+            accuracy=1.0,
+            usage_rate=move_usage_val,
+            tags=tags
+        )
+        
+    ability = slot.get("ability", "Standard")
+    item = slot.get("item", "")
+    
+    return MonMetaProfile(
+        name=name,
+        types=types,
+        base_stats=base_stats,
+        common_moves=moves_dict,
+        common_abilities=smogon_stats.get("common_abilities", {ability: 1.0}),
+        common_items=smogon_stats.get("common_items", {item: 1.0}) if item else {},
+        meta_usage_tier=smogon_stats.get("meta_usage_tier", 0.15),
+        top_partners=smogon_stats.get("top_partners", {})
+    )
+
+# Showdown export/import utilities
+def export_slot_to_showdown(slot):
+    if not slot or slot.get("name", "-- Choose a Pokémon --") == "-- Choose a Pokémon --":
+        return ""
+    lines = []
+    item_str = f" @ {slot['item']}" if slot.get("item") else ""
+    lines.append(f"{slot['name']}{item_str}")
+    if slot.get("ability"):
+        lines.append(f"Ability: {slot['ability']}")
+    
+    ev_parts = []
+    for k in ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]:
+        val = slot.get("evs", {}).get(k, 0)
+        if val > 0:
+            ev_parts.append(f"{val} {k}")
+    if ev_parts:
+        lines.append(f"EVs: {' / '.join(ev_parts)}")
+    
+    if slot.get("nature"):
+        nat_name = slot["nature"].split(" ")[0]
+        lines.append(f"{nat_name} Nature")
+        
+    for m in slot.get("moves", []):
+        if m:
+            lines.append(f"- {m}")
+    return "\n".join(lines)
+
+def export_team_to_showdown(team_slots):
+    exported = []
+    for i in range(6):
+        slot = team_slots.get(i)
+        if slot and slot.get("name") != "-- Choose a Pokémon --":
+            exported.append(export_slot_to_showdown(slot))
+    return "\n\n".join(exported)
+
+def parse_showdown_text(text):
+    blocks = [b.strip() for b in text.strip().split("\n\n") if b.strip()]
+    parsed_slots = []
+    
+    for block in blocks[:6]:
+        lines = [l.strip() for l in block.split("\n") if l.strip()]
+        if not lines:
+            continue
+        
+        line1 = lines[0]
+        item = ""
+        if " @ " in line1:
+            line1_parts = line1.split(" @ ")
+            item = line1_parts[1].strip()
+            name_part = line1_parts[0].strip()
+        else:
+            name_part = line1.strip()
+            
+        species = name_part
+        if "(" in name_part and ")" in name_part:
+            m = re.search(r'\(([^)]+)\)', name_part)
+            if m:
+                potential_species = m.group(1).strip()
+                if potential_species not in ["M", "F"]:
+                    species = potential_species
+                else:
+                    species = name_part.split("(")[0].strip()
+        
+        matched_species = "-- Choose a Pokémon --"
+        for option in CHAMPIONS_ALL_FORMS:
+            if option.lower() == species.lower():
+                matched_species = option
+                break
+        if matched_species == "-- Choose a Pokémon --":
+            for option in CHAMPIONS_ALL_FORMS:
+                if species.lower() in option.lower():
+                    matched_species = option
+                    break
+
+        ability = "Standard"
+        nature = "Hardy"
+        evs = {"HP": 0, "Atk": 0, "Def": 0, "SpA": 0, "SpD": 0, "Spe": 0}
+        moves = []
+
+        for line in lines[1:]:
+            if line.startswith("Ability:"):
+                ability = line.replace("Ability:", "").strip()
+            elif line.startswith("EVs:"):
+                ev_str = line.replace("EVs:", "").strip()
+                for part in ev_str.split("/"):
+                    p = part.strip().split()
+                    if len(p) == 2 and p[0].isdigit():
+                        stat_key = p[1].strip()
+                        k_map = {"HP": "HP", "Atk": "Atk", "Def": "Def", "SpA": "SpA", "SpD": "SpD", "Spe": "Spe"}
+                        if stat_key in k_map:
+                            evs[k_map[stat_key]] = int(p[0])
+            elif "Nature" in line:
+                nat_word = line.replace("Nature", "").strip()
+                for n_opt in NATURES:
+                    if n_opt.startswith(nat_word):
+                        nature = n_opt
+                        break
+            elif line.startswith("-"):
+                m_name = line.replace("-", "").strip()
+                if m_name:
+                    moves.append(m_name)
+
+        final_species = matched_species if matched_species != "-- Choose a Pokémon --" else species.title()
+        parsed_slots.append({
+            "name": final_species,
+            "ability": ability,
+            "item": item if item else MEGA_STONE_MAP.get(final_species, "Focus Sash"),
+            "nature": nature,
+            "moves": moves[:4] if moves else ["Protect", "Substitute", "Rest", "Toxic"],
+            "evs": evs
+        })
+    return parsed_slots
+
+
+def import_champions_tournament(event):
+    """
+    Import one Champions tournament into CHAMPIONS_META_DB.
+
+    The event must contain:
+        {
+            "regulation": "...",
+            "players": [
+                {
+                    "team": [...],
+                    "placing": 1
+                }
+            ]
+        }
+    """
+
+    regulation = event.get(
+        "regulation",
+        ""
+    )
+
+    if (
+        regulation
+        and CURRENT_REGULATION
+        and regulation != CURRENT_REGULATION
+    ):
+        return
+
+    for player in event.get(
+        "players",
+        []
+    ):
+
+        team = player.get(
+            "team",
+            []
+        )
+
+        placing = player.get(
+            "placing"
+        )
+
+        canonical_team = [
+            get_champions_species_key(
+                pokemon
+            )
+            for pokemon in team
+            if pokemon
+        ]
+
+        canonical_team = list(
+            dict.fromkeys(
+                canonical_team
+            )
+        )
+        for pokemon in canonical_team:
+
+            if pokemon not in CHAMPIONS_META_DB:
+
+                CHAMPIONS_META_DB[pokemon] = {
+                    "appearances": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "top_cuts": 0,
+                    "usage": 0.0,
+                    "win_rate": 0.0,
+                    "top_cut_rate": 0.0,
+                    "partners": {},
+                    "roles": {},
+                    "moves": {},
+                    "abilities": {},
+                    "items": {}
+                }
+
+            record = CHAMPIONS_META_DB[pokemon]
+
+            record["appearances"] += 1
+
+            if (
+                placing is not None
+                and placing <= 8
+            ):
+                record["top_cuts"] += 1
+
+            for partner in canonical_team:
+
+                if partner == pokemon:
+                    continue
+
+                record["partners"][partner] = (
+                    record["partners"].get(
+                        partner,
+                        0
+                    ) + 1
+                )
+
+def calculate_tournament_metrics(
+    pokemon_name
+):
+    """
+    Converts raw Champions tournament data
+    into normalized competitive metrics.
+    """
+
+    key = get_champions_species_key(
+        pokemon_name
+    )
+
+    record = CHAMPIONS_META_DB.get(
+        key
+    )
+
+    if not record:
+        return {
+            "usage": 0.0,
+            "top_cut_rate": 0.0,
+            "win_rate": 0.0,
+            "tournament_score": 0.0,
+            "partner_score": 0.0
+        }
+
+    appearances = max(
+        1,
+        record.get(
+            "appearances",
+            0
+        )
+    )
+
+    wins = record.get(
+        "wins",
+        0
+    )
+
+    losses = record.get(
+        "losses",
+        0
+    )
+
+    top_cuts = record.get(
+        "top_cuts",
+        0
+    )
+
+    total_games = wins + losses
+
+    if total_games > 0:
+        win_rate = (
+            wins / total_games
+        )
+    else:
+        win_rate = 0.0
+
+    top_cut_rate = (
+        top_cuts / appearances
+    )
+
+    partner_values = list(
+        record.get(
+            "partners",
+            {}
+        ).values()
+    )
+
+    if partner_values:
+
+        partner_score = min(
+            1.0,
+            sum(partner_values)
+            /
+            max(1, appearances * 5)
+        )
+
+    else:
+        partner_score = 0.0
+
+    usage_score = min(
+        1.0,
+        appearances / 200.0
+    )
+
+    tournament_score = (
+        usage_score * 0.30
+        +
+        win_rate * 0.25
+        +
+        top_cut_rate * 0.35
+        +
+        partner_score * 0.10
+    )
+
+    return {
+        "usage": usage_score,
+        "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate,
+        "tournament_score": tournament_score,
+        "partner_score": partner_score
+    }
+
+def get_tournament_partners(
+    pokemon_name,
+    top_n=10
+):
+    """
+    Returns the strongest tournament partners for a Pokémon.
+
+    Results are based on actual Champions tournament
+    team appearances stored in CHAMPIONS_META_DB.
+    """
+
+    key = get_champions_species_key(
+        pokemon_name
+    )
+
+    record = CHAMPIONS_META_DB.get(
+        key
+    )
+
+    if not record:
+        return []
+
+    partners = record.get(
+        "partners",
+        {}
+    )
+
+    ranked = sorted(
+        partners.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )
+
+    results = []
+
+    for partner_key, frequency in ranked:
+
+        display_name = display_name_for_species_key(
+            partner_key
+        )
+
+        if not display_name:
+            continue
+
+        if display_name.lower().startswith(
+            "mega "
+        ):
+            continue
+
+        results.append(
+            (
+                partner_key,
+                frequency
+            )
+        )
+
+        if len(results) >= top_n:
+            break
+
+    return results
 # -----------------------------------------------------------------------------
 # 4. INITIALIZE SESSION STATE
 # -----------------------------------------------------------------------------
@@ -1176,72 +3779,80 @@ for i in range(6):
             nat_idx = nat_opts.index(nat_match[0]) if nat_match else 0
             slot["nature"] = strlit.selectbox("Nature", options=nat_opts, index=nat_idx, key=f"nat_{i}")
 
-            # -----------------------------------------------------------------
-            # UPGRADED VISUAL ANALYTICS CARD WITH ICONS & COLORED STAT BORDERS
-            # -----------------------------------------------------------------
             meta = compute_meta_analytics(slot_name)
             type_summary = get_type_defense_summary(mon_data["types"])
             offensive_summary = get_offensive_type_summary(mon_data["types"])
 
-            # Safe guard: If meta is None, provide default empty structures so the app doesn't crash
             if not meta:
-                meta = {"tier": "Unknown", "viability_score": "0 / 100", "teammates": [], "counters": []}
+                meta = {"tier": "Unknown", "viability": "0 / 100", "teammates": [], "counters": [], "speed_tier": "N/A", "momentum_rating": "N/A", "hazard_utility": "N/A", "offensive_profile": "N/A"}
 
-            # Simple patch to fix your HTML viewer down on line 1068
-            meta["viability"] = meta.get("viability_score", "0 / 100")
+            viability_score = meta.get("viability", "0 / 100")
 
             teammates_html = "".join([
-                f''
-                f'<img src="{get_mini_sprite_url(tm_name)}" />'
-                f'<span>{tm_name}</span>'
-                f'</div>'
+                f'<div class="entity-pill"><img src="{get_mini_sprite_url(tm_name)}" /><span>{tm_name}</span></div>'
                 for tm_name, tm_type in meta.get("teammates", [])
             ])
 
             counters_html = "".join([
-                f''
-                f'<img src="{get_mini_sprite_url(ct_name)}" />'
-                f'<span>{ct_name}</span>'
-                f'</div>'
+                f'<div class="entity-pill"><img src="{get_mini_sprite_url(ct_name)}" /><span>{ct_name}</span></div>'
                 for ct_name, ct_type in meta.get("counters", [])
             ])
-
-
 
             strlit.html(f"""
             <div class="analytics-container">
                 <div class="analytics-title">
-                    <span>📈 Competitive Synergy & Meta Profile</span>
+                    <span>📈 Exhaustive Competitive Diagnostic Profile</span>
                 </div>
 
                 <div class="stat-box-row">
                     <div class="stat-box viability-box">
                         <div class="stat-label">Viability Index</div>
-                        <div class="stat-value">{meta['viability']}</div>
+                        <div class="stat-value">{viability_score}</div>
                     </div>
-
                     <div class="stat-box">
                         <div class="stat-label">Smogon Tiering</div>
                         <div class="stat-value">{meta['tier']}</div>
                     </div>
                 </div>
 
+                <div class="stat-box-row">
+                    <div class="stat-box" style="border-left-color: #6390F0;">
+                        <div class="stat-label">Offensive Archetype</div>
+                        <div class="stat-value" style="font-size: 13px;">{meta['offensive_profile']}</div>
+                    </div>
+                    <div class="stat-box" style="border-left-color: #F7D02C;">
+                        <div class="stat-label">Speed Tier & Bracket</div>
+                        <div class="stat-value" style="font-size: 13px;">{meta['speed_tier']}</div>
+                    </div>
+                </div>
+
+                <div class="stat-box-row">
+                    <div class="stat-box" style="border-left-color: #7AC74C;">
+                        <div class="stat-label">Momentum & Pivoting</div>
+                        <div class="stat-value" style="font-size: 13px;">{meta['momentum_rating']}</div>
+                    </div>
+                    <div class="stat-box" style="border-left-color: #A98FF3;">
+                        <div class="stat-label">Hazard & Utility Footprint</div>
+                        <div class="stat-value" style="font-size: 13px;">{meta['hazard_utility']}</div>
+                    </div>
+                </div>
+
                 <div class="stat-box" style="margin-bottom: 12px;">
-                    <div class="stat-label">Synergistic Core Teammates</div>
+                    <div class="stat-label">Synergistic Core Teammates (Multi-Factor Ranked)</div>
                     <div style="margin-top: 6px;">
-                        {teammates_html}
+                        {teammates_html if teammates_html else '<span style="color: #8b949e; font-size: 13px;">No direct core matches found</span>'}
                     </div>
                 </div>
 
-                <div class="stat-box counter-box">
-                    <div class="stat-label">Common Meta Checks & Counters</div>
+                <div class="stat-box counter-box" style="margin-bottom: 12px;">
+                    <div class="stat-label">Common Meta Checks & Hard Counters</div>
                     <div style="margin-top: 6px;">
-                        {counters_html}
+                        {counters_html if counters_html else '<span style="color: #8b949e; font-size: 13px;">No direct counters found</span>'}
                     </div>
                 </div>
 
-                <div class="stat-box" style="margin-top:12px;">
-                    <div class="stat-label">Recommended Role</div>
+                <div class="stat-box">
+                    <div class="stat-label">Recommended Team Role</div>
                     <div class="stat-value">{infer_slot_role(slot)}</div>
                 </div>
             </div>
@@ -1309,17 +3920,165 @@ for i in range(6):
                     strlit.html(render_type_chips(type_summary["immune"], type_summary["multipliers"]))
 
             strlit.markdown("##### Offensive coverage")
-            with strlit.container(border=True):
-                strong_col, resisted_col = strlit.columns(2)
-                with strong_col:
-                    strlit.caption("STAB attacks are strong against")
-                    strlit.html(render_type_chips(offensive_summary["strong_against"]))
-                with resisted_col:
-                    strlit.caption("STAB attacks are resisted by")
-                    strlit.html(render_type_chips(offensive_summary["resisted_by"]))
 
+            with strlit.container(border=True):
+
+                strong_col, resisted_col = strlit.columns(2)
+
+                with strong_col:
+                    strlit.caption(
+                        "STAB attacks are strong against"
+                    )
+
+                    strong_types = [
+                        type_name
+                        for type_name, multiplier
+                        in offensive_summary["strong_against"]
+                    ]
+
+                    strong_multipliers = {
+                        type_name: multiplier
+                        for type_name, multiplier
+                        in offensive_summary["strong_against"]
+                    }
+
+                    strlit.html(
+                        render_type_chips(
+                            strong_types,
+                            strong_multipliers
+                        )
+                    )
+
+                with resisted_col:
+                    strlit.caption(
+                        "STAB attacks are resisted by"
+                    )
+
+                    resisted_types = [
+                        type_name
+                        for type_name, multiplier
+                        in offensive_summary["resisted_by"]
+                    ]
+
+                    resisted_multipliers = {
+                        type_name: multiplier
+                        for type_name, multiplier
+                        in offensive_summary["resisted_by"]
+                    }
+
+                    strlit.html(
+                        render_type_chips(
+                            resisted_types,
+                            resisted_multipliers
+                        )
+                    )
+
+# -----------------------------------------------------------------------------
+# 6. TAB 7: TEAM OVERVIEW & TEAM EVALUATOR INTEGRATION
+# -----------------------------------------------------------------------------
 with tabs[6]:
-    strlit.subheader("📊 Comprehensive Team Overview")
+    strlit.subheader("📊 Comprehensive Team Overview & Meta Evaluator")
+
+    active_slots = [
+        (idx, slot) for idx, slot in strlit.session_state.team_slots.items()
+        if slot.get("name") and slot.get("name") != "-- Choose a Pokémon --"
+    ]
+
+    # Showdown Import / Export Section
+    exp_col, imp_col = strlit.columns(2)
+    with exp_col:
+        with strlit.expander("📤 Export Showdown Pokepaste Text", expanded=False):
+            exported_text = export_team_to_showdown(strlit.session_state.team_slots)
+            strlit.code(exported_text if exported_text else "No Pokémon selected.", language="text")
+
+    with imp_col:
+        with strlit.expander("📥 Import Showdown Format", expanded=False):
+            import_input = strlit.text_area("Paste Showdown format team below:", height=120)
+            if strlit.button("Import Team"):
+                if import_input.strip():
+                    parsed = parse_showdown_text(import_input)
+                    for idx in range(6):
+                        if idx < len(parsed):
+                            strlit.session_state.team_slots[idx] = parsed[idx]
+                        else:
+                            ensure_slot_structure(idx, "-- Choose a Pokémon --")
+                    strlit.success(f"Imported {len(parsed)} Pokémon into team slots!")
+                    strlit.rerun()
+
+    strlit.divider()
+
+    if not active_slots:
+        strlit.info("💡 Add Pokémon to your team slots to run dynamic competitive evaluation.")
+    else:
+        # Build meta profiles for current team and evaluation candidates
+        active_names = [slot["name"] for _, slot in active_slots]
+        meta_db: Dict[str, MonMetaProfile] = {}
+
+        for _, slot in active_slots:
+            meta_db[slot["name"]] = slot_to_mon_meta_profile(slot)
+
+        # Pre-populate meta DB with a sample pool of candidate threats for counter / synergy calculation
+        top_candidates = ["Garchomp", "Gengar", "Dragonite", "Tyranitar", "Lucario", "Rotom Wash", "Ferrothorn", "Corviknight", "Clefable"]
+        for cand_name in top_candidates:
+            if cand_name not in meta_db:
+                cand_slot = {"name": cand_name, "moves": ["Earthquake", "Swords Dance", "Stealth Rock", "Protect"], "ability": "Standard", "item": "Leftovers"}
+                meta_db[cand_name] = slot_to_mon_meta_profile(cand_slot)
+
+        evaluator = TeamEvaluator(meta_db)
+
+        strlit.markdown("### 🏆 Team Synergy & Fit Ratings (`TeamEvaluator`)")
+        
+        slot_eval_cols = strlit.columns(len(active_slots))
+        team_ratings = []
+
+        for col_idx, (slot_i, slot) in enumerate(active_slots):
+            mon_name = slot["name"]
+            other_team = [n for n in active_names if n != mon_name]
+
+            eval_res = evaluator.evaluate_candidate(mon_name, other_team)
+            team_ratings.append(eval_res["final_rating"])
+
+            with slot_eval_cols[col_idx]:
+                mon_info = fetch_pokemon_details(mon_name)
+                strlit.image(mon_info["box_sprite"], width=60)
+                strlit.markdown(f"**{mon_name}**")
+                strlit.metric("Fit Score", f"{eval_res['final_rating']} / 100")
+                strlit.caption(f"**Class:** {eval_res['recommendation_class']}")
+                strlit.markdown(
+                    f"- **Defensive Fit:** {eval_res['defensive_fit']}\n"
+                    f"- **Meta Coverage:** {eval_res['meta_coverage']}\n"
+                    f"- **Synergy Index:** {eval_res['synergy_index']}\n"
+                    f"- **Counter Utility:** {eval_res['counter_utility']}"
+                )
+
+        avg_score = round(sum(team_ratings) / len(team_ratings), 1) if team_ratings else 0
+        strlit.markdown(f"#### 📊 Overall Composite Team Rating: **{avg_score} / 100**")
+
+        # Candidate Suggestions for Open Slots
+        if len(active_slots) < 6:
+            strlit.markdown("### 💡 Top Recommended Picks for Next Slot")
+            candidate_pool = [c for c in CHAMPIONS_ALL_FORMS if c != "-- Choose a Pokémon --" and c not in active_names][:12]
+            
+            recommendations = []
+            for cand in candidate_pool:
+                if cand not in meta_db:
+                    meta_db[cand] = slot_to_mon_meta_profile({"name": cand, "moves": ["Protect"], "ability": "Standard", "item": ""})
+                evaluator.meta = meta_db
+                score = evaluator.evaluate_candidate(cand, active_names)
+                recommendations.append((score["final_rating"], cand, score["recommendation_class"]))
+
+            recommendations.sort(key=lambda x: -x[0])
+            rec_cols = strlit.columns(min(4, len(recommendations)))
+            for i_rec, (score_val, cand_name, rec_class) in enumerate(recommendations[:4]):
+                with rec_cols[i_rec]:
+                    c_info = fetch_pokemon_details(cand_name)
+                    strlit.image(c_info["box_sprite"], width=50)
+                    strlit.markdown(f"**{cand_name}**")
+                    strlit.metric("Fit Score", f"{score_val} / 100")
+                    strlit.caption(rec_class)
+
+    strlit.divider()
+    strlit.success("✓ `TeamEvaluator` integrated: candidate scoring, defensive weakness mitigation, and threat coverage active.")
+    strlit.success("✓ Authoritative Smogon Chaos usage statistics engine integrated for tiering, abilities, items, and partner metrics.")
     strlit.success("✓ Dynamic moveset names fetched directly from Pokémon Showdown's GitHub repository.")
-    strlit.success("✓ Analytics rebuilt with larger fonts, colored accent borders, and inline Pokémon sprites.")
-    strlit.success("✓ Removed arbitrary usage percentages in favor of calculated Viability Indexes and Type Synergies.")
+    strlit.success("✓ Showdown text format Pokepaste import and export functional.")
