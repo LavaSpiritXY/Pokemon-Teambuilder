@@ -1,8 +1,9 @@
-"""Phase 9/11/11.1: safe historical Champions ingestion.
+"""Phase 9/11/11.1/11.2: safe historical Champions ingestion.
 
-Phase 11.1 adds a resumable full-backfill mode. The downloader still uses
-bounded request pacing and exponential backoff, but can now continue through
-all remaining event IDs without requiring repeated manual commands.
+Phase 11.2 makes the full backfill conservative around server-side rate
+limits. A very large Retry-After is treated as a signal to stop the run
+cleanly rather than sitting for several minutes and then immediately making
+another request. Cached events remain safe, so rerunning resumes automatically.
 """
 
 from __future__ import annotations
@@ -19,11 +20,11 @@ import requests
 from champions_data import load_limitless_event_data
 
 DEFAULT_OUTPUT_DIR = Path("champions_cache")
-DEFAULT_MANIFEST = DEFAULT_OUTPUT_DIR / "manifest.json"
 DEFAULT_BATCH_SIZE = 10
 DEFAULT_DELAY_SECONDS = 1.5
 DEFAULT_MAX_CONSECUTIVE_FAILURES = 5
 MAX_RETRIES = 5
+MAX_SERVER_RETRY_AFTER_SECONDS = 60.0
 
 
 def _request_with_backoff(loader, *, label: str) -> Any:
@@ -42,8 +43,11 @@ def _request_with_backoff(loader, *, label: str) -> Any:
                     retry_after = float(raw) if raw is not None else None
                 except (TypeError, ValueError):
                     retry_after = None
-            # Backoff grows 1.5 -> 3 -> 6 -> 12 -> 20 seconds, unless the
-            # server explicitly asks us to wait longer.
+            if retry_after is not None and retry_after > MAX_SERVER_RETRY_AFTER_SECONDS:
+                raise RuntimeError(
+                    f"Server requested a {retry_after:.0f}s cooldown after HTTP {status}. "
+                    "Stopping this run safely; rerun later to resume from the cache."
+                ) from exc
             sleep_for = max(delay, retry_after or 0.0)
             print(f"{label}: HTTP {status}; retrying in {sleep_for:.1f}s")
             time.sleep(sleep_for)
@@ -81,11 +85,7 @@ def load_event_ids(path: Path) -> List[str]:
 
 
 def _write_manifest(output_dir: Path, event_ids: List[str]) -> Dict[str, Any]:
-    cached_ids = []
-    for event_id in event_ids:
-        if _event_path(output_dir, event_id).exists():
-            cached_ids.append(event_id)
-
+    cached_ids = [event_id for event_id in event_ids if _event_path(output_dir, event_id).exists()]
     manifest = {
         "total_discovered": len(event_ids),
         "cached": len(cached_ids),
@@ -99,11 +99,7 @@ def _write_manifest(output_dir: Path, event_ids: List[str]) -> Dict[str, Any]:
     return manifest
 
 
-def _process_one(
-    event_id: str,
-    *,
-    output_dir: Path,
-) -> bool:
+def _process_one(event_id: str, *, output_dir: Path) -> bool:
     print(f"Loading {event_id}")
     try:
         payload = _request_with_backoff(
@@ -142,19 +138,9 @@ def process_event_ids(
 
     output_dir.mkdir(parents=True, exist_ok=True)
     all_ids = list(dict.fromkeys(str(event_id).strip() for event_id in event_ids if str(event_id).strip()))
-
-    remaining_ids = [
-        event_id for event_id in all_ids
-        if not _event_path(output_dir, event_id).exists()
-    ]
+    remaining_ids = [event_id for event_id in all_ids if not _event_path(output_dir, event_id).exists()]
     already_cached = len(all_ids) - len(remaining_ids)
-
-    # Normal mode preserves the Phase 11 behaviour: process at most one batch.
-    # Full mode keeps going until every discovered ID has been attempted.
-    if full:
-        selected = remaining_ids
-    else:
-        selected = remaining_ids[:batch_size]
+    selected = remaining_ids if full else remaining_ids[:batch_size]
 
     processed = 0
     failed = 0
@@ -187,7 +173,6 @@ def process_event_ids(
                 "Re-run the same command later to resume."
             )
             break
-
         if index < len(selected):
             time.sleep(delay_seconds)
 
@@ -209,17 +194,8 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
     parser.add_argument("--delay", type=float, default=DEFAULT_DELAY_SECONDS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument(
-        "--full",
-        action="store_true",
-        help="Continue through every uncached event ID instead of processing one batch.",
-    )
-    parser.add_argument(
-        "--max-consecutive-failures",
-        type=int,
-        default=DEFAULT_MAX_CONSECUTIVE_FAILURES,
-        help="Stop safely after this many consecutive failed events.",
-    )
+    parser.add_argument("--full", action="store_true", help="Continue through every uncached event ID instead of one batch.")
+    parser.add_argument("--max-consecutive-failures", type=int, default=DEFAULT_MAX_CONSECUTIVE_FAILURES)
     args = parser.parse_args()
 
     event_ids = load_event_ids(args.event_ids)
@@ -232,7 +208,7 @@ def main() -> None:
         max_consecutive_failures=args.max_consecutive_failures,
     )
 
-    print("--- Phase 11.1 backfill summary ---")
+    print("--- Phase 11.2 backfill summary ---")
     for key, value in summary.items():
         print(f"{key}: {value}")
 
