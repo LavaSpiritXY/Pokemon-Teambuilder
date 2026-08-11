@@ -1,16 +1,12 @@
 """
 Pokémon Champions tournament data layer.
 
-PHASE 3
+PHASE 4
 -------
-This module now connects to the documented Limitless Tournament API.
+This module retrieves and normalizes completed Limitless tournament data.
 
-Important: this module is STILL isolated from app.py.  It does not populate
-CHAMPIONS_META_DB and does not alter the Streamlit application yet.
-
-The verified source for Pokémon Champions community tournament data is the
-Limitless Tournament Platform API.  Its VGC tournaments use the VGC game ID,
-while Champions regulations currently appear as Regulation M-A / M-B.
+It remains isolated from app.py.  It does NOT populate CHAMPIONS_META_DB and
+it does NOT alter the Streamlit application yet.
 """
 
 from __future__ import annotations
@@ -27,16 +23,13 @@ import requests
 # 1. CONFIGURATION
 # ============================================================================
 
-CHAMPIONS_DATA_VERSION = 3
+CHAMPIONS_DATA_VERSION = 4
 REQUEST_TIMEOUT_SECONDS = 20
 
 LIMITLESS_BASE_URL = "https://play.limitlesstcg.com"
 LIMITLESS_API_BASE_URL = f"{LIMITLESS_BASE_URL}/api"
 LIMITLESS_TOURNAMENTS_URL = f"{LIMITLESS_BASE_URL}/tournaments"
 
-# Champions regulations are deliberately represented as a set.  We will
-# continue adding future Champions regulation IDs here when verified rather
-# than changing the application's main CURRENT_REGULATION by hand.
 CHAMPIONS_REGULATIONS = {
     "M-A",
     "M-B",
@@ -69,6 +62,7 @@ class ChampionsEvent:
     source: str = "Limitless"
     source_url: str = ""
     official: bool = False
+    completed: bool = False
 
 
 @dataclass
@@ -229,7 +223,7 @@ def build_limitless_tournament_url(event_id: Any, section: str = "") -> str:
 
 
 # ============================================================================
-# 6. VERIFIED LIMITLESS API ACCESS
+# 6. LIMITLESS API ACCESS
 # ============================================================================
 
 
@@ -239,24 +233,14 @@ def list_limitless_tournaments(
     limit: int = 50,
     regulation: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    """Return recent VGC tournaments, optionally restricted to Champions regs.
-
-    The API documents ``game=VGC`` and pagination via ``page``/``limit``.
-    Regulation M-A/M-B are the currently verified Champions regulation IDs.
-
-    We filter the returned records locally as an additional safety check so
-    an unrelated VGC regulation can never silently enter the Champions data
-    store.
-    """
+    """Return recent VGC tournaments, optionally restricted to a regulation."""
 
     if page < 1:
         raise ValueError("page must be >= 1")
     if limit < 1 or limit > 100:
         raise ValueError("limit must be between 1 and 100")
     if regulation is not None and regulation not in CHAMPIONS_REGULATIONS:
-        raise ValueError(
-            f"Unsupported Champions regulation: {regulation!r}."
-        )
+        raise ValueError(f"Unsupported Champions regulation: {regulation!r}.")
 
     url = build_limitless_api_url(
         "tournaments",
@@ -269,15 +253,7 @@ def list_limitless_tournaments(
     if not isinstance(payload, list):
         raise ValueError("Limitless /tournaments returned a non-list payload.")
 
-    results = []
-    for tournament in payload:
-        if not isinstance(tournament, dict):
-            continue
-
-        # The list endpoint supplies basic tournament information.  The
-        # regulation is verified from /details below, not guessed from the
-        # tournament name.
-        results.append(tournament)
+    results = [item for item in payload if isinstance(item, dict)]
 
     if regulation is None:
         return results
@@ -302,8 +278,9 @@ def get_limitless_tournament_details(event_id: Any) -> Dict[str, Any]:
     if not event_key:
         raise ValueError("event_id cannot be empty.")
 
-    url = build_limitless_api_url(f"tournaments/{event_key}/details")
-    payload = fetch_json(url)
+    payload = fetch_json(
+        build_limitless_api_url(f"tournaments/{event_key}/details")
+    )
 
     if not isinstance(payload, dict):
         raise ValueError("Limitless tournament details returned a non-object payload.")
@@ -318,8 +295,9 @@ def get_limitless_tournament_standings(event_id: Any) -> List[Dict[str, Any]]:
     if not event_key:
         raise ValueError("event_id cannot be empty.")
 
-    url = build_limitless_api_url(f"tournaments/{event_key}/standings")
-    payload = fetch_json(url)
+    payload = fetch_json(
+        build_limitless_api_url(f"tournaments/{event_key}/standings")
+    )
 
     if not isinstance(payload, list):
         raise ValueError("Limitless standings returned a non-list payload.")
@@ -334,8 +312,9 @@ def get_limitless_tournament_pairings(event_id: Any) -> List[Dict[str, Any]]:
     if not event_key:
         raise ValueError("event_id cannot be empty.")
 
-    url = build_limitless_api_url(f"tournaments/{event_key}/pairings")
-    payload = fetch_json(url)
+    payload = fetch_json(
+        build_limitless_api_url(f"tournaments/{event_key}/pairings")
+    )
 
     if not isinstance(payload, list):
         raise ValueError("Limitless pairings returned a non-list payload.")
@@ -344,8 +323,80 @@ def get_limitless_tournament_pairings(event_id: Any) -> List[Dict[str, Any]]:
 
 
 # ============================================================================
-# 7. NORMALIZATION OF LIMITLESS API RESULTS
+# 7. RESULT / TEAM EXTRACTION
 # ============================================================================
+
+
+def _extract_pokemon_names(decklist: Any) -> List[str]:
+    """Extract Pokémon names from a Limitless deck/team payload.
+
+    Champions teamlist payloads may evolve, so this function accepts several
+    common container shapes without assuming that every field is Pokémon.
+    Card/deck objects that do not clearly identify a Pokémon are ignored.
+    """
+
+    if decklist is None:
+        return []
+
+    candidates: List[Any] = []
+
+    if isinstance(decklist, list):
+        candidates = decklist
+    elif isinstance(decklist, dict):
+        for key in ("pokemon", "pokémon", "team", "members", "cards"):
+            value = decklist.get(key)
+            if isinstance(value, list):
+                candidates.extend(value)
+
+    names: List[str] = []
+    for item in candidates:
+        if isinstance(item, str):
+            name = normalize_champions_name(item)
+            if name:
+                names.append(name)
+            continue
+
+        if not isinstance(item, dict):
+            continue
+
+        # Prefer explicit Pokémon/name fields.  Do not blindly interpret
+        # arbitrary card names as Pokémon until the exact Champions payload is
+        # confirmed by the source.
+        for key in ("pokemon", "pokémon", "name"):
+            value = item.get(key)
+            if isinstance(value, str) and value.strip():
+                names.append(normalize_champions_name(value))
+                break
+
+    # Stable de-duplication while preserving source order.
+    output: List[str] = []
+    seen = set()
+    for name in names:
+        key = champions_species_key(name)
+        if key and key not in seen:
+            seen.add(key)
+            output.append(name)
+
+    return output
+
+
+def infer_top_cut_placement(placement: Optional[int], player_count: int) -> bool:
+    """Conservative top-cut inference for completed tournament standings.
+
+    The Limitless standings endpoint exposes final placement, while the
+    details endpoint exposes tournament phases.  For this first extraction
+    layer we use the common competitive convention of a top-8 cutoff when the
+    event has at least 8 players.  A later phase-aware parser will replace this
+    with the exact configured elimination size from tournament phases.
+    """
+
+    if placement is None or placement < 1:
+        return False
+
+    if player_count < 8:
+        return placement <= max(1, player_count // 2)
+
+    return placement <= 8
 
 
 def normalize_limitless_event(payload: Dict[str, Any]) -> ChampionsEvent:
@@ -356,6 +407,13 @@ def normalize_limitless_event(payload: Dict[str, Any]) -> ChampionsEvent:
         raise ValueError("Tournament payload has no id.")
 
     regulation = str(payload.get("format", "")).strip()
+    phases = payload.get("phases") or []
+    completed = bool(payload.get("ended"))
+    if isinstance(phases, list) and phases:
+        # Presence of tournament phases alone does not prove completion, so
+        # completion is finalized by the standings fetch in load_event_data.
+        completed = completed or False
+
     return ChampionsEvent(
         event_id=event_id,
         name=str(payload.get("name", "")).strip(),
@@ -365,12 +423,15 @@ def normalize_limitless_event(payload: Dict[str, Any]) -> ChampionsEvent:
         source="Limitless",
         source_url=build_limitless_tournament_url(event_id),
         official=False,
+        completed=completed,
     )
 
 
 def normalize_limitless_result(
     event_id: Any,
     payload: Dict[str, Any],
+    *,
+    player_count: int = 0,
 ) -> ChampionsResult:
     """Convert one Limitless standings record into our result model."""
 
@@ -382,18 +443,82 @@ def normalize_limitless_result(
         payload.get("name") or payload.get("player") or ""
     ).strip()
 
+    placement = payload.get("placing")
+    try:
+        placement = int(placement) if placement is not None else None
+    except (TypeError, ValueError):
+        placement = None
+
     return ChampionsResult(
         event_id=str(event_id),
         player_name=player_name,
         player_id=str(payload.get("player") or ""),
-        placement=payload.get("placing"),
+        placement=placement,
         wins=int(record.get("wins") or 0),
         losses=int(record.get("losses") or 0),
         draws=int(record.get("ties") or 0),
-        top_cut=False,
+        top_cut=infer_top_cut_placement(placement, player_count),
         dropped_round=payload.get("drop"),
         decklist=payload.get("decklist"),
     )
+
+
+def normalize_limitless_team(
+    event_id: Any,
+    result: ChampionsResult,
+) -> ChampionsTeam:
+    """Convert a normalized result's decklist into a team record."""
+
+    return ChampionsTeam(
+        event_id=event_id,
+        player_name=result.player_name,
+        pokemon=_extract_pokemon_names(result.decklist),
+        raw_decklist=result.decklist,
+    )
+
+
+def load_limitless_event_data(event_id: Any) -> Dict[str, Any]:
+    """Fetch and normalize one completed Champions tournament.
+
+    This is the first end-to-end function in the data layer.  It fetches the
+    details and standings, validates the regulation, and returns normalized
+    event/results/teams without touching app.py or CHAMPIONS_META_DB.
+    """
+
+    event_key = str(event_id).strip()
+    if not event_key:
+        raise ValueError("event_id cannot be empty.")
+
+    details = get_limitless_tournament_details(event_key)
+    regulation = str(details.get("format", "")).strip()
+    if regulation not in CHAMPIONS_REGULATIONS:
+        raise ValueError(
+            f"Tournament {event_key} uses unsupported format {regulation!r}; "
+            "it was not imported into Champions data."
+        )
+
+    standings = get_limitless_tournament_standings(event_key)
+    event_payload = dict(details)
+    event = normalize_limitless_event(event_payload)
+    event.completed = len(standings) > 0
+
+    results = [
+        normalize_limitless_result(
+            event_key,
+            row,
+            player_count=event.player_count,
+        )
+        for row in standings
+        if (row.get("name") or row.get("player"))
+    ]
+
+    teams = [normalize_limitless_team(event_key, result) for result in results]
+
+    return {
+        "event": event,
+        "results": results,
+        "teams": teams,
+    }
 
 
 # ============================================================================
@@ -472,6 +597,20 @@ def store_team(team: ChampionsTeam) -> None:
     CHAMPIONS_DATA_STORE.mark_updated()
 
 
+def store_event_data(data: Dict[str, Any]) -> None:
+    """Store the output of load_limitless_event_data()."""
+
+    event = data["event"]
+    results = data["results"]
+    teams = data["teams"]
+
+    store_event(event)
+    for result in results:
+        store_result(result)
+    for team in teams:
+        store_team(team)
+
+
 __all__ = [
     "CHAMPIONS_DATA_VERSION",
     "REQUEST_TIMEOUT_SECONDS",
@@ -497,8 +636,12 @@ __all__ = [
     "get_limitless_tournament_pairings",
     "normalize_limitless_event",
     "normalize_limitless_result",
+    "normalize_limitless_team",
+    "load_limitless_event_data",
+    "infer_top_cut_placement",
     "get_cached_event",
     "store_event",
     "store_result",
     "store_team",
+    "store_event_data",
 ]
