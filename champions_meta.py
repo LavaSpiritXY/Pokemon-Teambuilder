@@ -23,31 +23,45 @@ def _normalise_name(name: str) -> str:
 
 
 def _candidate_keys(name: str) -> List[str]:
-    """Generate conservative lookup aliases without collapsing real forms."""
+    """Generate exact-first lookup aliases for display/form names."""
     key = _normalise_name(name)
     if not key:
         return []
     candidates = [key]
 
-    # Common app display conventions.
-    if key.startswith("mega "):
-        candidates.append(key[5:])
-    if key.endswith(" mega"):
-        candidates.append(key[:-5].strip())
+    def add(value: str) -> None:
+        value = _normalise_name(value)
+        if value and value not in candidates:
+            candidates.append(value)
 
-    # Regional/form prefixes: only use the base species as a fallback.
+    # Mega display forms. Preserve the exact form first, then progressively
+    # fall back to the species. Both "Mega Charizard X" and "Charizard Mega X"
+    # therefore resolve to the tournament species "charizard" when needed.
+    if key.startswith("mega "):
+        remainder = key[5:].strip()
+        add(remainder)
+        match = re.match(r"^(.+?)\s+([xy])$", remainder)
+        if match:
+            add(match.group(1))
+    if key.endswith(" mega"):
+        add(key[:-5].strip())
+    for suffix in (" mega x", " mega y"):
+        if key.endswith(suffix):
+            add(key[:-len(suffix)].strip())
+
+    # Regional display prefixes.
     for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
         if key.startswith(prefix):
-            candidates.append(key[len(prefix):])
+            add(key[len(prefix):])
 
-    # Common suffix conventions used by the app/Pokémon data sources.
-    for suffix in (" mega x", " mega y", " combat breed", " blaze breed", " aqua breed"):
+    # Form suffixes. Keep the exact form first; these are fallbacks only.
+    for suffix in (" combat breed", " blaze breed", " aqua breed"):
         if key.endswith(suffix):
-            candidates.append(key[:-len(suffix)].strip())
-    if key == "eternal flower floette":
-        candidates.extend(["eternal flower floette", "floette"])
+            add(key[:-len(suffix)].strip())
 
-    # Avoid duplicate aliases while preserving exact-first order.
+    if key == "eternal flower floette":
+        add("floette")
+
     return list(dict.fromkeys(candidates))
 
 
@@ -82,12 +96,10 @@ class ChampionsMetaStore:
         source = self.load().get(table, {})
         if not isinstance(source, dict):
             return None
-        # First pass exact/normalised aliases against the stored keys.
         for candidate in _candidate_keys(pokemon_name):
             row = source.get(candidate)
             if row is not None:
                 return row
-        # Final pass handles legacy keys containing punctuation/casing.
         normalised_source = {_normalise_name(k): v for k, v in source.items() if isinstance(k, str)}
         for candidate in _candidate_keys(pokemon_name):
             if candidate in normalised_source:
