@@ -17,6 +17,9 @@ from typing import Any, Dict, List
 def load_snapshots(cache_dir: Path) -> List[Dict[str, Any]]:
     snapshots: List[Dict[str, Any]] = []
     for path in sorted(cache_dir.glob("*.json")):
+        # manifest.json is bookkeeping, not a tournament snapshot.
+        if path.name == "manifest.json":
+            continue
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
             payload["_file"] = path.name
