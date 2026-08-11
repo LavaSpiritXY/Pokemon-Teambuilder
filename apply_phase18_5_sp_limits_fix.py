@@ -1,26 +1,29 @@
 from pathlib import Path
+import re
 
 
 def main() -> None:
     path = Path("app.py")
     text = path.read_text(encoding="utf-8")
 
-    old = '''            strlit.markdown("##### 📊 Effort Values (EV Spread)")
-            ev_cols = col_set.columns(3)
-            ev_keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
-            ev_labels = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"]
-            if "evs" not in slot or not isinstance(slot["evs"], dict):
-                slot["evs"] = {k: 0 for k in ev_keys}
+    # Match the active EV/SP editor by its stable section header and the
+    # following input loop, rather than requiring one exact previous patch.
+    pattern = re.compile(
+        r'''(?ms)^            strlit\.markdown\("##### (?:📊 )?(?:Effort Values \(EV Spread\)|Champions SP Allocation)"\)\n'
+        r'''            ev_cols = col_set\.columns\(3\)\n'
+        r'''            ev_keys = \["HP", "Atk", "Def", "SpA", "SpD", "Spe"\]\n'
+        r'''            ev_labels = \["HP", "Attack", "Defense", "Sp\. Atk", "Sp\. Def", "Speed"\]\n'
+        r'''            if "evs" not in slot or not isinstance\(slot\["evs"\], dict\):\n'
+        r'''                slot\["evs"\] = \{k: 0 for k in ev_keys\}\n\n'
+        r'''            for idx, \(key, label\) in enumerate\(zip\(ev_keys, ev_labels\)\):\n'
+        r'''                with ev_cols\[idx % 3\]:\n'
+        r'''                    slot\["evs"\]\[key\] = strlit\.number_input\(\n'
+        r'''                        label, min_value=0, max_value=252, step=4,\n'
+        r'''                        value=slot\["evs"\]\.get\(key, 0\), key=f"stat_ev_\{i\}_\{key\}"\n'
+        r'''                    \)\n'''
+    )
 
-            for idx, (key, label) in enumerate(zip(ev_keys, ev_labels)):
-                with ev_cols[idx % 3]:
-                    slot["evs"][key] = strlit.number_input(
-                        label, min_value=0, max_value=252, step=4,
-                        value=slot["evs"].get(key, 0), key=f"stat_ev_{i}_{key}"
-                    )
-'''
-
-    new = '''            strlit.markdown("##### 📊 Champions SP Allocation")
+    replacement = '''            strlit.markdown("##### 📊 Champions SP Allocation")
             ev_cols = col_set.columns(3)
             ev_keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
             ev_labels = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"]
@@ -56,13 +59,21 @@ def main() -> None:
                         key=f"stat_ev_{i}_{key}"
                     )
 
-            # Clamp the complete spread defensively in case session state
-            # contains an older 252-based spread from before Champions SP.
+            # Clamp legacy session-state values defensively.
+            for key in ev_keys:
+                slot["evs"][key] = min(
+                    sp_per_stat_cap,
+                    max(0, int(slot["evs"].get(key, 0) or 0))
+                )
+
             total_sp = sum(int(slot["evs"].get(k, 0) or 0) for k in ev_keys)
             if total_sp > sp_total_cap:
                 overflow = total_sp - sp_total_cap
                 for key in reversed(ev_keys):
-                    reduction = min(int(slot["evs"].get(key, 0) or 0), overflow)
+                    reduction = min(
+                        int(slot["evs"].get(key, 0) or 0),
+                        overflow
+                    )
                     slot["evs"][key] = int(slot["evs"].get(key, 0) or 0) - reduction
                     overflow -= reduction
                     if overflow <= 0:
@@ -73,10 +84,15 @@ def main() -> None:
             )
 '''
 
-    if old not in text:
-        raise RuntimeError("Expected Phase 18.5 EV allocation block was not found in app.py")
+    matches = list(pattern.finditer(text))
+    if len(matches) != 1:
+        raise RuntimeError(
+            f"Expected exactly one active EV/SP editor block, found {len(matches)}."
+        )
 
-    path.write_text(text.replace(old, new, 1), encoding="utf-8")
+    text = pattern.sub(replacement, text, count=1)
+    path.write_text(text, encoding="utf-8")
+
     print("Champions SP limits fixed in app.py")
     print("Per-stat cap: 32")
     print("Team-slot total cap: 66")
