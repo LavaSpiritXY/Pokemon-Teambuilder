@@ -950,6 +950,8 @@ MOVE_DISPLAY_OVERRIDES = {
     "doubleironbash": "Double Iron Bash",
     "populationbomb": "Population Bomb",
     "gigatonhammer": "Gigaton Hammer",
+    "lastrespects": "Last Respects",
+    "tripleaxel": "Triple Axel",
 }
 
 def canonical_species_key(name):
