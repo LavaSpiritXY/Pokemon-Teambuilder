@@ -9,9 +9,15 @@ hundreds of rate-limited detail requests.
 from __future__ import annotations
 
 import re
+import time
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+import requests
+
 from champions_data import CHAMPIONS_REGULATIONS, list_limitless_tournaments
+
+DISCOVERY_DELAY_SECONDS = 2.0
+DISCOVERY_MAX_RETRIES = 5
 
 
 def _listing_regulation(row: Dict[str, Any]) -> str:
@@ -23,7 +29,6 @@ def _listing_regulation(row: Dict[str, Any]) -> str:
             if value in CHAMPIONS_REGULATIONS:
                 return value
 
-    # Some listing payloads expose the regulation only in the tournament name.
     name = str(row.get("name") or "")
     match = re.search(r"\bReg\s*(M-[AB])\b", name, flags=re.IGNORECASE)
     if match:
@@ -32,18 +37,47 @@ def _listing_regulation(row: Dict[str, Any]) -> str:
     return ""
 
 
+def _load_listing_page(page: int, page_limit: int) -> List[Dict[str, Any]]:
+    """Fetch one listing page with bounded 429/5xx backoff."""
+    delay = DISCOVERY_DELAY_SECONDS
+
+    for attempt in range(DISCOVERY_MAX_RETRIES + 1):
+        try:
+            rows = list_limitless_tournaments(page=page, limit=page_limit)
+            if page > 1:
+                time.sleep(DISCOVERY_DELAY_SECONDS)
+            return rows
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else None
+            if status not in {429, 500, 502, 503, 504} or attempt >= DISCOVERY_MAX_RETRIES:
+                raise
+
+            retry_after = None
+            if exc.response is not None:
+                raw = exc.response.headers.get("Retry-After")
+                try:
+                    retry_after = float(raw) if raw is not None else None
+                except (TypeError, ValueError):
+                    retry_after = None
+
+            sleep_for = max(delay, retry_after or 0.0)
+            print(
+                f"Listing page {page}: HTTP {status}; "
+                f"waiting {sleep_for:.1f}s before retry {attempt + 1}/{DISCOVERY_MAX_RETRIES}"
+            )
+            time.sleep(sleep_for)
+            delay = min(delay * 2.0, 30.0)
+
+    raise RuntimeError("Unreachable listing retry state")
+
+
 def discover_champions_tournaments(
     *,
     regulations: Iterable[str] = CHAMPIONS_REGULATIONS,
     page_limit: int = 100,
     max_pages: int = 100,
 ) -> List[Dict[str, Any]]:
-    """Discover and de-duplicate Champions tournaments without detail calls.
-
-    This function intentionally does not call get_limitless_tournament_details.
-    The resulting rows are lightweight manifests; details are fetched later
-    only for events selected for historical ingestion.
-    """
+    """Discover and de-duplicate Champions tournaments without detail calls."""
     if page_limit < 1 or page_limit > 100:
         raise ValueError("page_limit must be between 1 and 100")
     if max_pages < 1:
@@ -57,7 +91,8 @@ def discover_champions_tournaments(
     found: Dict[str, Dict[str, Any]] = {}
 
     for page in range(1, max_pages + 1):
-        rows = list_limitless_tournaments(page=page, limit=page_limit)
+        print(f"Discovering tournament listing page {page}...")
+        rows = _load_listing_page(page, page_limit)
         if not rows:
             break
 
@@ -69,9 +104,6 @@ def discover_champions_tournaments(
             if regulation not in requested:
                 continue
             found[event_id] = {**row, "format": regulation}
-
-        # A short page can still be a valid page boundary. Requesting the next
-        # page is cheap because this endpoint is only the listing endpoint.
 
     return list(found.values())
 
@@ -86,10 +118,8 @@ def _as_int(value: Any) -> Optional[int]:
 
 
 def _phase_cut_size(phase: Dict[str, Any]) -> Optional[int]:
-    """Extract a plausible elimination-field size from one phase object."""
     if not isinstance(phase, dict):
         return None
-
     for key in (
         "topCut", "top_cut", "cut", "cutSize", "cut_size",
         "eliminationSize", "elimination_size",
@@ -100,17 +130,13 @@ def _phase_cut_size(phase: Dict[str, Any]) -> Optional[int]:
 
     name = str(phase.get("name") or phase.get("title") or "")
     match = re.search(r"top\s*(\d+)", name, flags=re.IGNORECASE)
-    if match:
-        return int(match.group(1))
-    return None
+    return int(match.group(1)) if match else None
 
 
 def extract_exact_top_cut_size(details: Dict[str, Any]) -> Optional[int]:
-    """Return the elimination cut size when the details payload states it."""
     phases = details.get("phases")
     if not isinstance(phases, list):
         return None
-
     candidates = []
     for phase in phases:
         size = _phase_cut_size(phase)
@@ -123,11 +149,9 @@ def exact_top_cut_flags(
     details: Dict[str, Any],
     placements: Iterable[Optional[int]],
 ) -> Tuple[Optional[int], List[bool]]:
-    """Calculate top-cut flags without inventing a cutoff."""
     cut_size = extract_exact_top_cut_size(details)
     if cut_size is None:
         return None, [False for _ in placements]
-
     return cut_size, [
         placement is not None and 1 <= placement <= cut_size
         for placement in placements
@@ -135,17 +159,14 @@ def exact_top_cut_flags(
 
 
 def summarize_discovery(events: Iterable[Dict[str, Any]]) -> Dict[str, int]:
-    """Return a small audit summary for discovered events."""
     summary = {regulation: 0 for regulation in sorted(CHAMPIONS_REGULATIONS)}
     completed = 0
-
     for event in events:
         regulation = str(event.get("format", ""))
         if regulation in summary:
             summary[regulation] += 1
         if event.get("ended"):
             completed += 1
-
     summary["total"] = sum(summary.values())
     summary["completed"] = completed
     return summary
