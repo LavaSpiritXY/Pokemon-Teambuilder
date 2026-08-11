@@ -1,7 +1,7 @@
 """Unified Champions profile UI used by the Phase 18.4 patch.
 
-The renderer is deliberately display-only: it consumes the existing metadata
-and tournament evidence, but does not mutate the Strategizer engine.
+Display-only: it consumes existing metadata and tournament evidence without
+mutating the Strategizer scoring engine.
 """
 from __future__ import annotations
 
@@ -11,7 +11,6 @@ from typing import Any, Dict, Iterable, Optional
 import streamlit as st
 
 from champions_phase18_4 import build_profile_18_4, rank_counters_with_evidence
-
 
 _CSS = """
 <style>
@@ -71,9 +70,12 @@ def _counter_rows(items: Iterable[Dict[str, Any]], resolver: Any) -> str:
     return "".join(rows)
 
 
-def _base_stats_html(stats: Optional[Dict[str, Any]]) -> str:
+def render_base_stats_bubble(stats: Optional[Dict[str, Any]]) -> None:
+    """Render the Champions base-stat bubble directly under matchup coverage."""
+    st.markdown("<div class='ch183-section'>📊 Base Stats</div>", unsafe_allow_html=True)
     if not stats:
-        return "<div class='ch183-card'><span class='ch183-muted'>Base stats are not available for this form.</span></div>"
+        st.markdown("<div class='ch183-card'><span class='ch183-muted'>Base stats are not available for this form.</span></div>", unsafe_allow_html=True)
+        return
     keys = [("hp", "HP"), ("attack", "Atk"), ("defense", "Def"), ("special-attack", "SpA"), ("special-defense", "SpD"), ("speed", "Spe")]
     parts = []
     for key, label in keys:
@@ -84,7 +86,7 @@ def _base_stats_html(stats: Optional[Dict[str, Any]]) -> str:
             value = 0
         width = max(0, min(100, round(value / 180 * 100)))
         parts.append(f"<div class='ch184-stat'><div class='ch184-stat-name'>{label}</div><div class='ch184-stat-value'>{value}</div><div class='ch184-stat-bar'><div class='ch184-stat-fill' style='width:{width}%'></div></div></div>")
-    return "<div class='ch184-stat-grid'>" + "".join(parts) + "</div>"
+    st.markdown("<div class='ch183-card'><div class='ch184-stat-grid'>" + "".join(parts) + "</div></div>", unsafe_allow_html=True)
 
 
 def render_champions_profile_v5(
@@ -112,10 +114,7 @@ def render_champions_profile_v5(
     st.markdown(_CSS, unsafe_allow_html=True)
     st.markdown("<div class='ch183-wrap'>", unsafe_allow_html=True)
     image = f"<img src='{html.escape(sprite, quote=True)}' alt='{html.escape(pokemon_name)}'>" if sprite else ""
-    st.markdown(
-        f"<div class='ch183-head'>{image}<div><div class='ch183-title'>🏆 Champions Competitive Profile — {html.escape(_pretty(pokemon_name))}</div><div class='ch183-sub'>Tournament evidence, speed tiering, strategic diagnostics and Champions-aware recommendations</div></div></div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown(f"<div class='ch183-head'>{image}<div><div class='ch183-title'>🏆 Champions Competitive Profile — {html.escape(_pretty(pokemon_name))}</div><div class='ch183-sub'>Tournament evidence, speed tiering, strategic diagnostics and Champions-aware recommendations</div></div></div>", unsafe_allow_html=True)
 
     if not tournament.get("available"):
         st.markdown("<div class='ch183-card'><div class='ch183-value'>Tournament data unavailable</div><div class='ch183-note'>This Pokémon/form is recognised by the builder, but no collected Champions tournament evidence is currently available. The existing Strategizer score has not been treated as a negative signal.</div></div>", unsafe_allow_html=True)
@@ -149,11 +148,6 @@ def render_champions_profile_v5(
             st.markdown("<div class='ch183-card'>" + _counter_rows(counters, sprite_resolver) + "</div>", unsafe_allow_html=True)
         else:
             st.markdown("<div class='ch183-card'><span class='ch183-muted'>No tournament-supported checks are available from the current matchup candidate pool yet. No counter claim is being fabricated.</span></div>", unsafe_allow_html=True)
-
-    # Keep the profile self-contained, but do not duplicate the app's type
-    # matchup/offensive coverage cards here. Those remain rendered once below.
-    st.markdown("<div class='ch183-section'>📊 Base Stats</div>", unsafe_allow_html=True)
-    st.markdown(_base_stats_html(base_stats), unsafe_allow_html=True)
 
     if identity and len(identity) > 1:
         st.markdown(f"<div class='ch183-note' style='margin-top:8px'>Form lookup aliases: {html.escape(', '.join(identity))}</div>", unsafe_allow_html=True)
