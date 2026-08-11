@@ -1,15 +1,7 @@
-"""Phase 9: safe historical Champions ingestion.
+"""Phase 9/11: safe historical Champions ingestion.
 
-This module deliberately stops short of modifying app.py. It provides an
-incremental, resumable batch processor which can consume the tournament IDs
-already discovered by Phase 8 and write normalized JSON snapshots locally.
-
-The processor is intentionally conservative:
-- it processes a small batch by default;
-- it sleeps between event requests;
-- it retries HTTP 429/5xx responses with bounded exponential backoff;
-- it writes each completed event immediately, so an interrupted run can resume;
-- it never assumes a top-cut size that the source does not expose.
+Phase 11 adds a local progress manifest so historical backfills are resumable
+and auditable without manually counting cache files.
 """
 
 from __future__ import annotations
@@ -19,21 +11,20 @@ import json
 import time
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List
 
 import requests
 
 from champions_data import load_limitless_event_data
 
 DEFAULT_OUTPUT_DIR = Path("champions_cache")
+DEFAULT_MANIFEST = DEFAULT_OUTPUT_DIR / "manifest.json"
 DEFAULT_BATCH_SIZE = 10
 DEFAULT_DELAY_SECONDS = 1.5
 MAX_RETRIES = 4
 
 
 def _request_with_backoff(loader, *, label: str) -> Any:
-    """Run a source loader with bounded retry handling for rate limits."""
-
     delay = DEFAULT_DELAY_SECONDS
     for attempt in range(MAX_RETRIES + 1):
         try:
@@ -42,7 +33,6 @@ def _request_with_backoff(loader, *, label: str) -> Any:
             status = exc.response.status_code if exc.response is not None else None
             if status not in {429, 500, 502, 503, 504} or attempt >= MAX_RETRIES:
                 raise
-
             retry_after = None
             if exc.response is not None:
                 raw = exc.response.headers.get("Retry-After")
@@ -50,7 +40,6 @@ def _request_with_backoff(loader, *, label: str) -> Any:
                     retry_after = float(raw) if raw is not None else None
                 except (TypeError, ValueError):
                     retry_after = None
-
             sleep_for = max(delay, retry_after or 0.0)
             print(f"{label}: HTTP {status}; retrying in {sleep_for:.1f}s")
             time.sleep(sleep_for)
@@ -63,31 +52,17 @@ def _event_path(output_dir: Path, event_id: str) -> Path:
 
 
 def _serialize_event(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Convert dataclasses in the normalized payload into plain JSON data."""
-
-    event = payload["event"]
-    results = payload["results"]
-    teams = payload["teams"]
-
     return {
-        "event": asdict(event),
-        "results": [asdict(result) for result in results],
-        "teams": [asdict(team) for team in teams],
+        "event": asdict(payload["event"]),
+        "results": [asdict(result) for result in payload["results"]],
+        "teams": [asdict(team) for team in payload["teams"]],
     }
 
 
 def load_event_ids(path: Path) -> List[str]:
-    """Load event IDs from a JSON file.
-
-    Accepted forms are either a list of IDs or a list of tournament objects
-    containing an ``id`` field. This lets Phase 9 consume the output of a
-    Phase 8 discovery script without coupling the two modules tightly.
-    """
-
     raw = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(raw, list):
         raise ValueError("Event ID file must contain a JSON list.")
-
     ids: List[str] = []
     seen = set()
     for item in raw:
@@ -101,6 +76,25 @@ def load_event_ids(path: Path) -> List[str]:
     return ids
 
 
+def _write_manifest(output_dir: Path, event_ids: List[str]) -> Dict[str, Any]:
+    cached_ids = []
+    for event_id in event_ids:
+        if _event_path(output_dir, event_id).exists():
+            cached_ids.append(event_id)
+
+    manifest = {
+        "total_discovered": len(event_ids),
+        "cached": len(cached_ids),
+        "remaining": len(event_ids) - len(cached_ids),
+        "cached_event_ids": cached_ids,
+    }
+    path = output_dir / "manifest.json"
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporary.replace(path)
+    return manifest
+
+
 def process_event_ids(
     event_ids: Iterable[str],
     *,
@@ -108,27 +102,24 @@ def process_event_ids(
     batch_size: int = DEFAULT_BATCH_SIZE,
     delay_seconds: float = DEFAULT_DELAY_SECONDS,
 ) -> Dict[str, int]:
-    """Process at most ``batch_size`` not-yet-cached events."""
-
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    all_ids = list(dict.fromkeys(str(event_id).strip() for event_id in event_ids if str(event_id).strip()))
 
     selected = []
     skipped = 0
-    for event_id in event_ids:
-        path = _event_path(output_dir, event_id)
-        if path.exists():
+    for event_id in all_ids:
+        if _event_path(output_dir, event_id).exists():
             skipped += 1
             continue
-        selected.append(str(event_id))
+        selected.append(event_id)
         if len(selected) >= batch_size:
             break
 
     processed = 0
     failed = 0
-
     for index, event_id in enumerate(selected):
         print(f"[{index + 1}/{len(selected)}] Loading {event_id}")
         try:
@@ -136,11 +127,10 @@ def process_event_ids(
                 lambda event_id=event_id: load_limitless_event_data(event_id),
                 label=event_id,
             )
-            output = _serialize_event(payload)
             path = _event_path(output_dir, event_id)
             temporary = path.with_suffix(".json.tmp")
             temporary.write_text(
-                json.dumps(output, ensure_ascii=False, indent=2),
+                json.dumps(_serialize_event(payload), ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
             temporary.replace(path)
@@ -150,14 +140,23 @@ def process_event_ids(
             failed += 1
             print(f"    ERROR: {exc}")
 
+        # Update the manifest after every event so an interrupted run still has
+        # an accurate progress record.
+        manifest = _write_manifest(output_dir, all_ids)
+        print(f"    progress: {manifest['cached']}/{manifest['total_discovered']} cached")
+
         if index + 1 < len(selected):
             time.sleep(max(0.0, delay_seconds))
 
+    manifest = _write_manifest(output_dir, all_ids)
     return {
         "requested": len(selected),
         "processed": processed,
         "failed": failed,
         "already_cached": skipped,
+        "total_discovered": manifest["total_discovered"],
+        "total_cached": manifest["cached"],
+        "remaining": manifest["remaining"],
     }
 
 
@@ -177,7 +176,7 @@ def main() -> None:
         delay_seconds=args.delay,
     )
 
-    print("--- Phase 9 batch summary ---")
+    print("--- Phase 11 batch summary ---")
     for key, value in summary.items():
         print(f"{key}: {value}")
 
