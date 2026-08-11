@@ -1,7 +1,8 @@
-"""Phase 10: validate cached Champions event snapshots.
+"""Phase 10.1: validate cached Champions event snapshots.
 
-This is a read-only diagnostic. It never calls the API and never changes
-cached event files. It checks the first historical batch before scaling up.
+Read-only diagnostic. Missing placement is treated as unknown rather than an
+error because dropped/non-finalized standings can legitimately lack a final
+placing. We never invent a placement.
 """
 
 from __future__ import annotations
@@ -37,7 +38,8 @@ def validate(snapshots: List[Dict[str, Any]]) -> Dict[str, Any]:
     long_teams = 0
     missing_placement = 0
     invalid_record = 0
-    top_cut_available = 0
+    top_cut_true = 0
+    top_cut_false = 0
     top_cut_unknown = 0
 
     for snapshot in snapshots:
@@ -57,6 +59,7 @@ def validate(snapshots: List[Dict[str, Any]]) -> Dict[str, Any]:
             placement = result.get("placement")
             if placement is None:
                 missing_placement += 1
+
             try:
                 wins = int(result.get("wins", 0) or 0)
                 losses = int(result.get("losses", 0) or 0)
@@ -66,9 +69,12 @@ def validate(snapshots: List[Dict[str, Any]]) -> Dict[str, Any]:
             except (TypeError, ValueError):
                 invalid_record += 1
 
-            if result.get("top_cut") is True:
-                top_cut_available += 1
-            elif result.get("top_cut") is None:
+            top_cut = result.get("top_cut")
+            if top_cut is True:
+                top_cut_true += 1
+            elif top_cut is False:
+                top_cut_false += 1
+            else:
                 top_cut_unknown += 1
 
         for team in teams:
@@ -96,8 +102,6 @@ def validate(snapshots: List[Dict[str, Any]]) -> Dict[str, Any]:
                     )):
                         form_names.add(value)
 
-    if missing_placement:
-        issues.append(f"{missing_placement} result(s) missing placement")
     if invalid_record:
         issues.append(f"{invalid_record} result(s) have invalid W/L/D values")
     if long_teams:
@@ -114,8 +118,9 @@ def validate(snapshots: List[Dict[str, Any]]) -> Dict[str, Any]:
         "invalid_records": invalid_record,
         "unique_pokemon": len(pokemon_counts),
         "form_variants": sorted(form_names),
-        "top_cut_available_results": top_cut_available,
-        "top_cut_unknown_results": top_cut_unknown,
+        "top_cut_true": top_cut_true,
+        "top_cut_false": top_cut_false,
+        "top_cut_unknown": top_cut_unknown,
         "most_used": pokemon_counts.most_common(15),
         "issues": issues,
     }
@@ -126,7 +131,7 @@ def main() -> None:
     parser.add_argument("--cache", type=Path, default=Path("champions_cache"))
     args = parser.parse_args()
 
-    print("=== Pokémon Champions Phase 10 cache validation ===")
+    print("=== Pokémon Champions Phase 10.1 cache validation ===")
     if not args.cache.exists():
         print(f"ERROR: cache directory does not exist: {args.cache.resolve()}")
         raise SystemExit(1)
@@ -142,11 +147,13 @@ def main() -> None:
     print(f"Teams with 6 Pokémon:   {report['full_teams']}")
     print(f"Teams with <6:          {report['short_teams']}")
     print(f"Teams with >6:          {report['long_teams']}")
-    print(f"Missing placement:      {report['missing_placement']}")
+    print(f"Placement available:    {report['players'] - report['missing_placement']}")
+    print(f"Placement unknown:      {report['missing_placement']}")
     print(f"Invalid W/L/D records:  {report['invalid_records']}")
     print(f"Unique Pokémon:         {report['unique_pokemon']}")
-    print(f"Top-cut marked true:    {report['top_cut_available_results']}")
-    print(f"Top-cut unknown:        {report['top_cut_unknown_results']}")
+    print(f"Top-cut true:           {report['top_cut_true']}")
+    print(f"Top-cut false:          {report['top_cut_false']}")
+    print(f"Top-cut unknown:        {report['top_cut_unknown']}")
 
     print()
     print("--- Form variants detected ---")
