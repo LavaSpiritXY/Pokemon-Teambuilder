@@ -27,8 +27,11 @@ def main() -> None:
     print("Single active profile renderer: PASS")
 
     assert "##### 📊 Champions SP Allocation" in app
-    assert "max_value=32" in app
-    assert "66 - other_sp" in app or "66" in app
+    # The UI uses a dynamic max so the 32-per-stat cap and 66-total cap are
+    # enforced together. Accept either the explicit cap or the equivalent
+    # min(32, remaining) implementation.
+    assert "max_value=32" in app or "min(sp_per_stat_cap, remaining)" in app or "min(32, remaining)" in app
+    assert "66 - other_sp" in app or "sp_total_cap = 66" in app or "66" in app
     print("Champions SP controls: PASS")
 
     assert "Tournament data unavailable" in source
