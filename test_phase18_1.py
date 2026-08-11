@@ -18,7 +18,12 @@ def main() -> None:
     }
     for value, expected in cases.items():
         candidates = _candidate_keys(value)
-        assert expected in candidates
+        print(f"  {value}: {candidates}")
+        if expected not in candidates:
+            raise AssertionError(
+                f"Form/alias resolver failed for {value!r}: "
+                f"expected {expected!r} in {candidates!r}"
+            )
     print("Form/alias resolver: PASS")
 
     from champions_integration import get_champions_profile
