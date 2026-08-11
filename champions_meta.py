@@ -47,17 +47,30 @@ def _candidate_keys(name: str) -> List[str]:
         add(key[:-5].strip())
     for suffix in (" mega x", " mega y"):
         if key.endswith(suffix):
-            add(key[:-len(suffix)].strip())
+            base = key[:-len(suffix)].strip()
+            add(base)
+            if base.endswith(" mega"):
+                add(base[:-5].strip())
 
     # Regional display prefixes.
     for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
         if key.startswith(prefix):
-            add(key[len(prefix):])
+            base = key[len(prefix):].strip()
+            add(base)
+            # Paldean/other regional display names can also be represented as
+            # a species + form suffix in the tournament dataset.
+            for suffix in (" combat breed", " blaze breed", " aqua breed"):
+                if base.endswith(suffix):
+                    add(base[:-len(suffix)].strip())
 
     # Form suffixes. Keep the exact form first; these are fallbacks only.
     for suffix in (" combat breed", " blaze breed", " aqua breed"):
         if key.endswith(suffix):
-            add(key[:-len(suffix)].strip())
+            base = key[:-len(suffix)].strip()
+            add(base)
+            for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
+                if base.startswith(prefix):
+                    add(base[len(prefix):].strip())
 
     if key == "eternal flower floette":
         add("floette")
