@@ -15,7 +15,7 @@ from champions_data import (
     list_limitless_tournaments,
     load_limitless_event_data,
 )
-from champions_aggregation import build_champions_meta_db
+from champions_aggregation import aggregate_pokemon_statistics
 
 
 def main() -> None:
@@ -40,7 +40,6 @@ def main() -> None:
         print("No matching tournaments were returned. Stop here; do not modify app.py.")
         return
 
-    # Prefer an event that has an ID and appears latest in the returned data.
     event = next((row for row in tournaments if row.get("id")), None)
     if event is None:
         print("Returned tournament rows contain no usable IDs. Stop here.")
@@ -89,8 +88,8 @@ def main() -> None:
         )
 
     try:
-        meta_db = build_champions_meta_db(
-            events=[normalized_event],
+        meta_db = aggregate_pokemon_statistics(
+            event=normalized_event,
             results=results,
             teams=teams,
         )
@@ -106,16 +105,16 @@ def main() -> None:
     if meta_db:
         ranked = sorted(
             meta_db.items(),
-            key=lambda item: item[1].appearances,
+            key=lambda item: item[1]["appearances"],
             reverse=True,
         )
         print("Most-used extracted Pokémon:")
         for key, record in ranked[:10]:
             print(
-                f"  {key}: appearances={record.appearances}, "
-                f"wins={record.wins}, losses={record.losses}, "
-                f"win_rate={record.win_rate:.3f}, "
-                f"partners={len(record.partners)}"
+                f"  {key}: appearances={record['appearances']}, "
+                f"wins={record['wins']}, losses={record['losses']}, "
+                f"win_rate={record['win_rate']:.3f}, "
+                f"partners={len(record['partners'])}"
             )
 
 
