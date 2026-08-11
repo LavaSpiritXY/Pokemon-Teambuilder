@@ -14,18 +14,30 @@ def replace_once(text: str, pattern: str, replacement: str, label: str, flags: i
     return re.sub(pattern, replacement, text, count=1, flags=flags)
 
 
+def replace_all_at_least_once(text: str, pattern: str, replacement: str, label: str, flags: int = 0) -> str:
+    count = len(re.findall(pattern, text, flags))
+    if count < 1:
+        raise RuntimeError(f"Phase 18.5 anchor '{label}' expected at least once, found {count}.")
+    return re.sub(pattern, replacement, text, flags=flags)
+
+
 def main() -> None:
     text = APP.read_text(encoding="utf-8")
 
+    # Some earlier Phase 18.x edits can leave the legacy renderer import
+    # duplicated. Collapse every legacy import into one Phase 18.5 import.
+    import_pattern = r"^\s*from champions_phase18_3_ui import render_champions_profile_v5(?:, render_base_stats_bubble)?\s*$"
     if "from champions_phase18_5 import render_champions_profile_v6" not in text:
-        import_pattern = r"^\s*from champions_phase18_3_ui import render_champions_profile_v5(?:, render_base_stats_bubble)?\s*$"
-        text = replace_once(
+        text = replace_all_at_least_once(
             text,
             import_pattern,
             "from champions_phase18_5 import render_champions_profile_v6",
             "Phase 18.5 renderer import",
             re.MULTILINE,
         )
+    else:
+        # If the new import already exists, remove any stale duplicate legacy imports.
+        text = re.sub(import_pattern, "", text, flags=re.MULTILINE)
 
     call_pattern = r"(?ms)^        render_champions_profile_v5\(\n.*?^        \)\n"
     if "render_champions_profile_v6(" not in text:
