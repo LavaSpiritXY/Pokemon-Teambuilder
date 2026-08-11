@@ -53,6 +53,13 @@ def main() -> None:
     assert display_tier(60) == "C"
     print("Display tiering: PASS")
 
+    app = Path("app.py").read_text(encoding="utf-8")
+    assert "render_base_stats_bubble" in app
+    assert "base_stats=mon_data.get(\"stats\")" in app
+    assert "max_value=252" not in app
+    assert "Champions SP: {current_sp_total} / 66 total" in app
+    print("App wiring and Champions SP UI: PASS")
+
     print("No-data state is handled by renderer: PASS")
     print("Duplicate type/offensive panels remain outside renderer: PASS")
     print("Base-stat bubble renderer available: PASS")
