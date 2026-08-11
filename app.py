@@ -154,17 +154,6 @@ def calculate_meta_viability(pkmn_data, selected_format="Gen 9 OU"):
         "archetypes_detected": [a["name"] for a in archetypes]
     }
 
-# ==========================================
-# 3. META-GATED CHECKS & COUNTERS
-# ==========================================
-
-
-
-# ==========================================
-# 2. META-INDEX AWARE VIABILITY & TIERING
-# ==========================================
-
-
 
 # ==========================================
 # 3. META-GATED CHECKS, COUNTERS & SYNERGY
@@ -687,15 +676,18 @@ NATURES = [
 
 SPECIES_DISPLAY_OVERRIDES = {
 
-    # =========================================================
-    # PALDEA FORMS
-    # =========================================================
+    # ==========================================
+    # PALDEA FORMS (Squashed Fallbacks for UI)
+    # ==========================================
+    "taurospaldeacombat": "Tauros Paldea Combat",
+    "taurospaldeacombatbreed": "Tauros Paldea Combat",
+    "taurospaldeablaze": "Tauros Paldea Blaze",
+    "taurospaldeaaqua": "Tauros Paldea Aqua",
 
-    "taurospaldea": "Tauros Paldea Combat",
-    "taurospaldeafire": "Tauros Paldea Blaze",
-    "taurospaldeawater": "Tauros Paldea Aqua",
-
-    "tauros-paldea-combat": "Tauros Paldea Combat",
+    # ==========================================
+    # PALDEA FORMS (Clean Endpoint Matches)
+    # ==========================================
+    "tauros-paldea-combat-breed": "Tauros Paldea Combat",
     "tauros-paldea-blaze": "Tauros Paldea Blaze",
     "tauros-paldea-aqua": "Tauros Paldea Aqua",
 
@@ -703,7 +695,8 @@ SPECIES_DISPLAY_OVERRIDES = {
     # BASCULEGION
     # =========================================================
 
-    "basculegion": "Basculegion",
+    "basculegion-male": "Basculegion",
+    "basculegion-m": "Basculegion",
     "basculegionm": "Basculegion",
     "basculegion-f": "Basculegion Female",
     "basculegion-female": "Basculegion Female",
@@ -717,17 +710,17 @@ SPECIES_DISPLAY_OVERRIDES = {
     "indeedee-f": "Indeedee Female",
     "indeedee-female": "Indeedee Female",
 
-    "indeedeem": "Indeedee",
-    "indeedee-m": "Indeedee",
-    "indeedee-male": "Indeedee",
+    "indeedeem": "Indeedee Male",
+    "indeedee-m": "Indeedee Male",
+    "indeedee-male": "Indeedee Male",
 
     # =========================================================
     # MEOWSTIC
     # =========================================================
 
-    "meowsticmale": "Meowstic",
-    "meowstic-m": "Meowstic",
-    "meowstic-male": "Meowstic",
+    "meowsticmale": "Meowstic Male",
+    "meowstic-m": "Meowstic Male",
+    "meowstic-male": "Meowstic Male",
 
     "meowsticfemale": "Meowstic Female",
     "meowstic-f": "Meowstic Female",
@@ -737,8 +730,8 @@ SPECIES_DISPLAY_OVERRIDES = {
     # OINKOLOGNE
     # =========================================================
 
-    "oinkolognem": "Oinkologne",
-    "oinkologne-m": "Oinkologne",
+    "oinkolognem": "Oinkologne Male",
+    "oinkologne-m": "Oinkologne Male",
 
     "oinkolognef": "Oinkologne Female",
     "oinkologne-f": "Oinkologne Female",
@@ -961,49 +954,107 @@ MOVE_DISPLAY_OVERRIDES = {
 
 def canonical_species_key(name):
     """
-    Converts a Champions display name into the canonical
-    internal species key while preserving important forms.
+    Converts a Pokémon name into ONE stable internal key.
+
+    Important:
+    - Keeps meaningful form information.
+    - Does NOT squash words together.
+    - Does NOT try to guess a PokeAPI ID.
+    - Does NOT remove form names.
     """
 
     if not name:
         return ""
 
-    value = str(name).strip().lower()
+    text = str(name).strip().lower()
 
-    replacements = {
-        "basculegion male": "basculegion-male",
-        "basculegion female": "basculegion-female",
+    # Normalise punctuation only.
+    text = text.replace("’", "'")
+    text = text.replace("_", "-")
 
-        "hisuian arcanine": "arcanine-hisui",
-        "hisuian braviary": "braviary-hisui",
-        "hisuian decidueye": "decidueye-hisui",
-        "hisuian electrode": "electrode-hisui",
-        "hisuian goodra": "goodra-hisui",
-        "hisuian growlithe": "growlithe-hisui",
-        "hisuian lilligant": "lilligant-hisui",
-        "hisuian qwilfish": "qwilfish-hisui",
-        "hisuian samurott": "samurott-hisui",
-        "hisuian sliggoo": "sliggoo-hisui",
-        "hisuian sneasel": "sneasel-hisui",
-        "hisuian typhlosion": "typhlosion-hisui",
-        "hisuian avalugg": "avalugg-hisui",
-        "hisuian zoroark": "zoroark-hisui",
-        "hisuian zorua": "zorua-hisui",
+    # Normalise repeated whitespace.
+    text = " ".join(text.split())
 
-        "tauros paldea combat": "tauros-paldea-combat",
-        "tauros paldea blaze": "tauros-paldea-blaze",
-        "tauros paldea aqua": "tauros-paldea-aqua",
+    # Standardise common punctuation around hyphens.
+    text = text.replace(" - ", "-")
+    text = text.replace(" -", "-")
+    text = text.replace("- ", "-")
 
-        "eternal flower floette": "floette-eternal",
+    # Explicit aliases for forms whose names can be represented
+    # differently by different data sources.
+    aliases = {
+        # Basculegion
+        "basculegion male": "Basculegion",
+        "basculegion female": "Basculegion Female",
+        "basculegion-male": "Basculegion",
+        "basculegion-female": "Basculegion Female",
+
+        # Rotom
+        "rotom wash": "rotom-wash",
+        "rotom heat": "rotom-heat",
+        "rotom frost": "rotom-frost",
+        "rotom fan": "rotom-fan",
+        "rotom mow": "rotom-mow",
+
+        # Lycanroc
+        "lycanroc midday": "lycanroc-midday",
+        "lycanroc midnight": "lycanroc-midnight",
+        "lycanroc dusk": "lycanroc-dusk",
+
+        # Galarian forms
+        "slowbro galar": "slowbro-galar",
+        "slowking galar": "slowking-galar",
+        "mr mime galar": "mr-mime-galar",
+
+        # Hisuian forms
+        "braviary hisui": "braviary-hisui",
+        "decidueye hisui": "decidueye-hisui",
+        "electrode hisui": "electrode-hisui",
+        "goodra hisui": "goodra-hisui",
+        "lilligant hisui": "lilligant-hisui",
+        "qwilfish hisui": "qwilfish-hisui",
+        "samurott hisui": "samurott-hisui",
+        "sliggoo hisui": "sliggoo-hisui",
+        "typhlosion hisui": "typhlosion-hisui",
+        "voltorb hisui": "voltorb-hisui",
+        "zoroark hisui": "zoroark-hisui",
+        "avalugg hisui": "avalugg-hisui",
+        "arcanine hisui": "arcanine-hisui",
+        "decidueye hisuian": "decidueye-hisui",
+        "lilligant hisuian": "lilligant-hisui",
+        "zoroark hisuian": "zoroark-hisui",
+
+        # Alolan forms
+        "raichu alola": "raichu-alola",
+        "rattata alola": "rattata-alola",
+        "raticate alola": "raticate-alola",
+        "sandshrew alola": "sandshrew-alola",
+        "sandslash alola": "sandslash-alola",
+        "vulpix alola": "vulpix-alola",
+        "ninetales alola": "ninetales-alola",
+        "diglett alola": "diglett-alola",
+        "dugtrio alola": "dugtrio-alola",
+        "meowth alola": "meowth-alola",
+        "persian alola": "persian-alola",
+        "geodude alola": "geodude-alola",
+        "graveler alola": "graveler-alola",
+        "golem alola": "golem-alola",
+        "grimer alola": "grimer-alola",
+        "muk alola": "muk-alola",
+
+        # Paldean forms
+        "wooper paldea": "wooper-paldea",
     }
+    # Force fix squashed Paldean Tauros inputs
+    if text == "taurospaldeacombat" or text == "taurospaldeacombatbreed":
+        text = "tauros-paldea-combat-breed"
+    elif text == "taurospaldeablaze":
+        text = "tauros-paldea-blaze"
+    elif text == "taurospaldeaaqua":
+        text = "tauros-paldea-aqua"
 
-    if value in replacements:
-        return replacements[value]
-
-    value = value.replace("♀", "-female")
-    value = value.replace("♂", "-male")
-
-    return value.replace(" ", "-")
+    # This will now safely check the aliases dictionary using the fixed text variable
+    return aliases.get(text, text)
 
 def display_name_for_move(move_id):
     if not move_id:
@@ -1089,8 +1140,8 @@ CUSTOM_MEGAS_DATA = {
     "Mega Golurk": {"ability": "Unseen Fist", "hp": 89, "atk": 159, "def": 105, "spa": 70, "spd": 105, "spd_stat": 55},
     "Mega Greninja": {"ability": "Protean", "hp": 72, "atk": 125, "def": 77, "spa": 133, "spd": 81, "spd_stat": 142},
     "Mega Floette": {"ability": "Fairy Aura", "hp": 74, "atk": 85, "def": 87, "spa": 155, "spd": 148, "spd_stat": 102},
-    "Mega Meowstic (Male)": {"ability": "Trace", "hp": 74, "atk": 48, "def": 76, "spa": 143, "spd": 101, "spd_stat": 124},
-    "Mega Meowstic (Female)": {"ability": "Trace", "hp": 74, "atk": 48, "def": 76, "spa": 83, "spd": 81, "spd_stat": 104},
+    "Mega Meowstic Male": {"ability": "Trace", "hp": 74, "atk": 48, "def": 76, "spa": 143, "spd": 101, "spd_stat": 124},
+    "Mega Meowstic Female": {"ability": "Trace", "hp": 74, "atk": 48, "def": 76, "spa": 83, "spd": 81, "spd_stat": 104},
     "Mega Malamar": {"ability": "Contrary", "hp": 86, "atk": 102, "def": 88, "spa": 98, "spd": 120, "spd_stat": 88},
     "Mega Barbaracle": {"ability": "Tough Claws", "hp": 72, "atk": 140, "def": 130, "spa": 64, "spd": 106, "spd_stat": 88},
     "Mega Dragalge": {"ability": "Regenerator", "hp": 65, "atk": 85, "def": 105, "spa": 132, "spd": 163, "spd_stat": 44},
@@ -1184,7 +1235,15 @@ def fetch_champions_pokedex_entries():
 def display_name_for_species_key(species_key):
     """
     Convert a Champions/Showdown species ID into a stable,
-    human-readable Pokémon name while preserving forms.
+    human-readable Pokémon name.
+
+    This function deliberately handles multiple possible spellings
+    of the same form so that:
+        rotomwash
+        rotom-wash
+        Rotom Wash
+    all become:
+        Rotom Wash
     """
 
     if not species_key:
@@ -1192,26 +1251,23 @@ def display_name_for_species_key(species_key):
 
     raw = str(species_key).strip().lower()
 
+    # ---------------------------------------------------------
+    # NORMALISE THE INPUT FOR FORM LOOKUP
+    # ---------------------------------------------------------
+
+    # Remove punctuation and separators ONLY for the purpose
+    # of matching against our aliases.
+    lookup = re.sub(r"[^a-z0-9]", "", raw)
+
     FORM_NAMES = {
-
-        # =====================================================
-        # TAUROS
-        # =====================================================
-
-        "taurospaldea": "Tauros Paldea Combat",
-        "taurospaldeacombat": "Tauros Paldea Combat",
-        "taurospaldeablaze": "Tauros Paldea Blaze",
-        "taurospaldeafire": "Tauros Paldea Blaze",
-        "taurospaldeaaqua": "Tauros Paldea Aqua",
-        "taurospaldeawater": "Tauros Paldea Aqua",
 
         # =====================================================
         # BASCULEGION
         # =====================================================
 
-        "basculegion": "Basculegion Male",
-        "basculegionm": "Basculegion Male",
-        "basculegionmale": "Basculegion Male",
+        "basculegionm": "Basculegion",
+        "basculegion-male": "Basculegion",
+
         "basculegionf": "Basculegion Female",
         "basculegionfemale": "Basculegion Female",
 
@@ -1221,37 +1277,44 @@ def display_name_for_species_key(species_key):
 
         "floette": "Floette",
         "floetteeternal": "Floette Eternal",
-        "floette-eternal": "Floette Eternal",
-
-        # =====================================================
-        # INDEEDEE
-        # =====================================================
-
-        "indeedee": "Indeedee",
-        "indeedeem": "Indeedee Male",
-        "indeedeemale": "Indeedee Male",
-        "indeedeef": "Indeedee Female",
-        "indeedeefemale": "Indeedee Female",
 
         # =====================================================
         # MEOWSTIC
         # =====================================================
 
-        "meowstic": "Meowstic",
+        "meowstic": "Meowstic Male",
         "meowsticm": "Meowstic Male",
         "meowsticmale": "Meowstic Male",
         "meowsticf": "Meowstic Female",
         "meowsticfemale": "Meowstic Female",
 
         # =====================================================
-        # OINKOLOGNE
+        # MR. RIME
         # =====================================================
 
-        "oinkologne": "Oinkologne",
-        "oinkolognem": "Oinkologne Male",
-        "oinkolognemale": "Oinkologne Male",
-        "oinkolognef": "Oinkologne Female",
-        "oinkolognefemale": "Oinkologne Female",
+        "mrrime": "Mr. Rime",
+
+        # =====================================================
+        # ROTOM
+        # =====================================================
+
+        "rotom": "Rotom",
+
+        "rotomheat": "Rotom Heat",
+        "rotomwash": "Rotom Wash",
+        "rotomfrost": "Rotom Frost",
+        "rotomfan": "Rotom Fan",
+        "rotommow": "Rotom Mow",
+
+        # =====================================================
+        # TAUROS PALDEA
+        # =====================================================
+
+        "tauros": "Tauros",
+
+        "tauros-paldea-combat-breed": "Tauros Paldea Combat Breed",
+        "tauros-paldea-aqua-breed": "Tauros Paldea Aqua Breed",
+        "tauros-paldea-blaze-breed": "Tauros Paldea Blaze Breed",
 
         # =====================================================
         # LYCANROC
@@ -1271,101 +1334,119 @@ def display_name_for_species_key(species_key):
         # =====================================================
 
         "growlithehisui": "Growlithe Hisui",
-        "growlithe-hisui": "Growlithe Hisui",
-
         "arcaninehisui": "Arcanine Hisui",
-        "arcanine-hisui": "Arcanine Hisui",
 
         "voltorbhisui": "Voltorb Hisui",
-        "voltorb-hisui": "Voltorb Hisui",
-
         "electrodehisui": "Electrode Hisui",
-        "electrode-hisui": "Electrode Hisui",
 
         "qwilfishhisui": "Qwilfish Hisui",
-        "qwilfish-hisui": "Qwilfish Hisui",
-
         "sneaselhisui": "Sneasel Hisui",
-        "sneasel-hisui": "Sneasel Hisui",
 
         "samurotthisui": "Samurott Hisui",
-        "samurott-hisui": "Samurott Hisui",
+        "samurotthisuian": "Samurott Hisui",
 
-        "lilligantihisui": "Lilligant Hisui",
         "lilliganthisui": "Lilligant Hisui",
-        "lilligant-hisui": "Lilligant Hisui",
 
-        "zorua-hisui": "Zorua Hisui",
         "zoruahisui": "Zorua Hisui",
-
         "zoroarkhisui": "Zoroark Hisui",
-        "zoroark-hisui": "Zoroark Hisui",
 
         "braviaryhisui": "Braviary Hisui",
-        "braviary-hisui": "Braviary Hisui",
 
         "sliggoohisui": "Sliggoo Hisui",
-        "sliggoo-hisui": "Sliggoo Hisui",
-
         "goodrahisui": "Goodra Hisui",
-        "goodra-hisui": "Goodra Hisui",
 
         "avalugghisui": "Avalugg Hisui",
-        "avalugg-hisui": "Avalugg Hisui",
 
         "decidueyehisui": "Decidueye Hisui",
-        "decidueye-hisui": "Decidueye Hisui",
 
         "typhlosionhisui": "Typhlosion Hisui",
-        "typhlosion-hisui": "Typhlosion Hisui",
 
         # =====================================================
         # ALOLA
         # =====================================================
 
-        "growlithealola": "Growlithe Alola",
-        "arcaninealola": "Arcanine Alola",
+        "raichualola": "Raichu Alola",
+
+        "rattataalola": "Rattata Alola",
+        "raticatealola": "Raticate Alola",
+
+        "sandshrewalola": "Sandshrew Alola",
+        "sandslashalola": "Sandslash Alola",
+
+        "vulpixalola": "Vulpix Alola",
+        "ninetalesalola": "Ninetales Alola",
+
+        "diglettalola": "Diglett Alola",
+        "dugtrioalola": "Dugtrio Alola",
+
+        "meowthalola": "Meowth Alola",
+        "persianalola": "Persian Alola",
+
         "geodudealola": "Geodude Alola",
         "graveleralola": "Graveler Alola",
         "golemalola": "Golem Alola",
-        "vulpixalola": "Vulpix Alola",
-        "ninetalesalola": "Ninetales Alola",
-        "sandshrewalola": "Sandshrew Alola",
-        "sandslashalola": "Sandslash Alola",
-        "meowthalola": "Meowth Alola",
-        "persianalola": "Persian Alola",
-        "diglettalola": "Diglett Alola",
-        "dugtrioalola": "Dugtrio Alola",
+
         "grimeralola": "Grimer Alola",
         "mukalola": "Muk Alola",
-        "raichualola": "Raichu Alola",
 
         # =====================================================
         # GALAR
         # =====================================================
 
+        "slowbrogalar": "Slowbro Galar",
+        "slowkinggalar": "Slowking Galar",
+
+        "mrmimegalar": "Mr. Mime Galar",
+
+        "stunfiskgalar": "Stunfisk Galar",
+
         "meowthgalar": "Meowth Galar",
         "ponytagalar": "Ponyta Galar",
         "rapidashgalar": "Rapidash Galar",
+
         "farfetchdgalar": "Farfetch'd Galar",
         "weezinggalar": "Weezing Galar",
-        "mrmimegalar": "Mr. Mime Galar",
-        "mr-mimegalar": "Mr. Mime Galar",
+
         "corsolagalar": "Corsola Galar",
         "zigzagoongalar": "Zigzagoon Galar",
         "linoonegalar": "Linoone Galar",
+
         "darumakagalar": "Darumaka Galar",
-        "darmanitan galar": "Darmanitan Galar",
         "darmanitangalar": "Darmanitan Galar",
+
         "yamaskgalar": "Yamask Galar",
-        "stunfiskgalar": "Stunfisk Galar",
+
+        # =====================================================
+        # OTHER SPECIAL NAMES
+        # =====================================================
+
+        "mrmime": "Mr. Mime",
+        "mimejr": "Mime Jr.",
+        "farfetchd": "Farfetch'd",
+        "sirfetchd": "Sirfetch'd",
+        "flabebe": "Flabébé",
+        "type-null": "Type: Null",
+        "typenull": "Type: Null",
+        "hooh": "Ho-Oh",
     }
 
-    if raw in FORM_NAMES:
-        return FORM_NAMES[raw]
+    # ---------------------------------------------------------
+    # FIRST: FORM ALIAS LOOKUP
+    # ---------------------------------------------------------
+
+    if lookup in FORM_NAMES:
+        return FORM_NAMES[lookup]
+
+    # ---------------------------------------------------------
+    # SECOND: EXISTING OVERRIDES
+    # ---------------------------------------------------------
 
     if raw in SPECIES_DISPLAY_OVERRIDES:
         return SPECIES_DISPLAY_OVERRIDES[raw]
+
+    # ---------------------------------------------------------
+    # THIRD: GENERIC FALLBACK
+    # ---------------------------------------------------------
 
     pretty = (
         raw
@@ -1495,17 +1576,36 @@ def get_clean_api_name(mon_name):
         # TAUROS
         # =====================================================
 
-        "Tauros Paldea Combat": "tauros-paldea-combat",
-        "Tauros Paldea Blaze": "tauros-paldea-blaze",
-        "Tauros Paldea Aqua": "tauros-paldea-aqua",
+        "Tauros Paldea Combat": "tauros-paldea-combat-breed",
+        "Tauros Paldea Blaze": "tauros-paldea-blaze-breed",
+        "Tauros Paldea Aqua": "tauros-paldea-aqua-breed",
+
+        # =====================================================
+        # ROTOM
+        # =====================================================
+
+        "Rotom": "rotom",
+
+        "Rotom Heat": "rotom-heat",
+        "Rotom Wash": "rotom-wash",
+        "Rotom Frost": "rotom-frost",
+        "Rotom Fan": "rotom-fan",
+        "Rotom Mow": "rotom-mow",
+
+        # =====================================================
+        # MR. RIME/SLOWBRO/SLOWKING GALAR
+        # =====================================================
+        "Slowbro Galar": "slowbro-galar",
+        "Slowking Galar": "slowking-galar",
+
+        "Mr. Rime": "mr-rime",
 
         # =====================================================
         # BASCULEGION
         # =====================================================
 
-        "Basculegion": "basculegion",
-        "Basculegion Male": "basculegion",
-        "Basculegion Female": "basculegion-f",
+        "Basculegion": "basculegion-male",
+        "Basculegion Female": "basculegion-female",
 
         # =====================================================
         # FLOETTE
@@ -1664,17 +1764,16 @@ def get_champions_species_key(mon_name):
         # TAUROS
         # =====================================================
 
-        "Tauros Paldea Combat": "taurospaldeacombat",
-        "Tauros Paldea Blaze": "taurospaldeablaze",
-        "Tauros Paldea Aqua": "taurospaldeaaqua",
+        "Tauros Paldea Combat Breed": "tauros-paldea-combat-breed",
+        "Tauros Paldea Blaze Breed": "tauros-paldea-blaze-breed",
+        "Tauros Paldea Aqua Breed": "tauros-paldea-aqua-breed",
 
         # =====================================================
         # BASCULEGION
         # =====================================================
 
-        "Basculegion": "basculegion",
-        "Basculegion Male": "basculegionm",
-        "Basculegion Female": "basculegionf",
+        "Basculegion": "basculegion-male",
+        "Basculegion Female": "basculegion-female",
 
         # =====================================================
         # FLOETTE
