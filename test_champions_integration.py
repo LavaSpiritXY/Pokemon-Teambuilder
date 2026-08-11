@@ -26,7 +26,8 @@ def main() -> None:
         assert len(partners) > 0
         assert all(isinstance(partner, dict) for partner in partners)
 
-        partner_names = [partner.get("partner") for partner in partners]
+        # champions_meta.py uses "pokemon" as the partner-name field.
+        partner_names = [partner.get("pokemon") for partner in partners]
         assert all(partner_names)
         assert len(partner_names) == len(set(partner_names))
 
