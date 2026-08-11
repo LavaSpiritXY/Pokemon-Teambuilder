@@ -96,6 +96,7 @@ def _empty_stats() -> Dict[str, Any]:
         "placement_sum": 0.0,
         "placement_count": 0,
         "best_placement": None,
+        "regulations": {},
     }
 
 
@@ -180,7 +181,7 @@ def aggregate(cache_dir: Path) -> Dict[str, Any]:
                 _record_stats(pokemon[key], result, weight)
                 pokemon[key]["display_name"] = name
                 pokemon[key]["regulations"][regulation] = (
-                    pokemon[key].get("regulations", {}).get(regulation, 0) + 1
+                    pokemon[key]["regulations"].get(regulation, 0) + 1
                 )
             for left, right in combinations(sorted(set(n.lower() for n in unique_names)), 2):
                 partner = partners[left][right]
