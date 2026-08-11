@@ -1,51 +1,48 @@
-"""Phase 7 diagnostic: run the Champions ingestion + aggregation pipeline.
-
-This file is intentionally standalone. It does not import Streamlit or app.py.
-Run locally with:
-    python run_champions_pipeline.py
-
-It prints a compact report so we can verify what the live source actually
-returns before connecting anything to CHAMPIONS_META_DB.
-"""
+"""Phase 8 diagnostic: verify historical discovery and exact tournament cuts."""
 
 from __future__ import annotations
 
-from champions_data import (
-    CHAMPIONS_REGULATIONS,
-    list_limitless_tournaments,
-    load_limitless_event_data,
-)
+from champions_data import load_limitless_event_data, get_limitless_tournament_details
 from champions_aggregation import aggregate_pokemon_statistics
+from champions_phase8 import (
+    discover_champions_tournaments,
+    exact_top_cut_flags,
+    summarize_discovery,
+)
 
 
 def main() -> None:
-    print("=== Pokémon Champions tournament pipeline diagnostic ===")
-    print(f"Supported regulations: {', '.join(sorted(CHAMPIONS_REGULATIONS))}")
+    print("=== Pokémon Champions Phase 8 diagnostic ===")
     print()
 
-    tournaments = []
-    for regulation in sorted(CHAMPIONS_REGULATIONS):
-        try:
-            rows = list_limitless_tournaments(
-                page=1,
-                limit=20,
-                regulation=regulation,
-            )
-            tournaments.extend(rows)
-            print(f"{regulation}: found {len(rows)} matching tournament(s)")
-        except Exception as exc:
-            print(f"{regulation}: ERROR while listing tournaments: {exc}")
+    try:
+        tournaments = discover_champions_tournaments(
+            page_limit=100,
+            max_pages=100,
+        )
+    except Exception as exc:
+        print(f"ERROR during paginated tournament discovery: {exc}")
+        return
+
+    summary = summarize_discovery(tournaments)
+    print("--- Historical discovery ---")
+    print(f"M-A tournaments discovered: {summary.get('M-A', 0)}")
+    print(f"M-B tournaments discovered: {summary.get('M-B', 0)}")
+    print(f"Total discovered: {summary.get('total', 0)}")
+    print(f"Marked completed by listing: {summary.get('completed', 0)}")
 
     if not tournaments:
-        print("No matching tournaments were returned. Stop here; do not modify app.py.")
+        print("No Champions tournaments were discovered. Stop here.")
         return
 
+    # Pick the first event with a usable ID.  We deliberately load the full
+    # event details before evaluating the exact cut.
     event = next((row for row in tournaments if row.get("id")), None)
     if event is None:
-        print("Returned tournament rows contain no usable IDs. Stop here.")
+        print("No usable event IDs were returned. Stop here.")
         return
 
-    event_id = event["id"]
+    event_id = str(event["id"])
     print()
     print(f"Testing event: {event_id}")
     print(f"Name: {event.get('name', '')}")
@@ -53,6 +50,7 @@ def main() -> None:
 
     try:
         payload = load_limitless_event_data(event_id)
+        details = get_limitless_tournament_details(event_id)
     except Exception as exc:
         print(f"ERROR loading event {event_id}: {exc}")
         return
@@ -61,6 +59,17 @@ def main() -> None:
     results = payload["results"]
     teams = payload["teams"]
 
+    cut_size, flags = exact_top_cut_flags(
+        details,
+        [result.placement for result in results],
+    )
+
+    # Apply exact flags only when the source explicitly supplied a cut.  If
+    # not, keep the upstream provisional values out of this audit report.
+    if cut_size is not None:
+        for result, flag in zip(results, flags):
+            result.top_cut = flag
+
     print()
     print("--- Normalized event ---")
     print(f"Players: {normalized_event.player_count}")
@@ -68,9 +77,8 @@ def main() -> None:
     print(f"Regulation: {normalized_event.regulation}")
     print(f"Results: {len(results)}")
     print(f"Teams: {len(teams)}")
-
-    teams_with_pokemon = [team for team in teams if team.pokemon]
-    print(f"Teams with extracted Pokémon: {len(teams_with_pokemon)}")
+    print(f"Teams with extracted Pokémon: {sum(bool(team.pokemon) for team in teams)}")
+    print(f"Exact top-cut size: {cut_size if cut_size is not None else 'not exposed by source'}")
 
     if teams:
         print()
