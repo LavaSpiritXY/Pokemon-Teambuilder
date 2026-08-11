@@ -1,16 +1,10 @@
-"""Phase 18.4: data-first Champions profile fixes.
-
-Keeps the legacy Strategizer score as an input, but builds a stronger
-Champions-facing display score from tournament evidence. Also supplies safe
-role text, form-aware aliases, EV/SP limits, and empty-state helpers.
-"""
+"""Phase 18.4: data-first Champions profile fixes."""
 from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional
 
 from champions_integration import get_champions_profile
 from champions_meta import _candidate_keys
-from champions_viability import get_champions_viability_evidence
 
 SP_PER_STAT_MAX = 32
 SP_TOTAL_MAX = 66
@@ -20,40 +14,77 @@ def _clamp(value: float, low: float = 0.0, high: float = 100.0) -> float:
     return max(low, min(high, value))
 
 
+def form_candidates(name: str) -> List[str]:
+    """Expand the shared resolver with common Champions display spellings."""
+    raw = str(name or "").strip().lower().replace("_", " ").replace("-", " ")
+    candidates = list(_candidate_keys(name) or [])
+
+    def add(value: str) -> None:
+        value = " ".join(value.split()).strip()
+        if value and value not in candidates:
+            candidates.append(value)
+
+    add(raw)
+    for prefix in ("alolan", "galarian", "hisuian", "paldean", "kantonian"):
+        if raw.startswith(prefix + " "):
+            add(raw[len(prefix) + 1:])
+    if raw.startswith("mega "):
+        base = raw[5:].strip()
+        add(base)
+        add(base.split(" ")[0])
+    if raw.startswith("rotom "):
+        form = raw[6:].strip()
+        add(f"rotom {form}")
+        add(f"rotom-{form}")
+        add("rotom")
+    return candidates
+
+
+def resolved_tournament_profile(name: str) -> Dict[str, Any]:
+    """Try the exact form and safe aliases until tournament data is found."""
+    best: Dict[str, Any] = {"available": False, "pokemon": name}
+    for candidate in form_candidates(name):
+        try:
+            profile = get_champions_profile(candidate)
+        except Exception:
+            continue
+        if profile.get("available"):
+            profile = dict(profile)
+            profile["resolved_identity"] = candidate
+            return profile
+    return best
+
+
 def tournament_display_score(base_score: float, pokemon_name: str) -> Dict[str, Any]:
     """Create a stronger display-only score without mutating the old engine."""
-    evidence = get_champions_viability_evidence(pokemon_name)
+    profile = resolved_tournament_profile(pokemon_name)
     base = _clamp(float(base_score))
-    if not evidence.get("available"):
-        return {"score": round(base, 1), "base": base, "tournament": None, "confidence": 0.0}
+    if not profile.get("available"):
+        return {"score": round(base, 1), "base": round(base, 1), "tournament": None, "confidence": 0.0}
 
-    appearances = int(evidence.get("appearances") or 0)
-    confidence = float(evidence.get("confidence") or 0.0)
-    win = float(evidence.get("win_rate") or 0.50)
-    recent = float(evidence.get("recent_win_rate") or win)
-    cut = float(evidence.get("top_cut_rate") or 0.20)
-    partner = float(evidence.get("partner_support") or 0.0)
+    appearances = int(profile.get("appearances") or 0)
+    confidence = min((appearances / 100.0) ** 0.5, 1.0) if appearances else 0.0
+    win = max(0.0, min(1.0, float(profile.get("win_rate") or 0.50)))
+    recent = max(0.0, min(1.0, float(profile.get("recent_win_rate") or win)))
+    cut = max(0.0, min(1.0, float(profile.get("top_cut_rate") or 0.20)))
+    partners = profile.get("partners") or []
+    rates = []
+    for partner in partners[:6]:
+        try:
+            if int(partner.get("teams_together") or 0) > 0:
+                rates.append(float(partner.get("shared_win_rate") or 0.50))
+        except (TypeError, ValueError):
+            continue
+    partner_quality = max(0.0, min(1.0, sum(rates) / len(rates) if rates else 0.50))
 
-    # Convert raw tournament evidence into a 0-100 display signal. Usage is
-    # evidence of relevance, while performance and top-cut results determine
-    # quality. Confidence prevents tiny samples from dominating.
-    usage_signal = min(appearances / 800.0, 1.0)
-    performance_signal = _clamp(((win * 0.50) + (recent * 0.25) + (cut * 0.25)) * 100.0)
-    quality = _clamp(performance_signal + (partner * 0.10), 0.0, 100.0)
-    tournament_score = (quality * 0.72) + (usage_signal * 100.0 * 0.28)
+    performance_signal = ((win * 0.50) + (recent * 0.25) + (cut * 0.25)) * 100.0
+    usage_signal = min(appearances / 800.0, 1.0) * 100.0
+    partner_signal = partner_quality * 100.0
+    tournament_score = (performance_signal * 0.48) + (usage_signal * 0.34) + (partner_signal * 0.18)
 
-    # Tournament evidence is intentionally the majority of the display score
-    # when it is strong and well-supported, while retaining a modest anchor to
-    # the established Strategizer result.
-    blend = 0.68 * confidence
+    blend = 0.72 * confidence
     score = (base * (1.0 - blend)) + (tournament_score * blend)
-    return {
-        "score": round(_clamp(score), 1),
-        "base": round(base, 1),
-        "tournament": round(tournament_score, 1),
-        "confidence": confidence,
-        "appearances": appearances,
-    }
+    return {"score": round(_clamp(score), 1), "base": round(base, 1), "tournament": round(tournament_score, 1), "confidence": confidence, "appearances": appearances}
 
 
 def display_tier(score: float) -> str:
@@ -68,10 +99,6 @@ def display_tier(score: float) -> str:
     if score >= 35:
         return "D"
     return "E"
-
-
-def form_candidates(name: str) -> List[str]:
-    return list(_candidate_keys(name) or [str(name).strip().lower()])
 
 
 def role_from_meta(meta: Optional[Dict[str, Any]], pokemon_name: str) -> str:
@@ -89,7 +116,7 @@ def role_from_meta(meta: Optional[Dict[str, Any]], pokemon_name: str) -> str:
         return "Hazard Setter"
     if {"rapid spin", "defog", "mortal spin"} & moves:
         return "Hazard Control"
-    if "protect" in moves and ("parting shot" in moves or "u-turn" in moves or "volt switch" in moves):
+    if "protect" in moves and ({"parting shot", "u-turn", "volt switch"} & moves):
         return "Pivot / Positioning"
     return str(meta.get("recommended_role") or meta.get("role") or "Balanced Pick")
 
@@ -97,23 +124,19 @@ def role_from_meta(meta: Optional[Dict[str, Any]], pokemon_name: str) -> str:
 def validate_sp_spread(values: Dict[str, Any]) -> Dict[str, int]:
     keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
     out = {k: max(0, min(SP_PER_STAT_MAX, int(values.get(k, 0) or 0))) for k in keys}
-    total = sum(out.values())
-    if total > SP_TOTAL_MAX:
-        # Preserve the user's earlier stats as much as possible while enforcing
-        # the Champions 66-SP team-wide cap.
-        overflow = total - SP_TOTAL_MAX
-        for key in reversed(keys):
-            if overflow <= 0:
-                break
-            reduction = min(out[key], overflow)
-            out[key] -= reduction
-            overflow -= reduction
+    overflow = max(0, sum(out.values()) - SP_TOTAL_MAX)
+    for key in reversed(keys):
+        if overflow <= 0:
+            break
+        reduction = min(out[key], overflow)
+        out[key] -= reduction
+        overflow -= reduction
     return out
 
 
 def build_profile_18_4(pokemon_name: str, base_score: float, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     meta = dict(meta or {})
-    tournament = get_champions_profile(pokemon_name)
+    tournament = resolved_tournament_profile(pokemon_name)
     score_data = tournament_display_score(base_score, pokemon_name)
     return {
         "pokemon": pokemon_name,
@@ -143,7 +166,7 @@ def rank_counters_with_evidence(pokemon_name: str, existing_candidates: Iterable
         if not name or key in seen or key == " ".join(pokemon_name.lower().split()):
             continue
         seen.add(key)
-        profile = get_champions_profile(name)
+        profile = resolved_tournament_profile(name)
         if not profile.get("available") or int(profile.get("appearances") or 0) <= 0:
             continue
         appearances = int(profile.get("appearances") or 0)
