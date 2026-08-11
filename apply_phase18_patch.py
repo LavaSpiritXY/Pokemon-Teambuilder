@@ -4,7 +4,12 @@ APP = Path("app.py")
 
 IMPORT_ANCHOR = "import pandas as pd\n"
 IMPORT_INSERT = "from champions_phase18 import render_champions_profile_v3\n"
-CALL_ANCHOR = "            render_champions_tournament_profile(slot_name)"
+
+# Phase 17 replaced the original Phase 15 call. Support the current call shape.
+CALL_ANCHORS = [
+    "            render_champions_profile_v2(slot_name)",
+    "            render_champions_tournament_profile(slot_name)",
+]
 CALL_INSERT = "            render_champions_profile_v3(slot_name, meta=meta, sprite_resolver=get_mini_sprite_url)"
 
 
@@ -25,7 +30,13 @@ def main() -> None:
         raise SystemExit("Phase 18 already appears to be applied; no changes made.")
 
     text = replace_once(text, IMPORT_ANCHOR, IMPORT_ANCHOR + IMPORT_INSERT, "Phase 18 import")
-    text = replace_once(text, CALL_ANCHOR, CALL_INSERT, "Phase 18 UI call")
+
+    matches = [anchor for anchor in CALL_ANCHORS if text.count(anchor) == 1]
+    if len(matches) != 1:
+        counts = {anchor: text.count(anchor) for anchor in CALL_ANCHORS}
+        raise RuntimeError(f"Phase 18 UI call anchor could not be uniquely identified: {counts}")
+
+    text = replace_once(text, matches[0], CALL_INSERT, "Phase 18 UI call")
 
     APP.write_text(text, encoding="utf-8")
     print("Phase 18 patch applied successfully to app.py")
