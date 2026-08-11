@@ -1,17 +1,13 @@
 """
 Pokémon Champions tournament data layer.
 
-PHASE 1
+PHASE 2
 -------
 This module is intentionally isolated from app.py.
 
-It does NOT fetch tournament data yet and it does NOT modify the existing
-Strategizer.  It provides the stable data structures, normalization helpers,
-and HTTP/caching primitives that the later tournament importer will use.
-
-Keeping this separate is deliberate: if a tournament source changes, we want
-to repair this module rather than introduce more tournament logic into the
-main Streamlit application.
+Phase 2 establishes the verified Limitless VGC source connection and keeps
+raw event-page fetching separate from parsing/analytics.  It does NOT yet
+populate CHAMPIONS_META_DB or alter the existing Streamlit application.
 """
 
 from __future__ import annotations
@@ -19,7 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -28,16 +24,17 @@ import requests
 # 1. CONFIGURATION
 # ============================================================================
 
-# The current Champions tournament data layer is kept separate from the
-# application's existing CURRENT_REGULATION value.  We will populate this
-# from verified event data in a later phase rather than hard-coding it here.
-CHAMPIONS_DATA_VERSION = 1
-
-# Network defaults.  These are deliberately conservative so a future data
-# importer cannot accidentally hammer a public tournament-data service.
+CHAMPIONS_DATA_VERSION = 2
 REQUEST_TIMEOUT_SECONDS = 20
+
+LIMITLESS_BASE_URL = "https://limitlessvgc.com"
+LIMITLESS_TOURNAMENTS_URL = f"{LIMITLESS_BASE_URL}/tournaments"
+
 REQUEST_HEADERS = {
-    "User-Agent": "Pokemon-Teambuilder/ChampionsData (+https://github.com/LavaSpiritXY/Pokemon-Teambuilder)"
+    "User-Agent": (
+        "Pokemon-Teambuilder/ChampionsData "
+        "(+https://github.com/LavaSpiritXY/Pokemon-Teambuilder)"
+    )
 }
 
 
@@ -87,18 +84,11 @@ class ChampionsTeam:
 # 3. POKÉMON NAME NORMALIZATION
 # ============================================================================
 
-# Separators commonly introduced by tournament websites, spreadsheets, or
-# URLs.  We preserve the actual form information while producing a stable key.
 _NAME_SEPARATORS = re.compile(r"[\s_./]+")
 
 
 def normalize_champions_name(name: Any) -> str:
-    """Return a human-readable, stable Pokémon/form name.
-
-    This is intentionally conservative in Phase 1.  It does NOT try to guess
-    forms from an arbitrary string.  The detailed Champions form mapping will
-    be added once the real tournament payload has been inspected.
-    """
+    """Return a human-readable, stable Pokémon/form name."""
 
     if name is None:
         return ""
@@ -115,11 +105,7 @@ def normalize_champions_name(name: Any) -> str:
 
 
 def champions_species_key(name: Any) -> str:
-    """Return the canonical lookup key used by the Champions data layer.
-
-    The key is intentionally deterministic.  Form-aware aliases will be
-    added later and will all pass through this single function.
-    """
+    """Return the canonical lookup key used by the Champions data layer."""
 
     normalized = normalize_champions_name(name)
     if not normalized:
@@ -136,7 +122,7 @@ _SESSION: Optional[requests.Session] = None
 
 
 def get_http_session() -> requests.Session:
-    """Return one reusable HTTP session for future tournament requests."""
+    """Return one reusable HTTP session for tournament requests."""
 
     global _SESSION
 
@@ -147,15 +133,23 @@ def get_http_session() -> requests.Session:
     return _SESSION
 
 
+def fetch_text(url: str, *, timeout: int = REQUEST_TIMEOUT_SECONDS) -> str:
+    """Fetch a text/HTML page from a verified source URL."""
+
+    if not isinstance(url, str) or not url.strip():
+        raise ValueError("A non-empty URL is required.")
+
+    response = get_http_session().get(url.strip(), timeout=timeout)
+    response.raise_for_status()
+    return response.text
+
+
 def fetch_json(url: str, *, timeout: int = REQUEST_TIMEOUT_SECONDS) -> Any:
     """Fetch JSON from a verified endpoint.
 
-    This function is intentionally generic.  No Limitless/RK9 endpoint is
-    hard-coded until the source format has been verified.
-
-    Raises:
-        ValueError: if the response is not valid JSON.
-        requests.RequestException: for network/HTTP failures.
+    No unverified Limitless JSON endpoint is assumed here.  The current
+    source pages are public HTML pages, so HTML fetching is the primary Phase
+    2 primitive.  JSON support remains available for a later verified source.
     """
 
     if not isinstance(url, str) or not url.strip():
@@ -168,21 +162,67 @@ def fetch_json(url: str, *, timeout: int = REQUEST_TIMEOUT_SECONDS) -> Any:
         return response.json()
     except ValueError as exc:
         raise ValueError(
-            f"Expected JSON from tournament data source, got {response.headers.get('content-type', 'unknown')}"
+            "Expected JSON from tournament data source, got "
+            f"{response.headers.get('content-type', 'unknown')}"
         ) from exc
 
 
 # ============================================================================
-# 5. IN-MEMORY DATA CONTAINER
+# 5. VERIFIED LIMITLESS URL BUILDERS
+# ============================================================================
+
+
+def build_limitless_tournament_url(event_id: Any, section: str = "") -> str:
+    """Build a Limitless tournament URL without accepting arbitrary URLs."""
+
+    event_key = str(event_id).strip()
+    if not event_key:
+        raise ValueError("event_id cannot be empty.")
+
+    allowed_sections = {"", "teams", "statistics", "standings"}
+    if section not in allowed_sections:
+        raise ValueError(
+            f"Unsupported tournament section: {section!r}. "
+            f"Expected one of {sorted(allowed_sections)!r}."
+        )
+
+    url = f"{LIMITLESS_BASE_URL}/tournaments/{event_key}"
+    if section:
+        url += f"/{section}"
+
+    return url
+
+
+def fetch_limitless_tournament_page(
+    event_id: Any,
+    section: str = "",
+    *,
+    timeout: int = REQUEST_TIMEOUT_SECONDS,
+) -> str:
+    """Fetch one verified Limitless tournament page as raw HTML.
+
+    Sections currently verified against the public Limitless site:
+      - ``""``: results page
+      - ``"teams"``: tournament team lists
+      - ``"statistics"``: tournament Pokémon statistics
+      - ``"standings"``: detailed standings/usage information where present
+
+    Parsing is deliberately NOT performed here.  Keeping raw retrieval
+    separate lets us inspect and test the source format before creating
+    permanent parsers.
+    """
+
+    url = build_limitless_tournament_url(event_id, section)
+    return fetch_text(url, timeout=timeout)
+
+
+# ============================================================================
+# 6. IN-MEMORY DATA CONTAINER
 # ============================================================================
 
 @dataclass
 class ChampionsDataStore:
-    """Container for normalized tournament data.
-
-    This is deliberately an in-memory object for Phase 1.  Persistent caching
-    will be added only after the source payload and update strategy are tested.
-    """
+    """Container for normalized tournament data."""
 
     events: Dict[str, ChampionsEvent] = field(default_factory=dict)
     results: List[ChampionsResult] = field(default_factory=list)
@@ -199,12 +239,11 @@ class ChampionsDataStore:
         self.updated_at = None
 
 
-# One process-local store.  It is not connected to Streamlit yet.
 CHAMPIONS_DATA_STORE = ChampionsDataStore()
 
 
 # ============================================================================
-# 6. FUTURE INTEGRATION POINTS
+# 7. DATA STORE HELPERS
 # ============================================================================
 
 
@@ -256,6 +295,8 @@ def store_team(team: ChampionsTeam) -> None:
 __all__ = [
     "CHAMPIONS_DATA_VERSION",
     "REQUEST_TIMEOUT_SECONDS",
+    "LIMITLESS_BASE_URL",
+    "LIMITLESS_TOURNAMENTS_URL",
     "ChampionsEvent",
     "ChampionsResult",
     "ChampionsTeam",
@@ -264,7 +305,10 @@ __all__ = [
     "normalize_champions_name",
     "champions_species_key",
     "get_http_session",
+    "fetch_text",
     "fetch_json",
+    "build_limitless_tournament_url",
+    "fetch_limitless_tournament_page",
     "get_cached_event",
     "store_event",
     "store_result",
