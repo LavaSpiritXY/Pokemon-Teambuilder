@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from champions_data import load_limitless_event_data, get_limitless_tournament_details
+from champions_data import load_limitless_event_data
 from champions_aggregation import aggregate_pokemon_statistics
-from champions_phase8 import (
+from champions_phase8_safe import (
     discover_champions_tournaments,
-    exact_top_cut_flags,
+    get_verified_cut,
     summarize_discovery,
 )
 
@@ -35,8 +35,6 @@ def main() -> None:
         print("No Champions tournaments were discovered. Stop here.")
         return
 
-    # Pick the first event with a usable ID.  We deliberately load the full
-    # event details before evaluating the exact cut.
     event = next((row for row in tournaments if row.get("id")), None)
     if event is None:
         print("No usable event IDs were returned. Stop here.")
@@ -50,7 +48,7 @@ def main() -> None:
 
     try:
         payload = load_limitless_event_data(event_id)
-        details = get_limitless_tournament_details(event_id)
+        _, cut_size = get_verified_cut(event_id)
     except Exception as exc:
         print(f"ERROR loading event {event_id}: {exc}")
         return
@@ -59,16 +57,15 @@ def main() -> None:
     results = payload["results"]
     teams = payload["teams"]
 
-    cut_size, flags = exact_top_cut_flags(
-        details,
-        [result.placement for result in results],
-    )
-
-    # Apply exact flags only when the source explicitly supplied a cut.  If
-    # not, keep the upstream provisional values out of this audit report.
     if cut_size is not None:
-        for result, flag in zip(results, flags):
-            result.top_cut = flag
+        for result in results:
+            result.top_cut = (
+                result.placement is not None
+                and 1 <= result.placement <= cut_size
+            )
+    else:
+        for result in results:
+            result.top_cut = False
 
     print()
     print("--- Normalized event ---")
