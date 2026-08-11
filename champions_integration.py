@@ -1,4 +1,4 @@
-"""Phase 14: safe integration layer for Champions tournament metrics.
+"""Phase 14.1: safe integration layer for Champions tournament metrics.
 
 This module deliberately does not modify the existing Strategizer scoring.
 It exposes a small, defensive API that app.py can consume in a later phase.
@@ -9,9 +9,10 @@ from __future__ import annotations
 from typing import Any, Dict, Optional
 
 try:
-    from champions_meta import get_champions_meta
+    from champions_meta import get_champions_meta, get_champions_partners
 except ImportError:  # pragma: no cover
     get_champions_meta = None
+    get_champions_partners = None
 
 
 def get_champions_profile(pokemon_name: str) -> Dict[str, Any]:
@@ -49,7 +50,18 @@ def get_champions_profile(pokemon_name: str) -> Dict[str, Any]:
     profile.update(raw)
     profile["available"] = True
     profile["pokemon"] = pokemon_name
-    profile["partners"] = list(profile.get("partners") or [])
+
+    # Partner data is stored separately from the Pokémon aggregate in the
+    # Phase 12 dataset, so explicitly load it here rather than expecting it
+    # inside get_champions_meta().
+    if get_champions_partners is not None:
+        try:
+            profile["partners"] = list(get_champions_partners(pokemon_name, limit=10) or [])
+        except Exception:
+            profile["partners"] = []
+    else:
+        profile["partners"] = []
+
     profile["regulations"] = dict(profile.get("regulations") or {})
     return profile
 
