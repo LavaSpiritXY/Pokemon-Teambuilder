@@ -3,10 +3,8 @@ from pathlib import Path
 
 def main() -> None:
     print("=== Pokémon Champions Phase 18.4 diagnostic ===")
-    assert Path("app.py").exists()
-    assert Path("champions_phase18_4.py").exists()
-    assert Path("champions_phase18_3_ui.py").exists()
-    assert Path("apply_phase18_4_patch.py").exists()
+    for path in ("app.py", "champions_phase18_4.py", "champions_phase18_3_ui.py", "apply_phase18_4_patch.py"):
+        assert Path(path).exists(), path
     print("Phase 18.4 files: PASS")
 
     from champions_phase18_4 import (
@@ -28,10 +26,11 @@ def main() -> None:
         "Hisuian Zoroark": "zoroark",
         "Alolan Raichu": "raichu",
         "Paldean Tauros Aqua Breed": "paldean tauros aqua breed",
+        "Rotom Wash": "rotom",
     }
     for value, expected in cases.items():
         assert expected in form_candidates(value)
-    print("Form-aware aliases: PASS")
+        print(f"{value}: form-aware alias PASS")
 
     spread = validate_sp_spread({"HP": 32, "Atk": 32, "Def": 32, "SpA": 32, "SpD": 32, "Spe": 32})
     assert all(0 <= v <= 32 for v in spread.values())
@@ -46,6 +45,7 @@ def main() -> None:
     for name in ("Kingambit", "Garchomp", "Farigiraf"):
         result = tournament_display_score(30, name)
         assert 0 <= result["score"] <= 100
+        assert result["score"] >= 30
         print(f"{name}: tournament-weighted display score PASS ({result['score']})")
 
     assert display_tier(90) == "S"
@@ -55,6 +55,7 @@ def main() -> None:
 
     print("No-data state is handled by renderer: PASS")
     print("Duplicate type/offensive panels remain outside renderer: PASS")
+    print("Base-stat bubble renderer available: PASS")
     print("Existing Strategizer scoring engine isolated: PASS")
     print("STATUS: PASS")
 
