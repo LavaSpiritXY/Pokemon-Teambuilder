@@ -7,6 +7,14 @@ from typing import Dict, List, Set, Tuple
 import requests
 import streamlit as strlit
 import pandas as pd
+from champions_phase18_5 import render_champions_profile_v6
+from champions_phase18 import render_champions_profile_v3
+from champions_phase17 import render_champions_profile_v2
+
+try:
+    from champions_integration import get_champions_profile
+except ImportError:
+    get_champions_profile = None
 
 # ==========================================
 # 1. ARCHETYPE & ENABLER REGISTRY
@@ -4021,6 +4029,56 @@ def get_tournament_partners(
 
     return results
 # -----------------------------------------------------------------------------
+# Phase 15: Champions tournament profile display
+# -----------------------------------------------------------------------------
+def render_champions_tournament_profile(pokemon_name):
+    """Render tournament statistics without changing existing app scoring."""
+    if get_champions_profile is None:
+        return
+
+    try:
+        profile = get_champions_profile(pokemon_name)
+    except Exception:
+        return
+
+    if not profile.get("available"):
+        return
+
+    appearances = int(profile.get("appearances") or 0)
+    wins = int(profile.get("wins") or 0)
+    losses = int(profile.get("losses") or 0)
+    win_rate = profile.get("win_rate")
+    top_cut_rate = profile.get("top_cut_rate")
+    recent_win_rate = profile.get("recent_win_rate")
+    partners = profile.get("partners") or []
+
+    with strlit.expander("🏆 Champions Tournament Profile", expanded=True):
+        strlit.caption("Historical Champions tournament data. This display does not alter the existing Strategizer score.")
+        cols = strlit.columns(4)
+        cols[0].metric("Team Appearances", f"{appearances:,}")
+        cols[1].metric("Win Rate", f"{float(win_rate) * 100:.1f}%" if win_rate is not None else "N/A")
+        cols[2].metric("Top-Cut Rate", f"{float(top_cut_rate) * 100:.1f}%" if top_cut_rate is not None else "N/A")
+        cols[3].metric("Recent Win Rate", f"{float(recent_win_rate) * 100:.1f}%" if recent_win_rate is not None else "N/A")
+        strlit.caption(f"Tournament game record: {wins:,} wins · {losses:,} losses")
+
+        if partners:
+            strlit.markdown("**Most common tournament partners**")
+            partner_rows = []
+            for partner in partners[:5]:
+                partner_name = partner.get("pokemon")
+                if not partner_name:
+                    continue
+                partner_rows.append({
+                    "Partner": display_name_for_species_key(partner_name) or partner_name,
+                    "Teams Together": int(partner.get("teams_together") or 0),
+                    "Shared Win Rate": f"{float(partner.get('shared_win_rate') or 0) * 100:.1f}%",
+                })
+            if partner_rows:
+                strlit.dataframe(partner_rows, hide_index=True, use_container_width=True)
+        else:
+            strlit.caption("No tournament partner data available.")
+
+# -----------------------------------------------------------------------------
 # 4. INITIALIZE SESSION STATE
 # -----------------------------------------------------------------------------
 if "team_slots" not in strlit.session_state:
@@ -4124,79 +4182,23 @@ for i in range(6):
             offensive_summary = get_offensive_type_summary(mon_data["types"])
 
             if not meta:
-                meta = {"tier": "Unknown", "viability": "0 / 100", "teammates": [], "counters": [], "speed_tier": "N/A", "momentum_rating": "N/A", "hazard_utility": "N/A", "offensive_profile": "N/A"}
-
-            viability_score = meta.get("viability", "0 / 100")
-
-            teammates_html = "".join([
-                f'<div class="entity-pill"><img src="{get_mini_sprite_url(tm_name)}" /><span>{tm_name}</span></div>'
-                for tm_name, tm_type in meta.get("teammates", [])
-            ])
-
-            counters_html = "".join([
-                f'<div class="entity-pill"><img src="{get_mini_sprite_url(ct_name)}" /><span>{ct_name}</span></div>'
-                for ct_name, ct_type in meta.get("counters", [])
-            ])
-
-            strlit.html(f"""
-            <div class="analytics-container">
-                <div class="analytics-title">
-                    <span>📈 Exhaustive Competitive Diagnostic Profile</span>
-                </div>
-
-                <div class="stat-box-row">
-                    <div class="stat-box viability-box">
-                        <div class="stat-label">Viability Index</div>
-                        <div class="stat-value">{viability_score}</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Smogon Tiering</div>
-                        <div class="stat-value">{meta['tier']}</div>
-                    </div>
-                </div>
-
-                <div class="stat-box-row">
-                    <div class="stat-box" style="border-left-color: #6390F0;">
-                        <div class="stat-label">Offensive Archetype</div>
-                        <div class="stat-value" style="font-size: 13px;">{meta['offensive_profile']}</div>
-                    </div>
-                    <div class="stat-box" style="border-left-color: #F7D02C;">
-                        <div class="stat-label">Speed Tier & Bracket</div>
-                        <div class="stat-value" style="font-size: 13px;">{meta['speed_tier']}</div>
-                    </div>
-                </div>
-
-                <div class="stat-box-row">
-                    <div class="stat-box" style="border-left-color: #7AC74C;">
-                        <div class="stat-label">Momentum & Pivoting</div>
-                        <div class="stat-value" style="font-size: 13px;">{meta['momentum_rating']}</div>
-                    </div>
-                    <div class="stat-box" style="border-left-color: #A98FF3;">
-                        <div class="stat-label">Hazard & Utility Footprint</div>
-                        <div class="stat-value" style="font-size: 13px;">{meta['hazard_utility']}</div>
-                    </div>
-                </div>
-
-                <div class="stat-box" style="margin-bottom: 12px;">
-                    <div class="stat-label">Synergistic Core Teammates (Multi-Factor Ranked)</div>
-                    <div style="margin-top: 6px;">
-                        {teammates_html if teammates_html else '<span style="color: #8b949e; font-size: 13px;">No direct core matches found</span>'}
-                    </div>
-                </div>
-
-                <div class="stat-box counter-box" style="margin-bottom: 12px;">
-                    <div class="stat-label">Common Meta Checks & Hard Counters</div>
-                    <div style="margin-top: 6px;">
-                        {counters_html if counters_html else '<span style="color: #8b949e; font-size: 13px;">No direct counters found</span>'}
-                    </div>
-                </div>
-
-                <div class="stat-box">
-                    <div class="stat-label">Recommended Team Role</div>
-                    <div class="stat-value">{infer_slot_role(slot)}</div>
-                </div>
-            </div>
-            """)
+                meta = {
+                    "tier": "Unknown",
+                    "viability": "0 / 100",
+                    "teammates": [],
+                    "counters": [],
+                    "speed_tier": "N/A",
+                    "momentum_rating": "N/A",
+                    "hazard_utility": "N/A",
+                    "offensive_profile": "N/A",
+                }
+        render_champions_profile_v6(
+            slot_name,
+            meta=meta,
+            sprite_resolver=get_mini_sprite_url,
+            base_stats=mon_data.get("stats"),
+            sp_values=slot.get("evs") or {},
+        )
 
         with col_set:
             strlit.markdown("##### ⚔️ Moveset Configuration")
@@ -4231,20 +4233,28 @@ for i in range(6):
                             </div>
                         </div>
                     ''', unsafe_allow_html=True)
-
-            strlit.markdown("##### 📊 Effort Values (EV Spread)")
-            ev_cols = col_set.columns(3)
-            ev_keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
-            ev_labels = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"]
+            strlit.markdown("##### 📊 Champions SP Allocation")
+            sp_cols = col_set.columns(3)
+            sp_keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
+            sp_labels = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"]
             if "evs" not in slot or not isinstance(slot["evs"], dict):
-                slot["evs"] = {k: 0 for k in ev_keys}
-
-            for idx, (key, label) in enumerate(zip(ev_keys, ev_labels)):
-                with ev_cols[idx % 3]:
-                    slot["evs"][key] = strlit.number_input(
-                        label, min_value=0, max_value=252, step=4,
-                        value=slot["evs"].get(key, 0), key=f"stat_ev_{i}_{key}"
+                slot["evs"] = {k: 0 for k in sp_keys}
+            current_sp = {k: max(0, min(32, int(slot["evs"].get(k, 0) or 0))) for k in sp_keys}
+            used_sp = sum(current_sp.values())
+            for idx, (key, label) in enumerate(zip(sp_keys, sp_labels)):
+                with sp_cols[idx % 3]:
+                    other_sp = used_sp - current_sp[key]
+                    max_allowed = min(32, 66 - other_sp)
+                    current_value = current_sp[key]
+                    new_value = strlit.number_input(
+                        label, min_value=0, max_value=max_allowed, step=1,
+                        value=min(current_value, max_allowed), key=f"stat_sp_{i}_{key}"
                     )
+                    current_sp[key] = int(new_value)
+                    slot["evs"][key] = int(new_value)
+                    used_sp = other_sp + int(new_value)
+            strlit.caption(f"Champions SP: {sum(current_sp.values())}/66 total · maximum 32 per stat")
+
 
             strlit.markdown("##### Type matchup")
             with strlit.container(border=True):
@@ -4312,6 +4322,8 @@ for i in range(6):
                             resisted_multipliers
                         )
                     )
+
+            render_base_stats_bubble(mon_data.get("stats"))
 
 # -----------------------------------------------------------------------------
 # 6. TAB 7: TEAM OVERVIEW & TEAM EVALUATOR INTEGRATION
@@ -4422,3 +4434,6 @@ with tabs[6]:
     strlit.success("✓ Authoritative Smogon Chaos usage statistics engine integrated for tiering, abilities, items, and partner metrics.")
     strlit.success("✓ Dynamic moveset names fetched directly from Pokémon Showdown's GitHub repository.")
     strlit.success("✓ Showdown text format Pokepaste import and export functional.")
+
+
+
