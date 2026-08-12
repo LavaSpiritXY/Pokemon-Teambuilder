@@ -1,0 +1,40 @@
+name: Apply Phase 19 fixes
+
+on:
+  push:
+    branches: [champions-tournament-data]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, 'Phase 19 applied') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: champions-tournament-data
+          fetch-depth: 0
+
+      - name: Apply Phase 19 hotfix
+        run: python apply_phase19_hotfix.py
+
+      - name: Apply Phase 19 UI and meta fixes
+        run: python apply_phase19_ui_and_meta_fix.py
+
+      - name: Compile changed Python modules
+        run: python -m py_compile app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py
+
+      - name: Commit Phase 19 changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py apply_phase19_ui_and_meta_fix.py apply_phase19_hotfix.py
+          if git diff --cached --quiet; then
+            echo "No Phase 19 changes to commit."
+            exit 0
+          fi
+          git commit -m "Phase 19 applied: dynamic EV UI and meta fixes"
+          git push origin HEAD:champions-tournament-data
