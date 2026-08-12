@@ -2258,11 +2258,18 @@ def get_type_defense_summary(defending_types):
 
 def get_offensive_type_summary(attacking_types):
     """
-    Calculates the best offensive STAB multiplier against
-    every defending type.
+    Calculates offensive STAB coverage.
 
-    Returns the multiplier alongside each category so the
-    UI can display x2, x1/2, x1/4 and x0.
+    Strong coverage uses the best individual STAB matchup.
+
+    Resistance coverage combines the STAB multipliers:
+        one resisted STAB  -> x1/2
+        both resisted STAB -> x1/4
+        immunity involved  -> x0
+
+    This allows dual-STAB Pokémon such as Incineroar
+    (Fire/Dark) to show both individual and combined
+    resistance information.
     """
 
     strong_against = []
@@ -2283,36 +2290,48 @@ def get_offensive_type_summary(attacking_types):
                 "immune",
                 []
             ):
-                multipliers.append(0.0)
+                multiplier = 0.0
 
             elif attacking_type in matchup.get(
                 "resist",
                 []
             ):
-                multipliers.append(0.5)
+                multiplier = 0.5
 
             elif attacking_type in matchup.get(
                 "weak",
                 []
             ):
-                multipliers.append(2.0)
+                multiplier = 2.0
 
             else:
-                multipliers.append(1.0)
+                multiplier = 1.0
 
-        best_multiplier = max(
-            multipliers,
-            default=1.0
-        )
+            multipliers.append(multiplier)
+
+        if not multipliers:
+            continue
+
+        # Strong coverage uses the best available STAB.
+        best_multiplier = max(multipliers)
 
         if best_multiplier > 1:
             strong_against.append(
                 (defending_type, best_multiplier)
             )
 
-        elif best_multiplier < 1:
+        # Resistance coverage combines the STAB matchups.
+        # x0 remains an immunity.
+        if any(multiplier == 0 for multiplier in multipliers):
+            combined_multiplier = 0.0
+        else:
+            combined_multiplier = 1.0
+            for multiplier in multipliers:
+                combined_multiplier *= multiplier
+
+        if combined_multiplier < 1:
             resisted_by.append(
-                (defending_type, best_multiplier)
+                (defending_type, combined_multiplier)
             )
 
     return {

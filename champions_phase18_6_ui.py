@@ -1,4 +1,4 @@
-"""Phase 18.6/18.7 dynamic Champions stat-training UI."""
+﻿"""Phase 18.6/18.7 dynamic Champions stat-training UI."""
 from __future__ import annotations
 from typing import Any, Dict, Mapping, Optional
 import streamlit as st
@@ -48,24 +48,58 @@ def _stat_bar_html(value:int)->str:
 def render_dynamic_stat_training(slot_index:int,pokemon_name:str,base_stats:Optional[Mapping[str,Any]],nature:str,sprite_url:str="",moves:Optional[list[str]]=None)->Dict[str,int]:
     values=render_dynamic_stat_controls(slot_index,pokemon_name,nature); render_dynamic_stat_graph(slot_index,pokemon_name,base_stats,nature); return values
 
-def render_dynamic_stat_controls(slot_index:int,pokemon_name:str,nature:str)->Dict[str,int]:
-    slot=st.session_state.team_slots[slot_index]; values=_sanitize(slot); species_key=f"stat_sp_species_{slot_index}"
-    if st.session_state.get(species_key)!=pokemon_name:
-        for _,key in _STAT_KEYS: st.session_state[f"stat_sp_slider_{slot_index}_{key}"]=values[key]
-        st.session_state[species_key]=pokemon_name
+def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str) -> Dict[str, int]:
+    slot = st.session_state.team_slots[slot_index]
+    values = _sanitize(slot)
+    species_key = f"stat_sp_species_{slot_index}"
+
+    if st.session_state.get(species_key) != pokemon_name:
+        for _, key in _STAT_KEYS:
+            st.session_state[f"stat_sp_slider_{slot_index}_{key}"] = values[key]
+        st.session_state[species_key] = pokemon_name
     else:
-        for _,key in _STAT_KEYS:
-            if f"stat_sp_slider_{slot_index}_{key}" not in st.session_state: st.session_state[f"stat_sp_slider_{slot_index}_{key}"]=values[key]
-    st.subheader("🎯 EV Training"); st.caption("Each stat: 0–32 · Team total: 0–66.")
-    for label,key in _STAT_KEYS:
-        max_allowed=_slider_max(values,key); current=min(values[key],max_allowed); widget_key=f"stat_sp_slider_{slot_index}_{key}"
+        for _, key in _STAT_KEYS:
+            if f"stat_sp_slider_{slot_index}_{key}" not in st.session_state:
+                st.session_state[f"stat_sp_slider_{slot_index}_{key}"] = values[key]
+
+    st.subheader("🎯 EV Training")
+    st.caption("Each stat: 0–32 · Team total: 0–66.")
+
+    for label, key in _STAT_KEYS:
+        max_allowed = _slider_max(values, key)
+        current = min(values[key], max_allowed)
+        widget_key = f"stat_sp_slider_{slot_index}_{key}"
+
         if max_allowed == 0:
-            st.slider(f"{label} EVs 🔒 MAX POINTS USED",0,32,value=current,step=1,disabled=True,key=f"stat_sp_locked_{slot_index}_{key}")
-            st.session_state[widget_key]=0
+            # Keep the same slider UI, but lock it when no SP remains.
+            st.slider(
+                f"{label} EVs — 🔒 MAX POINTS USED",
+                min_value=0,
+                max_value=32,
+                value=0,
+                step=1,
+                disabled=True,
+                key=f"stat_sp_locked_{slot_index}_{key}"
+            )
+            st.session_state[widget_key] = 0
         else:
-            st.session_state[widget_key]=current
-            st.slider(f"{label} EVs",0,max_allowed,value=current,step=1,key=widget_key,on_change=_sync_slider,args=(slot_index,key))
-    values=_sanitize(slot); st.caption(f"Champions SP: {sum(values.values())}/66 total · maximum 32 per stat"); return values
+            st.session_state[widget_key] = current
+            st.slider(
+                f"{label} EVs",
+                0,
+                max_allowed,
+                value=current,
+                step=1,
+                key=widget_key,
+                on_change=_sync_slider,
+                args=(slot_index, key)
+            )
+
+    values = _sanitize(slot)
+    st.caption(
+        f"Champions SP: {sum(values.values())}/66 total · maximum 32 per stat"
+    )
+    return values
 
 def render_dynamic_stat_graph(slot_index:int,pokemon_name:str,base_stats:Optional[Mapping[str,Any]],nature:str)->Dict[str,int]:
     slot=st.session_state.team_slots[slot_index]; values=_sanitize(slot); boosted,lowered=_nature_effect(nature)
@@ -76,3 +110,4 @@ def render_dynamic_stat_graph(slot_index:int,pokemon_name:str,base_stats:Optiona
         base=_base_stat(base_stats,key); ev=values[key]; pre_nature=base+ev; delta=round(pre_nature*.10) if key==boosted else -round(pre_nature*.10) if key==lowered else 0; total=max(0,pre_nature+delta); nature_text=f"+{delta}" if delta>0 else str(delta); marker=" ↑" if key==boosted else " ↓" if key==lowered else ""
         cols=st.columns([1.15,1.05,1.05,1.05,3.0,0.85]); cols[0].markdown(f"**{label}{marker}**"); cols[1].markdown(f"<span style='color:#f1f5f9'>{base}</span>",unsafe_allow_html=True); cols[2].markdown(f"<span style='color:#f1f5f9'>+{ev}</span>",unsafe_allow_html=True); cols[3].markdown(f"<span style='color:#f1f5f9'>{nature_text}</span>",unsafe_allow_html=True); cols[4].html(_stat_bar_html(total)); cols[5].markdown(f"<span style='color:#f1f5f9;font-weight:700'>{total}</span>",unsafe_allow_html=True)
     st.caption("🔴 low → 🟠 medium → 🟢 high · colour changes continuously with the final stat"); return values
+
