@@ -15,15 +15,6 @@ _NATURE_EFFECTS = {
     "Calm": ("SpD", "Atk"), "Gentle": ("SpD", "Def"), "Sassy": ("SpD", "Spe"), "Careful": ("SpD", "SpA"),
     "Hardy": (None, None), "Docile": (None, None), "Bashful": (None, None), "Quirky": (None, None), "Serious": (None, None),
 }
-_CSS = """
-<style>
-.ch186-card{border:1px solid rgba(148,163,184,.24);border-radius:14px;padding:14px 16px;background:rgba(148,163,184,.055);margin:8px 0}
-.ch186-title{font-size:1.08rem;font-weight:850;margin-bottom:4px}.ch186-sub{font-size:.76rem;color:rgba(180,190,205,.72)}
-.ch186-plot{width:100%;padding:8px 0 2px}.ch186-bar-row{display:grid;grid-template-columns:142px 1fr 52px;gap:12px;align-items:center;margin:12px 0}.ch186-bar-label{font-weight:800;font-size:.84rem}.ch186-bar-label small{display:block;font-size:.68rem;font-weight:650;color:rgba(180,190,205,.68);margin-top:2px}.ch186-track{height:25px;border-radius:7px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.18);position:relative}.ch186-base{position:absolute;left:0;top:0;height:100%;background:rgba(148,163,184,.42)}.ch186-trained{position:absolute;top:0;height:100%;background:rgba(122,199,76,.78)}.ch186-value{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}.ch186-scale{display:flex;justify-content:space-between;margin:2px 52px 0 154px;font-size:.62rem;color:rgba(180,190,205,.5)}
-.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}
-.ch186-max{outline:2px solid rgba(239,68,68,.72);outline-offset:2px;border-radius:8px}.ch186-slot{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(148,163,184,.045);margin:7px 0}.ch186-slot img{width:48px;height:48px;object-fit:contain}.ch186-slot-name{font-weight:850}.ch186-slot-meta{font-size:.72rem;color:rgba(180,190,205,.72)}
-</style>
-"""
 
 def _nature_effect(nature: str):
     return _NATURE_EFFECTS.get(str(nature or "Hardy").strip().split(" ")[0], (None, None))
@@ -41,7 +32,7 @@ def _base_stat(stats: Optional[Mapping[str, Any]], key: str) -> int:
 
 def _sanitize(slot: Dict[str, Any]) -> Dict[str, int]:
     raw = slot.get("evs") if isinstance(slot.get("evs"), dict) else {}
-    clean = {}
+    clean: Dict[str, int] = {}
     total = 0
     for _, key in _STAT_KEYS:
         try:
@@ -71,14 +62,11 @@ def _sync_slider(slot_index: int, key: str) -> None:
     slot["evs"] = current
 
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
-    st.markdown(_CSS, unsafe_allow_html=True)
     values = render_dynamic_stat_controls(slot_index, pokemon_name, nature)
     render_dynamic_stat_graph(slot_index, pokemon_name, base_stats, nature)
     return values
 
 def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str) -> Dict[str, int]:
-    """Render the single authoritative Champions SP slider editor."""
-    st.markdown("<div class='ch186-card'><div class='ch186-title'>🎯 EV Training</div><div class='ch186-sub'>Each stat: 0–32 · Team total: 0–66.</div></div>", unsafe_allow_html=True)
     slot = st.session_state.team_slots[slot_index]
     values = _sanitize(slot)
     species_key = f"stat_sp_species_{slot_index}"
@@ -91,6 +79,8 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
             widget_key = f"stat_sp_slider_{slot_index}_{key}"
             if widget_key not in st.session_state:
                 st.session_state[widget_key] = values[key]
+    st.markdown("### 🎯 EV Training")
+    st.caption("Each stat: 0–32 · Team total: 0–66.")
     for label, key in _STAT_KEYS:
         st.slider(f"{label} EVs", min_value=0, max_value=32, value=values[key], step=1, key=f"stat_sp_slider_{slot_index}_{key}", on_change=_sync_slider, args=(slot_index, key))
         current = int(st.session_state.team_slots[slot_index].get("evs", {}).get(key, 0) or 0)
@@ -104,38 +94,52 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
     return values
 
 def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str) -> Dict[str, int]:
-    """Render the intended live stacked bar chart: base stat plus trained contribution."""
     slot = st.session_state.team_slots[slot_index]
     values = _sanitize(slot)
     boosted, lowered = _nature_effect(nature)
     total = sum(values.values())
     labels = [label for label, _ in _STAT_KEYS]
-    base_values = []
-    actual_values = []
+    base_values: list[int] = []
+    ev_values: list[int] = []
+    actual_values: list[int] = []
     for _, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
         ev = values[key]
         multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
-        actual = round((base + ev) * multiplier)
         base_values.append(base)
-        actual_values.append(actual)
-    max_value = max(180, max(actual_values or [0]) + 10)
+        ev_values.append(ev)
+        actual_values.append(round((base + ev) * multiplier))
 
-    st.markdown(
-        f"<div class='ch186-card'><div class='ch186-title'>📊 Dynamic Stat Training</div><div class='ch186-sub'>Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}</div></div>",
-        unsafe_allow_html=True,
+    st.markdown("### 📊 Dynamic Stat Training")
+    st.caption(f"Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}")
+
+    import plotly.graph_objects as go
+    y = labels[::-1]
+    base = base_values[::-1]
+    ev = ev_values[::-1]
+    actual = actual_values[::-1]
+    hover = []
+    for label, key, b, e, a in zip(labels[::-1], [k for _, k in _STAT_KEYS][::-1], base, ev, actual):
+        tag = "+ Nature" if key == boosted else "− Nature" if key == lowered else "Neutral"
+        hover.append(f"{label}<br>Base: {b}<br>EV: +{e}<br>{tag}<br>Final: {a}")
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(y=y, x=base, orientation="h", name="Base", hoverinfo="text", hovertext=hover))
+    fig.add_trace(go.Bar(y=y, x=ev, orientation="h", name="EV Training", hoverinfo="text", hovertext=hover))
+    fig.update_layout(
+        barmode="stack",
+        height=390,
+        margin=dict(l=10, r=45, t=15, b=10),
+        xaxis=dict(range=[0, max(180, max(actual or [0]) + 10)], title=None, showgrid=True, zeroline=False),
+        yaxis=dict(title=None, categoryorder="array", categoryarray=y),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        showlegend=True,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(size=12),
     )
-
-    rows = []
-    for label, key, base, actual in zip(labels, [k for _, k in _STAT_KEYS], base_values, actual_values):
-        badge = "<span class='ch186-badge ch186-up'>+ Nature</span>" if key == boosted else "<span class='ch186-badge ch186-down'>− Nature</span>" if key == lowered else "<span class='ch186-badge ch186-neutral'>Neutral</span>"
-        base_pct = max(0.0, min(100.0, base / max_value * 100.0))
-        actual_pct = max(base_pct, min(100.0, actual / max_value * 100.0))
-        trained_pct = max(0.0, actual_pct - base_pct)
-        rows.append(
-            f"<div class='ch186-bar-row'><div class='ch186-bar-label'>{html.escape(label)} {badge}<small>Base {base}</small></div>"
-            f"<div class='ch186-track'><div class='ch186-base' style='width:{base_pct:.2f}%'></div><div class='ch186-trained' style='left:{base_pct:.2f}%;width:{trained_pct:.2f}%'></div></div>"
-            f"<div class='ch186-value'>{actual}</div></div>"
-        )
-    st.markdown("<div class='ch186-card ch186-plot'>" + "".join(rows) + "<div class='ch186-scale'><span>0</span><span>60</span><span>120</span><span>180+</span></div></div>", unsafe_allow_html=True)
+    fig.update_traces(marker_line_width=0)
+    for y_value, value in zip(y, actual):
+        fig.add_annotation(x=value, y=y_value, text=str(value), showarrow=False, xanchor="left", yshift=0, font=dict(size=13))
+    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
     return values
