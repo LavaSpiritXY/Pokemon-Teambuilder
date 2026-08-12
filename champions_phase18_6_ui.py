@@ -58,6 +58,14 @@ def _stat_colour(value: int) -> str:
     if value <= 120: return "#f97316"
     return "#7ac74c"
 
+def _stat_bar(value: int) -> str:
+    """Build a deliberately visible text bar so the magnitude colour cannot disappear with HTML/CSS."""
+    segments = max(1, min(20, round(value / 180 * 20)))
+    if value <= 80: block = "🟥"
+    elif value <= 120: block = "🟧"
+    else: block = "🟩"
+    return block * segments
+
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
     st.markdown(_CSS, unsafe_allow_html=True); values=render_dynamic_stat_controls(slot_index,pokemon_name,nature); render_dynamic_stat_graph(slot_index,pokemon_name,base_stats,nature); return values
 
@@ -81,6 +89,7 @@ def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Op
     st.markdown("<div class='ch186-header'><div>Stat</div><div style='text-align:center'>Initial Base Stat</div><div style='text-align:center'>EV Allocation</div><div style='text-align:center'>Nature Change</div><div>Stat Magnitude</div><div style='text-align:right'>Total Base Stat</div></div>",unsafe_allow_html=True)
     out=[]
     for label,key,base,ev,delta,total,width in rows:
-        badge="<span class='ch186-badge ch186-up'>+</span>" if key==boosted else "<span class='ch186-badge ch186-down'>−</span>" if key==lowered else "<span class='ch186-badge ch186-neutral'>0</span>"; nature_text=f"+{delta}" if delta>0 else str(delta)
+        badge="<span class='ch186-badge ch186-up'>+</span>" if key==boosted else "<span class='ch186-badge ch186-down'>−</span>" if key==lowered else "<span class='ch186-badge ch186-neutral'>0</span>"; nature_text=f"+{delta}" if delta>0 else str(delta); bar=_stat_bar(total)
         out.append(f"<div class='ch186-row'><div class='ch186-name'>{label} {badge}</div><div class='ch186-value'>{base}</div><div class='ch186-value'>+{ev}</div><div class='ch186-value'>{nature_text}</div><div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{_stat_colour(total)}'></div></div><div class='ch186-total'>{total}</div></div>")
-    st.markdown("<div class='ch186-card'>"+"".join(out)+"<div class='ch186-legend'><span class='ch186-low'>RED = SMALL</span><span class='ch186-mid'>ORANGE = MIDDLE</span><span class='ch186-high'>GREEN = BIG</span></div></div>",unsafe_allow_html=True); return values
+        out.append(f"<div style='margin:-5px 0 9px 360px;font-size:12px;line-height:1.1;white-space:nowrap'>{bar}</div>")
+    st.markdown("<div class='ch186-card'>"+"".join(out)+"<div class='ch186-legend'><span class='ch186-low'>🟥 RED = SMALL</span><span class='ch186-mid'>🟧 ORANGE = MIDDLE</span><span class='ch186-high'>🟩 GREEN = BIG</span></div></div>",unsafe_allow_html=True); return values
