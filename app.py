@@ -8,6 +8,7 @@ import requests
 import streamlit as strlit
 import pandas as pd
 from champions_phase18_5 import render_champions_profile_v6
+from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions_phase18 import render_champions_profile_v3
 from champions_phase17 import render_champions_profile_v2
 
@@ -4176,6 +4177,12 @@ for i in range(6):
             nat_match = [n for n in nat_opts if n.startswith(current_nature.split(" ")[0])]
             nat_idx = nat_opts.index(nat_match[0]) if nat_match else 0
             slot["nature"] = strlit.selectbox("Nature", options=nat_opts, index=nat_idx, key=f"nat_{i}")
+            render_dynamic_stat_controls(
+                slot_index=i,
+                pokemon_name=slot_name,
+                nature=slot.get("nature", "Hardy"),
+            )
+
 
             meta = compute_meta_analytics(slot_name)
             type_summary = get_type_defense_summary(mon_data["types"])
@@ -4233,27 +4240,6 @@ for i in range(6):
                             </div>
                         </div>
                     ''', unsafe_allow_html=True)
-            strlit.markdown("##### 📊 Champions SP Allocation")
-            sp_cols = col_set.columns(3)
-            sp_keys = ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]
-            sp_labels = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"]
-            if "evs" not in slot or not isinstance(slot["evs"], dict):
-                slot["evs"] = {k: 0 for k in sp_keys}
-            current_sp = {k: max(0, min(32, int(slot["evs"].get(k, 0) or 0))) for k in sp_keys}
-            used_sp = sum(current_sp.values())
-            for idx, (key, label) in enumerate(zip(sp_keys, sp_labels)):
-                with sp_cols[idx % 3]:
-                    other_sp = used_sp - current_sp[key]
-                    max_allowed = min(32, 66 - other_sp)
-                    current_value = current_sp[key]
-                    new_value = strlit.number_input(
-                        label, min_value=0, max_value=max_allowed, step=1,
-                        value=min(current_value, max_allowed), key=f"stat_sp_{i}_{key}"
-                    )
-                    current_sp[key] = int(new_value)
-                    slot["evs"][key] = int(new_value)
-                    used_sp = other_sp + int(new_value)
-            strlit.caption(f"Champions SP: {sum(current_sp.values())}/66 total · maximum 32 per stat")
 
 
             strlit.markdown("##### Type matchup")
@@ -4323,7 +4309,12 @@ for i in range(6):
                         )
                     )
 
-            render_base_stats_bubble(mon_data.get("stats"))
+            render_dynamic_stat_graph(
+                slot_index=i,
+                pokemon_name=slot_name,
+                base_stats=mon_data.get("stats"),
+                nature=slot.get("nature", "Hardy"),
+            )
 
 # -----------------------------------------------------------------------------
 # 6. TAB 7: TEAM OVERVIEW & TEAM EVALUATOR INTEGRATION

@@ -63,7 +63,7 @@ def _sync_slider(slot_index: int, key: str) -> None:
     slot["evs"] = current
 
 def _stat_colour(value: int) -> str:
-    ratio = max(0.0, min(1.0, value / 180.0))
+    ratio = max(0.0, min(1.0, float(value) / 180.0))
     return f"hsl({ratio * 120:.0f}, 72%, 48%)"
 
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
@@ -99,4 +99,99 @@ def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats:
             max_class = "ch186-max" if ev == 32 else ""
             rows.append(f"<div class='ch186-row {max_class}'><div><div class='ch186-name'>{label} {badge}</div><div class='ch186-note'>Base {base} · EV +{ev}</div></div><div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{_stat_colour(base)}'></div><div class='ch186-ev-overlay' style='width:{ev_width:.1f}%'></div></div><div class='ch186-total'>{adjusted}</div></div>")
         st.markdown("<div class='ch186-card'>" + "".join(rows) + "</div>", unsafe_allow_html=True)
+    return values
+
+
+
+def render_dynamic_stat_controls(
+    slot_index: int,
+    pokemon_name: str,
+    nature: str,
+) -> Dict[str, int]:
+    """Render the single authoritative Champions SP slider editor."""
+    st.markdown(
+        "<div class='ch186-card'><div class='ch186-title'>🎯 EV Training</div>"
+        "<div class='ch186-sub'>Each stat: 0–32 · Team total: 0–66.</div></div>",
+        unsafe_allow_html=True,
+    )
+    slot = st.session_state.team_slots[slot_index]
+    values = _sanitize(slot)
+    species_key = f"stat_sp_species_{slot_index}"
+    if st.session_state.get(species_key) != pokemon_name:
+        for _, key in _STAT_KEYS:
+            st.session_state[f"stat_sp_slider_{slot_index}_{key}"] = values[key]
+        st.session_state[species_key] = pokemon_name
+    else:
+        for _, key in _STAT_KEYS:
+            widget_key = f"stat_sp_slider_{slot_index}_{key}"
+            if widget_key not in st.session_state:
+                st.session_state[widget_key] = values[key]
+
+    for label, key in _STAT_KEYS:
+        st.slider(
+            f"{label} EVs",
+            min_value=0,
+            max_value=32,
+            value=values[key],
+            step=1,
+            key=f"stat_sp_slider_{slot_index}_{key}",
+            on_change=_sync_slider,
+            args=(slot_index, key),
+        )
+        current = int(st.session_state.team_slots[slot_index].get("evs", {}).get(key, 0) or 0)
+        st.caption(f"{current}/32")
+
+    values = _sanitize(slot)
+    total = sum(values.values())
+    notice_key = f"stat_sp_limit_notice_{slot_index}"
+    if st.session_state.pop(notice_key, False):
+        st.warning("EV limit reached: maximum 32 in one stat and 66 total.")
+    st.caption(f"Champions SP: {total}/66 total · maximum 32 per stat")
+    return values
+
+
+def render_dynamic_stat_graph(
+    slot_index: int,
+    pokemon_name: str,
+    base_stats: Optional[Mapping[str, Any]],
+    nature: str,
+) -> Dict[str, int]:
+    """Render the live stat graph from the same session-state values as the sliders."""
+    slot = st.session_state.team_slots[slot_index]
+    values = _sanitize(slot)
+    boosted, lowered = _nature_effect(nature)
+    total = sum(values.values())
+
+    st.markdown(
+        f"<div class='ch186-card'><div class='ch186-title'>📊 Dynamic Stat Training</div>"
+        f"<div class='ch186-sub'>Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}</div></div>",
+        unsafe_allow_html=True,
+    )
+
+    rows = []
+    for label, key in _STAT_KEYS:
+        base = _base_stat(base_stats, key)
+        ev = values[key]
+        pre_nature = base + ev
+        multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
+        adjusted = round(pre_nature * multiplier)
+        width = max(0.5, min(100.0, adjusted / 180.0 * 100.0))
+        colour = _stat_colour(adjusted)
+        badge = (
+            "<span class='ch186-badge ch186-up'>+ Nature</span>"
+            if key == boosted
+            else "<span class='ch186-badge ch186-down'>− Nature</span>"
+            if key == lowered
+            else "<span class='ch186-badge ch186-neutral'>Neutral</span>"
+        )
+        max_class = "ch186-max" if ev == 32 else ""
+        rows.append(
+            f"<div class='ch186-row {max_class}'>"
+            f"<div><div class='ch186-name'>{label} {badge}</div>"
+            f"<div class='ch186-note'>Base {base} · EV +{ev} · Nature ×{multiplier:.2f}</div></div>"
+            f"<div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{colour}'></div></div>"
+            f"<div class='ch186-total'>{adjusted}</div></div>"
+        )
+
+    st.markdown("<div class='ch186-card'>" + "".join(rows) + "</div>", unsafe_allow_html=True)
     return values

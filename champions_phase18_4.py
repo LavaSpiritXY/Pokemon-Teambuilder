@@ -1,5 +1,6 @@
 """Phase 18.4: data-first Champions profile fixes."""
 from __future__ import annotations
+import math
 
 from typing import Any, Dict, Iterable, List, Optional
 
@@ -56,35 +57,33 @@ def resolved_tournament_profile(name: str) -> Dict[str, Any]:
 
 
 def tournament_display_score(base_score: float, pokemon_name: str) -> Dict[str, Any]:
-    """Create a stronger display-only score without mutating the old engine."""
+    """Create the same calibrated tournament score used by Phase 19 profile UI."""
     profile = resolved_tournament_profile(pokemon_name)
     base = _clamp(float(base_score))
     if not profile.get("available"):
         return {"score": round(base, 1), "base": round(base, 1), "tournament": None, "confidence": 0.0}
 
-    appearances = int(profile.get("appearances") or 0)
-    confidence = min((appearances / 100.0) ** 0.5, 1.0) if appearances else 0.0
-    win = max(0.0, min(1.0, float(profile.get("win_rate") or 0.50)))
-    recent = max(0.0, min(1.0, float(profile.get("recent_win_rate") or win)))
-    cut = max(0.0, min(1.0, float(profile.get("top_cut_rate") or 0.20)))
-    partners = profile.get("partners") or []
-    rates = []
-    for partner in partners[:6]:
+    appearances = max(0.0, float(profile.get("appearances") or 0))
+    weighted_appearances = max(0.0, float(profile.get("weighted_appearances") or profile.get("recent_usage_weight") or appearances))
+    usage_signal = 1.0 - math.exp(-weighted_appearances / 300.0)
+    win = max(0.0, min(1.0, float(profile.get("win_rate") or 0.0)))
+    recent_win = max(0.0, min(1.0, float(profile.get("recent_win_rate") if profile.get("recent_win_rate") is not None else win)))
+    cut = max(0.0, min(1.0, float(profile.get("top_cut_rate") or profile.get("recent_top_cut_rate") or 0.0)))
+    if cut <= 0.0:
         try:
-            if int(partner.get("teams_together") or 0) > 0:
-                rates.append(float(partner.get("shared_win_rate") or 0.50))
+            avg = float(profile.get("average_placement") or 0.0)
         except (TypeError, ValueError):
-            continue
-    partner_quality = max(0.0, min(1.0, sum(rates) / len(rates) if rates else 0.50))
-
-    performance_signal = ((win * 0.50) + (recent * 0.25) + (cut * 0.25)) * 100.0
-    usage_signal = min(appearances / 800.0, 1.0) * 100.0
-    partner_signal = partner_quality * 100.0
-    tournament_score = (performance_signal * 0.48) + (usage_signal * 0.34) + (partner_signal * 0.18)
-
-    blend = 0.72 * confidence
+            avg = 0.0
+        if avg > 0:
+            cut = max(0.0, min(1.0, 1.0 / (1.0 + max(0.0, avg - 1.0) / 8.0))) * 0.5
+    cut_signal = max(0.0, min(1.0, 0.5 + (cut - 0.125) / 0.25))
+    win_signal = max(0.0, min(1.0, 0.5 + (win - 0.5) * 2.0))
+    recent_signal = max(0.0, min(1.0, 0.5 + (recent_win - 0.5) * 2.0))
+    tournament_score = (usage_signal * 0.45 + cut_signal * 0.25 + win_signal * 0.20 + recent_signal * 0.10) * 100.0
+    confidence = min(1.0, math.sqrt(appearances / 100.0)) if appearances else 0.0
+    blend = 0.80 * confidence
     score = (base * (1.0 - blend)) + (tournament_score * blend)
-    return {"score": round(_clamp(score), 1), "base": round(base, 1), "tournament": round(tournament_score, 1), "confidence": confidence, "appearances": appearances}
+    return {"score": round(_clamp(score), 1), "base": round(base, 1), "tournament": round(_clamp(tournament_score), 1), "confidence": confidence, "appearances": int(appearances)}
 
 
 def display_tier(score: float) -> str:
@@ -153,6 +152,7 @@ def build_profile_18_4(pokemon_name: str, base_score: float, meta: Optional[Dict
 def rank_counters_with_evidence(pokemon_name: str, existing_candidates: Iterable[Any], limit: int = 6) -> List[Dict[str, Any]]:
     """Return only candidates that have real tournament evidence."""
     rows: List[Dict[str, Any]] = []
+    fallback_rows: List[Dict[str, Any]] = []
     seen = set()
     for candidate in existing_candidates or []:
         if isinstance(candidate, (tuple, list)):
@@ -167,11 +167,17 @@ def rank_counters_with_evidence(pokemon_name: str, existing_candidates: Iterable
             continue
         seen.add(key)
         profile = resolved_tournament_profile(name)
-        if not profile.get("available") or int(profile.get("appearances") or 0) <= 0:
-            continue
-        appearances = int(profile.get("appearances") or 0)
-        win = float(profile.get("win_rate") or 0.5)
-        relevance = min(1.0, appearances / 500.0) * 0.55 + max(0.0, min(1.0, win)) * 0.45
-        rows.append({"pokemon": name, "appearances": appearances, "win_rate": win, "relevance_score": relevance})
+        if profile.get("available") and int(profile.get("appearances") or 0) > 0:
+            appearances = int(profile.get("appearances") or 0)
+            win = max(0.0, min(1.0, float(profile.get("win_rate") or 0.5)))
+            cut = max(0.0, min(1.0, float(profile.get("top_cut_rate") or 0.0)))
+            relevance = min(1.0, appearances / 500.0) * 0.45 + cut * 0.30 + win * 0.25
+            rows.append({"pokemon": name, "appearances": appearances, "win_rate": win, "relevance_score": relevance})
+        else:
+            # A strategic counter is still useful when the tournament archive has
+            # no record for that candidate. Keep it visible rather than rendering
+            # an empty counters panel.
+            fallback_rows.append({"pokemon": name, "appearances": 0, "win_rate": 0.0, "relevance_score": 0.0})
     rows.sort(key=lambda x: (x["relevance_score"], x["appearances"]), reverse=True)
-    return rows[: max(0, int(limit))]
+    ordered = rows + fallback_rows
+    return ordered[: max(0, int(limit))]

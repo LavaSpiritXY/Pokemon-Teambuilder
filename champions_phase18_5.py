@@ -102,13 +102,46 @@ def _sp_rows(sp_values: Optional[Mapping[str, Any]]) -> tuple[str, int]:
 
 
 def _tournament_index(tournament: Mapping[str, Any]) -> float:
-    """Convert observed tournament evidence into a transparent 0-100 index."""
+    """Convert Champions evidence into a calibrated 0–100 dominance index.
+
+    Usage is saturated rather than divided by an arbitrary 1,000-event ceiling;
+    top-cut performance is measured against the 12.5% baseline expected from a
+    Top-8 cut; recent results are used when the archive provides them.
+    """
     appearances = max(0.0, float(tournament.get("appearances") or 0))
-    appearance_signal = min(100.0, math.log1p(appearances) / math.log1p(1000) * 100.0)
-    win = max(0.0, min(1.0, float(tournament.get("win_rate") or 0)))
-    top = max(0.0, min(1.0, float(tournament.get("top_cut_rate") or 0)))
-    recent = max(0.0, min(1.0, float(tournament.get("recent_win_rate") or win)))
-    return round(appearance_signal * 0.35 + win * 100 * 0.30 + top * 100 * 0.20 + recent * 100 * 0.15, 1)
+    weighted_appearances = max(0.0, float(tournament.get("weighted_appearances") or tournament.get("recent_usage_weight") or appearances))
+    usage_signal = 1.0 - math.exp(-weighted_appearances / 300.0)
+
+    win = max(0.0, min(1.0, float(tournament.get("win_rate") or 0.0)))
+    recent_win = max(0.0, min(1.0, float(tournament.get("recent_win_rate") if tournament.get("recent_win_rate") is not None else win)))
+    cut_raw = float(tournament.get("top_cut_rate") or 0.0)
+    recent_cut_raw = float(tournament.get("recent_top_cut_rate") or 0.0)
+    cut = max(0.0, min(1.0, cut_raw if cut_raw > 0 else recent_cut_raw))
+
+    # If explicit top-cut data is absent, use average placement as a transparent
+    # quality proxy instead of inventing a 20% top-cut rate.
+    if cut <= 0.0:
+        avg_placement = tournament.get("average_placement")
+        try:
+            avg = float(avg_placement)
+        except (TypeError, ValueError):
+            avg = 0.0
+        if avg > 0:
+            cut = max(0.0, min(1.0, 1.0 / (1.0 + max(0.0, avg - 1.0) / 8.0))) * 0.5
+
+    # 12.5% is the neutral Top-8 baseline. Values above it receive a real
+    # competitive lift; values below it are not treated as a total failure.
+    cut_signal = max(0.0, min(1.0, 0.5 + (cut - 0.125) / 0.25))
+    win_signal = max(0.0, min(1.0, 0.5 + (win - 0.5) * 2.0))
+    recent_signal = max(0.0, min(1.0, 0.5 + (recent_win - 0.5) * 2.0))
+
+    index = (
+        usage_signal * 0.45
+        + cut_signal * 0.25
+        + win_signal * 0.20
+        + recent_signal * 0.10
+    ) * 100.0
+    return round(max(0.0, min(100.0, index)), 1)
 
 
 def _display_score(base_score: float, tournament: Mapping[str, Any]) -> tuple[float, float]:
@@ -184,16 +217,6 @@ def render_champions_profile_v6(
             st.markdown("<div class='ch185-card'><span class='ch185-muted'>No tournament-supported checks are available from the current evidence pool.</span></div>", unsafe_allow_html=True)
     else:
         st.markdown("<div class='ch185-card'><div class='ch185-value'>Tournament data unavailable</div><div class='ch185-note'>This Pokémon/form is recognised by the builder, but no collected Champions tournament evidence is currently available. The profile remains visible and the base Strategizer score is not penalised.</div></div>", unsafe_allow_html=True)
-
-    st.markdown("<div class='ch185-section'>📊 Base Stats</div>", unsafe_allow_html=True)
-    if base_stats:
-        st.markdown("<div class='ch185-card'><div class='ch185-stats'>" + _base_stat_rows(base_stats) + "</div></div>", unsafe_allow_html=True)
-    else:
-        st.markdown("<div class='ch185-card'><span class='ch185-muted'>Base stats are not available for this form.</span></div>", unsafe_allow_html=True)
-
-    st.markdown("<div class='ch185-section'>⚙️ Champions SP Allocation</div>", unsafe_allow_html=True)
-    sp_rows, total = _sp_rows(sp_values)
-    st.markdown(f"<div class='ch185-card'><div class='ch185-stats'>{sp_rows}</div><div class='ch185-note' style='margin-top:10px'>Selected SP: {total} / 66 · Maximum per stat: 32</div></div>", unsafe_allow_html=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
     return True
