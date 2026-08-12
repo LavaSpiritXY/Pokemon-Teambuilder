@@ -58,8 +58,14 @@ def render_dynamic_stat_controls(slot_index:int,pokemon_name:str,nature:str)->Di
             if f"stat_sp_slider_{slot_index}_{key}" not in st.session_state: st.session_state[f"stat_sp_slider_{slot_index}_{key}"]=values[key]
     st.subheader("🎯 EV Training"); st.caption("Each stat: 0–32 · Team total: 0–66.")
     for label,key in _STAT_KEYS:
-        max_allowed=_slider_max(values,key); current=min(values[key],max_allowed); st.session_state[f"stat_sp_slider_{slot_index}_{key}"]=current
-        st.slider(f"{label} EVs",0,max_allowed,value=current,step=1,key=f"stat_sp_slider_{slot_index}_{key}",on_change=_sync_slider,args=(slot_index,key))
+        max_allowed=_slider_max(values,key); current=min(values[key],max_allowed); widget_key=f"stat_sp_slider_{slot_index}_{key}"
+        if max_allowed == 0:
+            # Streamlit does not allow a 0→0 slider. Keep it visible as a disabled 0 value.
+            st.number_input(f"{label} EVs", min_value=0, max_value=0, value=0, step=1, disabled=True, key=f"stat_sp_locked_{slot_index}_{key}")
+            st.session_state[widget_key]=0
+        else:
+            st.session_state[widget_key]=current
+            st.slider(f"{label} EVs",0,max_allowed,value=current,step=1,key=widget_key,on_change=_sync_slider,args=(slot_index,key))
     values=_sanitize(slot); st.caption(f"Champions SP: {sum(values.values())}/66 total · maximum 32 per stat"); return values
 
 def render_dynamic_stat_graph(slot_index:int,pokemon_name:str,base_stats:Optional[Mapping[str,Any]],nature:str)->Dict[str,int]:
