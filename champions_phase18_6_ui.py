@@ -15,6 +15,15 @@ _NATURE_EFFECTS = {
     "Calm": ("SpD", "Atk"), "Gentle": ("SpD", "Def"), "Sassy": ("SpD", "Spe"), "Careful": ("SpD", "SpA"),
     "Hardy": (None, None), "Docile": (None, None), "Bashful": (None, None), "Quirky": (None, None), "Serious": (None, None),
 }
+_CSS = """
+<style>
+.ch186-card{border:1px solid rgba(148,163,184,.24);border-radius:14px;padding:14px 16px;background:rgba(148,163,184,.055);margin:8px 0}
+.ch186-title{font-size:1.08rem;font-weight:850;margin-bottom:4px}.ch186-sub{font-size:.76rem;color:rgba(180,190,205,.72)}
+.ch186-row{display:grid;grid-template-columns:112px 1fr 58px;gap:10px;align-items:center;margin:10px 0;padding:3px 0;border-radius:10px}.ch186-name{font-weight:800;font-size:.84rem}.ch186-note{font-size:.7rem;color:rgba(180,190,205,.68);margin-top:2px}
+.ch186-track{height:24px;border-radius:999px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.17);position:relative}.ch186-fill{height:100%;border-radius:999px}.ch186-total{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}
+.ch186-max{border:2px solid #ef4444;border-radius:10px;padding:5px 7px}
+</style>
+"""
 
 def _nature_effect(nature: str):
     return _NATURE_EFFECTS.get(str(nature or "Hardy").strip().split(" ")[0], (None, None))
@@ -61,7 +70,12 @@ def _sync_slider(slot_index: int, key: str) -> None:
     current[key] = requested
     slot["evs"] = current
 
+def _stat_colour(value: int) -> str:
+    ratio = max(0.0, min(1.0, float(value) / 180.0))
+    return f"hsl({ratio * 120:.0f}, 72%, 48%)"
+
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
+    st.markdown(_CSS, unsafe_allow_html=True)
     values = render_dynamic_stat_controls(slot_index, pokemon_name, nature)
     render_dynamic_stat_graph(slot_index, pokemon_name, base_stats, nature)
     return values
@@ -102,14 +116,12 @@ def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Op
     labels = [label for label, _ in _STAT_KEYS]
     adjusted_values = []
     base_values = []
-    ev_values = []
     for _, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
         ev = values[key]
         multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
         adjusted_values.append(round((base + ev) * multiplier))
         base_values.append(base)
-        ev_values.append(ev)
 
     st.markdown("### 📊 Dynamic Stat Training")
     st.caption(f"Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}")
@@ -126,15 +138,7 @@ def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Op
             height=430,
             margin=dict(l=25, r=25, t=30, b=25),
             showlegend=True,
-            polar=dict(
-                radialaxis=dict(
-                    visible=True,
-                    range=[0, max(180, max(adjusted_values or [0]) + 10)],
-                    gridcolor="rgba(128,128,128,0.22)",
-                    linecolor="rgba(128,128,128,0.30)",
-                ),
-                angularaxis=dict(gridcolor="rgba(128,128,128,0.18)"),
-            ),
+            polar=dict(radialaxis=dict(visible=True, range=[0, max(180, max(adjusted_values or [0]) + 10)])),
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
