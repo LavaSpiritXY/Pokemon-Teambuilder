@@ -94,52 +94,64 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
     return values
 
 def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str) -> Dict[str, int]:
+    """Render the live radar graph and detailed stat bars from the same EV/session values."""
     slot = st.session_state.team_slots[slot_index]
     values = _sanitize(slot)
     boosted, lowered = _nature_effect(nature)
     total = sum(values.values())
     labels = [label for label, _ in _STAT_KEYS]
-    base_values: list[int] = []
-    ev_values: list[int] = []
-    actual_values: list[int] = []
+    adjusted_values = []
+    base_values = []
+    ev_values = []
     for _, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
         ev = values[key]
         multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
+        adjusted_values.append(round((base + ev) * multiplier))
         base_values.append(base)
         ev_values.append(ev)
-        actual_values.append(round((base + ev) * multiplier))
 
     st.markdown("### 📊 Dynamic Stat Training")
     st.caption(f"Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}")
 
-    import plotly.graph_objects as go
-    y = labels[::-1]
-    base = base_values[::-1]
-    ev = ev_values[::-1]
-    actual = actual_values[::-1]
-    hover = []
-    for label, key, b, e, a in zip(labels[::-1], [k for _, k in _STAT_KEYS][::-1], base, ev, actual):
-        tag = "+ Nature" if key == boosted else "− Nature" if key == lowered else "Neutral"
-        hover.append(f"{label}<br>Base: {b}<br>EV: +{e}<br>{tag}<br>Final: {a}")
+    try:
+        import plotly.graph_objects as go
+        theta = labels + [labels[0]]
+        actual = adjusted_values + [adjusted_values[0]]
+        base = base_values + [base_values[0]]
+        fig = go.Figure()
+        fig.add_trace(go.Scatterpolar(r=base, theta=theta, fill="toself", name="Base stats", opacity=0.35))
+        fig.add_trace(go.Scatterpolar(r=actual, theta=theta, fill="toself", name="Trained stats", opacity=0.72))
+        fig.update_layout(
+            height=430,
+            margin=dict(l=25, r=25, t=30, b=25),
+            showlegend=True,
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, max(180, max(adjusted_values or [0]) + 10)],
+                    gridcolor="rgba(128,128,128,0.22)",
+                    linecolor="rgba(128,128,128,0.30)",
+                ),
+                angularaxis=dict(gridcolor="rgba(128,128,128,0.18)"),
+            ),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+        )
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    except ImportError:
+        st.warning("Plotly is not installed, so the interactive stat graph cannot be displayed.")
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(y=y, x=base, orientation="h", name="Base", hoverinfo="text", hovertext=hover))
-    fig.add_trace(go.Bar(y=y, x=ev, orientation="h", name="EV Training", hoverinfo="text", hovertext=hover))
-    fig.update_layout(
-        barmode="stack",
-        height=390,
-        margin=dict(l=10, r=45, t=15, b=10),
-        xaxis=dict(range=[0, max(180, max(actual or [0]) + 10)], title=None, showgrid=True, zeroline=False),
-        yaxis=dict(title=None, categoryorder="array", categoryarray=y),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        showlegend=True,
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(size=12),
-    )
-    fig.update_traces(marker_line_width=0)
-    for y_value, value in zip(y, actual):
-        fig.add_annotation(x=value, y=y_value, text=str(value), showarrow=False, xanchor="left", yshift=0, font=dict(size=13))
-    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    rows = []
+    for label, key in _STAT_KEYS:
+        base_stat = _base_stat(base_stats, key)
+        ev = values[key]
+        multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
+        adjusted = round((base_stat + ev) * multiplier)
+        width = max(0.5, min(100.0, adjusted / 180.0 * 100.0))
+        badge = "<span class='ch186-badge ch186-up'>+ Nature</span>" if key == boosted else "<span class='ch186-badge ch186-down'>− Nature</span>" if key == lowered else "<span class='ch186-badge ch186-neutral'>Neutral</span>"
+        max_class = "ch186-max" if ev == 32 else ""
+        rows.append(f"<div class='ch186-row {max_class}'><div><div class='ch186-name'>{label} {badge}</div><div class='ch186-note'>Base {base_stat} · EV +{ev} · Nature ×{multiplier:.2f}</div></div><div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{_stat_colour(adjusted)}'></div></div><div class='ch186-total'>{adjusted}</div></div>")
+    st.markdown("<div class='ch186-card'>" + "".join(rows) + "</div>", unsafe_allow_html=True)
     return values
