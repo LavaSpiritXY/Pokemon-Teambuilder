@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import html
+import math
 from typing import Any, Dict, Mapping, Optional
 
 import streamlit as st
@@ -20,7 +21,7 @@ _CSS = """
 .ch186-card{border:1px solid rgba(148,163,184,.24);border-radius:14px;padding:14px 16px;background:rgba(148,163,184,.055);margin:8px 0}
 .ch186-title{font-size:1.08rem;font-weight:850;margin-bottom:4px}.ch186-sub{font-size:.76rem;color:rgba(180,190,205,.72)}
 .ch186-row{display:grid;grid-template-columns:112px 1fr 58px;gap:10px;align-items:center;margin:10px 0;padding:3px 0;border-radius:10px}.ch186-name{font-weight:800;font-size:.84rem}.ch186-note{font-size:.7rem;color:rgba(180,190,205,.68);margin-top:2px}
-.ch186-track{height:24px;border-radius:999px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.17);position:relative}.ch186-fill{height:100%;border-radius:999px}.ch186-total{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}
+.ch186-track{height:24px;border-radius:999px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.17);position:relative}.ch186-fill{height:100%;border-radius:999px}.ch186-total{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}.ch186-radar{display:flex;justify-content:center;width:100%;padding:4px 0 8px}.ch186-radar svg{width:min(100%,520px);height:auto;overflow:visible}.ch186-radar text{font-family:inherit;fill:currentColor;font-size:12px;font-weight:750}.ch186-radar .grid{fill:none;stroke:rgba(148,163,184,.25);stroke-width:1}.ch186-radar .axis{stroke:rgba(148,163,184,.18);stroke-width:1}.ch186-radar .base{fill:rgba(148,163,184,.18);stroke:rgba(148,163,184,.65);stroke-width:2}.ch186-radar .actual{fill:rgba(122,199,76,.24);stroke:#7ac74c;stroke-width:3}.ch186-radar .point{fill:#7ac74c;stroke:white;stroke-width:1.5}
 .ch186-max{border:2px solid #ef4444;border-radius:10px;padding:5px 7px}.ch186-slot{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(148,163,184,.045);margin:7px 0}.ch186-slot img{width:48px;height:48px;object-fit:contain}.ch186-slot-name{font-weight:850}.ch186-slot-meta{font-size:.72rem;color:rgba(180,190,205,.72)}
 </style>
 """
@@ -107,8 +108,55 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
     st.caption(f"Champions SP: {total}/66 total · maximum 32 per stat")
     return values
 
+def _radar_points(values: list[float], cx: float, cy: float, radius: float, max_value: float) -> str:
+    points = []
+    count = len(values)
+    for index, value in enumerate(values):
+        angle = -math.pi / 2 + (2 * math.pi * index / count)
+        scaled = radius * max(0.0, min(1.0, value / max_value))
+        points.append(f"{cx + math.cos(angle) * scaled:.1f},{cy + math.sin(angle) * scaled:.1f}")
+    return " ".join(points)
+
+def _render_radar_svg(labels: list[str], base_values: list[int], actual_values: list[int]) -> str:
+    """Render a dependency-free SVG radar chart inside Streamlit's HTML renderer."""
+    width, height = 520, 430
+    cx, cy, radius = 260, 205, 145
+    max_value = max(180, max(actual_values) + 10 if actual_values else 180)
+    grid_parts = []
+    for level in (0.25, 0.5, 0.75, 1.0):
+        grid_parts.append(f'<polygon class="grid" points="{_radar_points([max_value * level] * 6, cx, cy, radius, max_value)}"/>')
+    axis_parts = []
+    label_parts = []
+    for index, label in enumerate(labels):
+        angle = -math.pi / 2 + (2 * math.pi * index / 6)
+        x2 = cx + math.cos(angle) * radius
+        y2 = cy + math.sin(angle) * radius
+        tx = cx + math.cos(angle) * (radius + 27)
+        ty = cy + math.sin(angle) * (radius + 27) + 4
+        anchor = "middle" if abs(math.cos(angle)) < 0.35 else ("start" if math.cos(angle) > 0 else "end")
+        axis_parts.append(f'<line class="axis" x1="{cx}" y1="{cy}" x2="{x2:.1f}" y2="{y2:.1f}"/>')
+        label_parts.append(f'<text x="{tx:.1f}" y="{ty:.1f}" text-anchor="{anchor}">{html.escape(label)}</text>')
+    actual_points = _radar_points(actual_values, cx, cy, radius, max_value)
+    base_points = _radar_points(base_values, cx, cy, radius, max_value)
+    point_parts = []
+    for index, value in enumerate(actual_values):
+        angle = -math.pi / 2 + (2 * math.pi * index / 6)
+        scaled = radius * max(0.0, min(1.0, value / max_value))
+        x = cx + math.cos(angle) * scaled
+        y = cy + math.sin(angle) * scaled
+        point_parts.append(f'<circle class="point" cx="{x:.1f}" cy="{y:.1f}" r="4"/>')
+    return (
+        '<div class="ch186-radar"><svg viewBox="0 0 520 430" role="img" aria-label="Dynamic Pokémon stat radar chart">'
+        + "".join(grid_parts) + "".join(axis_parts)
+        + f'<polygon class="base" points="{base_points}"/><polygon class="actual" points="{actual_points}"/>'
+        + "".join(point_parts) + "".join(label_parts)
+        + '<text x="16" y="26" style="font-size:11px;fill:rgba(180,190,205,.75)">Base</text>'
+        + '<text x="58" y="26" style="font-size:11px;fill:#7ac74c">Trained</text>'
+        + '</svg></div>'
+    )
+
 def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str) -> Dict[str, int]:
-    """Render a real interactive radar graph from the same live EV/session values."""
+    """Render a dependency-free live radar graph from the same EV/session values."""
     slot = st.session_state.team_slots[slot_index]
     values = _sanitize(slot)
     boosted, lowered = _nature_effect(nature)
@@ -116,33 +164,14 @@ def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Op
     labels = [label for label, _ in _STAT_KEYS]
     adjusted_values = []
     base_values = []
-    ev_values = []
     for _, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
         ev = values[key]
         multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
         adjusted_values.append(round((base + ev) * multiplier))
         base_values.append(base)
-        ev_values.append(ev)
     st.markdown(f"<div class='ch186-card'><div class='ch186-title'>📊 Dynamic Stat Training</div><div class='ch186-sub'>Live totals · {total}/66 EVs allocated · {html.escape(str(nature))}</div></div>", unsafe_allow_html=True)
-    try:
-        import plotly.graph_objects as go
-        theta = labels + [labels[0]]
-        actual = adjusted_values + [adjusted_values[0]]
-        base = base_values + [base_values[0]]
-        fig = go.Figure()
-        fig.add_trace(go.Scatterpolar(r=base, theta=theta, fill="toself", name="Base stats", opacity=0.35))
-        fig.add_trace(go.Scatterpolar(r=actual, theta=theta, fill="toself", name="Trained stats", opacity=0.72))
-        fig.update_layout(
-            height=430,
-            margin=dict(l=25, r=25, t=30, b=25),
-            showlegend=True,
-            polar=dict(radialaxis=dict(visible=True, range=[0, max(180, max(adjusted_values) + 10)])),
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
-        )
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-    except ImportError:
-        st.warning("Plotly is not installed, so the interactive stat graph cannot be displayed.")
+    st.markdown(_render_radar_svg(labels, base_values, adjusted_values), unsafe_allow_html=True)
     rows = []
     for label, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
