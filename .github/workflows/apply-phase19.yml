@@ -18,10 +18,28 @@ jobs:
           ref: champions-tournament-data
           fetch-depth: 0
 
+      - name: Detect Phase 19 state
+        id: phase19
+        shell: bash
+        run: |
+          if grep -q "def render_dynamic_stat_controls(" champions_phase18_6_ui.py \
+             && grep -q "def render_dynamic_stat_graph(" champions_phase18_6_ui.py \
+             && grep -q "from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph" app.py \
+             && grep -q "def _tournament_index(" champions_phase18_5.py \
+             && grep -q "fallback_rows" champions_phase18_4.py; then
+            echo "applied=true" >> "$GITHUB_OUTPUT"
+            echo "Phase 19 changes are already present; patch scripts will be skipped."
+          else
+            echo "applied=false" >> "$GITHUB_OUTPUT"
+            echo "Phase 19 changes are incomplete; patch scripts will run."
+          fi
+
       - name: Apply Phase 19 hotfix
+        if: steps.phase19.outputs.applied != 'true'
         run: python apply_phase19_hotfix.py
 
       - name: Apply Phase 19 UI and meta fixes
+        if: steps.phase19.outputs.applied != 'true'
         run: python apply_phase19_ui_and_meta_fix.py
 
       - name: Compile changed Python modules
