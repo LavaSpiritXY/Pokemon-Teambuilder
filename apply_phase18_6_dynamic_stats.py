@@ -24,8 +24,9 @@ def patch_app():
             "Phase 18.6 UI import",
         )
 
-    # Remove the old static SP widget block. The new renderer owns the controls,
-    # the 32-per-stat cap, and the 66-total cap.
+    # Remove the old static SP widget block when it still exists.
+    # Phase 18.5/partial local edits may already have removed it, so this is
+    # intentionally idempotent instead of failing when the block is absent.
     old_sp = re.compile(
         r"            strlit\.markdown\(\"##### 📊 Champions SP Allocation\"\)\n"
         r".*?"
@@ -33,12 +34,12 @@ def patch_app():
         re.S,
     )
     text, sp_count = old_sp.subn("", text, count=1)
-    if sp_count == 0 and "stat_sp_slider_" not in text:
-        raise RuntimeError("Could not locate the old Champions SP allocation block in app.py. No app.py changes were written.")
 
-    # The old base-stat helper was removed during Phase 18.5. Replace its stale
-    # call with the Phase 18.6 dynamic chart/control renderer.
-    stale = re.compile(r"            render_base_stats_bubble\(mon_data\.get\(\"stats\"\)\)\n")
+    # The old base-stat helper was removed during Phase 18.5. Replace any
+    # stale call with the Phase 18.6 dynamic chart/control renderer.
+    stale = re.compile(
+        r"            render_base_stats_bubble\(mon_data\.get\(\"stats\"\)\)\n"
+    )
     if stale.search(text):
         text = stale.sub(
             "            render_dynamic_stat_training(\n"
@@ -53,7 +54,10 @@ def patch_app():
             count=1,
         )
     elif "render_dynamic_stat_training(" not in text:
-        raise RuntimeError("Could not locate the stale base-stat renderer call in app.py. No app.py changes were written.")
+        raise RuntimeError(
+            "Could not locate either the stale base-stat renderer call or an existing "
+            "Phase 18.6 dynamic renderer in app.py. No app.py changes were written."
+        )
 
     # Make slot tabs remember the selected Pokémon by name.
     old_tabs = 'tabs = strlit.tabs([f"Slot {i+1}" for i in range(6)] + ["📊 Team Overview"])'
