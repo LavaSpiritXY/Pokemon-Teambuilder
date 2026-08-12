@@ -15,15 +15,18 @@ _NATURE_EFFECTS = {
     "Calm": ("SpD", "Atk"), "Gentle": ("SpD", "Def"), "Sassy": ("SpD", "Spe"), "Careful": ("SpD", "SpA"),
     "Hardy": (None, None), "Docile": (None, None), "Bashful": (None, None), "Quirky": (None, None), "Serious": (None, None),
 }
+
 _CSS = """
 <style>
 .ch186-card{border:1px solid rgba(148,163,184,.24);border-radius:16px;padding:16px;background:rgba(148,163,184,.055);margin:8px 0}
 .ch186-title{font-size:1.08rem;font-weight:850;margin-bottom:4px}.ch186-sub{font-size:.76rem;color:rgba(180,190,205,.72)}
-.ch186-row{display:grid;grid-template-columns:112px 1fr 58px;gap:10px;align-items:center;margin:10px 0;padding:3px 0;border-radius:10px}.ch186-name{font-weight:800;font-size:.84rem}.ch186-note{font-size:.7rem;color:rgba(180,190,205,.68);margin-top:2px}
-.ch186-track{height:24px;border-radius:999px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.17)}.ch186-fill{height:100%;border-radius:999px;transition:width .2s ease,background .2s ease}.ch186-total{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}
-.ch186-max{border:2px solid #ef4444;border-radius:10px;padding:5px 7px}
-.ch186-legend{display:flex;justify-content:space-between;gap:12px;font-size:.68rem;color:rgba(180,190,205,.72);margin-top:5px}.ch186-low{color:#ef4444}.ch186-high{color:#7ac74c}
-@media (max-width:700px){.ch186-row{grid-template-columns:92px 1fr 48px;gap:7px}.ch186-note{font-size:.62rem}}
+.ch186-header{display:grid;grid-template-columns:115px 105px 105px 105px 1fr 72px;gap:10px;align-items:center;margin:10px 0 4px;padding:0 8px;color:rgba(180,190,205,.72);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.ch186-row{display:grid;grid-template-columns:115px 105px 105px 105px 1fr 72px;gap:10px;align-items:center;margin:8px 0;padding:9px 8px;border-radius:10px;background:rgba(148,163,184,.035)}
+.ch186-name{font-weight:800;font-size:.84rem}.ch186-value{text-align:center;font-weight:850;font-variant-numeric:tabular-nums}.ch186-note{font-size:.68rem;color:rgba(180,190,205,.68);margin-top:2px}
+.ch186-track{height:24px;border-radius:999px;overflow:hidden;background:rgba(148,163,184,.13);border:1px solid rgba(148,163,184,.17)}.ch186-fill{height:100%;border-radius:999px;transition:width .2s ease,background .2s ease}.ch186-total{text-align:right;font-weight:950;font-variant-numeric:tabular-nums;font-size:1rem}
+.ch186-badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:.66rem;font-weight:900;margin-left:4px}.ch186-up{background:rgba(122,199,76,.18);color:#7ac74c}.ch186-down{background:rgba(239,68,68,.16);color:#ef4444}.ch186-neutral{background:rgba(148,163,184,.14);color:#94a3b8}
+.ch186-max{border:2px solid #ef4444}.ch186-legend{display:flex;justify-content:space-between;gap:12px;font-size:.68rem;color:rgba(180,190,205,.72);margin-top:8px}.ch186-low{color:#ef4444}.ch186-mid{color:#f97316}.ch186-high{color:#7ac74c}
+@media (max-width:900px){.ch186-header{grid-template-columns:90px 72px 72px 72px 1fr 55px;gap:6px;font-size:.58rem}.ch186-row{grid-template-columns:90px 72px 72px 72px 1fr 55px;gap:6px}.ch186-value{font-size:.78rem}.ch186-note{font-size:.58rem}}
 </style>
 """
 
@@ -60,10 +63,17 @@ def _sync_slider(slot_index: int, key: str) -> None:
     current[key] = requested; slot["evs"] = current
 
 def _stat_colour(value: int) -> str:
-    """Return a red -> yellow -> green colour based on the displayed stat value."""
-    ratio = max(0.0, min(1.0, float(value) / 180.0))
-    hue = ratio * 120.0
-    return f"hsl({hue:.0f}, 72%, 48%)"
+    """Low stats are red, middle stats are orange, and high stats are green."""
+    value = max(0.0, float(value))
+    if value <= 80:
+        ratio = value / 80.0
+        hue = 0.0 + (30.0 * ratio)
+    elif value <= 120:
+        ratio = (value - 80.0) / 40.0
+        hue = 30.0 + (90.0 * ratio)
+    else:
+        hue = 120.0
+    return f"hsl({hue:.0f}, 78%, 48%)"
 
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
     st.markdown(_CSS, unsafe_allow_html=True)
@@ -90,46 +100,62 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
     return values
 
 def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str) -> Dict[str, int]:
-    """Render the live six-stat profile as simple red-to-green bars; intentionally no radar chart."""
+    """Render a live stat-bar profile. No Plotly, no radar chart."""
     slot = st.session_state.team_slots[slot_index]; values = _sanitize(slot)
     boosted, lowered = _nature_effect(nature)
     stat_rows = []
     for label, key in _STAT_KEYS:
         base = _base_stat(base_stats, key)
         ev = values[key]
-        multiplier = 1.10 if key == boosted else (0.90 if key == lowered else 1.0)
-        adjusted = round((base + ev) * multiplier)
-        width = max(0.5, min(100.0, adjusted / 180.0 * 100.0))
-        stat_rows.append((label, key, base, ev, multiplier, adjusted, width))
+        pre_nature = base + ev
+        if key == boosted:
+            nature_delta = round(pre_nature * 0.10)
+        elif key == lowered:
+            nature_delta = -round(pre_nature * 0.10)
+        else:
+            nature_delta = 0
+        total_stat = max(0, pre_nature + nature_delta)
+        width = max(0.5, min(100.0, total_stat / 180.0 * 100.0))
+        stat_rows.append((label, key, base, ev, nature_delta, total_stat, width))
 
-    total = sum(values.values())
+    total_ev = sum(values.values())
     st.markdown(
         f"<div class='ch186-card'><div class='ch186-title'>📊 {html.escape(str(pokemon_name))} — LIVE STAT PROFILE</div>"
-        f"<div class='ch186-sub'>{total}/66 SP allocated · {html.escape(str(nature or 'Hardy'))} nature · colour shows stat magnitude</div></div>",
+        f"<div class='ch186-sub'>{total_ev}/66 SP allocated · {html.escape(str(nature or 'Hardy'))} nature · bar colour reflects final stat magnitude</div></div>",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        "<div class='ch186-header'><div>Stat</div><div style='text-align:center'>Initial Base Stat</div><div style='text-align:center'>EV Allocation</div><div style='text-align:center'>Nature Change</div><div>Stat Magnitude</div><div style='text-align:right'>Total Base Stat</div></div>",
         unsafe_allow_html=True,
     )
 
     rows = []
-    for label, key, base, ev, multiplier, adjusted, width in stat_rows:
+    for label, key, base, ev, nature_delta, total_stat, width in stat_rows:
         if key == boosted:
-            badge = "<span class='ch186-badge ch186-up'>+ Nature</span>"
+            badge = "<span class='ch186-badge ch186-up'>+</span>"
+            nature_text = f"+{nature_delta}"
         elif key == lowered:
-            badge = "<span class='ch186-badge ch186-down'>− Nature</span>"
+            badge = "<span class='ch186-badge ch186-down'>−</span>"
+            nature_text = str(nature_delta)
         else:
-            badge = "<span class='ch186-badge ch186-neutral'>Neutral</span>"
+            badge = "<span class='ch186-badge ch186-neutral'>0</span>"
+            nature_text = "0"
         max_class = "ch186-max" if ev == 32 else ""
         rows.append(
             f"<div class='ch186-row {max_class}'>"
-            f"<div><div class='ch186-name'>{label} {badge}</div>"
-            f"<div class='ch186-note'>Base {base} · SP +{ev} · Nature ×{multiplier:.2f}</div></div>"
-            f"<div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{_stat_colour(adjusted)}'></div></div>"
-            f"<div class='ch186-total'>{adjusted}</div></div>"
+            f"<div><div class='ch186-name'>{label} {badge}</div></div>"
+            f"<div class='ch186-value'>{base}</div>"
+            f"<div class='ch186-value'>+{ev}</div>"
+            f"<div class='ch186-value'>{nature_text}</div>"
+            f"<div class='ch186-track'><div class='ch186-fill' style='width:{width:.1f}%;background:{_stat_colour(total_stat)}'></div></div>"
+            f"<div class='ch186-total'>{total_stat}</div></div>"
         )
 
     st.markdown(
         "<div class='ch186-card'>"
         + "".join(rows)
-        + "<div class='ch186-legend'><span class='ch186-low'>LOWER STAT</span><span>RED → YELLOW → GREEN</span><span class='ch186-high'>HIGHER STAT</span></div>"
+        + "<div class='ch186-legend'><span class='ch186-low'>RED = SMALL</span><span class='ch186-mid'>ORANGE = MIDDLE</span><span class='ch186-high'>GREEN = BIG</span></div>"
         + "</div>",
         unsafe_allow_html=True,
     )
