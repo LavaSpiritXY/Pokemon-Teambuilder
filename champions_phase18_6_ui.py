@@ -60,8 +60,9 @@ def render_dynamic_stat_controls(slot_index:int,pokemon_name:str,nature:str)->Di
     for label,key in _STAT_KEYS:
         max_allowed=_slider_max(values,key); current=min(values[key],max_allowed); widget_key=f"stat_sp_slider_{slot_index}_{key}"
         if max_allowed == 0:
-            # Streamlit does not allow a 0→0 slider. Keep it visible as a disabled 0 value.
-            st.number_input(f"{label} EVs", min_value=0, max_value=0, value=0, step=1, disabled=True, key=f"stat_sp_locked_{slot_index}_{key}")
+            # Keep the same slider UI, but lock it when no SP remains.
+            st.slider(f"{label} EVs — 🔒 MAX POINTS USED", min_value=0, max_value=32, value=0, step=1, disabled=True, key=f"stat_sp_locked_{slot_index}_{key}")
+            st.caption("🔒 No SP remaining — increase another stat or lower an existing allocation.")
             st.session_state[widget_key]=0
         else:
             st.session_state[widget_key]=current
