@@ -56,15 +56,15 @@ def _sync_slider(slot_index: int, key: str) -> None:
 
 
 def _bar_colour(value: int) -> str:
-    if value <= 80: return "🟥"
-    if value <= 120: return "🟧"
-    return "🟩"
+    if value <= 80: return "#ef4444"
+    if value <= 120: return "#f97316"
+    return "#7ac74c"
 
 
-def _stat_bar(value: int) -> str:
-    """Return a deliberately plain Unicode bar; rendered with st.write, not markdown/HTML."""
-    segments = max(1, min(24, round(value / 180 * 24)))
-    return _bar_colour(value) * segments
+def _stat_bar_html(value: int) -> str:
+    width = max(4, min(100, round(value / 180 * 100)))
+    colour = _bar_colour(value)
+    return f'<div style="width:100%;height:22px;border-radius:999px;background:#263241;border:1px solid #526071;overflow:hidden;"><div style="width:{width}%;height:100%;background:{colour};border-radius:999px;"></div></div>'
 
 
 def render_dynamic_stat_training(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str, sprite_url: str = "", moves: Optional[list[str]] = None) -> Dict[str, int]:
@@ -88,9 +88,9 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
 
 
 def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Optional[Mapping[str, Any]], nature: str) -> Dict[str, int]:
-    """Render the live profile with native Streamlit columns and visible Unicode bars.
+    """Render the live profile using Streamlit's native HTML component for the actual coloured bars.
 
-    No HTML, CSS, Plotly, SVG, canvas, or radar chart is used here.
+    No Plotly, SVG, canvas, or radar chart is used.
     """
     slot = st.session_state.team_slots[slot_index]; values = _sanitize(slot); boosted, lowered = _nature_effect(nature)
     st.markdown(f"### 📊 {pokemon_name} — LIVE STAT PROFILE")
@@ -103,8 +103,7 @@ def render_dynamic_stat_graph(slot_index: int, pokemon_name: str, base_stats: Op
         total = max(0, pre_nature + delta); nature_text = f"+{delta}" if delta > 0 else str(delta); marker = " ↑" if key == boosted else " ↓" if key == lowered else ""
         cols = st.columns([1.15, 1.05, 1.05, 1.05, 3.0, 0.85])
         cols[0].markdown(f"**{label}{marker}**"); cols[1].write(base); cols[2].write(f"+{ev}"); cols[3].write(nature_text)
-        # IMPORTANT: st.write is intentional. Markdown was the thing hiding the coloured blocks.
-        cols[4].write(_stat_bar(total))
+        cols[4].html(_stat_bar_html(total))
         cols[5].markdown(f"**{total}**")
-    st.write("🟥" + " RED = SMALL    " + "🟧" + " ORANGE = MIDDLE    " + "🟩" + " GREEN = BIG")
+    st.caption("🔴 RED = SMALL    🟠 ORANGE = MIDDLE    🟢 GREEN = BIG")
     return values
