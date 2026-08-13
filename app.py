@@ -15,6 +15,7 @@ from champions.constants import (
     SPECIES_DISPLAY_OVERRIDES,
     TYPE_CHART_DATA,
     CUSTOM_MEGAS_DATA,
+    BASE_HELD_ITEMS,
 )
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
@@ -1549,17 +1550,6 @@ def fetch_pokemon_roster():
 
 CHAMPIONS_ALL_FORMS = fetch_pokemon_roster()
 
-BASE_HELD_ITEMS = [
-    "Air Balloon", "Assault Vest", "Babiri Berry", "Binding Band", "Black Belt", "Black Sludge",
-    "Choice Band", "Choice Scarf", "Choice Specs", "Clear Amulet", "Covert Cloak", "Damp Rock",
-    "Eviolite", "Expert Belt", "Focus Sash", "Heat Rock", "Heavy-Duty Boots", "Iapapa Berry",
-    "Ice Rock", "Kee Berry", "Kings Rock", "Leftovers", "Life Orb", "Light Clay", "Loaded Dice",
-    "Lum Berry", "Maranga Berry", "Mental Herb", "Miracle Seed", "Mystic Water", "Never-Melt Ice",
-    "Normal Gem", "Occa Berry", "Passho Berry", "Payapa Berry", "Protective Pads", "Punching Glove",
-    "Rawst Berry", "Red Card", "Rindo Berry", "Rocky Helmet", "Safety Goggles", "Salac Berry",
-    "Scope Lens", "Shuca Berry", "Silk Scarf", "Sitrus Berry", "Smooth Rock", "Soft Sand",
-    "Spell Tag", "Throat Spray", "Toxic Orb", "Twisted Spoon", "Weakness Policy", "White Herb", "Yache Berry"
-]
 CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.values()))))
 
 # -----------------------------------------------------------------------------
