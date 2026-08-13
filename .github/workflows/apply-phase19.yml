@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   patch:
-    if: ${{ !contains(github.event.head_commit.message, 'Phase 19 applied') && !contains(github.event.head_commit.message, 'Automated tournament extraction applied') }}
+    if: ${{ !contains(github.event.head_commit.message, 'Phase 19 applied') && !contains(github.event.head_commit.message, 'Automated tournament extraction applied') && !contains(github.event.head_commit.message, 'Automated team I/O extraction applied') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -62,6 +62,10 @@ jobs:
         if: ${{ hashFiles('tools/auto_refactor.py') != '' }}
         run: python tools/auto_refactor.py
 
+      - name: Run automated team I/O extraction
+        if: ${{ hashFiles('tools/auto_extract_team_io.py') != '' }}
+        run: python tools/auto_extract_team_io.py
+
       - name: Compile changed Python modules
         run: |
           python -m py_compile app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py
@@ -69,12 +73,14 @@ jobs:
           if [ -f champions/tournament_data.py ]; then python -m py_compile champions/tournament_data.py; fi
           if [ -f champions/type_chart.py ]; then python -m py_compile champions/type_chart.py; fi
           if [ -f champions/smogon_data.py ]; then python -m py_compile champions/smogon_data.py; fi
+          if [ -f champions/team_io.py ]; then python -m py_compile champions/team_io.py; fi
+          if [ -f tools/auto_extract_team_io.py ]; then python -m py_compile tools/auto_extract_team_io.py; fi
 
       - name: Commit Phase 19 and refactor changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py apply_phase19_ui_and_meta_fix.py apply_phase19_hotfix.py champions/move_data.py champions/tournament_data.py champions/type_chart.py champions/smogon_data.py tools/auto_refactor.py tools/auto_extract_type_chart.py tools/auto_extract_smogon_data.py .github/workflows/apply-phase19.yml
+          git add app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py apply_phase19_ui_and_meta_fix.py apply_phase19_hotfix.py champions/move_data.py champions/tournament_data.py champions/type_chart.py champions/smogon_data.py champions/team_io.py tools/auto_refactor.py tools/auto_extract_type_chart.py tools/auto_extract_smogon_data.py tools/auto_extract_team_io.py .github/workflows/apply-phase19.yml
           if [ -f tools/auto_extract_move_data.py ]; then
             git rm tools/auto_extract_move_data.py
           fi
@@ -88,5 +94,5 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Automated tournament extraction applied"
+          git commit -m "Automated team I/O extraction applied"
           git push origin HEAD:champions-tournament-data
