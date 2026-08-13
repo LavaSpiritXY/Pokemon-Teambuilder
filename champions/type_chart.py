@@ -1,9 +1,10 @@
 from champions.constants import TYPE_COLORS, TYPE_DEFENSES, TYPE_SVG_URLS
+import requests
 
 TYPE_ORDER = list(TYPE_COLORS)
 
 
-def get_type_relationships(type_name, requests):
+def get_type_relationships(type_name):
     """Fetch raw PokeAPI damage relations for one attacking type."""
     try:
         response = requests.get(
