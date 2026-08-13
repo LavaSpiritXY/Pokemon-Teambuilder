@@ -1558,7 +1558,7 @@ CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.val
 # -----------------------------------------------------------------------------
 def get_hardcoded_move_type(move_name):
     move_lower = str(move_name).strip().lower()
-    return types_map.get(move_lower, "")
+    return MOVE_TYPE_OVERRIDES.get(move_lower, "")
 
 @strlit.cache_data(ttl=86400, show_spinner=False)
 def fetch_move_type(move_name):
