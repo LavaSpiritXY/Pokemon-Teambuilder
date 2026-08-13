@@ -1,16 +1,5 @@
 from champions.constants import ARCHETYPE_DEFINITIONS
-
-
-def get_hardcoded_move_type(move_name):
-    move_map = {
-        "Tailwind": "Flying", "Trick Room": "Psychic", "Rain Dance": "Water",
-        "Sunny Day": "Fire", "Protect": "Normal", "Surf": "Water", "Eruption": "Fire"
-    }
-    return move_map.get(move_name, "Normal")
-
-
-def fetch_move_type(move_name):
-    return get_hardcoded_move_type(move_name)
+from champions.move_data import fetch_move_type, get_hardcoded_move_type
 
 
 def detect_archetypes(pkmn_data):
