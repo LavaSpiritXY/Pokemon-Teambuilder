@@ -1,8 +1,6 @@
 ﻿import requests
 import streamlit as strlit
 
-from champions.constants import TYPE_CHART_DATA
-
 
 @strlit.cache_data(ttl=86400, show_spinner=False)
 def get_type_relationships(type_name):
@@ -13,28 +11,15 @@ def get_type_relationships(type_name):
             timeout=10,
         )
         response.raise_for_status()
-        data = response.json()
-        relations = data.get("damage_relations", {})
+        relations = response.json().get("damage_relations", {})
 
         return {
-            "double_damage_from": [
-                item["name"] for item in relations.get("double_damage_from", [])
-            ],
-            "half_damage_from": [
-                item["name"] for item in relations.get("half_damage_from", [])
-            ],
-            "no_damage_from": [
-                item["name"] for item in relations.get("no_damage_from", [])
-            ],
-            "double_damage_to": [
-                item["name"] for item in relations.get("double_damage_to", [])
-            ],
-            "half_damage_to": [
-                item["name"] for item in relations.get("half_damage_to", [])
-            ],
-            "no_damage_to": [
-                item["name"] for item in relations.get("no_damage_to", [])
-            ],
+            "double_damage_from": relations.get("double_damage_from", []),
+            "half_damage_from": relations.get("half_damage_from", []),
+            "no_damage_from": relations.get("no_damage_from", []),
+            "double_damage_to": relations.get("double_damage_to", []),
+            "half_damage_to": relations.get("half_damage_to", []),
+            "no_damage_to": relations.get("no_damage_to", []),
         }
     except Exception:
         return {
@@ -47,17 +32,29 @@ def get_type_relationships(type_name):
         }
 
 
+def _relation_names(relations, key):
+    return [
+        item.get("name", "")
+        for item in relations.get(key, [])
+        if item.get("name")
+    ]
+
+
 def get_type_defense_summary(type_name):
     relations = get_type_relationships(type_name)
-    return relations
+    return {
+        "double_damage_from": _relation_names(relations, "double_damage_from"),
+        "half_damage_from": _relation_names(relations, "half_damage_from"),
+        "no_damage_from": _relation_names(relations, "no_damage_from"),
+    }
 
 
 def get_offensive_type_summary(type_name):
     relations = get_type_relationships(type_name)
     return {
-        "double": relations.get("double_damage_to", []),
-        "half": relations.get("half_damage_to", []),
-        "immune": relations.get("no_damage_to", []),
+        "double": _relation_names(relations, "double_damage_to"),
+        "half": _relation_names(relations, "half_damage_to"),
+        "immune": _relation_names(relations, "no_damage_to"),
     }
 
 
