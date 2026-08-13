@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Set
 
 from champions.constants import TYPE_CHART_DATA
+from champions.meta_utils import fetch_move_type
 
 
 @dataclass
@@ -204,6 +205,190 @@ class TeamEvaluator:
         clamped = max(min_val, min(max_val, val))
         return ((clamped - min_val) / (max_val - min_val)) * 100.0
 
+
+def get_meta_relevant_checks(
+    pkmn_data,
+    meta_pool,
+    min_viability_threshold=0,
+    top_n=3
+):
+    """
+    Finds actual Champions checks/counters.
+
+    Counter score considers:
+    - STAB against target weakness
+    - actual offensive moves
+    - defensive resistance
+    - speed
+    - viability
+    - ability interaction
+    """
+
+    target_types = set(pkmn_data.get("types", []))
+    target_weaknesses = set(pkmn_data.get("weaknesses", []))
+    target_moves = {
+        str(m).lower()
+        for m in pkmn_data.get("moves", [])
+    }
+
+    valid_checks = []
+
+    for candidate_name, candidate_info in meta_pool.items():
+
+        candidate_types = set(
+            candidate_info.get("types", [])
+        )
+
+        candidate_moves = {
+            str(m).lower()
+            for m in candidate_info.get("moves", [])
+        }
+
+        candidate_abilities = {
+            str(a).lower()
+            for a in candidate_info.get("abilities", [])
+        }
+
+        candidate_stats = candidate_info.get(
+            "stats",
+            {}
+        )
+
+        candidate_speed = candidate_stats.get(
+            "speed",
+            0
+        )
+
+        viability = float(
+            candidate_info.get(
+                "viability_index",
+                0
+            )
+        )
+
+        score = 0.0
+        reasons = []
+
+        # -------------------------------------------------
+        # 1. STAB TYPE ADVANTAGE
+        # -------------------------------------------------
+
+        stab_hits = candidate_types & target_weaknesses
+
+        if stab_hits:
+            score += len(stab_hits) * 25
+            reasons.append(
+                "STAB: " + ", ".join(sorted(stab_hits))
+            )
+
+        # -------------------------------------------------
+        # 2. ACTUAL MOVE COVERAGE
+        # -------------------------------------------------
+
+        move_hits = set()
+
+        for move in candidate_moves:
+
+            move_type = fetch_move_type(move)
+
+            if move_type in target_weaknesses:
+                move_hits.add(move_type)
+
+        if move_hits:
+            score += len(move_hits) * 15
+            reasons.append(
+                "Coverage: "
+                + ", ".join(sorted(move_hits))
+            )
+
+        # -------------------------------------------------
+        # 3. SPEED ADVANTAGE
+        # -------------------------------------------------
+
+        target_speed = pkmn_data.get(
+            "stats",
+            {}
+        ).get(
+            "speed",
+            100
+        )
+
+        if candidate_speed > target_speed:
+            score += 10
+            reasons.append("Speed advantage")
+
+        # -------------------------------------------------
+        # 4. DEFENSIVE PRESSURE
+        # -------------------------------------------------
+
+        defensive_score = 0
+
+        for candidate_type in candidate_types:
+
+            matchup = TYPE_CHART_DATA.get(candidate_type, {})
+            if any(
+                matchup.get(weakness, 1.0) < 1.0
+                for weakness in target_weaknesses
+            ):
+                defensive_score += 5
+
+        score += defensive_score
+
+        # -------------------------------------------------
+        # 5. ABILITY INTERACTION
+        # -------------------------------------------------
+
+        target_abilities = {
+            str(a).lower()
+            for a in pkmn_data.get(
+                "abilities",
+                []
+            )
+        }
+
+        if "prankster" in target_abilities:
+
+            if (
+                "armor tail" in candidate_abilities
+                or
+                "queenly majesty"
+                in candidate_abilities
+            ):
+                score += 20
+                reasons.append(
+                    "Anti-Prankster ability"
+                )
+
+        # -------------------------------------------------
+        # 6. VIABILITY RANKING
+        # -------------------------------------------------
+
+        score += viability * 0.25
+
+        # -------------------------------------------------
+        # 7. REQUIRE ACTUAL COUNTERPLAY
+        # -------------------------------------------------
+
+        if not stab_hits and not move_hits:
+            continue
+
+        valid_checks.append({
+            "name": candidate_name,
+            "score": score,
+            "viability": viability,
+            "reason": (
+                " • ".join(reasons)
+                if reasons
+                else "Competitive check"
+            )
+        })
+
+    valid_checks.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    return valid_checks[:top_n]
 
 def create_move_profile(name: str, raw_move_data: dict) -> MoveProfile:
     return MoveProfile(
