@@ -663,7 +663,7 @@ for i in range(6):
                 current_ability = ability_options[0]
 
             slot["ability"] = strlit.selectbox("Ability", options=ability_options, index=ability_options.index(current_ability), key=f"ab_{i}")
-            strlit.caption(f"Suggested role: {infer_slot_role(slot)}")
+            strlit.caption(f"Suggested role: {infer_slot_role(slot, fetch_pokemon_details)}")
 
             if slot_name in MEGA_STONE_MAP:
                 correct_stone = MEGA_STONE_MAP[slot_name]
@@ -929,6 +929,3 @@ with tabs[6]:
     strlit.success("✓ Authoritative Smogon Chaos usage statistics engine integrated for tiering, abilities, items, and partner metrics.")
     strlit.success("✓ Dynamic moveset names fetched directly from Pokémon Showdown's GitHub repository.")
     strlit.success("✓ Showdown text format Pokepaste import and export functional.")
-
-
-
