@@ -577,50 +577,51 @@ def compute_meta_analytics(mon_name):
     type_multipliers = {}
 
     for attacking_type in TYPE_CHART_DATA:
+        relations = get_type_relationships(
+            attacking_type
+        )
+
+        if not relations:
+            type_multipliers[
+                attacking_type.title()
+            ] = 1.0
+            continue
+
+        double_damage = {
+            x["name"].title()
+            for x in relations.get(
+                "double_damage_to",
+                []
+            )
+        }
+
+        half_damage = {
+            x["name"].title()
+            for x in relations.get(
+                "half_damage_to",
+                []
+            )
+        }
+
+        no_damage = {
+            x["name"].title()
+            for x in relations.get(
+                "no_damage_to",
+                []
+            )
+        }
 
         multiplier = 1.0
 
         for defending_type in types:
+            defending_name = defending_type.title()
 
-            relations = get_type_relationships(
-                attacking_type
-            )
-
-            if not relations:
-                continue
-
-            double_damage = {
-                x["name"].title()
-                for x in relations.get(
-                    "double_damage_to",
-                    []
-                )
-            }
-
-            half_damage = {
-                x["name"].title()
-                for x in relations.get(
-                    "half_damage_to",
-                    []
-                )
-            }
-
-            no_damage = {
-                x["name"].title()
-                for x in relations.get(
-                    "no_damage_to",
-                    []
-                )
-            }
-
-            if attacking_type.title() in double_damage:
-                multiplier *= 2.0
-
-            elif attacking_type.title() in half_damage:
-                multiplier *= 0.5
-
-            elif attacking_type.title() in no_damage:
+            if defending_name in no_damage:
                 multiplier *= 0.0
+            elif defending_name in double_damage:
+                multiplier *= 2.0
+            elif defending_name in half_damage:
+                multiplier *= 0.5
 
         type_multipliers[
             attacking_type.title()
