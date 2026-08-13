@@ -22,10 +22,13 @@ MODULE.write_text(module_text, encoding="utf-8")
 lines = text.splitlines(keepends=True)
 ranges = []
 for node in functions:
+    start = node.lineno - 1
+    while start > 0 and lines[start - 1].lstrip().startswith("@"):
+        start -= 1
     end = getattr(node, "end_lineno", None)
     if end is None:
         raise SystemExit(f"No end_lineno for {node.name}")
-    ranges.append((node.lineno - 1, end))
+    ranges.append((start, end))
 for start, end in sorted(ranges, reverse=True):
     del lines[start:end]
 new_text = "".join(lines)
