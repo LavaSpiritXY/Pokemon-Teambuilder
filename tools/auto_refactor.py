@@ -51,6 +51,21 @@ def extract_team_moves(text: str) -> str:
     return text
 
 
+def extract_species_key(text: str) -> str:
+    """Move the canonical species-key normaliser into its own module."""
+    start = text.find("def canonical_species_key(name):")
+    end = text.find("MEGA_STONE_MAP =", start)
+    if start == -1 or end == -1:
+        return text
+
+    text = text[:start] + text[end:]
+    import_line = "from champions.species_keys import canonical_species_key\n"
+    if import_line not in text:
+        anchor = "from champions.roster_data import (\n"
+        text = text.replace(anchor, import_line + "\n" + anchor, 1)
+    return text
+
+
 def main():
     text = APP.read_text(encoding="utf-8")
 
@@ -70,6 +85,7 @@ def main():
 
     updated = extract_slot_role(updated)
     updated = extract_team_moves(updated)
+    updated = extract_species_key(updated)
 
     for name in ["Dict", "List", "Set", "Tuple"]:
         if updated.count(name) == 1:
