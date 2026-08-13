@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import py_compile
 from pathlib import Path
 
 APP = Path("app.py")
@@ -100,10 +101,8 @@ def main() -> None:
 
     APP.write_text(new_text, encoding="utf-8")
 
-    compile_targets = [APP, MODULE]
-    for path in compile_targets:
-        compile(path)
-
+    py_compile.compile(str(APP), doraise=True)
+    py_compile.compile(str(MODULE), doraise=True)
     print(f"Extracted move/data helpers into {MODULE}")
 
 
