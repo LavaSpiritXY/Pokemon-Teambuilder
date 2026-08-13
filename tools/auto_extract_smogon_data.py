@@ -19,14 +19,15 @@ def main():
     text = text[:start] + text[end:]
 
     old_import = "from champions.meta_viability import (\n    CHAMPIONS_META_DATA,\n    SMOGON_USAGE_DB,\n    calculate_meta_viability,\n    get_smogon_stats_for,\n)"
-    new_import = "from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability\nfrom champions.smogon_data import fetch_smogon_usage_stats, get_smogon_stats_for"
+    new_import = "from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability\nfrom champions.smogon_data import fetch_smogon_usage_stats, get_smogon_stats_for, set_smogon_usage_db"
     if old_import in text:
         text = text.replace(old_import, new_import, 1)
 
     marker = "SMOGON_USAGE_DB = fetch_smogon_usage_stats()\n"
     if marker not in text:
         anchor = "# Fallback Smogon Usage Database\n"
-        text = text.replace(anchor, anchor + "SMOGON_USAGE_DB = fetch_smogon_usage_stats(display_name_for_move)\n", 1)
+        replacement = anchor + "SMOGON_USAGE_DB = fetch_smogon_usage_stats(display_name_for_move)\nset_smogon_usage_db(SMOGON_USAGE_DB)\n"
+        text = text.replace(anchor, replacement, 1)
 
     APP.write_text(text, encoding="utf-8")
     print("Smogon data extraction completed.")
