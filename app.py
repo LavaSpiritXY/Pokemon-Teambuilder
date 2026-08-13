@@ -7,6 +7,7 @@ from typing import Dict, List, Set, Tuple
 import requests
 import streamlit as strlit
 import pandas as pd
+from champions.constants import CURRENT_REGULATION
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions_phase18 import render_champions_profile_v3
@@ -609,7 +610,6 @@ def get_meta_relevant_checks(
 
 CHAMPIONS_META_DB = {}
 
-CURRENT_REGULATION = "M-B"
 
 @dataclass
 class MoveProfile:
