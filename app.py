@@ -77,6 +77,7 @@ from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions_phase18 import render_champions_profile_v3
 from champions_phase17 import render_champions_profile_v2
+from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
 
 try:
     from champions_integration import get_champions_profile
@@ -1404,117 +1405,8 @@ def slot_to_mon_meta_profile(slot) -> MonMetaProfile:
     )
 
 # Showdown export/import utilities
-def export_slot_to_showdown(slot):
-    if not slot or slot.get("name", "-- Choose a Pokémon --") == "-- Choose a Pokémon --":
-        return ""
-    lines = []
-    item_str = f" @ {slot['item']}" if slot.get("item") else ""
-    lines.append(f"{slot['name']}{item_str}")
-    if slot.get("ability"):
-        lines.append(f"Ability: {slot['ability']}")
-    
-    ev_parts = []
-    for k in ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]:
-        val = slot.get("evs", {}).get(k, 0)
-        if val > 0:
-            ev_parts.append(f"{val} {k}")
-    if ev_parts:
-        lines.append(f"EVs: {' / '.join(ev_parts)}")
-    
-    if slot.get("nature"):
-        nat_name = slot["nature"].split(" ")[0]
-        lines.append(f"{nat_name} Nature")
-        
-    for m in slot.get("moves", []):
-        if m:
-            lines.append(f"- {m}")
-    return "\n".join(lines)
 
-def export_team_to_showdown(team_slots):
-    exported = []
-    for i in range(6):
-        slot = team_slots.get(i)
-        if slot and slot.get("name") != "-- Choose a Pokémon --":
-            exported.append(export_slot_to_showdown(slot))
-    return "\n\n".join(exported)
 
-def parse_showdown_text(text):
-    blocks = [b.strip() for b in text.strip().split("\n\n") if b.strip()]
-    parsed_slots = []
-    
-    for block in blocks[:6]:
-        lines = [l.strip() for l in block.split("\n") if l.strip()]
-        if not lines:
-            continue
-        
-        line1 = lines[0]
-        item = ""
-        if " @ " in line1:
-            line1_parts = line1.split(" @ ")
-            item = line1_parts[1].strip()
-            name_part = line1_parts[0].strip()
-        else:
-            name_part = line1.strip()
-            
-        species = name_part
-        if "(" in name_part and ")" in name_part:
-            m = re.search(r'\(([^)]+)\)', name_part)
-            if m:
-                potential_species = m.group(1).strip()
-                if potential_species not in ["M", "F"]:
-                    species = potential_species
-                else:
-                    species = name_part.split("(")[0].strip()
-        
-        matched_species = "-- Choose a Pokémon --"
-        for option in CHAMPIONS_ALL_FORMS:
-            if option.lower() == species.lower():
-                matched_species = option
-                break
-        if matched_species == "-- Choose a Pokémon --":
-            for option in CHAMPIONS_ALL_FORMS:
-                if species.lower() in option.lower():
-                    matched_species = option
-                    break
-
-        ability = "Standard"
-        nature = "Hardy"
-        evs = {"HP": 0, "Atk": 0, "Def": 0, "SpA": 0, "SpD": 0, "Spe": 0}
-        moves = []
-
-        for line in lines[1:]:
-            if line.startswith("Ability:"):
-                ability = line.replace("Ability:", "").strip()
-            elif line.startswith("EVs:"):
-                ev_str = line.replace("EVs:", "").strip()
-                for part in ev_str.split("/"):
-                    p = part.strip().split()
-                    if len(p) == 2 and p[0].isdigit():
-                        stat_key = p[1].strip()
-                        k_map = {"HP": "HP", "Atk": "Atk", "Def": "Def", "SpA": "SpA", "SpD": "SpD", "Spe": "Spe"}
-                        if stat_key in k_map:
-                            evs[k_map[stat_key]] = int(p[0])
-            elif "Nature" in line:
-                nat_word = line.replace("Nature", "").strip()
-                for n_opt in NATURES:
-                    if n_opt.startswith(nat_word):
-                        nature = n_opt
-                        break
-            elif line.startswith("-"):
-                m_name = line.replace("-", "").strip()
-                if m_name:
-                    moves.append(m_name)
-
-        final_species = matched_species if matched_species != "-- Choose a Pokémon --" else species.title()
-        parsed_slots.append({
-            "name": final_species,
-            "ability": ability,
-            "item": item if item else MEGA_STONE_MAP.get(final_species, "Focus Sash"),
-            "nature": nature,
-            "moves": moves[:4] if moves else ["Protect", "Substitute", "Rest", "Toxic"],
-            "evs": evs
-        })
-    return parsed_slots
 
 
 # -----------------------------------------------------------------------------
