@@ -1,0 +1,43 @@
+name: Auto-integrate extracted meta engine
+
+on:
+  push:
+    branches:
+      - champions-tournament-data
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-meta-engine:
+    if: ${{ !contains(github.event.head_commit.message, 'Auto-integrate extracted meta engine') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: champions-tournament-data
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Integrate meta engine
+        run: python tools/integrate_meta_engine.py
+
+      - name: Validate syntax
+        run: python -m py_compile app.py champions/meta_engine.py
+
+      - name: Commit integration
+        run: |
+          if git diff --quiet; then
+            echo "No integration changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py
+          git commit -m "Auto-integrate extracted meta engine"
+          git push origin champions-tournament-data
