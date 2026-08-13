@@ -38,6 +38,8 @@ from champions.meta_viability import (
 from champions.roles import infer_slot_role
 from champions.team_moves import generate_synergistic_moveset, normalize_moves
 
+from champions.species_keys import canonical_species_key
+
 from champions.roster_data import (
     fetch_champions_learnsets,
     fetch_champions_pokedex_entries,
@@ -269,113 +271,6 @@ strlit.markdown("""
 # -----------------------------------------------------------------------------
 # 2. DYNAMIC MASTER MOVE DICTIONARY & ROSTER DATA
 # -----------------------------------------------------------------------------
-
-
-def canonical_species_key(name):
-    """
-    Converts a Pokémon name into ONE stable internal key.
-
-    Important:
-    - Keeps meaningful form information.
-    - Does NOT squash words together.
-    - Does NOT try to guess a PokeAPI ID.
-    - Does NOT remove form names.
-    """
-
-    if not name:
-        return ""
-
-    text = str(name).strip().lower()
-
-    # Normalise punctuation only.
-    text = text.replace("’", "'")
-    text = text.replace("_", "-")
-
-    # Normalise repeated whitespace.
-    text = " ".join(text.split())
-
-    # Standardise common punctuation around hyphens.
-    text = text.replace(" - ", "-")
-    text = text.replace(" -", "-")
-    text = text.replace("- ", "-")
-
-    # Explicit aliases for forms whose names can be represented
-    # differently by different data sources.
-    aliases = {
-        # Basculegion
-        "basculegion male": "Basculegion",
-        "basculegion female": "Basculegion Female",
-        "basculegion-male": "Basculegion",
-        "basculegion-female": "Basculegion Female",
-
-        # Rotom
-        "rotom wash": "rotom-wash",
-        "rotom heat": "rotom-heat",
-        "rotom frost": "rotom-frost",
-        "rotom fan": "rotom-fan",
-        "rotom mow": "rotom-mow",
-
-        # Lycanroc
-        "lycanroc midday": "lycanroc-midday",
-        "lycanroc midnight": "lycanroc-midnight",
-        "lycanroc dusk": "lycanroc-dusk",
-
-        # Galarian forms
-        "slowbro galar": "slowbro-galar",
-        "slowking galar": "slowking-galar",
-        "mr mime galar": "mr-mime-galar",
-
-        # Hisuian forms
-        "braviary hisui": "braviary-hisui",
-        "decidueye hisui": "decidueye-hisui",
-        "electrode hisui": "electrode-hisui",
-        "goodra hisui": "goodra-hisui",
-        "lilligant hisui": "lilligant-hisui",
-        "qwilfish hisui": "qwilfish-hisui",
-        "samurott hisui": "samurott-hisui",
-        "sliggoo hisui": "sliggoo-hisui",
-        "typhlosion hisui": "typhlosion-hisui",
-        "voltorb hisui": "voltorb-hisui",
-        "zoroark hisui": "zoroark-hisui",
-        "avalugg hisui": "avalugg-hisui",
-        "arcanine hisui": "arcanine-hisui",
-        "decidueye hisuian": "decidueye-hisui",
-        "lilligant hisuian": "lilligant-hisui",
-        "zoroark hisuian": "zoroark-hisui",
-
-        # Alolan forms
-        "raichu alola": "raichu-alola",
-        "rattata alola": "rattata-alola",
-        "raticate alola": "raticate-alola",
-        "sandshrew alola": "sandshrew-alola",
-        "sandslash alola": "sandslash-alola",
-        "vulpix alola": "vulpix-alola",
-        "ninetales alola": "ninetales-alola",
-        "diglett alola": "diglett-alola",
-        "dugtrio alola": "dugtrio-alola",
-        "meowth alola": "meowth-alola",
-        "persian alola": "persian-alola",
-        "geodude alola": "geodude-alola",
-        "graveler alola": "graveler-alola",
-        "golem alola": "golem-alola",
-        "grimer alola": "grimer-alola",
-        "muk alola": "muk-alola",
-
-        # Paldean forms
-        "wooper paldea": "wooper-paldea",
-    }
-    # Force fix squashed Paldean Tauros inputs
-    if text == "taurospaldeacombat" or text == "taurospaldeacombatbreed":
-        text = "tauros-paldea-combat-breed"
-    elif text == "taurospaldeablaze":
-        text = "tauros-paldea-blaze"
-    elif text == "taurospaldeaaqua":
-        text = "tauros-paldea-aqua"
-
-    # This will now safely check the aliases dictionary using the fixed text variable
-    return aliases.get(text, text)
-
-
 
 
 MEGA_STONE_MAP = {name: f"{name.replace('Mega ', '')}ite" for name in CUSTOM_MEGAS_DATA.keys()}
