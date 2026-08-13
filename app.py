@@ -16,6 +16,7 @@ from champions.constants import (
     TYPE_CHART_DATA,
     CUSTOM_MEGAS_DATA,
     BASE_HELD_ITEMS,
+    MOVE_TYPE_OVERRIDES,
 )
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
@@ -1557,26 +1558,6 @@ CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.val
 # -----------------------------------------------------------------------------
 def get_hardcoded_move_type(move_name):
     move_lower = str(move_name).strip().lower()
-    types_map = {
-        "dragon dance": "Dragon", "dragon claw": "Dragon", "draco meteor": "Dragon", "outrage": "Dragon",
-        "flare blitz": "Fire", "flamethrower": "Fire", "fire blast": "Fire", "overheat": "Fire", "heat wave": "Fire",
-        "roost": "Flying", "brave bird": "Flying", "air slash": "Flying", "hurricane": "Flying", "acrobatics": "Flying",
-        "earthquake": "Ground", "earth power": "Ground", "high horsepower": "Ground", "spikes": "Ground",
-        "stealth rock": "Rock", "stone edge": "Rock", "rock slide": "Rock", "rock blast": "Rock",
-        "close combat": "Fighting", "drain punch": "Fighting", "aura sphere": "Fighting", "focus blast": "Fighting",
-        "ice punch": "Ice", "ice beam": "Ice", "blizzard": "Ice", "icicle spear": "Ice", "freeze-dry": "Ice",
-        "thunder punch": "Electric", "thunderbolt": "Electric", "thunder": "Electric", "volt switch": "Electric",
-        "swords dance": "Normal", "protect": "Normal", "substitute": "Normal", "extreme speed": "Normal", "rapid spin": "Normal",
-        "toxic": "Poison", "sludge wave": "Poison", "sludge bomb": "Poison", "gunk shot": "Poison", "mortal spin": "Poison",
-        "shadow ball": "Ghost", "shadow claw": "Ghost", "poltergeist": "Ghost", "destiny bond": "Ghost", "hex": "Ghost",
-        "psychic": "Psychic", "psyshock": "Psychic", "zen headbutt": "Psychic", "calm mind": "Psychic", "trick room": "Psychic",
-        "play rough": "Fairy", "moonblast": "Fairy", "dazzling gleam": "Fairy", "spirit break": "Fairy",
-        "iron head": "Steel", "bullet punch": "Steel", "meteor mash": "Steel", "flash cannon": "Steel", "defog": "Flying",
-        "hydro pump": "Water", "surf": "Water", "liquidation": "Water", "flip turn": "Water", "water shuriken": "Water",
-        "giga drain": "Grass", "leaf blade": "Grass", "power whip": "Grass", "energy ball": "Grass", "wood hammer": "Grass",
-        "dark pulse": "Dark", "crunch": "Dark", "sucker punch": "Dark", "knock off": "Dark", "parting shot": "Dark",
-        "u-turn": "Bug", "quiver dance": "Bug", "bug buzz": "Bug", "first impression": "Bug"
-    }
     return types_map.get(move_lower, "")
 
 @strlit.cache_data(ttl=86400, show_spinner=False)
