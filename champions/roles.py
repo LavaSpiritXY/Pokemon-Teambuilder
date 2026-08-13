@@ -1,7 +1,7 @@
 from typing import Callable, Dict, Any
 
 
-def infer_slot_role(slot: Dict[str, Any], fetch_pokemon_details: Callable[[str], Dict[str, Any]]) -> str:
+def infer_slot_role(slot: Dict[str, Any], fetch_pokemon_details: Callable[[str], Dict[str, Any]] | None = None) -> str:
     """Infer a practical competitive role from a configured slot."""
     name = slot.get("name", "")
     moves = set(slot.get("moves", []))
