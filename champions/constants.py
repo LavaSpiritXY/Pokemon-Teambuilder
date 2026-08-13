@@ -207,3 +207,52 @@ MOVE_TYPE_OVERRIDES = {
     "dark pulse": "Dark", "crunch": "Dark", "sucker punch": "Dark", "knock off": "Dark", "parting shot": "Dark",
     "u-turn": "Bug", "quiver dance": "Bug", "bug buzz": "Bug", "first impression": "Bug"
 }
+
+# ==========================================
+# ARCHETYPE & ENABLER REGISTRY
+# ==========================================
+
+ARCHETYPE_DEFINITIONS = {
+    "Tailwind Enabler": {
+        "abilities": ["Prankster", "Gale Wings", "Wind Power"],
+        "moves": ["Tailwind"],
+        "role_label": "Dedicated Speed Control / Tailwind Lead",
+        "boost": 25
+    },
+    "Rain Setter": {
+        "abilities": ["Drizzle"],
+        "moves": ["Rain Dance"],
+        "role_label": "Weather Anchor (Rain)",
+        "boost": 20
+    },
+    "Sun Setter": {
+        "abilities": ["Drought", "Orichalcum Pulse"],
+        "moves": ["Sunny Day"],
+        "role_label": "Weather Anchor (Sun)",
+        "boost": 20
+    },
+    "Terrain Anchor": {
+        "abilities": [
+            "Psychic Surge",
+            "Grassy Surge",
+            "Electric Surge",
+            "Misty Surge",
+            "Sand Stream"
+        ],
+        "moves": [
+            "Psychic Terrain",
+            "Grassy Terrain",
+            "Electric Terrain",
+            "Misty Terrain",
+            "Sandstorm"
+        ],
+        "role_label": "Terrain / Weather Anchor",
+        "boost": 20
+    },
+    "Priority Blocker": {
+        "abilities": ["Armor Tail", "Queenly Majesty", "Psychic Surge"],
+        "moves": [],
+        "role_label": "Defensive Utility / Anti-Priority",
+        "boost": 18
+    }
+}
