@@ -18,6 +18,7 @@ from champions.constants import (
     BASE_HELD_ITEMS,
     MOVE_TYPE_OVERRIDES,
     ARCHETYPE_DEFINITIONS,
+    MOVE_DISPLAY_OVERRIDES,
 )
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
@@ -1033,16 +1034,6 @@ def fetch_master_move_dictionary():
     return move_dict
 
 MASTER_MOVE_DICTIONARY = fetch_master_move_dictionary()
-
-MOVE_DISPLAY_OVERRIDES = {
-    "storedpower": "Stored Power",
-    "stompingtantrum": "Stomping Tantrum",
-    "doubleironbash": "Double Iron Bash",
-    "populationbomb": "Population Bomb",
-    "gigatonhammer": "Gigaton Hammer",
-    "lastrespects": "Last Respects",
-    "tripleaxel": "Triple Axel",
-}
 
 def canonical_species_key(name):
     """

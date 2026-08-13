@@ -256,3 +256,13 @@ ARCHETYPE_DEFINITIONS = {
         "boost": 18
     }
 }
+
+MOVE_DISPLAY_OVERRIDES = {
+    "storedpower": "Stored Power",
+    "stompingtantrum": "Stomping Tantrum",
+    "doubleironbash": "Double Iron Bash",
+    "populationbomb": "Population Bomb",
+    "gigatonhammer": "Gigaton Hammer",
+    "lastrespects": "Last Respects",
+    "tripleaxel": "Triple Axel",
+}
