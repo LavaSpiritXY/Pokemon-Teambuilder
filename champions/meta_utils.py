@@ -1,16 +1,4 @@
-from pathlib import Path
-
-APP = Path("app.py")
-MODULE = Path("champions/meta_utils.py")
-
-IMPORT_BLOCK = '''from champions.meta_utils import (
-    get_hardcoded_move_type,
-    fetch_move_type,
-    detect_archetypes,
-)
-'''
-
-MODULE_CONTENT = '''from champions.constants import ARCHETYPE_DEFINITIONS
+from champions.constants import ARCHETYPE_DEFINITIONS
 
 
 def get_hardcoded_move_type(move_name):
@@ -49,31 +37,3 @@ def detect_archetypes(pkmn_data):
             })
 
     return matched_archetypes
-'''
-
-
-def main():
-    text = APP.read_text(encoding="utf-8")
-
-    if "from champions.meta_utils import (" not in text:
-        anchor = "from champions.constants import ("
-        end = text.index(")\n", text.index(anchor)) + 2
-        text = text[:end] + "\n" + IMPORT_BLOCK + text[end:]
-
-    start_token = "def get_hardcoded_move_type(move_name):"
-    end_token = "# ==========================================\n# 2. META-INDEX AWARE VIABILITY & TIERING"
-
-    if start_token in text:
-        start = text.index(start_token)
-        end = text.index(end_token, start)
-        text = text[:start] + text[end:]
-    elif "from champions.meta_utils import (" not in text:
-        raise SystemExit("Meta utility block was not found; refusing to modify app.py.")
-
-    MODULE.write_text(MODULE_CONTENT.rstrip() + "\n", encoding="utf-8")
-    APP.write_text(text, encoding="utf-8")
-    print("Extracted move/archetype utilities into champions/meta_utils.py")
-
-
-if __name__ == "__main__":
-    main()

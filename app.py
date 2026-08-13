@@ -22,6 +22,12 @@ from champions.constants import (
     TYPE_DEFENSES,
 )
 
+from champions.meta_utils import (
+    get_hardcoded_move_type,
+    fetch_move_type,
+    detect_archetypes,
+)
+
 from champions.meta_engine import (
     MoveProfile,
     MonMetaProfile,
@@ -105,42 +111,6 @@ def get_smogon_stats_for(mon_name):
         "common_items": {},
         "top_partners": {}
     }
-
-def get_hardcoded_move_type(move_name):
-    move_map = {
-        "Tailwind": "Flying", "Trick Room": "Psychic", "Rain Dance": "Water",
-        "Sunny Day": "Fire", "Protect": "Normal", "Surf": "Water", "Eruption": "Fire"
-    }
-    return move_map.get(move_name, "Normal")
-
-def fetch_move_type(move_name):
-    return get_hardcoded_move_type(move_name)
-
-def detect_archetypes(pkmn_data):
-    """
-    Scans a Pokémon's ability pool and relevant moveset to identify functional archetypes.
-    Uses OR logic so anchors like Pelipper (Drizzle) are detected correctly.
-    """
-    matched_archetypes = []
-    abilities = [str(a).lower() for a in pkmn_data.get("abilities", [])]
-    moves = [str(m).lower() for m in pkmn_data.get("moves", [])]
-    
-    for arch_name, criteria in ARCHETYPE_DEFINITIONS.items():
-        req_abs = [str(a).lower() for a in criteria.get("abilities", [])]
-        req_moves = [str(m).lower() for m in criteria.get("moves", [])]
-        
-        has_ability = any(ab in abilities for ab in req_abs) if req_abs else False
-        has_move = any(mv in moves for mv in req_moves) if req_moves else False
-        
-        # Match if EITHER ability or move condition is met
-        if has_ability or has_move:
-            matched_archetypes.append({
-                "name": arch_name,
-                "role_label": criteria.get("role_label", "Balanced Pick"),
-                "boost": criteria.get("boost", 20)
-            })
-            
-    return matched_archetypes
 
 # ==========================================
 # 2. META-INDEX AWARE VIABILITY & TIERING
