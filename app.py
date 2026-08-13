@@ -1,24 +1,18 @@
 import math
 import random
 import re
-from dataclasses import dataclass, field
 from typing import Dict, List, Set, Tuple
 
 import requests
 import streamlit as strlit
 import pandas as pd
 from champions.constants import (
-    CURRENT_REGULATION,
     TYPE_COLORS,
     TYPE_SVG_URLS,
     NATURES,
-    SPECIES_DISPLAY_OVERRIDES,
     TYPE_CHART_DATA,
     CUSTOM_MEGAS_DATA,
     BASE_HELD_ITEMS,
-    MOVE_TYPE_OVERRIDES,
-    ARCHETYPE_DEFINITIONS,
-    MOVE_DISPLAY_OVERRIDES,
     TYPE_DEFENSES,
 )
 
@@ -32,11 +26,7 @@ from champions.move_data import (
     get_move_api_slug,
 )
 
-from champions.meta_utils import (
-    get_hardcoded_move_type,
-    fetch_move_type,
-    detect_archetypes,
-)
+from champions.meta_utils import detect_archetypes
 
 from champions.meta_viability import (
     CHAMPIONS_META_DATA,
