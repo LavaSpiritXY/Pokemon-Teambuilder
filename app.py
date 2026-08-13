@@ -52,6 +52,7 @@ from champions.pokemon_data import (
 )
 
 from champions.type_chart import (
+    get_type_relationships,
     get_type_defense_summary,
     get_offensive_type_summary,
     format_type_multiplier,
@@ -314,19 +315,6 @@ CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.val
 # 3. HELPER FUNCTIONS & API FETCHING
 # -----------------------------------------------------------------------------
 
-
-@strlit.cache_data(ttl=86400, show_spinner=False)
-def get_type_relationships(type_name):
-    try:
-        url = f"https://pokeapi.co/api/v2/type/{type_name.lower()}"
-        response = requests.get(url, timeout=5)
-
-        if response.status_code == 200:
-            return response.json().get("damage_relations", {})
-
-    except Exception:
-        pass
-    return {}
 
 # -----------------------------------------------------------------------------
 # 3.5 SMOGON COMPETITIVE USAGE DATA SOURCE ENGINE
