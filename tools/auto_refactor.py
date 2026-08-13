@@ -68,6 +68,37 @@ def extract_type_relationships(text: str) -> str:
     return text
 
 
+def extract_meta_analytics(text: str) -> str:
+    """Replace the large inline analytics implementation with the dedicated module.
+
+    The replacement is deliberately structural: it targets the cache decorator
+    immediately above compute_meta_analytics and the next top-level function.
+    If either boundary is missing, the file is left untouched rather than
+    risking a partial rewrite.
+    """
+    pattern = re.compile(
+        r"@strlit\.cache_data\(\s*ttl=3600,\s*show_spinner=False\s*\)\s*\n"
+        r"def compute_meta_analytics\(mon_name\):.*?\n(?=def ensure_slot_structure\()",
+        re.DOTALL,
+    )
+    replacement = (
+        "def compute_meta_analytics(mon_name):\n"
+        "    return _compute_meta_analytics(mon_name)\n\n"
+    )
+    updated, count = pattern.subn(replacement, text, count=1)
+    if count != 1:
+        return text
+
+    import_line = "from champions.meta_analytics import compute_meta_analytics as _compute_meta_analytics\n"
+    if import_line not in updated:
+        anchor = "from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability\n"
+        if anchor in updated:
+            updated = updated.replace(anchor, anchor + import_line, 1)
+        else:
+            return text
+    return updated
+
+
 def main():
     text = APP.read_text(encoding="utf-8")
     replacements = {
@@ -85,6 +116,7 @@ def main():
     updated = extract_team_moves(updated)
     updated = extract_species_key(updated)
     updated = extract_type_relationships(updated)
+    updated = extract_meta_analytics(updated)
     for name in ["Dict", "List", "Set", "Tuple"]:
         if updated.count(name) == 1:
             updated = updated.replace(f"from typing import {name}\n", "")
