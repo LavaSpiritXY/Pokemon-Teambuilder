@@ -1,7 +1,20 @@
 from champions.constants import TYPE_COLORS, TYPE_DEFENSES, TYPE_SVG_URLS
 
-
 TYPE_ORDER = list(TYPE_COLORS)
+
+
+def get_type_relationships(type_name, requests):
+    """Fetch raw PokeAPI damage relations for one attacking type."""
+    try:
+        response = requests.get(
+            f"https://pokeapi.co/api/v2/type/{str(type_name).lower()}",
+            timeout=5,
+        )
+        if response.status_code == 200:
+            return response.json().get("damage_relations", {})
+    except Exception:
+        pass
+    return {}
 
 
 def get_type_defense_summary(defending_types):
@@ -23,27 +36,12 @@ def get_type_defense_summary(defending_types):
 
 
 def get_offensive_type_summary(attacking_types):
-    """
-    Calculates offensive STAB coverage.
-
-    Strong coverage uses the best individual STAB matchup.
-
-    Resistance coverage combines the STAB multipliers:
-        one resisted STAB  -> x1/2
-        both resisted STAB -> x1/4
-        immunity involved  -> x0
-
-    This allows dual-STAB Pokémon such as Incineroar
-    (Fire/Dark) to show both individual and combined
-    resistance information.
-    """
+    """Calculates offensive STAB coverage and combined resistance multipliers."""
     strong_against = []
     resisted_by = []
-
     for defending_type in TYPE_ORDER:
         matchup = TYPE_DEFENSES.get(defending_type, {})
         multipliers = []
-
         for attacking_type in attacking_types:
             if attacking_type in matchup.get("immune", []):
                 multiplier = 0.0
@@ -54,28 +52,20 @@ def get_offensive_type_summary(attacking_types):
             else:
                 multiplier = 1.0
             multipliers.append(multiplier)
-
         if not multipliers:
             continue
-
         best_multiplier = max(multipliers)
         if best_multiplier > 1:
             strong_against.append((defending_type, best_multiplier))
-
         if any(multiplier == 0 for multiplier in multipliers):
             combined_multiplier = 0.0
         else:
             combined_multiplier = 1.0
             for multiplier in multipliers:
                 combined_multiplier *= multiplier
-
         if combined_multiplier < 1:
             resisted_by.append((defending_type, combined_multiplier))
-
-    return {
-        "strong_against": strong_against,
-        "resisted_by": resisted_by,
-    }
+    return {"strong_against": strong_against, "resisted_by": resisted_by}
 
 
 def format_type_multiplier(multiplier):
