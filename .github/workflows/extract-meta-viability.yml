@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   extract:
-    if: ${{ !contains(github.event.head_commit.message, 'Meta viability extraction complete') }}
+    if: ${{ !contains(github.event.head_commit.message, 'Meta viability extraction complete') && !contains(github.event.head_commit.message, 'Fix meta viability validation') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -56,23 +56,46 @@ jobs:
           )
           anchor = 'from champions.meta_engine import (\n'
 
-          # IMPORTANT: calculate the removal on the original text before
-          # inserting imports, otherwise every character inserted above shifts
-          # checks_start and the wrong section gets cut out.
           cleaned_text = text[:smogon_start] + text[checks_start:]
           cleaned_text = cleaned_text.replace(
               anchor,
               import_block + '\n' + anchor,
               1,
           )
-
           app.write_text(cleaned_text, encoding='utf-8')
 
       - name: Validate syntax
         run: python -m py_compile app.py champions/meta_viability.py
 
-      - name: Validate imports
-        run: python -c "from champions.meta_viability import calculate_meta_viability, get_smogon_stats_for; from app import calculate_meta_viability as app_calc; assert calculate_meta_viability is app_calc; print('meta viability extraction validated')"
+      - name: Validate extracted module
+        run: python -c "from champions.meta_viability import calculate_meta_viability, get_smogon_stats_for; print('meta viability module import validated')"
+
+      - name: Validate source wiring
+        shell: python
+        run: |
+          import ast
+          from pathlib import Path
+
+          tree = ast.parse(Path('app.py').read_text(encoding='utf-8'))
+          imported = {
+              alias.name
+              for node in tree.body
+              if isinstance(node, ast.ImportFrom) and node.module == 'champions.meta_viability'
+              for alias in node.names
+          }
+          required = {
+              'CHAMPIONS_META_DATA',
+              'SMOGON_USAGE_DB',
+              'calculate_meta_viability',
+              'get_smogon_stats_for',
+          }
+          assert required <= imported, f'missing imports: {required - imported}'
+          assert not any(
+              isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+              and node.name == 'calculate_meta_viability'
+              for node in tree.body
+          ), 'calculate_meta_viability still defined in app.py'
+          print('meta viability source wiring validated')
 
       - name: Commit extraction and remove automation
         shell: bash
