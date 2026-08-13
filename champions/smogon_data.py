@@ -1,13 +1,14 @@
 import re
-from typing import Dict
+from typing import Dict, Optional
 
 import requests
 
 
-def fetch_smogon_usage_stats(display_name_for_move, display_name_for_species_key=None) -> Dict[str, dict]:
-    """
-    Fetch competitive usage statistics from Smogon's public Chaos JSON data.
-    """
+SMOGON_USAGE_DB: Dict[str, dict] = {}
+
+
+def fetch_smogon_usage_stats(display_name_for_move) -> Dict[str, dict]:
+    """Fetch competitive usage statistics from Smogon's public Chaos JSON data."""
     url = "https://smogon.com/stats/2024-05/chaos/gen9ou-1825.json"
     usage_map = {}
 
@@ -18,9 +19,8 @@ def fetch_smogon_usage_stats(display_name_for_move, display_name_for_species_key
 
         data = res.json()
         total_battles = max(1, data.get("info", {}).get("number of battles", 10000))
-        mon_data = data.get("data", {})
 
-        for raw_name, details in mon_data.items():
+        for raw_name, details in data.get("data", {}).items():
             clean_key = raw_name.strip().lower()
             usage_count = details.get("usage", 0)
             meta_usage_tier = min(1.0, (usage_count / total_battles) * 2.0)
@@ -67,7 +67,12 @@ def fetch_smogon_usage_stats(display_name_for_move, display_name_for_species_key
         return {}
 
 
-def get_smogon_stats_for(mon_name: str, usage_db: Dict[str, dict]) -> dict:
+def set_smogon_usage_db(usage_db: Optional[Dict[str, dict]]) -> None:
+    global SMOGON_USAGE_DB
+    SMOGON_USAGE_DB = usage_db or {}
+
+
+def get_smogon_stats_for(mon_name: str) -> dict:
     if not mon_name:
         return {
             "meta_usage_tier": 0.15,
@@ -78,12 +83,12 @@ def get_smogon_stats_for(mon_name: str, usage_db: Dict[str, dict]) -> dict:
         }
 
     clean = mon_name.strip().lower()
-    if clean in usage_db:
-        return usage_db[clean]
+    if clean in SMOGON_USAGE_DB:
+        return SMOGON_USAGE_DB[clean]
 
     base = re.sub(r"^mega\s+", "", clean).strip()
-    if base in usage_db:
-        return usage_db[base]
+    if base in SMOGON_USAGE_DB:
+        return SMOGON_USAGE_DB[base]
 
     return {
         "meta_usage_tier": 0.15,
