@@ -1,0 +1,49 @@
+name: Extract meta utility module
+
+on:
+  push:
+    branches:
+      - champions-tournament-data
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: ${{ !contains(github.event.head_commit.message, 'Complete meta utility extraction') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: champions-tournament-data
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run extraction
+        run: python tools/extract_meta_utils.py
+
+      - name: Validate syntax
+        run: python -m py_compile app.py champions/meta_utils.py
+
+      - name: Validate extraction
+        run: |
+          python - <<'PY'
+          from champions.meta_utils import detect_archetypes, fetch_move_type
+          assert fetch_move_type("Tailwind") == "Flying"
+          assert detect_archetypes({"abilities": ["Drizzle"], "moves": []})[0]["name"] == "Rain Setter"
+          print("Meta utility extraction validation passed")
+          PY
+
+      - name: Commit extraction and remove automation
+        run: |
+          rm -f tools/extract_meta_utils.py .github/workflows/run-meta-utils-extraction.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions/meta_utils.py tools/extract_meta_utils.py .github/workflows/run-meta-utils-extraction.yml
+          git commit -m "Complete meta utility extraction"
+          git push origin champions-tournament-data
