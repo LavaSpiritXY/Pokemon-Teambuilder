@@ -71,7 +71,6 @@ def extract_type_relationships(text: str) -> str:
 def main():
     text = APP.read_text(encoding="utf-8")
     replacements = {
-        "    CURRENT_REGULATION,\n": "",
         "    SPECIES_DISPLAY_OVERRIDES,\n": "",
         "    MOVE_TYPE_OVERRIDES,\n": "",
         "    ARCHETYPE_DEFINITIONS,\n": "",
