@@ -54,6 +54,10 @@ jobs:
         if: ${{ hashFiles('tools/auto_extract_type_chart.py') != '' }}
         run: python tools/auto_extract_type_chart.py
 
+      - name: Run automated Smogon-data extraction
+        if: ${{ hashFiles('tools/auto_extract_smogon_data.py') != '' }}
+        run: python tools/auto_extract_smogon_data.py
+
       - name: Run automated app refactor
         if: ${{ hashFiles('tools/auto_refactor.py') != '' }}
         run: python tools/auto_refactor.py
@@ -64,12 +68,13 @@ jobs:
           if [ -f champions/move_data.py ]; then python -m py_compile champions/move_data.py; fi
           if [ -f champions/tournament_data.py ]; then python -m py_compile champions/tournament_data.py; fi
           if [ -f champions/type_chart.py ]; then python -m py_compile champions/type_chart.py; fi
+          if [ -f champions/smogon_data.py ]; then python -m py_compile champions/smogon_data.py; fi
 
       - name: Commit Phase 19 and refactor changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py apply_phase19_ui_and_meta_fix.py apply_phase19_hotfix.py champions/move_data.py champions/tournament_data.py champions/type_chart.py tools/auto_refactor.py tools/auto_extract_type_chart.py .github/workflows/apply-phase19.yml
+          git add app.py champions_phase18_4.py champions_phase18_5.py champions_phase18_6_ui.py apply_phase19_ui_and_meta_fix.py apply_phase19_hotfix.py champions/move_data.py champions/tournament_data.py champions/type_chart.py champions/smogon_data.py tools/auto_refactor.py tools/auto_extract_type_chart.py tools/auto_extract_smogon_data.py .github/workflows/apply-phase19.yml
           if [ -f tools/auto_extract_move_data.py ]; then
             git rm tools/auto_extract_move_data.py
           fi
