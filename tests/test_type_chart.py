@@ -32,20 +32,22 @@ class TypeChartTests(unittest.TestCase):
     def test_reverse_relationships(self):
         defense = get_type_defense_summary("Water")
 
-        self.assertIn("Electric", defense["double_damage_from"])
-        self.assertIn("Fire", defense["half_damage_from"])
+        self.assertIn("electric", defense["double_damage_from"])
+        self.assertIn("fire", defense["half_damage_from"])
 
     def test_offensive_summary_matches_chart(self):
         for attacking_type, matchups in TYPE_CHART_DATA.items():
             summary = get_offensive_type_summary(attacking_type)
 
             for defending_type, multiplier in matchups.items():
+                normalized = defending_type.lower()
+
                 if multiplier == 2.0:
-                    self.assertIn(defending_type, summary["double"])
+                    self.assertIn(normalized, summary["double"])
                 elif multiplier == 0.5:
-                    self.assertIn(defending_type, summary["half"])
+                    self.assertIn(normalized, summary["half"])
                 elif multiplier == 0.0:
-                    self.assertIn(defending_type, summary["immune"])
+                    self.assertIn(normalized, summary["immune"])
 
 
 if __name__ == "__main__":
