@@ -19,7 +19,6 @@ chunks = [ast.get_source_segment(text, n) for n in functions]
 module_text = '''import re\n\nimport requests\nimport streamlit as strlit\n\nfrom champions.constants import SPECIES_DISPLAY_OVERRIDES\n\n''' + "\n\n".join(chunks) + "\n"
 MODULE.write_text(module_text, encoding="utf-8")
 
-# Remove the extracted function blocks from app.py, then add imports.
 lines = text.splitlines(keepends=True)
 ranges = []
 for node in functions:
