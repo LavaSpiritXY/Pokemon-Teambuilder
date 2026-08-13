@@ -1,15 +1,13 @@
 name: Apply Phase 19 fixes
 
 on:
-  push:
-    branches: [champions-tournament-data]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   patch:
-    if: ${{ !contains(github.event.head_commit.message, 'Phase 19 applied') && !contains(github.event.head_commit.message, 'Automated tournament extraction applied') && !contains(github.event.head_commit.message, 'Automated team I/O extraction applied') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -43,27 +41,27 @@ jobs:
         run: python apply_phase19_ui_and_meta_fix.py
 
       - name: Run automated move-data extraction
-        if: ${{ hashFiles('tools/auto_extract_move_data.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_extract_move_data.py') != ''
         run: python tools/auto_extract_move_data.py
 
       - name: Run automated tournament-data extraction
-        if: ${{ hashFiles('tools/auto_extract_tournament_data.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_extract_tournament_data.py') != ''
         run: python tools/auto_extract_tournament_data.py
 
       - name: Run automated type-chart extraction
-        if: ${{ hashFiles('tools/auto_extract_type_chart.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_extract_type_chart.py') != ''
         run: python tools/auto_extract_type_chart.py
 
       - name: Run automated Smogon-data extraction
-        if: ${{ hashFiles('tools/auto_extract_smogon_data.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_extract_smogon_data.py') != ''
         run: python tools/auto_extract_smogon_data.py
 
       - name: Run automated app refactor
-        if: ${{ hashFiles('tools/auto_refactor.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_refactor.py') != ''
         run: python tools/auto_refactor.py
 
       - name: Run automated team I/O extraction
-        if: ${{ hashFiles('tools/auto_extract_team_io.py') != '' }}
+        if: steps.phase19.outputs.applied != 'true' && hashFiles('tools/auto_extract_team_io.py') != ''
         run: python tools/auto_extract_team_io.py
 
       - name: Compile changed Python modules
@@ -80,6 +78,7 @@ jobs:
           if [ -f tools/auto_extract_team_io.py ]; then python -m py_compile tools/auto_extract_team_io.py; fi
 
       - name: Commit Phase 19 and refactor changes
+        if: steps.phase19.outputs.applied != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -97,5 +96,5 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Automated team I/O extraction applied"
+          git commit -m "Phase 19 applied"
           git push origin HEAD:champions-tournament-data
