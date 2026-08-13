@@ -1,0 +1,38 @@
+name: Auto extract roster helpers
+
+on:
+  push:
+    branches: [champions-tournament-data]
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: ${{ !contains(github.event.head_commit.message, 'Automated roster extraction applied') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: champions-tournament-data
+          fetch-depth: 0
+
+      - name: Run roster helper extraction
+        run: python tools/extract_roster_helpers.py
+
+      - name: Compile affected modules
+        run: |
+          python -m py_compile app.py champions/roster_data.py
+
+      - name: Commit extraction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions/roster_data.py
+          if git diff --cached --quiet; then
+            echo "No extraction changes needed."
+            exit 0
+          fi
+          git commit -m "Automated roster extraction applied"
+          git push origin HEAD:champions-tournament-data
