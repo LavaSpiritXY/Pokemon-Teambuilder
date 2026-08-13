@@ -1,91 +1,79 @@
-from champions.constants import TYPE_COLORS, TYPE_DEFENSES, TYPE_SVG_URLS
-import requests
+﻿import requests
+import streamlit as strlit
 
-TYPE_ORDER = list(TYPE_COLORS)
+from champions.constants import TYPE_CHART_DATA
 
 
+@strlit.cache_data(ttl=86400, show_spinner=False)
 def get_type_relationships(type_name):
-    """Fetch raw PokeAPI damage relations for one attacking type."""
+    """Fetch PokeAPI type relationships for a single type."""
     try:
         response = requests.get(
-            f"https://pokeapi.co/api/v2/type/{str(type_name).lower()}",
-            timeout=5,
+            f"https://pokeapi.co/api/v2/type/{type_name.lower()}",
+            timeout=10,
         )
-        if response.status_code == 200:
-            return response.json().get("damage_relations", {})
+        response.raise_for_status()
+        data = response.json()
+        relations = data.get("damage_relations", {})
+
+        return {
+            "double_damage_from": [
+                item["name"] for item in relations.get("double_damage_from", [])
+            ],
+            "half_damage_from": [
+                item["name"] for item in relations.get("half_damage_from", [])
+            ],
+            "no_damage_from": [
+                item["name"] for item in relations.get("no_damage_from", [])
+            ],
+            "double_damage_to": [
+                item["name"] for item in relations.get("double_damage_to", [])
+            ],
+            "half_damage_to": [
+                item["name"] for item in relations.get("half_damage_to", [])
+            ],
+            "no_damage_to": [
+                item["name"] for item in relations.get("no_damage_to", [])
+            ],
+        }
     except Exception:
-        pass
-    return {}
+        return {
+            "double_damage_from": [],
+            "half_damage_from": [],
+            "no_damage_from": [],
+            "double_damage_to": [],
+            "half_damage_to": [],
+            "no_damage_to": [],
+        }
 
 
-def get_type_defense_summary(defending_types):
-    multipliers = {type_name: 1 for type_name in TYPE_ORDER}
-    for defending_type in defending_types:
-        matchup = TYPE_DEFENSES.get(defending_type, {})
-        for type_name in matchup.get("weak", []):
-            multipliers[type_name] *= 2
-        for type_name in matchup.get("resist", []):
-            multipliers[type_name] *= 0.5
-        for type_name in matchup.get("immune", []):
-            multipliers[type_name] = 0
+def get_type_defense_summary(type_name):
+    relations = get_type_relationships(type_name)
+    return relations
+
+
+def get_offensive_type_summary(type_name):
+    relations = get_type_relationships(type_name)
     return {
-        "weak": [type_name for type_name in TYPE_ORDER if multipliers[type_name] > 1],
-        "resist": [type_name for type_name in TYPE_ORDER if 0 < multipliers[type_name] < 1],
-        "immune": [type_name for type_name in TYPE_ORDER if multipliers[type_name] == 0],
-        "multipliers": multipliers,
+        "double": relations.get("double_damage_to", []),
+        "half": relations.get("half_damage_to", []),
+        "immune": relations.get("no_damage_to", []),
     }
-
-
-def get_offensive_type_summary(attacking_types):
-    """Calculates offensive STAB coverage and combined resistance multipliers."""
-    strong_against = []
-    resisted_by = []
-    for defending_type in TYPE_ORDER:
-        matchup = TYPE_DEFENSES.get(defending_type, {})
-        multipliers = []
-        for attacking_type in attacking_types:
-            if attacking_type in matchup.get("immune", []):
-                multiplier = 0.0
-            elif attacking_type in matchup.get("resist", []):
-                multiplier = 0.5
-            elif attacking_type in matchup.get("weak", []):
-                multiplier = 2.0
-            else:
-                multiplier = 1.0
-            multipliers.append(multiplier)
-        if not multipliers:
-            continue
-        best_multiplier = max(multipliers)
-        if best_multiplier > 1:
-            strong_against.append((defending_type, best_multiplier))
-        if any(multiplier == 0 for multiplier in multipliers):
-            combined_multiplier = 0.0
-        else:
-            combined_multiplier = 1.0
-            for multiplier in multipliers:
-                combined_multiplier *= multiplier
-        if combined_multiplier < 1:
-            resisted_by.append((defending_type, combined_multiplier))
-    return {"strong_against": strong_against, "resisted_by": resisted_by}
 
 
 def format_type_multiplier(multiplier):
     if multiplier == 0:
-        return "x0"
+        return "0×"
     if multiplier == 0.25:
-        return "x1/4"
+        return "¼×"
     if multiplier == 0.5:
-        return "x1/2"
-    return f"x{int(multiplier)}"
+        return "½×"
+    if multiplier == 2:
+        return "2×"
+    if multiplier == 4:
+        return "4×"
+    return f"{multiplier:g}×"
 
 
-def render_type_chips(type_names, multipliers=None):
-    if not type_names:
-        return '<div class="type-chart-empty">None</div>'
-    return "".join(
-        f'<span class="type-chip" style="background-color: {TYPE_COLORS[type_name]};">'
-        f'<span>{type_name}</span>'
-        f'{f"<span class=\"type-multiplier\">{format_type_multiplier(multipliers[type_name])}</span>" if multipliers else ""}'
-        f'<img src="{TYPE_SVG_URLS[type_name]}" alt="" /></span>'
-        for type_name in type_names
-    )
+def render_type_chips(types):
+    return " ".join(f"`{t}`" for t in types)
