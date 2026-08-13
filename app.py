@@ -19,6 +19,7 @@ from champions.constants import (
     MOVE_TYPE_OVERRIDES,
     ARCHETYPE_DEFINITIONS,
     MOVE_DISPLAY_OVERRIDES,
+    TYPE_DEFENSES,
 )
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
@@ -1963,27 +1964,6 @@ def get_mini_sprite_url(mon_name):
     return fetch_pokemon_details(mon_name)["box_sprite"]
 
 TYPE_ORDER = list(TYPE_COLORS)
-TYPE_DEFENSES = {
-    "Normal": {"weak": ["Fighting"], "immune": ["Ghost"]},
-    "Fire": {"weak": ["Water", "Ground", "Rock"], "resist": ["Fire", "Grass", "Ice", "Bug", "Steel", "Fairy"]},
-    "Water": {"weak": ["Electric", "Grass"], "resist": ["Fire", "Water", "Ice", "Steel"]},
-    "Electric": {"weak": ["Ground"], "resist": ["Electric", "Flying", "Steel"]},
-    "Grass": {"weak": ["Fire", "Ice", "Poison", "Flying", "Bug"], "resist": ["Water", "Electric", "Grass", "Ground"]},
-    "Ice": {"weak": ["Fire", "Fighting", "Rock", "Steel"], "resist": ["Ice"]},
-    "Fighting": {"weak": ["Flying", "Psychic", "Fairy"], "resist": ["Bug", "Rock", "Dark"]},
-    "Poison": {"weak": ["Ground", "Psychic"], "resist": ["Grass", "Fighting", "Poison", "Bug", "Fairy"]},
-    "Ground": {"weak": ["Water", "Grass", "Ice"], "resist": ["Poison", "Rock"], "immune": ["Electric"]},
-    "Flying": {"weak": ["Electric", "Ice", "Rock"], "resist": ["Grass", "Fighting", "Bug"], "immune": ["Ground"]},
-    "Psychic": {"weak": ["Bug", "Ghost", "Dark"], "resist": ["Fighting", "Psychic"]},
-    "Bug": {"weak": ["Fire", "Flying", "Rock"], "resist": ["Grass", "Fighting", "Ground"]},
-    "Rock": {"weak": ["Water", "Grass", "Fighting", "Ground", "Steel"], "resist": ["Normal", "Fire", "Poison", "Flying"]},
-    "Ghost": {"weak": ["Ghost", "Dark"], "resist": ["Poison", "Bug"], "immune": ["Normal", "Fighting"]},
-    "Dragon": {"weak": ["Ice", "Dragon", "Fairy"], "resist": ["Fire", "Water", "Grass", "Electric"]},
-    "Dark": {"weak": ["Fighting", "Bug", "Fairy"], "resist": ["Ghost", "Dark"], "immune": ["Psychic"]},
-    "Steel": {"weak": ["Fire", "Fighting", "Ground"], "resist": ["Normal", "Grass", "Ice", "Flying", "Psychic", "Bug", "Rock", "Dragon", "Steel", "Fairy"], "immune": ["Poison"]},
-    "Fairy": {"weak": ["Poison", "Steel"], "resist": ["Fighting", "Bug", "Dark"], "immune": ["Dragon"]},
-}
-
 def get_type_defense_summary(defending_types):
     multipliers = {type_name: 1 for type_name in TYPE_ORDER}
     for defending_type in defending_types:
