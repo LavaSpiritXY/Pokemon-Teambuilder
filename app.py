@@ -36,6 +36,7 @@ from champions.meta_viability import (
 )
 
 from champions.roles import infer_slot_role
+from champions.team_moves import generate_synergistic_moveset, normalize_moves
 
 from champions.roster_data import (
     fetch_champions_learnsets,
@@ -1904,54 +1905,6 @@ def ensure_slot_structure(slot_idx, fallback_name="-- Choose a Pokémon --"):
         }
     return strlit.session_state.team_slots[slot_idx]
 
-def normalize_moves(moves, available_moves):
-    available_moves = list(dict.fromkeys(available_moves)) or ["Protect"]
-    valid_moves = [move for move in moves if move in available_moves]
-    for move in available_moves:
-        if len(valid_moves) >= 4:
-            break
-        if move not in valid_moves:
-            valid_moves.append(move)
-    while len(valid_moves) < 4:
-        valid_moves.append(available_moves[0])
-    return valid_moves[:4]
-
-def generate_synergistic_moveset(new_species, target_slot_idx):
-    if new_species == "-- Choose a Pokémon --":
-        return ["Protect", "Substitute", "Toxic", "Rest"]
-    mon_data = fetch_pokemon_details(new_species)
-    learnset = mon_data["moves"]
-    mon_types = mon_data["types"]
-    
-    # Check if authoritative Smogon move usage statistics exist for this species
-    smogon_stats = get_smogon_stats_for(new_species)
-    smogon_moves = smogon_stats.get("common_moves", {})
-    if smogon_moves:
-        sorted_by_usage = sorted(
-            [m for m in learnset if m in smogon_moves],
-            key=lambda x: smogon_moves.get(x, 0.0),
-            reverse=True
-        )
-        if len(sorted_by_usage) >= 4:
-            return sorted_by_usage[:4]
-
-    priority_STABs = []
-    priority_Coverage = []
-    for m in learnset:
-        m_type = fetch_move_type(m)
-        if m_type in mon_types and m not in priority_STABs:
-            priority_STABs.append(m)
-        else:
-            priority_Coverage.append(m)
-            
-    final_set = (priority_STABs[:2] + priority_Coverage[:2])
-    while len(final_set) < 4 and learnset:
-        for m in learnset:
-            if m not in final_set:
-                final_set.append(m)
-                break
-    return list(dict.fromkeys(final_set))[:4]
-
 def on_species_change(slot_idx):
     new_species = strlit.session_state.get(f"species_select_{slot_idx}", "-- Choose a Pokémon --")
     slot = ensure_slot_structure(slot_idx, new_species)
@@ -1964,7 +1917,13 @@ def on_species_change(slot_idx):
     spa = mon_data["stats"].get("special-attack", 80)
     nature = "Jolly (+Spe, -SpA)" if atk >= spa else "Timid (+Spe, -Atk)"
     evs = {"HP": 0, "Atk": 252, "Def": 4, "SpA": 0, "SpD": 0, "Spe": 252} if atk >= spa else {"HP": 0, "Atk": 0, "Def": 4, "SpA": 252, "SpD": 0, "Spe": 252}
-    recommended_moves = generate_synergistic_moveset(new_species, slot_idx)
+    recommended_moves = generate_synergistic_moveset(
+        new_species,
+        slot_idx,
+        fetch_pokemon_details,
+        get_smogon_stats_for,
+        fetch_move_type
+    )
 
     slot.update({
         "name": new_species, "ability": ability, "item": item,
