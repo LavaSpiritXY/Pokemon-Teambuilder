@@ -35,6 +35,8 @@ from champions.meta_viability import (
     get_smogon_stats_for,
 )
 
+from champions.roles import infer_slot_role
+
 from champions.roster_data import (
     fetch_champions_learnsets,
     fetch_champions_pokedex_entries,
@@ -1877,122 +1879,16 @@ def compute_meta_analytics(mon_name):
         "offensive_profile":
             offensive_profile,
         "role":
-            infer_slot_role({
-                "name": mon_name,
-                "moves": moves
-            }),
+            infer_slot_role(
+                {
+                    "name": mon_name,
+                    "moves": moves
+                },
+                fetch_pokemon_details
+            ),
         "teammates": teammates,
         "counters": counters
     }
-
-def infer_slot_role(slot):
-
-    name = slot.get(
-        "name",
-        ""
-    )
-
-    moves = set(
-        slot.get(
-            "moves",
-            []
-        )
-    )
-
-    details = fetch_pokemon_details(
-        name
-    )
-
-    stats = details.get(
-        "stats",
-        {}
-    )
-
-    atk = stats.get(
-        "attack",
-        100
-    )
-
-    spa = stats.get(
-        "special-attack",
-        100
-    )
-
-    spe = stats.get(
-        "speed",
-        100
-    )
-
-    hp = stats.get(
-        "hp",
-        100
-    )
-
-    defense = stats.get(
-        "defense",
-        100
-    )
-
-    sp_def = stats.get(
-        "special-defense",
-        100
-    )
-
-    # Speed control
-    if "Tailwind" in moves:
-        return "Speed Control / Support"
-
-    if "Trick Room" in moves:
-        return "Trick Room / Support"
-
-    # Setup sweepers
-    if moves & {
-        "Swords Dance",
-        "Dragon Dance",
-        "Nasty Plot",
-        "Quiver Dance",
-        "Calm Mind"
-    }:
-        return "Setup Sweeper"
-
-    # Pivot
-    if moves & {
-        "U-turn",
-        "Volt Switch",
-        "Flip Turn",
-        "Parting Shot"
-    }:
-        return "Pivot"
-
-    # Strong attackers
-    if max(atk, spa) >= 115:
-
-        if spe >= 90:
-
-            if atk >= spa:
-                return "Physical Attacker"
-
-            return "Special Attacker"
-
-    # Defensive support
-    if (
-        hp >= 100
-        or defense >= 100
-        or sp_def >= 100
-    ):
-
-        if moves & {
-            "Recover",
-            "Roost",
-            "Synthesis",
-            "Protect",
-            "Helping Hand",
-            "Follow Me",
-            "Rage Powder"
-        }:
-            return "Defensive / Support"
-
-    return "Balanced / Utility"
 
 def ensure_slot_structure(slot_idx, fallback_name="-- Choose a Pokémon --"):
     if "team_slots" not in strlit.session_state:
