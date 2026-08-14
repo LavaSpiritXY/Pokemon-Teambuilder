@@ -1,104 +1,54 @@
-import math
-import random
-import re
-from typing import Dict, List, Set, Tuple
 
-import requests
 import streamlit as strlit
-import pandas as pd
 from champions.constants import (
     TYPE_COLORS,
     TYPE_SVG_URLS,
     NATURES,
-    TYPE_CHART_DATA,
     CUSTOM_MEGAS_DATA,
     BASE_HELD_ITEMS,
-    TYPE_DEFENSES,
 )
 
+from typing import Dict, List, Set, Tuple
+
 from champions.move_data import (
-    MASTER_MOVE_DICTIONARY,
-    display_name_for_move,
-    fetch_master_move_dictionary,
     fetch_move_type,
-    get_champions_species_key,
     get_hardcoded_move_type,
-    get_move_api_slug,
 )
 
 from champions.roster_data import (
     fetch_pokemon_roster,
 )
 
-from champions.meta_utils import detect_archetypes
-
-from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability
-
 from champions.meta_analytics import compute_meta_analytics
-from champions.meta_analytics import get_cached_meta_candidate
-
-from champions.smogon_data import fetch_smogon_usage_stats, get_smogon_stats_for
 
 from champions.roles import infer_slot_role
 from champions.team_moves import generate_synergistic_moveset, normalize_moves
 
 from champions.species_keys import canonical_species_key
 
-from champions.roster_data import (
-    fetch_champions_learnsets,
-    fetch_champions_pokedex_entries,
-    display_name_for_species_key,
-    get_clean_api_name,
-    get_base_api_name,
-)
-
-
 from champions.pokemon_data import (
-    get_champion_moves_for,
     fetch_pokemon_details,
     get_mini_sprite_url,
 )
 
 from champions.type_chart import (
-    get_type_relationships,
     get_type_defense_summary,
     get_offensive_type_summary,
-    format_type_multiplier,
     render_type_chips,
 )
 
-from champions.tournament_data import (
-    CHAMPIONS_META_DB,
-    import_champions_tournament,
-    calculate_tournament_metrics,
-    get_tournament_partners,
-)
-
 from champions.meta_engine import (
-    MoveProfile,
     MonMetaProfile,
     TeamEvaluator,
-    build_meta_profiles_from_data,
-    create_move_profile,
     slot_to_mon_meta_profile,
-    get_meta_relevant_checks,
 )
 
-from champions_phase18_5 import render_champions_profile_v6
-from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
+from champions.competitive_profile import render_champions_profile_v6
+from champions.stat_training import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
 
 from champions.team_state import ensure_slot_structure, on_species_change
 
-try:
-    from champions_integration import get_champions_profile
-except ImportError:
-    get_champions_profile = None
-
-
-
-# Fallback Smogon Usage Database
-SMOGON_USAGE_DB = fetch_smogon_usage_stats(display_name_for_move)
 
 # ==========================================
 # 3. META-GATED CHECKS, COUNTERS & SYNERGY
@@ -301,15 +251,6 @@ MEGA_STONE_MAP = {name: f"{name.replace('Mega ', '')}ite" for name in CUSTOM_MEG
 
 
 
-CHAMPIONS_LEARNSETS = fetch_champions_learnsets()
-CHAMPIONS_ROSTER = fetch_champions_pokedex_entries()
-VALID_CHAMPIONS = {
-    display_name_for_species_key(species)
-    for species in set(CHAMPIONS_ROSTER) | set(CHAMPIONS_LEARNSETS)
-}
-VALID_CHAMPIONS.update(CUSTOM_MEGAS_DATA)
-
-
 
 CHAMPIONS_ALL_FORMS = fetch_pokemon_roster()
 
@@ -332,56 +273,6 @@ CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.val
 
 
 
-
-# -----------------------------------------------------------------------------
-# Phase 15: Champions tournament profile display
-# -----------------------------------------------------------------------------
-def render_champions_tournament_profile(pokemon_name):
-    """Render tournament statistics without changing existing app scoring."""
-    if get_champions_profile is None:
-        return
-
-    try:
-        profile = get_champions_profile(pokemon_name)
-    except Exception:
-        return
-
-    if not profile.get("available"):
-        return
-
-    appearances = int(profile.get("appearances") or 0)
-    wins = int(profile.get("wins") or 0)
-    losses = int(profile.get("losses") or 0)
-    win_rate = profile.get("win_rate")
-    top_cut_rate = profile.get("top_cut_rate")
-    recent_win_rate = profile.get("recent_win_rate")
-    partners = profile.get("partners") or []
-
-    with strlit.expander("🏆 Champions Tournament Profile", expanded=True):
-        strlit.caption("Historical Champions tournament data. This display does not alter the existing Strategizer score.")
-        cols = strlit.columns(4)
-        cols[0].metric("Team Appearances", f"{appearances:,}")
-        cols[1].metric("Win Rate", f"{float(win_rate) * 100:.1f}%" if win_rate is not None else "N/A")
-        cols[2].metric("Top-Cut Rate", f"{float(top_cut_rate) * 100:.1f}%" if top_cut_rate is not None else "N/A")
-        cols[3].metric("Recent Win Rate", f"{float(recent_win_rate) * 100:.1f}%" if recent_win_rate is not None else "N/A")
-        strlit.caption(f"Tournament game record: {wins:,} wins · {losses:,} losses")
-
-        if partners:
-            strlit.markdown("**Most common tournament partners**")
-            partner_rows = []
-            for partner in partners[:5]:
-                partner_name = partner.get("pokemon")
-                if not partner_name:
-                    continue
-                partner_rows.append({
-                    "Partner": display_name_for_species_key(partner_name) or partner_name,
-                    "Teams Together": int(partner.get("teams_together") or 0),
-                    "Shared Win Rate": f"{float(partner.get('shared_win_rate') or 0) * 100:.1f}%",
-                })
-            if partner_rows:
-                strlit.dataframe(partner_rows, hide_index=True, use_container_width=True)
-        else:
-            strlit.caption("No tournament partner data available.")
 
 # -----------------------------------------------------------------------------
 # 4. INITIALIZE SESSION STATE

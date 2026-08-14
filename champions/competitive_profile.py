@@ -12,7 +12,7 @@ from typing import Any, Dict, Iterable, Mapping, Optional
 import streamlit as st
 
 from champions_integration import get_champions_profile
-from champions_phase18_4 import rank_counters_with_evidence
+from champions.counter_evidence import rank_counters_with_evidence
 
 _CSS = """
 <style>
