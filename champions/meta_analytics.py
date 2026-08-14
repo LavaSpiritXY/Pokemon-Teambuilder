@@ -8,6 +8,7 @@ from champions.pokemon_data import fetch_pokemon_details
 from champions.roles import infer_slot_role
 from champions.roster_data import display_name_for_species_key, fetch_champions_pokedex_entries
 from champions.species_keys import canonical_species_key
+from champions.smogon_data import get_smogon_stats_for
 from champions.tournament_data import calculate_tournament_metrics, get_tournament_partners
 from champions.type_chart import get_type_relationships
 
@@ -145,6 +146,45 @@ def _candidate_score(target_data: Dict, candidate_data: Dict, tournament_partner
 
     return score
 
+@strlit.cache_data(ttl=3600, show_spinner=False)
+def get_cached_meta_candidate(name: str) -> Dict | None:
+    try:
+        c_data = fetch_pokemon_details(name)
+
+        if not c_data.get("types"):
+            return None
+
+        tournament = calculate_tournament_metrics(name)
+
+        if tournament["usage"] > 0:
+            tournament_viability = (
+                tournament["tournament_score"] * 100
+            )
+        else:
+            smogon = get_smogon_stats_for(name)
+
+            tournament_viability = (
+                smogon.get("meta_usage_tier", 0.15) * 60
+            )
+
+        return {
+            "types": c_data.get("types", []),
+            "stats": c_data.get("stats", {}),
+            "abilities": c_data.get("abilities", []),
+            "moves": c_data.get("moves", []),
+            "viability_index": int(
+                max(
+                    0,
+                    min(
+                        100,
+                        tournament_viability
+                    )
+                )
+            ),
+        }
+
+    except Exception:
+        return None
 
 @strlit.cache_data(ttl=3600, show_spinner=False)
 def compute_meta_analytics(mon_name: str) -> Dict:

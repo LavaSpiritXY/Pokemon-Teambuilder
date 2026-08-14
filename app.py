@@ -33,6 +33,9 @@ from champions.roster_data import (
 from champions.meta_utils import detect_archetypes
 
 from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability
+
+from champions.meta_analytics import get_cached_meta_candidate
+
 from champions.smogon_data import fetch_smogon_usage_stats, get_smogon_stats_for
 
 from champions.roles import infer_slot_role
@@ -317,94 +320,7 @@ CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.val
 # -----------------------------------------------------------------------------
 # 3.5 SMOGON COMPETITIVE USAGE DATA SOURCE ENGINE
 # -----------------------------------------------------------------------------
-@strlit.cache_data(
-    ttl=3600,
-    show_spinner=False
-)
-def get_cached_meta_candidate(name):
 
-    try:
-
-        c_data = fetch_pokemon_details(
-            name
-        )
-
-        if not c_data.get(
-            "types"
-        ):
-            return None
-
-        tournament = (
-            calculate_tournament_metrics(
-                name
-            )
-        )
-
-        if tournament["usage"] > 0:
-
-            tournament_viability = (
-                tournament[
-                    "tournament_score"
-                ]
-                * 100
-            )
-
-        else:
-
-            smogon = (
-                get_smogon_stats_for(
-                    name
-                )
-            )
-
-            tournament_viability = (
-                smogon.get(
-                    "meta_usage_tier",
-                    0.15
-                )
-                * 60
-            )
-
-        return {
-            "types":
-                c_data.get(
-                    "types",
-                    []
-                ),
-
-            "stats":
-                c_data.get(
-                    "stats",
-                    {}
-                ),
-
-            "abilities":
-                c_data.get(
-                    "abilities",
-                    []
-                ),
-
-            "moves":
-                c_data.get(
-                    "moves",
-                    []
-                ),
-
-            "viability_index":
-                int(
-                    max(
-                        0,
-                        min(
-                            100,
-                            tournament_viability
-                        )
-                    )
-                )
-        }
-
-    except Exception:
-
-        return None   
 
 @strlit.cache_data(
     ttl=3600,
