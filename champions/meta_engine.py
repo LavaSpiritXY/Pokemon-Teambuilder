@@ -5,6 +5,10 @@ from typing import Dict, List, Set
 from champions.constants import TYPE_CHART_DATA
 from champions.meta_utils import fetch_move_type
 
+from champions.meta_utils import detect_archetypes
+from champions.move_data import get_hardcoded_move_type, fetch_move_type
+from champions.pokemon_data import fetch_pokemon_details
+from champions.smogon_data import get_smogon_stats_for
 
 @dataclass
 class MoveProfile:
@@ -399,6 +403,82 @@ def create_move_profile(name: str, raw_move_data: dict) -> MoveProfile:
         accuracy=raw_move_data.get("accuracy", 1.0),
         usage_rate=raw_move_data.get("usage_rate", 0.5),
         tags=set(raw_move_data.get("tags", [])),
+    )
+
+def slot_to_mon_meta_profile(slot) -> MonMetaProfile:
+    name = slot.get("name", "Unknown")
+    details = fetch_pokemon_details(name)
+    types = details.get("types", ["Normal"])
+    stats = details.get("stats", {})
+
+    # 1. Run centralized archetype detection
+    pkmn_payload = {
+        "name": name,
+        "abilities": [slot.get("ability", "Standard")],
+        "moves": slot.get("moves", []),
+        "weaknesses": []
+    }
+    detected = detect_archetypes(pkmn_payload)
+    detected_names = {a["name"] for a in detected}
+
+    base_stats = {
+        "hp": stats.get("hp", 80),
+        "atk": stats.get("attack", 100),
+        "def": stats.get("defense", 100),
+        "spa": stats.get("special-attack", 100),
+        "spd": stats.get("special-defense", 100),
+        "spe": stats.get("speed", 100)
+    }
+
+    smogon_stats = get_smogon_stats_for(name)
+    smogon_move_rates = smogon_stats.get("common_moves", {})
+
+    moves_dict = {}
+    for move_name in slot.get("moves", []):
+        m_type = get_hardcoded_move_type(move_name) or fetch_move_type(move_name)
+        tags = set()
+        m_lower = move_name.lower()
+
+        # Inherit official archetype tags
+        if "Tailwind Enabler" in detected_names and "tailwind" in m_lower:
+            tags.add("tailwind")
+        if "Trick Room Setter" in detected_names and "trick room" in m_lower:
+            tags.add("trick_room")
+        if "Priority Blocker" in detected_names:
+            tags.add("anti_priority")
+
+        # Move mechanics tags
+        if any(w in m_lower for w in ["dance", "plot", "calm mind", "swords"]):
+            tags.add("setup")
+        if any(w in m_lower for w in ["sucker", "extreme speed", "aqua jet", "bullet punch", "mach punch"]):
+            tags.add("priority")
+        if any(w in m_lower for w in ["follow me", "rage powder"]):
+            tags.add("redirection")
+
+        move_usage_val = smogon_move_rates.get(move_name, 0.5)
+
+        moves_dict[move_name] = MoveProfile(
+            name=move_name,
+            category="Status" if "protect" in m_lower or "substitute" in m_lower or "toxic" in m_lower else "Physical",
+            type=m_type,
+            base_power=80,
+            accuracy=1.0,
+            usage_rate=move_usage_val,
+            tags=tags
+        )
+
+    ability = slot.get("ability", "Standard")
+    item = slot.get("item", "")
+
+    return MonMetaProfile(
+        name=name,
+        types=types,
+        base_stats=base_stats,
+        common_moves=moves_dict,
+        common_abilities=smogon_stats.get("common_abilities", {ability: 1.0}),
+        common_items=smogon_stats.get("common_items", {item: 1.0}) if item else {},
+        meta_usage_tier=smogon_stats.get("meta_usage_tier", 0.15),
+        top_partners=smogon_stats.get("top_partners", {})
     )
 
 
