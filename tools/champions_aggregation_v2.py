@@ -13,10 +13,11 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from itertools import combinations
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, List, Optional
 
-DEFAULT_CACHE = Path("champions_cache")
-DEFAULT_OUTPUT = Path("champions_meta_history.json")
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_CACHE = ROOT / "champions_cache"
+DEFAULT_OUTPUT = ROOT / "champions_meta_history.json"
 RECENCY_HALF_LIFE_DAYS = 45.0
 
 
