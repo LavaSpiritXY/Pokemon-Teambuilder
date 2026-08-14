@@ -3,8 +3,10 @@ import re
 import requests
 import streamlit as strlit
 
-from champions.constants import SPECIES_DISPLAY_OVERRIDES
-
+from champions.constants import (
+    CUSTOM_MEGAS_DATA,
+    SPECIES_DISPLAY_OVERRIDES,
+)
 def fetch_champions_learnsets():
     url = "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts"
     try:
@@ -312,6 +314,22 @@ def display_name_for_species_key(species_key):
         for word in pretty.split()
     )
 
+def fetch_pokemon_roster():
+    roster = list(CUSTOM_MEGAS_DATA.keys())
+
+    for species_key in sorted(
+        set(fetch_champions_pokedex_entries())
+        | set(fetch_champions_learnsets().keys())
+    ):
+        roster.append(display_name_for_species_key(species_key))
+
+    return ["-- Choose a Pokémon --"] + sorted(
+        set(roster),
+        key=lambda item: (
+            not item.startswith("Mega "),
+            item.lower(),
+        ),
+    )
 
 def get_clean_api_name(mon_name):
     """

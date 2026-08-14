@@ -26,6 +26,10 @@ from champions.move_data import (
     get_move_api_slug,
 )
 
+from champions.roster_data import (
+    fetch_pokemon_roster,
+)
+
 from champions.meta_utils import detect_archetypes
 
 from champions.meta_viability import CHAMPIONS_META_DATA, calculate_meta_viability
@@ -300,12 +304,6 @@ VALID_CHAMPIONS = {
 VALID_CHAMPIONS.update(CUSTOM_MEGAS_DATA)
 
 
-@strlit.cache_data(ttl=86400, show_spinner=False)
-def fetch_pokemon_roster():
-    roster = list(CUSTOM_MEGAS_DATA.keys())
-    for species_key in sorted(set(CHAMPIONS_ROSTER) | set(CHAMPIONS_LEARNSETS.keys())):
-        roster.append(display_name_for_species_key(species_key))
-    return ["-- Choose a Pokémon --"] + sorted(set(roster), key=lambda item: (not item.startswith("Mega "), item.lower()))
 
 CHAMPIONS_ALL_FORMS = fetch_pokemon_roster()
 
