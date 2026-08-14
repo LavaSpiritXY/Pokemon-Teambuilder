@@ -86,8 +86,6 @@ from champions.meta_engine import (
 
 from champions_phase18_5 import render_champions_profile_v6
 from champions_phase18_6_ui import render_dynamic_stat_controls, render_dynamic_stat_graph
-from champions_phase18 import render_champions_profile_v3
-from champions_phase17 import render_champions_profile_v2
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
 
 from champions.team_state import ensure_slot_structure, on_species_change
