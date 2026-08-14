@@ -568,21 +568,14 @@ for i in range(6):
                 strong_col, resisted_col = strlit.columns(2)
 
                 with strong_col:
-                    strlit.caption(
-                        "STAB attacks are strong against"
+                    strlit.caption("STAB attacks are strong against")
+
+                    strong_multipliers = offensive_summary.get(
+                        "strong_multipliers",
+                        offensive_summary.get("strong_against", {})
                     )
 
-                    strong_types = [
-                        type_name
-                        for type_name, multiplier
-                        in offensive_summary["strong_against"]
-                    ]
-
-                    strong_multipliers = {
-                        type_name: multiplier
-                        for type_name, multiplier
-                        in offensive_summary["strong_against"]
-                    }
+                    strong_types = list(strong_multipliers.keys())
 
                     strlit.html(
                         render_type_chips(
@@ -592,21 +585,14 @@ for i in range(6):
                     )
 
                 with resisted_col:
-                    strlit.caption(
-                        "STAB attacks are resisted by"
+                    strlit.caption("STAB attacks are resisted by")
+
+                    resisted_multipliers = offensive_summary.get(
+                        "resisted_multipliers",
+                        offensive_summary.get("resisted_by", {})
                     )
 
-                    resisted_types = [
-                        type_name
-                        for type_name, multiplier
-                        in offensive_summary["resisted_by"]
-                    ]
-
-                    resisted_multipliers = {
-                        type_name: multiplier
-                        for type_name, multiplier
-                        in offensive_summary["resisted_by"]
-                    }
+                    resisted_types = list(resisted_multipliers.keys())
 
                     strlit.html(
                         render_type_chips(
