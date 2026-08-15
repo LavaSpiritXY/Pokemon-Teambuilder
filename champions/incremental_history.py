@@ -1,8 +1,8 @@
 """Incrementally update Champions history without retaining the raw event cache.
 
-The full historical backfill is performed once locally.  After that, GitHub
+The full historical backfill is performed once locally. After that, GitHub
 Actions only needs the already-committed aggregate plus newly downloaded event
-snapshots.  This module decays the existing recency-weighted metrics from the
+snapshots. This module decays the existing recency-weighted metrics from the
 old reference date, then adds the new events.
 """
 
@@ -132,6 +132,38 @@ def _decay_existing(report: Dict[str, Any], reference: datetime) -> None:
                 row[key] = float(row.get(key, 0.0) or 0.0) * factor
 
 
+def _find_partner_row(
+    partners: Dict[str, Any],
+    left: str,
+    right: str,
+) -> Optional[Dict[str, Any]]:
+    """Find an existing partner row regardless of which side stores the pair.
+
+    Historical aggregates may have been produced with a different ordering
+    convention from the incremental updater. The pair (pikachu, charizard)
+    must therefore be treated as undirected when merging new event data.
+    """
+    for owner, partner in ((left, right), (right, left)):
+        for row in partners.get(owner, []) or []:
+            if str(row.get("pokemon") or "").strip().lower() == partner:
+                return row
+    return None
+
+
+def _add_partner_delta(
+    row: Dict[str, Any],
+    wins: int,
+    losses: int,
+    weight: float,
+) -> None:
+    row["teams_together"] = int(row.get("teams_together", 0) or 0) + 1
+    row["shared_wins"] = int(row.get("shared_wins", 0) or 0) + wins
+    row["shared_losses"] = int(row.get("shared_losses", 0) or 0) + losses
+    row["weighted_teams_together"] = float(row.get("weighted_teams_together", 0.0) or 0.0) + weight
+    row["weighted_wins"] = float(row.get("weighted_wins", 0.0) or 0.0) + wins * weight
+    row["weighted_losses"] = float(row.get("weighted_losses", 0.0) or 0.0) + losses * weight
+
+
 def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: datetime) -> None:
     event = snapshot.get("event") or {}
     regulation = str(event.get("regulation") or "Unknown")
@@ -191,24 +223,36 @@ def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: d
 
         keys = sorted(set(name.lower() for name in names))
         for left, right in combinations(keys, 2):
-            left_rows = partners.setdefault(left, [])
-            existing = next((row for row in left_rows if row.get("pokemon") == right), None)
+            # Partner relationships are undirected. Look in both possible
+            # orientations before creating a new row, so older aggregates
+            # generated with the opposite ordering are merged rather than
+            # duplicated.
+            existing = _find_partner_row(partners, left, right)
             if existing is None:
                 existing = {"pokemon": right, **_new_partner()}
-                left_rows.append(existing)
-            existing["teams_together"] += 1
-            existing["shared_wins"] += wins
-            existing["shared_losses"] += losses
-            existing["weighted_teams_together"] += weight
-            existing["weighted_wins"] += wins * weight
-            existing["weighted_losses"] += losses * weight
+                partners.setdefault(left, []).append(existing)
 
-            right_rows = partners.setdefault(right, [])
-            reverse = next((row for row in right_rows if row.get("pokemon") == left), None)
+            _add_partner_delta(existing, wins, losses, weight)
+
+            # Keep the reverse lookup synchronized with the same aggregate.
+            reverse_rows = partners.setdefault(right, [])
+            reverse = next(
+                (
+                    row for row in reverse_rows
+                    if str(row.get("pokemon") or "").strip().lower() == left
+                ),
+                None,
+            )
             if reverse is None:
                 reverse = {"pokemon": left, **_new_partner()}
-                right_rows.append(reverse)
-            reverse.update(existing)
+                reverse_rows.append(reverse)
+
+            # The reverse row represents the same undirected relationship.
+            # Copy the aggregate values instead of incrementing it a second
+            # time, which would double-count the team.
+            for key, value in existing.items():
+                if key != "pokemon":
+                    reverse[key] = value
             reverse["pokemon"] = left
 
 
