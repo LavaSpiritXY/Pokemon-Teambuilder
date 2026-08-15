@@ -36,9 +36,9 @@ def _safe_rate(value: Any) -> Optional[float]:
         return None
 
 
-@lru_cache(maxsize=1)
+@lru_cache(maxsize=8)
 def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
-    """Load the aggregated Champions history once per Python process."""
+    """Load the aggregated Champions history once per path per process."""
     history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
     if not history_path.exists():
         return {}
@@ -56,18 +56,14 @@ def get_history_pokemon_record(
     pokemon_name: Any,
     *,
     regulation: Optional[str] = None,
+    history_path: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Return one aggregated Pokémon record, optionally filtered by regulation.
-
-    The aggregate stores regulation-level appearance counts, while win/top-cut
-    metrics are stored overall and for the recent window. We never fabricate
-    regulation-specific rates that are not present in the source data.
-    """
+    """Return one aggregated Pokémon record, optionally filtered by regulation."""
     key = _canonical_key(pokemon_name)
     if not key:
         return None
 
-    record = (load_champions_history().get("pokemon") or {}).get(key)
+    record = (load_champions_history(history_path).get("pokemon") or {}).get(key)
     if not isinstance(record, dict):
         return None
 
@@ -83,12 +79,14 @@ def get_history_pokemon_record(
 def get_history_regulation_appearances(
     pokemon_name: Any,
     regulation: Optional[str],
+    *,
+    history_path: Optional[str] = None,
 ) -> Optional[int]:
     """Return tournament team appearances in one regulation."""
     if not regulation:
         return None
 
-    record = get_history_pokemon_record(pokemon_name)
+    record = get_history_pokemon_record(pokemon_name, history_path=history_path)
     if not record:
         return None
 
@@ -105,15 +103,14 @@ def get_history_metrics(
     *,
     regulation: Optional[str] = None,
     current_regulation: Optional[str] = None,
+    history_path: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Return clean overall, recent, and regulation-aware history metrics.
-
-    ``overall`` contains full-history counts and rates.
-    ``recent`` contains the generated recent-window signals.
-    ``current`` contains regulation presence/appearances and leaves rates as
-    ``None`` unless regulation-specific rate data exists in the aggregate.
-    """
-    record = get_history_pokemon_record(pokemon_name, regulation=regulation)
+    """Return clean overall, recent, and regulation-aware history metrics."""
+    record = get_history_pokemon_record(
+        pokemon_name,
+        regulation=regulation,
+        history_path=history_path,
+    )
     if not record:
         return None
 
@@ -136,10 +133,7 @@ def get_history_metrics(
     if overall_top_cut_rate is None and overall_appearances:
         overall_top_cut_rate = overall_top_cuts / overall_appearances
 
-    recent_usage_weight = max(
-        0.0,
-        float(record.get("recent_usage_weight", 0.0) or 0.0),
-    )
+    recent_usage_weight = max(0.0, float(record.get("recent_usage_weight", 0.0) or 0.0))
     recent_win_rate = _safe_rate(record.get("recent_win_rate"))
     recent_top_cut_rate = _safe_rate(record.get("recent_top_cut_rate"))
 
@@ -147,9 +141,17 @@ def get_history_metrics(
     current_appearances = get_history_regulation_appearances(
         pokemon_name,
         current_key,
+        history_path=history_path,
     )
 
     regulations = record.get("regulations") or {}
+    regulation_metrics = record.get("regulation_metrics") or {}
+    current_metrics = regulation_metrics.get(current_key, {}) if current_key else {}
+    if not isinstance(current_metrics, dict):
+        current_metrics = {}
+
+    current_win_rate = _safe_rate(current_metrics.get("win_rate"))
+    current_top_cut_rate = _safe_rate(current_metrics.get("top_cut_rate"))
     regulation_available = bool(current_key and current_key in regulations)
 
     return {
@@ -178,32 +180,10 @@ def get_history_metrics(
         "current": {
             "regulation": current_key,
             "appearances": current_appearances,
-            "win_rate": _safe_rate(
-                (record.get("regulation_metrics") or {})
-                .get(current_key, {})
-                .get("win_rate")
-            ) if current_key else None,
-            "top_cut_rate": _safe_rate(
-                (record.get("regulation_metrics") or {})
-                .get(current_key, {})
-                .get("top_cut_rate")
-            ) if current_key else None,
-            "win_rate_available": bool(
-                current_key
-                and _safe_rate(
-                    (record.get("regulation_metrics") or {})
-                    .get(current_key, {})
-                    .get("win_rate")
-                ) is not None
-            ),
-            "top_cut_rate_available": bool(
-                current_key
-                and _safe_rate(
-                    (record.get("regulation_metrics") or {})
-                    .get(current_key, {})
-                    .get("top_cut_rate")
-                ) is not None
-            ),
+            "win_rate": current_win_rate,
+            "top_cut_rate": current_top_cut_rate,
+            "win_rate_available": current_win_rate is not None,
+            "top_cut_rate_available": current_top_cut_rate is not None,
         },
     }
 
@@ -212,13 +192,14 @@ def get_history_partners(
     pokemon_name: Any,
     *,
     top_n: int = 10,
+    history_path: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """Return tournament partners in their aggregated ranking order."""
     key = _canonical_key(pokemon_name)
     if not key or top_n <= 0:
         return []
 
-    partners = (load_champions_history().get("partners") or {}).get(key)
+    partners = (load_champions_history(history_path).get("partners") or {}).get(key)
     if not isinstance(partners, list):
         return []
 
