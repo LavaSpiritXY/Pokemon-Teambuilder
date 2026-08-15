@@ -37,9 +37,19 @@ def _safe_rate(value: Any) -> Optional[float]:
 
 
 @lru_cache(maxsize=8)
-def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
-    """Load the aggregated Champions history once per path per process."""
-    history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
+def _load_champions_history_cached(
+    path: str,
+    modified_ns: int,
+    file_size: int,
+) -> Dict[str, Any]:
+    """Load history using the file revision as part of the cache key.
+
+    The sync workflow replaces ``champions_meta_history.json``. Using the
+    modification timestamp and size in the cache key means a long-running
+    Streamlit process automatically sees the new history without requiring a
+    restart or a manual cache clear.
+    """
+    history_path = Path(path)
     if not history_path.exists():
         return {}
 
@@ -50,6 +60,33 @@ def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
         return {}
 
     return payload if isinstance(payload, dict) else {}
+
+
+def _history_revision(path: Path) -> tuple[int, int]:
+    """Return a cheap filesystem revision token for the generated history."""
+    try:
+        stat = path.stat()
+        return stat.st_mtime_ns, stat.st_size
+    except OSError:
+        return 0, 0
+
+
+def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
+    """Load aggregated history and automatically invalidate after file changes."""
+    history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
+    modified_ns, file_size = _history_revision(history_path)
+    return _load_champions_history_cached(
+        str(history_path),
+        modified_ns,
+        file_size,
+    )
+
+
+def history_revision(path: Optional[str] = None) -> str:
+    """Return a stable revision token for cache keys in higher-level analytics."""
+    history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
+    modified_ns, file_size = _history_revision(history_path)
+    return f"{modified_ns}:{file_size}"
 
 
 def get_history_pokemon_record(
@@ -288,6 +325,7 @@ def build_legacy_meta_db(
 __all__ = [
     "DEFAULT_HISTORY_PATH",
     "load_champions_history",
+    "history_revision",
     "get_history_pokemon_record",
     "get_history_regulation_appearances",
     "get_history_metrics",
