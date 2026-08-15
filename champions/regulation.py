@@ -1,14 +1,16 @@
 """Helpers for selecting the active Pokémon Champions regulation.
 
 The sync pipeline may discover both currently running and future regulation
-announcements.  These helpers deliberately separate *detected* regulations
+announcements. These helpers deliberately separate *detected* regulations
 from the regulation that is active as of a given date.
 """
 
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
-from typing import Any, Dict, Iterable, Optional
+import json
+from pathlib import Path
+from typing import Any, Dict, Iterable, Optional, Tuple
 
 
 _REGULATION_PREFIX = "M-"
@@ -32,7 +34,6 @@ def _parse_event_date(value: Any) -> Optional[date]:
     if not text:
         return None
 
-    # Accept the ISO forms commonly returned by Limitless.
     candidate = text.replace("Z", "+00:00")
     try:
         return datetime.fromisoformat(candidate).date()
@@ -53,10 +54,8 @@ def select_active_champions_regulation(
     """Return the regulation belonging to the latest completed event.
 
     Future-dated events are ignored, so discovering a future regulation does
-    not switch the application early.  When multiple completed events share a
-    date, the later row wins deterministically.  Rows without a usable date
-    are ignored because they cannot safely establish which regulation is
-    currently active.
+    not switch the application early. Rows without a usable date are ignored
+    because they cannot safely establish which regulation is currently active.
     """
     reference_date = as_of or datetime.now(timezone.utc).date()
     best_date: Optional[date] = None
@@ -67,8 +66,7 @@ def select_active_champions_regulation(
             continue
 
         regulation = _normalise_regulation(
-            tournament.get("regulation")
-            or tournament.get("format")
+            tournament.get("regulation") or tournament.get("format")
         )
         if not regulation:
             continue
@@ -81,9 +79,6 @@ def select_active_champions_regulation(
         if event_date is None or event_date > reference_date:
             continue
 
-        # If an explicit completion flag exists, respect it.  Do not reject
-        # rows where the source simply omits that flag; the event date is the
-        # useful completed-event signal in the discovery feed.
         completed = tournament.get("completed")
         if completed is False:
             continue
@@ -100,12 +95,7 @@ def get_active_regulation_from_history(
     *,
     fallback: Optional[str] = None,
 ) -> Optional[str]:
-    """Read the active regulation recorded by the automatic sync.
-
-    Older history files do not have this metadata, so the supplied fallback
-    remains available during the migration.  We never guess an active
-    regulation from the presence of a future regulation alone.
-    """
+    """Read the active regulation recorded by the automatic sync."""
     if not isinstance(history, dict):
         return _normalise_regulation(fallback)
 
@@ -116,7 +106,56 @@ def get_active_regulation_from_history(
     return _normalise_regulation(fallback)
 
 
+def update_history_regulation_metadata(
+    path: Path,
+    *,
+    active_regulation: Optional[str],
+    detected_regulations: Iterable[str] = (),
+) -> Tuple[bool, Dict[str, Any]]:
+    """Persist sync-derived regulation metadata without rebuilding history."""
+    if not path.exists() or not path.stat().st_size:
+        return False, {}
+
+    try:
+        history = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False, {}
+
+    if not isinstance(history, dict):
+        return False, {}
+
+    active = _normalise_regulation(active_regulation)
+    detected = sorted(
+        {
+            regulation
+            for regulation in (
+                _normalise_regulation(value) for value in detected_regulations
+            )
+            if regulation
+        }
+    )
+
+    changed = (
+        history.get("active_regulation") != active
+        or history.get("detected_regulations") != detected
+    )
+
+    if not changed:
+        return False, history
+
+    history["active_regulation"] = active
+    history["detected_regulations"] = detected
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
+        json.dumps(history, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    temporary.replace(path)
+    return True, history
+
+
 __all__ = [
     "get_active_regulation_from_history",
     "select_active_champions_regulation",
+    "update_history_regulation_metadata",
 ]
