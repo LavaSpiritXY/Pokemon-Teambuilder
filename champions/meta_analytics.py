@@ -2,6 +2,7 @@ from typing import Dict, List
 
 import streamlit as strlit
 
+from champions.history_data import history_revision
 from champions.meta_utils import detect_archetypes
 from champions.meta_viability import calculate_meta_viability
 from champions.pokemon_data import fetch_pokemon_details
@@ -146,8 +147,10 @@ def _candidate_score(target_data: Dict, candidate_data: Dict, tournament_partner
 
     return score
 
+
 @strlit.cache_data(ttl=3600, show_spinner=False)
-def get_cached_meta_candidate(name: str) -> Dict | None:
+def _get_cached_meta_candidate(name: str, history_revision_token: str) -> Dict | None:
+    """Cache candidate analytics until the generated history changes."""
     try:
         c_data = fetch_pokemon_details(name)
 
@@ -186,8 +189,15 @@ def get_cached_meta_candidate(name: str) -> Dict | None:
     except Exception:
         return None
 
+
+def get_cached_meta_candidate(name: str) -> Dict | None:
+    """Return cached candidate data keyed to the current history revision."""
+    return _get_cached_meta_candidate(name, history_revision())
+
+
 @strlit.cache_data(ttl=3600, show_spinner=False)
-def compute_meta_analytics(mon_name: str) -> Dict:
+def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -> Dict:
+    """Cached analytics whose key includes the generated history revision."""
     if not mon_name or mon_name == "-- Choose a Pokémon --":
         return dict(_EMPTY_PROFILE)
 
@@ -261,3 +271,13 @@ def compute_meta_analytics(mon_name: str) -> Dict:
         "teammates": teammates,
         "counters": [],
     }
+
+
+def compute_meta_analytics(mon_name: str) -> Dict:
+    """Return analytics keyed to the current Champions history revision."""
+    return _compute_meta_analytics_cached(mon_name, history_revision())
+
+
+# Preserve the Streamlit cache-control API used by the regression tests and
+# existing application code (e.g. ``compute_meta_analytics.clear()``).
+compute_meta_analytics.clear = _compute_meta_analytics_cached.clear
