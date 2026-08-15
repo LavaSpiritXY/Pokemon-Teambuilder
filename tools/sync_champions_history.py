@@ -1,15 +1,8 @@
 """Discover and incrementally sync Pokémon Champions tournament history.
 
-This is the orchestration layer for the historical pipeline:
-
-1. Discover recent VGC tournaments from Limitless.
-2. Detect Champions regulations dynamically (M-A, M-B, M-C, ...).
-3. Merge newly discovered event IDs into champions_event_ids.json.
-4. Reuse the resumable event cache so already-downloaded tournaments are skipped.
-5. Rebuild champions_meta_history.json from the complete local cache.
-
-The script is safe to run repeatedly. It does not need a manually maintained
-list of new tournaments or a hard-coded list of future regulations.
+The initial historical backfill is performed locally.  GitHub Actions then
+uses the committed aggregate as the durable baseline and downloads only event
+IDs that were discovered since the last sync.
 """
 
 from __future__ import annotations
@@ -25,20 +18,18 @@ from typing import Any, Dict, Iterable, List, Optional, Set
 # When this file is launched directly with
 # ``python tools/sync_champions_history.py``, Python puts ``tools/`` on
 # sys.path rather than the repository root. Bootstrap the repository root so
-# the sibling ``champions`` package and root-level aggregation module resolve
-# exactly as they do when this script is imported or run as a module.
+# the sibling ``champions`` package resolves exactly as it does when imported.
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from champions.historical_ingestion import process_event_ids
+from champions.incremental_history import incremental_update
 from champions.limitless_data import (
     CHAMPIONS_REGULATIONS,
     get_limitless_tournament_details,
     list_limitless_tournaments,
-    load_limitless_event_data,
 )
-from champions_aggregation_v2 import aggregate
 
 
 DEFAULT_EVENT_IDS = Path("champions_event_ids.json")
@@ -47,9 +38,6 @@ DEFAULT_HISTORY = Path("champions_meta_history.json")
 DEFAULT_DISCOVERY_PAGES = 10
 DEFAULT_PAGE_SIZE = 100
 
-# Champions regulations currently use the M-X naming family. Keeping this as
-# a pattern rather than a fixed set means future regulations are discovered
-# automatically.
 _REGULATION_PATTERN = re.compile(
     r"\b(?:REG(?:ULATION)?[\s_-]*)?(M-[A-Z0-9]+)\b",
     flags=re.IGNORECASE,
@@ -60,12 +48,8 @@ def _normalise_regulation(value: Any) -> Optional[str]:
     text = str(value or "").strip().upper()
     if not text:
         return None
-
     match = _REGULATION_PATTERN.search(text)
-    if not match:
-        return None
-
-    return match.group(1).upper()
+    return match.group(1).upper() if match else None
 
 
 def detect_champions_regulation(tournament: Dict[str, Any]) -> Optional[str]:
@@ -73,12 +57,7 @@ def detect_champions_regulation(tournament: Dict[str, Any]) -> Optional[str]:
     regulation = _normalise_regulation(tournament.get("format"))
     if regulation:
         return regulation
-
-    regulation = _normalise_regulation(tournament.get("name"))
-    if regulation:
-        return regulation
-
-    return None
+    return _normalise_regulation(tournament.get("name"))
 
 
 def discover_champions_event_ids(
@@ -101,7 +80,6 @@ def discover_champions_event_ids(
         tournaments = list_limitless_tournaments(page=page, limit=page_size)
         if not tournaments:
             break
-
         scanned += len(tournaments)
 
         for tournament in tournaments:
@@ -111,9 +89,9 @@ def discover_champions_event_ids(
 
             regulation = detect_champions_regulation(tournament)
 
-            # Limitless occasionally exposes Champions tournaments as CUSTOM.
-            # Only make a details request for those ambiguous rows; ordinary
-            # VGC tournaments are discarded without an extra request.
+            # Limitless sometimes exposes Champions tournaments as CUSTOM.
+            # Inspect only those ambiguous rows; ordinary VGC tournaments are
+            # discarded without an additional request.
             if regulation is None and str(tournament.get("format") or "").upper() == "CUSTOM":
                 try:
                     details = get_limitless_tournament_details(event_id)
@@ -122,15 +100,11 @@ def discover_champions_event_ids(
                     continue
                 regulation = detect_champions_regulation(details)
                 if regulation is None:
-                    regulation = detect_champions_regulation(
-                        {**tournament, **details}
-                    )
+                    regulation = detect_champions_regulation({**tournament, **details})
 
             if regulation is None:
                 continue
 
-            # Register newly discovered regulations for this process so
-            # load_limitless_event_data accepts them without source-code edits.
             CHAMPIONS_REGULATIONS.add(regulation)
             regulations.add(regulation)
 
@@ -138,8 +112,6 @@ def discover_champions_event_ids(
                 seen.add(event_id)
                 event_ids.append(event_id)
 
-        # Limitless returns pages in descending recency order. A short page
-        # means there is no reason to keep paging further.
         if len(tournaments) < page_size:
             break
 
@@ -153,12 +125,10 @@ def discover_champions_event_ids(
 def load_existing_event_ids(path: Path) -> List[str]:
     if not path.exists():
         return []
-
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return []
-
     if not isinstance(payload, list):
         return []
 
@@ -192,7 +162,7 @@ def sync_history(
     batch_size: int = 25,
     delay_seconds: float = 1.5,
 ) -> Dict[str, Any]:
-    """Run one complete incremental synchronization pass."""
+    """Run one incremental synchronization pass."""
     discovery = discover_champions_event_ids(
         max_pages=discovery_pages,
         page_size=page_size,
@@ -202,7 +172,6 @@ def sync_history(
     existing_set = set(existing)
     merged = list(dict.fromkeys(existing + discovery["event_ids"]))
     new_ids = [event_id for event_id in merged if event_id not in existing_set]
-    write_event_ids(event_ids_path, merged)
 
     print("=== Champions automatic discovery ===")
     print(f"Scanned tournaments: {discovery['scanned_tournaments']}")
@@ -211,25 +180,62 @@ def sync_history(
     print(f"New event IDs discovered: {len(new_ids)}")
     print(f"Total known event IDs: {len(merged)}")
 
-    # process_event_ids is intentionally resumable: existing cache files are
-    # skipped, unsupported events are remembered, and transient failures stop
-    # safely after the configured threshold.
+    # Persist the complete discovered ID list even when there are no new
+    # tournament payloads. This also records newly discovered unsupported IDs
+    # so they are not repeatedly rediscovered as "new".
+    write_event_ids(event_ids_path, merged)
+
+    if not new_ids:
+        print("No new Champions tournaments to download.")
+        return {
+            "discovery": discovery,
+            "new_event_ids": 0,
+            "known_event_ids": len(merged),
+            "events_processed": 0,
+            "history_changed": False,
+        }
+
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    # IMPORTANT: only the newly discovered IDs are downloaded. The historical
+    # aggregate in champions_meta_history.json is the durable baseline; the
+    # raw cache does not need to exist on the GitHub runner.
     ingestion = process_event_ids(
-        merged,
+        new_ids,
         output_dir=cache_dir,
-        batch_size=batch_size,
+        batch_size=max(1, batch_size),
         delay_seconds=delay_seconds,
         full=True,
     )
 
-    report = aggregate(cache_dir)
+    downloaded = ingestion["processed"]
+    if downloaded == 0:
+        print("No new supported tournament payloads were downloaded.")
+        return {
+            "discovery": discovery,
+            "new_event_ids": len(new_ids),
+            "known_event_ids": len(merged),
+            "ingestion": ingestion,
+            "events_processed": 0,
+            "history_changed": True,
+        }
+
+    if not history_path.exists() or not history_path.stat().st_size:
+        raise RuntimeError(
+            "champions_meta_history.json is empty or missing. "
+            "Seed the completed local historical backfill into the repository "
+            "before automatic incremental syncing can begin."
+        )
+
+    report = incremental_update(history_path, cache_dir)
     history_path.write_text(
         json.dumps(report, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
     print("=== Champions history sync complete ===")
-    print(f"History events processed: {report['events_processed']}")
+    print(f"New history events added: {downloaded}")
+    print(f"Total history events: {report['events_processed']}")
     print(f"Pokémon records: {len(report['pokemon'])}")
     print(f"Partner records: {sum(len(rows) for rows in report['partners'].values())}")
     print(f"Saved history: {history_path}")
@@ -240,14 +246,13 @@ def sync_history(
         "known_event_ids": len(merged),
         "ingestion": ingestion,
         "events_processed": report["events_processed"],
-        "pokemon_records": len(report["pokemon"]),
-        "partner_records": sum(len(rows) for rows in report["partners"].values()),
+        "history_changed": True,
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Automatically discover and sync Pokémon Champions tournament history."
+        description="Automatically discover and incrementally sync Pokémon Champions tournament history."
     )
     parser.add_argument("--event-ids", type=Path, default=DEFAULT_EVENT_IDS)
     parser.add_argument("--cache", type=Path, default=DEFAULT_CACHE_DIR)
