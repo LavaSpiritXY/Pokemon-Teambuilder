@@ -151,6 +151,16 @@ def update_history_regulation_metadata(
         encoding="utf-8",
     )
     temporary.replace(path)
+
+    # history_data.py caches the aggregate for runtime performance. The sync
+    # job has just changed the on-disk payload, so invalidate that cache or a
+    # running process can continue serving the pre-sync regulation metadata.
+    try:
+        from champions.history_data import load_champions_history
+        load_champions_history.cache_clear()
+    except ImportError:
+        pass
+
     return True, history
 
 
