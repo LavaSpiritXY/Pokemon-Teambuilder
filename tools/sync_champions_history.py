@@ -17,8 +17,19 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set
+
+
+# When this file is launched directly with
+# ``python tools/sync_champions_history.py``, Python puts ``tools/`` on
+# sys.path rather than the repository root. Bootstrap the repository root so
+# the sibling ``champions`` package and root-level aggregation module resolve
+# exactly as they do when this script is imported or run as a module.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from champions.historical_ingestion import process_event_ids
 from champions.limitless_data import (
@@ -188,8 +199,9 @@ def sync_history(
     )
 
     existing = load_existing_event_ids(event_ids_path)
+    existing_set = set(existing)
     merged = list(dict.fromkeys(existing + discovery["event_ids"]))
-    new_ids = [event_id for event_id in merged if event_id not in set(existing)]
+    new_ids = [event_id for event_id in merged if event_id not in existing_set]
     write_event_ids(event_ids_path, merged)
 
     print("=== Champions automatic discovery ===")
