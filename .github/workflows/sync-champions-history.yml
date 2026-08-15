@@ -50,6 +50,7 @@ jobs:
             champions/historical_ingestion.py \
             champions/incremental_history.py \
             champions/history_data.py \
+            champions/regulation.py \
             champions/tournament_data.py \
             champions_aggregation_v2.py \
             tools/sync_champions_history.py
