@@ -1,0 +1,71 @@
+name: Sync Pokémon Champions tournament history
+
+on:
+  schedule:
+    # Run four times per day so new tournaments are picked up without manual work.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: champions-history
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Champions data branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: champions-tournament-data
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Automatically discover and sync Champions tournaments
+        run: |
+          python tools/sync_champions_history.py \
+            --discovery-pages 10 \
+            --page-size 100 \
+            --batch-size 25 \
+            --delay 1.5
+
+      - name: Run Champions regression tests
+        run: python -m pytest test_champions_auto_sync.py test_champions_history_data.py test_champions_incremental_history.py tests/test_meta_analytics.py tests/test_meta_viability.py tests/test_tournament_data.py tests/test_type_chart.py tests/test_champions_end_to_end.py -v
+
+      - name: Validate generated data and compile modules
+        run: |
+          python -m json.tool champions_meta_history.json > /dev/null
+          python -m json.tool champions_event_ids.json > /dev/null
+          python -m py_compile \
+            champions/limitless_data.py \
+            champions/historical_ingestion.py \
+            champions/incremental_history.py \
+            champions/history_data.py \
+            champions/regulation.py \
+            champions/tournament_data.py \
+            champions_aggregation_v2.py \
+            tools/sync_champions_history.py
+
+      - name: Commit updated history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add champions_event_ids.json champions_meta_history.json
+          if git diff --cached --quiet; then
+            echo "No Champions history changes detected."
+            exit 0
+          fi
+          git commit -m "Automated Champions history sync"
+          git push origin HEAD:champions-tournament-data
