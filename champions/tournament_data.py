@@ -14,11 +14,6 @@ from champions.roster_data import display_name_for_species_key
 # API below instead of reading this structure directly.
 CHAMPIONS_META_DB = build_legacy_meta_db()
 
-# Tracks records explicitly imported by the legacy test/compatibility API.
-# The generated history database above is a startup snapshot and must never
-# override newer data written by the automatic sync job.
-_EXPLICIT_IMPORT_KEYS = set()
-
 
 def _get_active_regulation():
     """Return the regulation recorded by the automatic sync.
@@ -79,8 +74,6 @@ def import_champions_tournament(event):
         canonical_team = list(dict.fromkeys(canonical_team))
 
         for pokemon in canonical_team:
-            _EXPLICIT_IMPORT_KEYS.add(pokemon)
-
             if pokemon not in CHAMPIONS_META_DB:
                 CHAMPIONS_META_DB[pokemon] = {
                     "appearances": 0,
@@ -99,6 +92,10 @@ def import_champions_tournament(event):
                 }
 
             record = CHAMPIONS_META_DB[pokemon]
+            # Marks only records created by this explicit compatibility API.
+            # Startup history records do not get this marker, so they cannot
+            # mask newer data from the automatic sync.
+            record["_explicit_import"] = True
             record["appearances"] += 1
 
             if wins + losses > 0:
@@ -194,14 +191,12 @@ def calculate_tournament_metrics(pokemon_name):
     """Return normalized Champions metrics using the active synced regulation."""
     active_regulation = _get_active_regulation()
     key = get_champions_species_key(pokemon_name)
+    legacy_record = CHAMPIONS_META_DB.get(key)
 
     # Explicit imports are retained for the small legacy compatibility API and
     # its tests. Normal application reads always go through the synced history.
-    if key in _EXPLICIT_IMPORT_KEYS:
-        return _legacy_metrics(
-            CHAMPIONS_META_DB[key],
-            active_regulation,
-        )
+    if legacy_record is not None and legacy_record.get("_explicit_import"):
+        return _legacy_metrics(legacy_record, active_regulation)
 
     history_metrics = _history_metrics_for_active_regulation(
         pokemon_name,
@@ -293,8 +288,8 @@ def get_tournament_partners(pokemon_name, top_n=10):
     import API. Normal application reads use the automatically synced history.
     """
     key = get_champions_species_key(pokemon_name)
-    if key in _EXPLICIT_IMPORT_KEYS:
-        legacy_record = CHAMPIONS_META_DB.get(key)
+    legacy_record = CHAMPIONS_META_DB.get(key)
+    if legacy_record is not None and legacy_record.get("_explicit_import"):
         pairs = sorted(
             (
                 str(partner).strip().lower(),
