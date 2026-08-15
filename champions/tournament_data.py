@@ -1,9 +1,14 @@
 from champions.constants import CURRENT_REGULATION
+from champions.history_data import build_legacy_meta_db
 from champions.move_data import get_champions_species_key
 from champions.roster_data import display_name_for_species_key
 
 
-CHAMPIONS_META_DB = {}
+# The historical aggregation is the primary source for tournament evidence.
+# Loading it here keeps the existing scoring API intact, so app.py does not
+# need to know about the new JSON schema yet.  If the generated history file
+# is absent, this safely falls back to the previous empty database behaviour.
+CHAMPIONS_META_DB = build_legacy_meta_db()
 
 
 def _extract_match_record(player):
