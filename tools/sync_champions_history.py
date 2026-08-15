@@ -1,6 +1,6 @@
 """Discover and incrementally sync Pokémon Champions tournament history.
 
-The initial historical backfill is performed locally.  GitHub Actions then
+The initial historical backfill is performed locally. GitHub Actions then
 uses the committed aggregate as the durable baseline and downloads only event
 IDs that were discovered since the last sync.
 """
@@ -15,10 +15,6 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set
 
 
-# When this file is launched directly with
-# ``python tools/sync_champions_history.py``, Python puts ``tools/`` on
-# sys.path rather than the repository root. Bootstrap the repository root so
-# the sibling ``champions`` package resolves exactly as it does when imported.
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -29,6 +25,10 @@ from champions.limitless_data import (
     CHAMPIONS_REGULATIONS,
     get_limitless_tournament_details,
     list_limitless_tournaments,
+)
+from champions.regulation import (
+    select_active_champions_regulation,
+    update_history_regulation_metadata,
 )
 
 
@@ -60,6 +60,30 @@ def detect_champions_regulation(tournament: Dict[str, Any]) -> Optional[str]:
     return _normalise_regulation(tournament.get("name"))
 
 
+def _discovery_event_row(
+    tournament: Dict[str, Any],
+    regulation: str,
+) -> Dict[str, Any]:
+    """Return only the fields needed for active-regulation selection."""
+    completed = tournament.get("completed")
+    if completed is None:
+        completed = tournament.get("ended")
+    if completed is None:
+        # The discovery endpoint represents completed tournament history; a
+        # future event is still excluded by its future date in the selector.
+        completed = True
+
+    return {
+        "format": regulation,
+        "date": (
+            tournament.get("date")
+            or tournament.get("start_date")
+            or tournament.get("startDate")
+        ),
+        "completed": bool(completed),
+    }
+
+
 def discover_champions_event_ids(
     *,
     max_pages: int = DEFAULT_DISCOVERY_PAGES,
@@ -74,6 +98,7 @@ def discover_champions_event_ids(
     event_ids: List[str] = []
     regulations: Set[str] = set()
     seen: Set[str] = set()
+    discovery_rows: List[Dict[str, Any]] = []
     scanned = 0
 
     for page in range(1, max_pages + 1):
@@ -89,24 +114,24 @@ def discover_champions_event_ids(
 
             regulation = detect_champions_regulation(tournament)
 
-            # Limitless sometimes exposes Champions tournaments as CUSTOM.
-            # Inspect only those ambiguous rows; ordinary VGC tournaments are
-            # discarded without an additional request.
             if regulation is None and str(tournament.get("format") or "").upper() == "CUSTOM":
                 try:
                     details = get_limitless_tournament_details(event_id)
                 except Exception as exc:
                     print(f"WARNING: could not inspect CUSTOM event {event_id}: {exc}")
                     continue
-                regulation = detect_champions_regulation(details)
+                merged = {**tournament, **details}
+                regulation = detect_champions_regulation(merged)
                 if regulation is None:
-                    regulation = detect_champions_regulation({**tournament, **details})
+                    regulation = detect_champions_regulation({**details, **tournament})
+                tournament = merged
 
             if regulation is None:
                 continue
 
             CHAMPIONS_REGULATIONS.add(regulation)
             regulations.add(regulation)
+            discovery_rows.append(_discovery_event_row(tournament, regulation))
 
             if event_id not in seen:
                 seen.add(event_id)
@@ -115,9 +140,12 @@ def discover_champions_event_ids(
         if len(tournaments) < page_size:
             break
 
+    active_regulation = select_active_champions_regulation(discovery_rows)
+
     return {
         "event_ids": event_ids,
         "regulations": sorted(regulations),
+        "active_regulation": active_regulation,
         "scanned_tournaments": scanned,
     }
 
@@ -176,14 +204,20 @@ def sync_history(
     print("=== Champions automatic discovery ===")
     print(f"Scanned tournaments: {discovery['scanned_tournaments']}")
     print(f"Detected regulations: {', '.join(discovery['regulations']) or 'none'}")
+    print(f"Active regulation: {discovery['active_regulation'] or 'unknown'}")
     print(f"Known event IDs before discovery: {len(existing)}")
     print(f"New event IDs discovered: {len(new_ids)}")
     print(f"Total known event IDs: {len(merged)}")
 
-    # Persist the complete discovered ID list even when there are no new
-    # tournament payloads. This also records newly discovered unsupported IDs
-    # so they are not repeatedly rediscovered as "new".
     write_event_ids(event_ids_path, merged)
+
+    metadata_changed = False
+    if history_path.exists() and history_path.stat().st_size:
+        metadata_changed, _ = update_history_regulation_metadata(
+            history_path,
+            active_regulation=discovery["active_regulation"],
+            detected_regulations=discovery["regulations"],
+        )
 
     if not new_ids:
         print("No new Champions tournaments to download.")
@@ -192,14 +226,11 @@ def sync_history(
             "new_event_ids": 0,
             "known_event_ids": len(merged),
             "events_processed": 0,
-            "history_changed": False,
+            "history_changed": metadata_changed,
         }
 
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # IMPORTANT: only the newly discovered IDs are downloaded. The historical
-    # aggregate in champions_meta_history.json is the durable baseline; the
-    # raw cache does not need to exist on the GitHub runner.
     ingestion = process_event_ids(
         new_ids,
         output_dir=cache_dir,
@@ -217,7 +248,7 @@ def sync_history(
             "known_event_ids": len(merged),
             "ingestion": ingestion,
             "events_processed": 0,
-            "history_changed": True,
+            "history_changed": metadata_changed,
         }
 
     if not history_path.exists() or not history_path.stat().st_size:
@@ -228,6 +259,8 @@ def sync_history(
         )
 
     report = incremental_update(history_path, cache_dir)
+    report["active_regulation"] = discovery["active_regulation"]
+    report["detected_regulations"] = discovery["regulations"]
     history_path.write_text(
         json.dumps(report, ensure_ascii=False, indent=2),
         encoding="utf-8",
@@ -236,6 +269,7 @@ def sync_history(
     print("=== Champions history sync complete ===")
     print(f"New history events added: {downloaded}")
     print(f"Total history events: {report['events_processed']}")
+    print(f"Active regulation: {report['active_regulation'] or 'unknown'}")
     print(f"Pokémon records: {len(report['pokemon'])}")
     print(f"Partner records: {sum(len(rows) for rows in report['partners'].values())}")
     print(f"Saved history: {history_path}")
