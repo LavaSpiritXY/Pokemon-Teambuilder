@@ -41,6 +41,9 @@ jobs:
             --batch-size 25 \
             --delay 1.5
 
+      - name: Run Champions regression tests
+        run: python -m pytest test_champions_auto_sync.py test_champions_history_data.py test_champions_incremental_history.py tests/test_meta_analytics.py tests/test_meta_viability.py tests/test_tournament_data.py tests/test_type_chart.py tests/test_champions_end_to_end.py -v
+
       - name: Validate generated data and compile modules
         run: |
           python -m json.tool champions_meta_history.json > /dev/null
