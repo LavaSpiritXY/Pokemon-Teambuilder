@@ -3,14 +3,28 @@ from champions.history_data import (
     build_legacy_meta_db,
     get_history_metrics,
     get_history_partners,
+    load_champions_history,
 )
 from champions.move_data import get_champions_species_key
+from champions.regulation import get_active_regulation_from_history
 from champions.roster_data import display_name_for_species_key
 
 
 # Legacy compatibility database. New consumers should use the clean history
 # API below instead of reading this structure directly.
 CHAMPIONS_META_DB = build_legacy_meta_db()
+
+
+def _get_active_regulation():
+    """Return the regulation recorded by the automatic sync.
+
+    Older history files do not have active-regulation metadata yet, so the
+    original constant remains a safe migration fallback.
+    """
+    return get_active_regulation_from_history(
+        load_champions_history(),
+        fallback=CURRENT_REGULATION,
+    ) or CURRENT_REGULATION
 
 
 def _extract_match_record(player):
@@ -38,11 +52,12 @@ def _extract_match_record(player):
 def import_champions_tournament(event):
     """Import one Champions tournament into the legacy compatibility DB."""
     regulation = event.get("regulation", "")
+    active_regulation = _get_active_regulation()
 
     if (
         regulation
-        and CURRENT_REGULATION
-        and regulation != CURRENT_REGULATION
+        and active_regulation
+        and regulation != active_regulation
     ):
         return
 
@@ -95,8 +110,9 @@ def import_champions_tournament(event):
                 )
 
 
-def _legacy_metrics(record):
+def _legacy_metrics(record, active_regulation=None):
     """Normalize metrics from an explicitly imported tournament record."""
+    active_regulation = active_regulation or _get_active_regulation()
     appearances = max(1, int(record.get("appearances", 0) or 0))
     wins = max(0, int(record.get("wins", 0) or 0))
     losses = max(0, int(record.get("losses", 0) or 0))
@@ -133,7 +149,7 @@ def _legacy_metrics(record):
             sum(count for _, count in partners) / max(1, appearances * 5),
         ) if partners else 0.0,
         "win_rate_available": win_rate is not None,
-        "current_regulation": CURRENT_REGULATION,
+        "current_regulation": active_regulation,
         "current_regulation_appearances": record.get("appearances", 0),
         "current_regulation_win_rate": win_rate,
         "current_regulation_top_cut_rate": top_cut_rate,
@@ -149,7 +165,7 @@ def _legacy_metrics(record):
         },
         "recent": None,
         "current": {
-            "regulation": CURRENT_REGULATION,
+            "regulation": active_regulation,
             "appearances": record.get("appearances", 0),
             "win_rate": win_rate,
             "top_cut_rate": top_cut_rate,
@@ -160,19 +176,16 @@ def _legacy_metrics(record):
 
 
 def calculate_tournament_metrics(pokemon_name):
-    """Return normalized Champions metrics.
-
-    Explicitly imported tournament data is authoritative when present in the
-    compatibility DB. Otherwise the maintained historical aggregate is used.
-    """
+    """Return normalized Champions metrics using the active regulation."""
+    active_regulation = _get_active_regulation()
     key = get_champions_species_key(pokemon_name)
     legacy_record = CHAMPIONS_META_DB.get(key)
     if legacy_record is not None:
-        return _legacy_metrics(legacy_record)
+        return _legacy_metrics(legacy_record, active_regulation)
 
     history_metrics = get_history_metrics(
         pokemon_name,
-        current_regulation=CURRENT_REGULATION,
+        current_regulation=active_regulation,
     )
 
     if not history_metrics:
@@ -183,7 +196,7 @@ def calculate_tournament_metrics(pokemon_name):
             "tournament_score": 0.0,
             "partner_score": 0.0,
             "win_rate_available": False,
-            "current_regulation": CURRENT_REGULATION,
+            "current_regulation": active_regulation,
             "current_regulation_appearances": None,
             "overall": None,
             "recent": None,
@@ -240,7 +253,7 @@ def calculate_tournament_metrics(pokemon_name):
         "tournament_score": tournament_score,
         "partner_score": partner_score,
         "win_rate_available": win_rate_available,
-        "current_regulation": current.get("regulation") or CURRENT_REGULATION,
+        "current_regulation": current.get("regulation") or active_regulation,
         "current_regulation_appearances": current.get("appearances"),
         "current_regulation_win_rate": current.get("win_rate"),
         "current_regulation_top_cut_rate": current.get("top_cut_rate"),
