@@ -57,7 +57,17 @@ def test_history_loader_and_legacy_translation(tmp_path):
     assert history_data.get_history_pokemon_record("Garchomp", regulation="M-B")["appearances"] == 19608
     assert history_data.get_history_pokemon_record("Garchomp", regulation="M-Z") is None
 
-    legacy = history_data.build_legacy_meta_db()
+    # Point the compatibility layer at the temporary fixture rather than the
+    # repository's real history file.
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        legacy = history_data.build_legacy_meta_db()
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
     assert legacy["garchomp"]["appearances"] == 19608
     assert legacy["garchomp"]["wins"] == 53055
     assert legacy["garchomp"]["partners"]["kingambit"] == 6253
@@ -72,9 +82,10 @@ def test_history_helpers_do_not_break_when_file_is_missing(tmp_path):
     assert history_data.get_history_partners("Garchomp") == []
 
 
-def test_existing_tournament_api_remains_safe_without_history_file():
-    # The committed branch intentionally keeps the generated 12 MB history
-    # file separate until the data is explicitly committed.  Existing callers
-    # must therefore retain the previous safe empty-database behaviour.
-    assert isinstance(calculate_tournament_metrics("Garchomp"), dict)
-    assert get_tournament_partners("Garchomp") == []
+def test_existing_tournament_api_returns_normalized_metrics():
+    metrics = calculate_tournament_metrics("Garchomp")
+    partners = get_tournament_partners("Garchomp")
+
+    assert isinstance(metrics, dict)
+    assert 0.0 <= metrics["tournament_score"] <= 1.0
+    assert isinstance(partners, list)
