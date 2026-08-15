@@ -1,4 +1,5 @@
 ﻿import unittest
+from unittest.mock import patch
 
 from champions.constants import CURRENT_REGULATION
 from champions.tournament_data import (
@@ -73,6 +74,45 @@ class TournamentDataTests(unittest.TestCase):
 
         partners = get_tournament_partners("Whimsicott")
         self.assertEqual(partners[0], ("farigiraf", 1))
+
+    def test_metrics_use_synced_active_regulation(self):
+        history_metrics = {
+            "overall": {
+                "appearances": 100,
+                "wins": 50,
+                "losses": 50,
+                "top_cut_count": 10,
+                "win_rate": 0.50,
+                "top_cut_rate": 0.10,
+            },
+            "recent": {
+                "usage_weight": 50.0,
+                "win_rate": 0.50,
+                "top_cut_rate": 0.10,
+            },
+            "current": {
+                "regulation": "M-C",
+                "appearances": 20,
+                "win_rate": 0.80,
+                "top_cut_rate": 0.30,
+                "win_rate_available": True,
+                "top_cut_rate_available": True,
+            },
+        }
+
+        with patch(
+            "champions.tournament_data.load_champions_history",
+            return_value={"active_regulation": "M-C"},
+        ), patch(
+            "champions.tournament_data.get_history_metrics",
+            return_value=history_metrics,
+        ):
+            metrics = calculate_tournament_metrics("Garchomp")
+
+        self.assertEqual(metrics["current_regulation"], "M-C")
+        self.assertEqual(metrics["current_regulation_appearances"], 20)
+        self.assertEqual(metrics["current_regulation_win_rate"], 0.80)
+        self.assertEqual(metrics["current_regulation_top_cut_rate"], 0.30)
 
 
 if __name__ == "__main__":
