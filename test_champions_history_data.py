@@ -24,10 +24,14 @@ def _write_history(path: Path) -> None:
                 "display_name": "Garchomp",
                 "regulations": {"M-A": 10417, "M-B": 9191},
                 "regulation_metrics": {
+                    "M-A": {
+                        "win_rate": 0.23,
+                        "top_cut_rate": 0.08,
+                    },
                     "M-B": {
                         "win_rate": 0.61,
                         "top_cut_rate": 0.21,
-                    }
+                    },
                 },
             }
         },
@@ -120,6 +124,38 @@ def test_clean_history_metrics_expose_overall_recent_and_current(tmp_path):
     assert metrics["current"]["win_rate"] == 0.61
     assert metrics["current"]["top_cut_rate"] == 0.21
     assert metrics["current"]["win_rate_available"] is True
+
+
+def test_regulation_metrics_do_not_leak_across_regulations(tmp_path):
+    """Selecting M-B must never silently return the M-A performance signal."""
+    history_path = tmp_path / "champions_meta_history.json"
+    _write_history(history_path)
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        m_a = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-A",
+        )
+        m_b = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-B",
+        )
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+    assert m_a is not None
+    assert m_b is not None
+    assert m_a["current"]["regulation"] == "M-A"
+    assert m_b["current"]["regulation"] == "M-B"
+    assert m_a["current"]["win_rate"] == 0.23
+    assert m_b["current"]["win_rate"] == 0.61
+    assert m_a["current"]["top_cut_rate"] == 0.08
+    assert m_b["current"]["top_cut_rate"] == 0.21
+    assert m_a["current"]["win_rate"] != m_b["current"]["win_rate"]
 
 
 def test_existing_tournament_api_returns_normalized_metrics():
