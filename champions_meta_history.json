@@ -370730,5 +370730,10 @@
         "shared_win_rate": 0.0
       }
     ]
-  }
+  },
+  "active_regulation": "M-B",
+  "detected_regulations": [
+    "M-A",
+    "M-B"
+  ]
 }
