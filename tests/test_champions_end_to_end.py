@@ -68,6 +68,7 @@ def test_full_sync_transition_switches_history_to_new_active_regulation(tmp_path
     metrics = get_history_metrics(
         "Pikachu",
         current_regulation=history["active_regulation"],
+        history_path=str(history_path),
     )
     assert metrics["current"]["regulation"] == "M-C"
     assert metrics["current"]["win_rate"] == 0.80
