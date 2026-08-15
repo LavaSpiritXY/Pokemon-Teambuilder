@@ -23,6 +23,12 @@ def _write_history(path: Path) -> None:
                 "recent_top_cut_rate": 0.137,
                 "display_name": "Garchomp",
                 "regulations": {"M-A": 10417, "M-B": 9191},
+                "regulation_metrics": {
+                    "M-B": {
+                        "win_rate": 0.61,
+                        "top_cut_rate": 0.21,
+                    }
+                },
             }
         },
         "partners": {
@@ -55,9 +61,6 @@ def test_history_loader_and_legacy_translation(tmp_path):
     loaded = history_data.load_champions_history(str(history_path))
     assert loaded["events_processed"] == 929
 
-    # Point the compatibility helpers at the temporary fixture rather than
-    # the repository's real history file, so the test is isolated and cannot
-    # accidentally pass because of data in the real history dataset.
     history_data.load_champions_history.cache_clear()
     original_path = history_data.DEFAULT_HISTORY_PATH
     history_data.DEFAULT_HISTORY_PATH = history_path
@@ -86,9 +89,37 @@ def test_history_helpers_do_not_break_when_file_is_missing(tmp_path):
         assert history_data.load_champions_history() == {}
         assert history_data.get_history_pokemon_record("Garchomp") is None
         assert history_data.get_history_partners("Garchomp") == []
+        assert history_data.get_history_metrics("Garchomp") is None
     finally:
         history_data.DEFAULT_HISTORY_PATH = original_path
         history_data.load_champions_history.cache_clear()
+
+
+def test_clean_history_metrics_expose_overall_recent_and_current(tmp_path):
+    history_path = tmp_path / "champions_meta_history.json"
+    _write_history(history_path)
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        metrics = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-B",
+        )
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+    assert metrics is not None
+    assert metrics["overall"]["appearances"] == 19608
+    assert metrics["overall"]["wins"] == 53055
+    assert metrics["recent"]["win_rate"] == 0.4975472815
+    assert metrics["current"]["regulation"] == "M-B"
+    assert metrics["current"]["appearances"] == 9191
+    assert metrics["current"]["win_rate"] == 0.61
+    assert metrics["current"]["top_cut_rate"] == 0.21
+    assert metrics["current"]["win_rate_available"] is True
 
 
 def test_existing_tournament_api_returns_normalized_metrics():
@@ -97,4 +128,5 @@ def test_existing_tournament_api_returns_normalized_metrics():
 
     assert isinstance(metrics, dict)
     assert 0.0 <= metrics["tournament_score"] <= 1.0
+    assert metrics["current_regulation"] == "M-B"
     assert isinstance(partners, list)
