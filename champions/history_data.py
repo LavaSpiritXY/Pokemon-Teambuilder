@@ -17,17 +17,17 @@ DEFAULT_HISTORY_PATH = Path("champions_meta_history.json")
 
 
 @lru_cache(maxsize=1)
-def load_champions_history(
-    path: str = str(DEFAULT_HISTORY_PATH),
-) -> Dict[str, Any]:
+def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
     """Load the aggregated Champions history once per Python process.
 
-    Missing or malformed history is treated as unavailable rather than making
-    the existing app fail to import.  The caller can therefore continue using
-    the old empty-database behaviour until the generated history file exists.
+    ``DEFAULT_HISTORY_PATH`` is resolved when this function is called rather
+    than when the function is defined.  This matters for tests and tooling
+    that temporarily redirect the compatibility layer to another history
+    file. Missing or malformed history is treated as unavailable rather than
+    making the existing app fail to import.
     """
 
-    history_path = Path(path)
+    history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
     if not history_path.exists():
         return {}
 
@@ -110,7 +110,7 @@ def build_legacy_meta_db(
     """Translate the new history format into the old CHAMPIONS_META_DB shape.
 
     This keeps the existing scoring functions working without requiring app.py
-    changes.  Partner frequencies are copied from the aggregated partner
+    changes. Partner frequencies are copied from the aggregated partner
     records; they are intentionally not presented as regulation-specific.
     """
 
