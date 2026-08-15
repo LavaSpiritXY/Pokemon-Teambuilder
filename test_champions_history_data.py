@@ -54,15 +54,17 @@ def test_history_loader_and_legacy_translation(tmp_path):
     history_data.load_champions_history.cache_clear()
     loaded = history_data.load_champions_history(str(history_path))
     assert loaded["events_processed"] == 929
-    assert history_data.get_history_pokemon_record("Garchomp", regulation="M-B")["appearances"] == 19608
-    assert history_data.get_history_pokemon_record("Garchomp", regulation="M-Z") is None
 
-    # Point the compatibility layer at the temporary fixture rather than the
-    # repository's real history file.
+    # Point the compatibility helpers at the temporary fixture rather than
+    # the repository's real history file, so the test is isolated and cannot
+    # accidentally pass because of data in the real history dataset.
     history_data.load_champions_history.cache_clear()
     original_path = history_data.DEFAULT_HISTORY_PATH
     history_data.DEFAULT_HISTORY_PATH = history_path
     try:
+        assert history_data.get_history_pokemon_record("Garchomp", regulation="M-B")["appearances"] == 19608
+        assert history_data.get_history_pokemon_record("Garchomp", regulation="M-Z") is None
+
         legacy = history_data.build_legacy_meta_db()
     finally:
         history_data.DEFAULT_HISTORY_PATH = original_path
@@ -76,10 +78,17 @@ def test_history_loader_and_legacy_translation(tmp_path):
 
 def test_history_helpers_do_not_break_when_file_is_missing(tmp_path):
     missing = tmp_path / "missing.json"
+
     history_data.load_champions_history.cache_clear()
-    assert history_data.load_champions_history(str(missing)) == {}
-    assert history_data.get_history_pokemon_record("Garchomp") is None
-    assert history_data.get_history_partners("Garchomp") == []
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = missing
+    try:
+        assert history_data.load_champions_history() == {}
+        assert history_data.get_history_pokemon_record("Garchomp") is None
+        assert history_data.get_history_partners("Garchomp") == []
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
 
 
 def test_existing_tournament_api_returns_normalized_metrics():
