@@ -109,7 +109,7 @@ def _candidate_names(target_name: str) -> List[str]:
     """Return tournament-relevant Champions candidates for meta analysis.
 
     The Champions Showdown mod does not expose a ``pokedex.ts`` file, so the
-    old roster lookup always returned an empty list.  The generated tournament
+    old roster lookup always returned an empty list. The generated tournament
     history already contains the canonical species keys for every Pokémon seen
     in the processed Champions events, making it the correct source here.
     """
@@ -156,6 +156,77 @@ def _candidate_score(target_data: Dict, candidate_data: Dict, tournament_partner
     candidate_physical = candidate_stats.get("attack", 100) >= candidate_stats.get("special-attack", 100)
     if target_physical != candidate_physical:
         score += 2.0
+
+    return score
+
+
+def _counter_score(target_data: Dict, candidate_data: Dict, candidate_name: str) -> float:
+    """Score how convincingly a tournament candidate can counter a target.
+
+    Counter scoring deliberately uses two independent pieces of information:
+    1. the candidate must be able to threaten the target's defensive typing;
+    2. the candidate should be able to withstand the target's STAB typing.
+
+    Tournament viability is a smaller tie-breaker so obscure type-chart answers
+    do not automatically outrank established Champions Pokémon.
+    """
+    target_types = [str(t).title() for t in target_data.get("types", [])]
+    candidate_types = [str(t).title() for t in candidate_data.get("types", [])]
+    if not target_types or not candidate_types:
+        return -999.0
+
+    score = 0.0
+
+    # Offensive pressure: reward candidate STAB that hits one or both of the
+    # target's types super-effectively. Double effectiveness is strong; a 4x
+    # matchup is especially valuable.
+    for candidate_type in candidate_types:
+        relations = get_type_relationships(candidate_type) or {}
+        double_to = {item["name"].title() for item in relations.get("double_damage_to", [])}
+        for target_type in target_types:
+            if target_type in double_to:
+                score += 18.0
+
+    # Defensive stability: reward resisting or being immune to the target's
+    # STAB types, and penalise candidates that are weak to them.
+    for target_type in target_types:
+        relations = get_type_relationships(target_type) or {}
+        double_from = {item["name"].title() for item in relations.get("double_damage_to", [])}
+        half_from = {item["name"].title() for item in relations.get("half_damage_to", [])}
+        no_from = {item["name"].title() for item in relations.get("no_damage_to", [])}
+
+        # Work out the actual multiplier of this target STAB type against the
+        # candidate's dual typing rather than checking each candidate type in
+        # isolation.
+        multiplier = 1.0
+        for candidate_type in candidate_types:
+            if candidate_type in no_from:
+                multiplier *= 0.0
+            elif candidate_type in double_from:
+                multiplier *= 2.0
+            elif candidate_type in half_from:
+                multiplier *= 0.5
+
+        if multiplier == 0.0:
+            score += 16.0
+        elif multiplier <= 0.5:
+            score += 12.0
+        elif multiplier == 1.0:
+            score += 2.0
+        elif multiplier >= 2.0:
+            score -= 12.0
+
+    # Tournament presence / viability is intentionally capped. This keeps the
+    # result meta-relevant without allowing raw usage to overwhelm matchup fit.
+    try:
+        tournament = calculate_tournament_metrics(candidate_name)
+        score += min(12.0, max(0.0, float(tournament.get("tournament_score", 0.0))) * 12.0)
+    except Exception:
+        pass
+
+    stats = candidate_data.get("stats", {})
+    bulk = float(stats.get("hp", 0)) + float(stats.get("defense", 0)) + float(stats.get("special-defense", 0))
+    score += min(8.0, max(0.0, (bulk - 250.0) / 25.0))
 
     return score
 
@@ -257,20 +328,31 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
 
     tournament_partners = dict(get_tournament_partners(mon_name, top_n=10))
     teammate_scores = []
+    counter_scores = []
+
     for candidate_name in _candidate_names(mon_name):
         try:
             candidate_data = fetch_pokemon_details(candidate_name)
             if not candidate_data:
                 continue
+
             score = _candidate_score(mon_data, candidate_data, tournament_partners, candidate_name)
             if score > 0:
                 candidate_types = candidate_data.get("types", [])
                 teammate_scores.append((score, candidate_name, candidate_types[0] if candidate_types else "Unknown"))
+
+            counter_score = _counter_score(mon_data, candidate_data, candidate_name)
+            if counter_score > 20.0:
+                candidate_types = candidate_data.get("types", [])
+                counter_scores.append((counter_score, candidate_name, candidate_types[0] if candidate_types else "Unknown"))
         except Exception:
             continue
 
     teammate_scores.sort(key=lambda item: item[0], reverse=True)
     teammates = [(name, pokemon_type) for _, name, pokemon_type in teammate_scores[:3]]
+
+    counter_scores.sort(key=lambda item: item[0], reverse=True)
+    counters = [(name, pokemon_type) for _, name, pokemon_type in counter_scores[:3]]
 
     return {
         "tier": tier,
@@ -281,7 +363,7 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
         "offensive_profile": _offensive_profile(attack, special_attack),
         "role": infer_slot_role({"name": mon_name, "moves": moves}, fetch_pokemon_details),
         "teammates": teammates,
-        "counters": [],
+        "counters": counters,
     }
 
 
