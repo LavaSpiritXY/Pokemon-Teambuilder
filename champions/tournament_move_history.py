@@ -1,9 +1,10 @@
 """Tournament move-frequency extraction and history enrichment.
 
 The Champions history aggregate stores team-level usage today. This module
-adds an optional move-usage layer from the raw tournament decklists when the
-source exposes moves. It is deliberately schema-tolerant because Limitless
-payloads have used several decklist shapes over time.
+adds a move-usage layer from the raw tournament decklists when the source
+exposes moves. Move frequency is measured as the percentage of observed team
+lists containing a move, not as a percentage of all move slots. That makes the
+result suitable for matchup scoring and a future move-recommendation UI.
 """
 from __future__ import annotations
 
@@ -66,12 +67,18 @@ def _walk_decklist(value: Any) -> Iterable[tuple[str, list[str]]]:
 
 
 def extract_tournament_moves(snapshot: Mapping[str, Any]) -> Dict[str, Dict[str, int]]:
-    """Return raw move counts keyed by canonical Pokémon species key."""
+    """Return raw move counts keyed by canonical Pokémon species key.
+
+    Each move is counted at most once per observed team list for a Pokémon.
+    This prevents duplicate move entries inside a malformed source record from
+    inflating the apparent tournament frequency.
+    """
     output: Dict[str, Dict[str, int]] = {}
     for team in snapshot.get("teams") or []:
         if not isinstance(team, Mapping):
             continue
         decklist = team.get("raw_decklist") or team.get("decklist")
+        seen_in_team: set[tuple[str, str]] = set()
         for pokemon_name, moves in _walk_decklist(decklist):
             species_key = get_champions_species_key(pokemon_name)
             if not species_key:
@@ -79,8 +86,13 @@ def extract_tournament_moves(snapshot: Mapping[str, Any]) -> Dict[str, Dict[str,
             counts = output.setdefault(species_key, {})
             for move in moves:
                 move_key = str(move).strip()
-                if move_key:
-                    counts[move_key] = counts.get(move_key, 0) + 1
+                if not move_key:
+                    continue
+                marker = (species_key, move_key.casefold())
+                if marker in seen_in_team:
+                    continue
+                seen_in_team.add(marker)
+                counts[move_key] = counts.get(move_key, 0) + 1
     return output
 
 
@@ -140,21 +152,36 @@ def enrich_history_with_tournament_moves(
         counts = record.get("move_counts") or {}
         if not isinstance(counts, Mapping) or not counts:
             continue
-        total = sum(max(0, int(v or 0)) for v in counts.values())
-        if not total:
+
+        # A move count represents the number of observed team lists in which
+        # that Pokémon had the move. The denominator is therefore the largest
+        # observed move count, i.e. the number of usable team observations for
+        # that Pokémon, rather than the sum of all move counts. Summing counts
+        # would incorrectly make a four-move set look like four times as much
+        # evidence and forces all move frequencies to add up to 100%.
+        sample_size = max(
+            [int(v or 0) for v in counts.values() if int(v or 0) > 0] or [0]
+        )
+        if not sample_size:
             continue
+
         usage = [
             {
                 "move": move,
                 "count": int(count),
-                "frequency": int(count) / total,
+                "sample_size": sample_size,
+                "frequency": min(1.0, int(count) / sample_size),
             }
             for move, count in counts.items()
             if int(count or 0) > 0
         ]
-        usage.sort(key=lambda row: (-row["frequency"], row["move"].lower()))
+        usage.sort(key=lambda row: (-row["frequency"], -row["count"], row["move"].lower()))
+
         if record.get("move_usage") != usage:
             record["move_usage"] = usage
+            changed = True
+        if record.get("move_sample_size") != sample_size:
+            record["move_sample_size"] = sample_size
             changed = True
 
     if not changed:
@@ -205,7 +232,7 @@ def get_tournament_move_usage(
     rows = record.get("move_usage") or []
     if not isinstance(rows, list):
         return {}
-    output = {}
+    output: Dict[str, float] = {}
     for row in rows:
         if not isinstance(row, Mapping):
             continue
@@ -220,3 +247,22 @@ def get_tournament_move_usage(
         if top_n and len(output) >= top_n:
             break
     return output
+
+
+def get_tournament_move_sample_size(
+    pokemon_name: Any,
+    *,
+    history_path: Path = DEFAULT_HISTORY_PATH,
+) -> int:
+    """Return the number of observed team lists supporting move evidence."""
+    key = get_champions_species_key(pokemon_name)
+    if not key or not history_path.exists():
+        return 0
+    history = _load_history(history_path)
+    record = (history.get("pokemon") or {}).get(key)
+    if not isinstance(record, dict):
+        return 0
+    try:
+        return max(0, int(record.get("move_sample_size", 0) or 0))
+    except (TypeError, ValueError):
+        return 0
