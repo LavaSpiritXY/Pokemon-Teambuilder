@@ -29,6 +29,11 @@ _EMPTY_PROFILE = {
 }
 
 
+_COUNTER_CANDIDATE_LIMIT = 60
+_COUNTER_PARTNER_RESERVE = 24
+_COUNTER_ENGINE_LIMIT = 20
+
+
 def _speed_tier(speed: float) -> str:
     if speed >= 130:
         return "Extremely Fast"
@@ -106,21 +111,60 @@ def get_all_type_names() -> List[str]:
 
 
 def _candidate_names(target_name: str) -> List[str]:
-    """Return tournament-relevant Champions candidates for meta analysis."""
+    """Return a bounded, tournament-relevant Champions candidate shortlist."""
     history = load_champions_history() or {}
-    species_keys = (history.get("pokemon") or {}).keys()
+    records = history.get("pokemon") or {}
+    if not isinstance(records, dict):
+        return []
+
     target_key = canonical_species_key(target_name)
-    names: List[str] = []
-    for species_key in species_keys:
+    active_regulation = str(history.get("active_regulation") or "").strip().upper()
+    ranked = []
+
+    for species_key, record in records.items():
         display_name = display_name_for_species_key(species_key)
         if not display_name:
             continue
-        if canonical_species_key(display_name) == target_key:
-            continue
         if display_name.lower().startswith("mega "):
             continue
-        names.append(display_name)
-    return list(dict.fromkeys(names))
+        if canonical_species_key(display_name) == target_key:
+            continue
+
+        record = record if isinstance(record, dict) else {}
+        regulation_metrics = record.get("regulation_metrics") or {}
+        current = regulation_metrics.get(active_regulation, {}) if active_regulation else {}
+        current = current if isinstance(current, dict) else {}
+        appearances = float(current.get("appearances", 0) or record.get("appearances", 0) or 0)
+        recent_weight = float(record.get("recent_usage_weight", 0) or 0)
+        top_cut_rate = float(current.get("top_cut_rate", 0) or record.get("top_cut_rate", 0) or 0)
+        usage = float(record.get("usage", 0) or 0)
+        relevance = (
+            min(50.0, appearances / 20.0)
+            + min(25.0, recent_weight * 25.0)
+            + min(15.0, top_cut_rate * 30.0)
+            + min(10.0, usage * 10.0)
+        )
+        ranked.append((relevance, display_name))
+
+    ranked.sort(key=lambda item: (-item[0], item[1].casefold()))
+    names = [name for _, name in ranked[:_COUNTER_CANDIDATE_LIMIT]]
+
+    try:
+        partners = get_tournament_partners(target_name, top_n=_COUNTER_PARTNER_RESERVE) or []
+        partner_names = []
+        for partner_key, _count in partners:
+            partner_name = display_name_for_species_key(partner_key)
+            if (
+                partner_name
+                and not partner_name.lower().startswith("mega ")
+                and canonical_species_key(partner_name) != target_key
+            ):
+                partner_names.append(partner_name)
+        names = list(dict.fromkeys(partner_names + names))
+    except Exception:
+        pass
+
+    return names[:_COUNTER_CANDIDATE_LIMIT]
 
 
 def _candidate_score(target_data: Dict, candidate_data: Dict, tournament_partners: Dict, candidate_name: str) -> float:
@@ -195,13 +239,7 @@ def _tier_for_viability(value: int) -> str:
 
 
 def _counter_tournament_evidence(target_name: str, candidate_name: str) -> Dict[str, float]:
-    """Return tournament evidence used to decide whether a counter is practical.
-
-    Pairings are deliberately interpreted as *adoption evidence*, not as proof
-    that the candidate won the matchup.  This keeps the engine from treating a
-    popular teammate as an automatic counter while still suppressing purely
-    theoretical Pokédex answers.
-    """
+    """Return tournament evidence used to decide whether a counter is practical."""
     target_metrics = calculate_tournament_metrics(target_name) or {}
     candidate_metrics = calculate_tournament_metrics(candidate_name) or {}
     partners = dict(get_tournament_partners(target_name, top_n=500) or [])
@@ -233,18 +271,7 @@ def _counter_tournament_evidence(target_name: str, candidate_name: str) -> Dict[
     }
 
 
-def _counter_is_practical(
-    target_name: str,
-    assessment,
-    candidate_name: str,
-) -> tuple[bool, str, Dict[str, float]]:
-    """Gate counter suggestions on evidence that survives real-world scrutiny.
-
-    A theoretical matchup is no longer enough.  A candidate must have a real
-    offensive route, enough matchup/survival quality, and at least one practical
-    evidence channel: meaningful tournament adoption, observed tournament move
-    evidence, or exceptionally strong matchup evidence.
-    """
+def _counter_is_practical(target_name: str, assessment, candidate_name: str) -> tuple[bool, str, Dict[str, float]]:
     evidence = _counter_tournament_evidence(target_name, candidate_name)
     matchup = float(getattr(assessment, "matchup", 0.0) or 0.0)
     survival = float(getattr(assessment, "survival", 0.0) or 0.0)
@@ -254,8 +281,6 @@ def _counter_is_practical(
     move_evidence = list(getattr(assessment, "move_evidence", []) or [])
     observed_move = any(float(row.get("frequency", 0.0) or 0.0) >= 0.05 for row in move_evidence)
 
-    # These are intentionally hard floors.  They prevent a good type-chart
-    # interaction from surviving when the candidate cannot actually convert it.
     if not best_moves:
         return False, "No verified damaging pressure route", evidence
     if matchup < 70.0:
@@ -264,34 +289,16 @@ def _counter_is_practical(
         return False, "Candidate is too fragile against the target", evidence
     if move_quality < 55.0 or offensive < 55.0:
         return False, "Offensive route is not convincing enough", evidence
-
-    # Relative team adoption is much more useful than an arbitrary raw count:
-    # 300 pairings means very different things for a target seen 1,000 vs
-    # 10,000 times.  A 3% pair ratio is a meaningful practical signal.
     if evidence["pair_ratio"] >= 0.03:
         return True, "Strong tournament adoption against the target", evidence
-
-    # Once tournament move data is available, a genuinely observed pressure
-    # move can substitute for broad team-pairing evidence.
     if observed_move and matchup >= 80.0 and survival >= 55.0:
         return True, "Observed tournament move evidence supports the matchup", evidence
-
-    # Allow a small number of genuine specialist answers through without
-    # requiring huge team adoption, but only when the direct matchup is elite
-    # AND the candidate itself has substantial tournament presence.
-    if (
-        matchup >= 88.0
-        and survival >= 65.0
-        and move_quality >= 70.0
-        and evidence["candidate_usage"] >= 0.02
-    ):
+    if matchup >= 88.0 and survival >= 65.0 and move_quality >= 70.0 and evidence["candidate_usage"] >= 0.02:
         return True, "Elite matchup plus established tournament presence", evidence
-
     return False, "Insufficient practical tournament evidence", evidence
 
 
 def _practical_counter_sort_key(assessment, evidence: Dict[str, float]) -> float:
-    """Re-rank surviving counters toward repeatable, evidenced answers."""
     adoption = min(100.0, evidence["pair_ratio"] * 100.0 * 2.5)
     if evidence["pair_ratio"] >= 0.03:
         adoption = max(adoption, 70.0)
@@ -341,26 +348,14 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
     teammate_scores = []
     candidates = []
 
-    # Collect candidate data once and reuse it for teammates and counters.
     for candidate_name in _candidate_names(mon_name):
         try:
             candidate_data = fetch_pokemon_details(candidate_name)
             if not candidate_data or not candidate_data.get("types"):
                 continue
-
-            teammate_score = _candidate_score(
-                mon_data,
-                candidate_data,
-                tournament_partners,
-                candidate_name,
-            )
+            teammate_score = _candidate_score(mon_data, candidate_data, tournament_partners, candidate_name)
             if teammate_score > 0:
-                teammate_scores.append((
-                    teammate_score,
-                    candidate_name,
-                    candidate_data["types"][0],
-                ))
-
+                teammate_scores.append((teammate_score, candidate_name, candidate_data["types"][0]))
             candidate_data = dict(candidate_data)
             candidate_data["name"] = candidate_name
             candidates.append((candidate_name, candidate_data))
@@ -368,38 +363,14 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
             continue
 
     teammate_scores.sort(key=lambda item: item[0], reverse=True)
-    teammates = [
-        (name, pokemon_type)
-        for _, name, pokemon_type in teammate_scores[:3]
-    ]
+    teammates = [(name, pokemon_type) for _, name, pokemon_type in teammate_scores[:3]]
 
-    # Ask the counter engine for a broad pool first.  The old limit=3 meant
-    # weak theoretical answers could occupy all three slots before practical
-    # evidence was considered.  The policy gate below therefore needs room to
-    # reject them and promote stronger alternatives.
-    assessments = rank_counters(
-        mon_name,
-        mon_data,
-        candidates,
-        limit=20,
-    )
-
+    assessments = rank_counters(mon_name, mon_data, candidates, limit=_COUNTER_ENGINE_LIMIT)
     practical_assessments = []
-    rejected_counter_reasons = []
     for assessment in assessments:
-        is_practical, reason, evidence = _counter_is_practical(
-            mon_name,
-            assessment,
-            assessment.name,
-        )
+        is_practical, _reason, evidence = _counter_is_practical(mon_name, assessment, assessment.name)
         if is_practical:
-            practical_assessments.append((
-                _practical_counter_sort_key(assessment, evidence),
-                assessment,
-                evidence,
-            ))
-        else:
-            rejected_counter_reasons.append((assessment.name, reason))
+            practical_assessments.append((_practical_counter_sort_key(assessment, evidence), assessment, evidence))
 
     practical_assessments.sort(key=lambda item: item[0], reverse=True)
     selected_assessments = [item[1] for item in practical_assessments[:3]]
@@ -407,10 +378,7 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
 
     candidate_lookup = {name: data for name, data in candidates}
     counters = [
-        (
-            assessment.name,
-            str((candidate_lookup.get(assessment.name, {}).get("types") or ["Unknown"])[0]),
-        )
+        (assessment.name, str((candidate_lookup.get(assessment.name, {}).get("types") or ["Unknown"])[0]))
         for assessment in selected_assessments
     ]
     counter_details = []
