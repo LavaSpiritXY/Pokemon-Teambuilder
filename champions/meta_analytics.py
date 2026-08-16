@@ -238,20 +238,31 @@ def _tier_for_viability(value: int) -> str:
     return "D / Low Meta Presence"
 
 
-def _counter_tournament_evidence(target_name: str, candidate_name: str) -> Dict[str, float]:
-    """Return tournament evidence used to decide whether a counter is practical."""
-    target_metrics = calculate_tournament_metrics(target_name) or {}
+def _counter_tournament_evidence(
+    target_name: str,
+    candidate_name: str,
+    *,
+    target_metrics: Dict | None = None,
+    partner_counts: Dict | None = None,
+) -> Dict[str, float]:
+    """Return tournament evidence without repeating target-history lookups.
+
+    ``target_metrics`` and ``partner_counts`` are intentionally injectable so
+    the practical-ranking pass can calculate target-wide evidence once and
+    reuse it for every candidate. Candidate metrics remain candidate-specific.
+    """
+    target_metrics = target_metrics if target_metrics is not None else (calculate_tournament_metrics(target_name) or {})
     candidate_metrics = calculate_tournament_metrics(candidate_name) or {}
-    partners = dict(get_tournament_partners(target_name, top_n=500) or [])
+    partners = partner_counts if partner_counts is not None else dict(get_tournament_partners(target_name, top_n=500) or [])
     pair_count = float(partners.get(canonical_species_key(candidate_name), 0) or 0)
     target_appearances = float(
         target_metrics.get("current_regulation_appearances")
-        or target_metrics.get("overall", {}).get("appearances", 0)
+        or (target_metrics.get("overall") or {}).get("appearances", 0)
         or 0
     )
     candidate_appearances = float(
         candidate_metrics.get("current_regulation_appearances")
-        or candidate_metrics.get("overall", {}).get("appearances", 0)
+        or (candidate_metrics.get("overall") or {}).get("appearances", 0)
         or 0
     )
     pair_ratio = pair_count / target_appearances if target_appearances > 0 else 0.0
@@ -271,8 +282,20 @@ def _counter_tournament_evidence(target_name: str, candidate_name: str) -> Dict[
     }
 
 
-def _counter_is_practical(target_name: str, assessment, candidate_name: str) -> tuple[bool, str, Dict[str, float]]:
-    evidence = _counter_tournament_evidence(target_name, candidate_name)
+def _counter_is_practical(
+    target_name: str,
+    assessment,
+    candidate_name: str,
+    *,
+    target_metrics: Dict | None = None,
+    partner_counts: Dict | None = None,
+) -> tuple[bool, str, Dict[str, float]]:
+    evidence = _counter_tournament_evidence(
+        target_name,
+        candidate_name,
+        target_metrics=target_metrics,
+        partner_counts=partner_counts,
+    )
     matchup = float(getattr(assessment, "matchup", 0.0) or 0.0)
     survival = float(getattr(assessment, "survival", 0.0) or 0.0)
     move_quality = float(getattr(assessment, "move_quality", 0.0) or 0.0)
@@ -369,9 +392,20 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
     teammates = [(name, pokemon_type) for _, name, pokemon_type in teammate_scores[:3]]
 
     assessments = rank_counters(mon_name, mon_data, candidates, limit=_COUNTER_ENGINE_LIMIT)
+
+    # Build target-wide practical evidence once. This is the important hot-path
+    # optimization: the old implementation repeatedly requested the same 500-
+    # partner target history while checking individual assessments.
+    practical_partner_counts = dict(get_tournament_partners(mon_name, top_n=500) or [])
     practical_assessments = []
     for assessment in assessments:
-        is_practical, _reason, evidence = _counter_is_practical(mon_name, assessment, assessment.name)
+        is_practical, _reason, evidence = _counter_is_practical(
+            mon_name,
+            assessment,
+            assessment.name,
+            target_metrics=tournament,
+            partner_counts=practical_partner_counts,
+        )
         if is_practical:
             practical_assessments.append((_practical_counter_sort_key(assessment, evidence), assessment, evidence))
 
