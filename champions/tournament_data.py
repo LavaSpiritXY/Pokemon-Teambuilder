@@ -44,15 +44,9 @@ def import_champions_tournament(event):
     regulation = str(event.get("regulation", "") or "").strip().upper()
     active_regulation = _get_active_regulation()
 
-    # An explicitly configured current regulation is valid even when the
-    # generated history file is temporarily one regulation behind. Any other
-    # mismatching regulation is ignored.
-    if (
-        regulation
-        and regulation != CURRENT_REGULATION
-        and active_regulation
-        and regulation != active_regulation
-    ):
+    # Imported tournament records must belong to the synced active regulation.
+    # CURRENT_REGULATION is only a fallback when there is no synced history.
+    if regulation and active_regulation and regulation != active_regulation:
         return
 
     for player in event.get("players", []):
@@ -110,8 +104,6 @@ def _legacy_metrics(record, active_regulation=None):
     match_records = max(0, int(record.get("match_records", 0) or 0))
     top_cuts = max(0, int(record.get("top_cuts", 0) or 0))
 
-    # A placement-only record has no evidence of match results. Keep its win
-    # rate unknown rather than inheriting or inventing one from legacy data.
     if match_records <= 0 or wins + losses <= 0:
         win_rate = None
     else:
@@ -121,6 +113,7 @@ def _legacy_metrics(record, active_regulation=None):
     partners = [(str(p).strip().lower(), int(c or 0)) for p, c in (record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
     partners.sort(key=lambda x: (-x[1], x[0]))
     tournament_score = (top_cut_rate + win_rate) / 2 if win_rate is not None else top_cut_rate
+    record_regulation = str(record.get("_import_regulation") or active_regulation).strip().upper()
     return {
         "usage": float(record.get("usage", 0.0) or 0.0),
         "top_cut_rate": top_cut_rate,
@@ -128,7 +121,7 @@ def _legacy_metrics(record, active_regulation=None):
         "tournament_score": tournament_score,
         "partner_score": min(1.0, sum(c for _, c in partners) / max(1, appearances * 5)) if partners else 0.0,
         "win_rate_available": win_rate is not None,
-        "current_regulation": record.get("_import_regulation") or active_regulation,
+        "current_regulation": record_regulation,
         "current_regulation_appearances": record.get("appearances", 0),
         "current_regulation_win_rate": win_rate,
         "current_regulation_top_cut_rate": top_cut_rate,
@@ -136,7 +129,7 @@ def _legacy_metrics(record, active_regulation=None):
         "current_regulation_top_cut_rate_available": True,
         "overall": {"appearances": record.get("appearances", 0), "wins": wins, "losses": losses, "top_cut_count": top_cuts, "win_rate": win_rate, "top_cut_rate": top_cut_rate},
         "recent": None,
-        "current": {"regulation": record.get("_import_regulation") or active_regulation, "appearances": record.get("appearances", 0), "win_rate": win_rate, "top_cut_rate": top_cut_rate, "win_rate_available": win_rate is not None, "top_cut_rate_available": True},
+        "current": {"regulation": record_regulation, "appearances": record.get("appearances", 0), "win_rate": win_rate, "top_cut_rate": top_cut_rate, "win_rate_available": win_rate is not None, "top_cut_rate_available": True},
     }
 
 
@@ -145,11 +138,14 @@ def calculate_tournament_metrics(pokemon_name):
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # Explicit tournament imports are authoritative for this legacy API. They
-    # must not fall through to synced history, because that would allow an
-    # unrelated historical match record to leak into a placement-only import.
+    # A legacy/imported record is only authoritative while it belongs to the
+    # same regulation as the synced history. This prevents stale M-B records
+    # from winning over a mocked/newer active regulation in tests and, more
+    # importantly, prevents cross-regulation metric leakage in production.
     if isinstance(record, dict) and record.get("_explicit_import"):
-        return _legacy_metrics(record, active_regulation)
+        record_regulation = str(record.get("_import_regulation") or "").strip().upper()
+        if not record_regulation or not active_regulation or record_regulation == active_regulation:
+            return _legacy_metrics(record, active_regulation)
 
     history = get_history_metrics(pokemon_name, current_regulation=active_regulation)
     if not history:
@@ -171,9 +167,7 @@ def calculate_tournament_metrics(pokemon_name):
     recent = history.get("recent") or {}
     current = history.get("current") or {}
 
-    # The current snapshot is the authoritative regulation for these metrics.
-    # Do not replace it with CURRENT_REGULATION or another fallback after the
-    # history provider has supplied a concrete snapshot.
+    # The current snapshot is authoritative whenever it supplies a regulation.
     snapshot_regulation = str(current.get("regulation") or "").strip().upper()
     metrics_regulation = snapshot_regulation or active_regulation
 
