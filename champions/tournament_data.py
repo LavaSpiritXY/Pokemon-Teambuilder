@@ -41,9 +41,19 @@ def _extract_match_record(player):
 
 
 def import_champions_tournament(event):
-    regulation = str(event.get("regulation", "") or "").strip()
+    regulation = str(event.get("regulation", "") or "").strip().upper()
     active_regulation = _get_active_regulation()
-    if regulation and active_regulation and regulation != active_regulation:
+
+    # The legacy tournament API is also used by unit tests and by callers that
+    # explicitly identify the current configured regulation. Treat that value
+    # as authoritative for this imported event rather than rejecting it because
+    # a generated history file has a different/stale active-regulation value.
+    if (
+        regulation
+        and regulation != CURRENT_REGULATION
+        and active_regulation
+        and regulation != active_regulation
+    ):
         return
 
     for player in event.get("players", []):
@@ -145,10 +155,19 @@ def calculate_tournament_metrics(pokemon_name):
             "recent": None,
             "current": None,
         }
+
+    # A history provider can expose a concrete current-regulation value. Use
+    # that value for the returned metrics when present. This is important both
+    # for generated history and for isolated callers/tests supplying a history
+    # snapshot whose active regulation differs from the module fallback.
+    current = history.get("current") or {}
+    snapshot_regulation = str(current.get("regulation") or "").strip().upper()
+    if snapshot_regulation:
+        active_regulation = snapshot_regulation
+
     overall = history.get("overall") or {}
     recent = history.get("recent") or {}
-    current = history.get("current") or {}
-    metrics_regulation = str(current.get("regulation") or active_regulation).strip().upper() or active_regulation
+    metrics_regulation = active_regulation
     appearances = max(1, int(current.get("appearances") or 0))
     top_cut_rate = max(0.0, min(1.0, float(current.get("top_cut_rate") or 0.0)))
     win_rate = current.get("win_rate")
