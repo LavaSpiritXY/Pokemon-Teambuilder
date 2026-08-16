@@ -16,10 +16,11 @@ CHAMPIONS_META_DB = build_legacy_meta_db()
 
 
 def _get_active_regulation():
+    """Return the regulation recorded by the synced history first."""
     history = load_champions_history()
     if isinstance(history, dict):
         active = str(history.get("active_regulation") or "").strip().upper()
-        if active.startswith("M-") and len(active) > 2:
+        if active:
             return active
     return get_active_regulation_from_history(history, fallback=CURRENT_REGULATION) or CURRENT_REGULATION
 
@@ -44,15 +45,37 @@ def import_champions_tournament(event):
     active_regulation = _get_active_regulation()
     if regulation and active_regulation and regulation != active_regulation:
         return
+
     for player in event.get("players", []):
         wins, losses = _extract_match_record(player)
-        canonical_team = list(dict.fromkeys(get_champions_species_key(p) for p in player.get("team", []) if p))
+        canonical_team = list(dict.fromkeys(
+            get_champions_species_key(p)
+            for p in player.get("team", [])
+            if p
+        ))
         for pokemon in canonical_team:
-            record = CHAMPIONS_META_DB.setdefault(pokemon, {
-                "appearances": 0, "wins": 0, "losses": 0, "match_records": 0,
-                "top_cuts": 0, "usage": 0.0, "win_rate": None, "top_cut_rate": 0.0,
-                "partners": {}, "roles": {}, "moves": {}, "abilities": {}, "items": {},
-            })
+            # Explicitly imported tournament records must start clean. This
+            # prevents legacy data from leaking wins/losses into a synced event.
+            record = {
+                "appearances": 0,
+                "wins": 0,
+                "losses": 0,
+                "match_records": 0,
+                "top_cuts": 0,
+                "usage": 0.0,
+                "win_rate": None,
+                "top_cut_rate": 0.0,
+                "partners": {},
+                "roles": {},
+                "moves": {},
+                "abilities": {},
+                "items": {},
+                "_explicit_import": True,
+            }
+            existing = CHAMPIONS_META_DB.get(pokemon)
+            if isinstance(existing, dict) and existing.get("_explicit_import"):
+                record = existing
+            CHAMPIONS_META_DB[pokemon] = record
             record["_explicit_import"] = True
             record["appearances"] += 1
             if wins + losses > 0:
@@ -79,12 +102,16 @@ def _legacy_metrics(record, active_regulation=None):
     partners.sort(key=lambda x: (-x[1], x[0]))
     tournament_score = (top_cut_rate + win_rate) / 2 if win_rate is not None else top_cut_rate
     return {
-        "usage": float(record.get("usage", 0.0) or 0.0), "top_cut_rate": top_cut_rate,
-        "win_rate": win_rate, "tournament_score": tournament_score,
+        "usage": float(record.get("usage", 0.0) or 0.0),
+        "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate,
+        "tournament_score": tournament_score,
         "partner_score": min(1.0, sum(c for _, c in partners) / max(1, appearances * 5)) if partners else 0.0,
-        "win_rate_available": win_rate is not None, "current_regulation": active_regulation,
+        "win_rate_available": win_rate is not None,
+        "current_regulation": active_regulation,
         "current_regulation_appearances": record.get("appearances", 0),
-        "current_regulation_win_rate": win_rate, "current_regulation_top_cut_rate": top_cut_rate,
+        "current_regulation_win_rate": win_rate,
+        "current_regulation_top_cut_rate": top_cut_rate,
         "current_regulation_win_rate_available": win_rate is not None,
         "current_regulation_top_cut_rate_available": True,
         "overall": {"appearances": record.get("appearances", 0), "wins": wins, "losses": losses, "top_cut_count": top_cuts, "win_rate": win_rate, "top_cut_rate": top_cut_rate},
@@ -97,11 +124,27 @@ def calculate_tournament_metrics(pokemon_name):
     active_regulation = _get_active_regulation()
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
-    if record is not None and record.get("_explicit_import"):
+
+    # Only records explicitly imported by the current tournament-data API may
+    # override synced history. Legacy fallback records must never shadow it.
+    if isinstance(record, dict) and record.get("_explicit_import"):
         return _legacy_metrics(record, active_regulation)
+
     history = get_history_metrics(pokemon_name, current_regulation=active_regulation)
     if not history:
-        return {"usage": 0.0, "top_cut_rate": 0.0, "win_rate": None, "tournament_score": 0.0, "partner_score": 0.0, "win_rate_available": False, "current_regulation": active_regulation, "current_regulation_appearances": None, "overall": None, "recent": None, "current": None}
+        return {
+            "usage": 0.0,
+            "top_cut_rate": 0.0,
+            "win_rate": None,
+            "tournament_score": 0.0,
+            "partner_score": 0.0,
+            "win_rate_available": False,
+            "current_regulation": active_regulation,
+            "current_regulation_appearances": None,
+            "overall": None,
+            "recent": None,
+            "current": None,
+        }
     overall = history.get("overall") or {}
     recent = history.get("recent") or {}
     current = history.get("current") or {}
@@ -120,7 +163,23 @@ def calculate_tournament_metrics(pokemon_name):
         components.append((win_rate, 0.35))
     total_weight = sum(w for _, w in components)
     tournament_score = sum(v * w for v, w in components) / total_weight if total_weight else 0.0
-    return {"usage": recent_usage_score, "top_cut_rate": top_cut_rate, "win_rate": win_rate, "tournament_score": tournament_score, "partner_score": partner_score, "win_rate_available": win_rate_available, "current_regulation": metrics_regulation, "current_regulation_appearances": current.get("appearances"), "current_regulation_win_rate": current.get("win_rate"), "current_regulation_top_cut_rate": current.get("top_cut_rate"), "current_regulation_win_rate_available": current.get("win_rate_available", False), "current_regulation_top_cut_rate_available": current.get("top_cut_rate_available", False), "overall": overall, "recent": recent, "current": current}
+    return {
+        "usage": recent_usage_score,
+        "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate,
+        "tournament_score": tournament_score,
+        "partner_score": partner_score,
+        "win_rate_available": win_rate_available,
+        "current_regulation": metrics_regulation,
+        "current_regulation_appearances": current.get("appearances"),
+        "current_regulation_win_rate": current.get("win_rate"),
+        "current_regulation_top_cut_rate": current.get("top_cut_rate"),
+        "current_regulation_win_rate_available": current.get("win_rate_available", False),
+        "current_regulation_top_cut_rate_available": current.get("top_cut_rate_available", False),
+        "overall": overall,
+        "recent": recent,
+        "current": current,
+    }
 
 
 @lru_cache(maxsize=512)
