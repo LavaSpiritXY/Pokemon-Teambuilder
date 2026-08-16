@@ -12,15 +12,35 @@ from champions.roster_data import get_clean_api_name, get_base_api_name, display
 _DETAILS_MEMORY_CACHE = {}
 _DETAILS_CACHE_LOCK = Lock()
 _PREFETCHED_TARGETS = set()
+_LEARNSETS_MEMORY_CACHE = None
+_LEARNSETS_CACHE_LOCK = Lock()
+
+
+def _get_cached_champions_learnsets():
+    """Load the large Champions learnset file once per Python process."""
+    global _LEARNSETS_MEMORY_CACHE
+    with _LEARNSETS_CACHE_LOCK:
+        if _LEARNSETS_MEMORY_CACHE is not None:
+            return _LEARNSETS_MEMORY_CACHE
+
+    from champions.roster_data import fetch_champions_learnsets
+    learnsets = fetch_champions_learnsets() or {}
+
+    with _LEARNSETS_CACHE_LOCK:
+        if _LEARNSETS_MEMORY_CACHE is None:
+            _LEARNSETS_MEMORY_CACHE = learnsets
+        return _LEARNSETS_MEMORY_CACHE
 
 
 def get_champion_moves_for(mon_name):
     """
     Return the Champions learnset for the exact Pokémon/form.
-    """
-    from champions.roster_data import fetch_champions_learnsets
 
-    learnsets = fetch_champions_learnsets()
+    The raw Showdown learnsets file is large and is shared by every
+    candidate in a counter analysis, so it must never be downloaded and
+    parsed once per candidate.
+    """
+    learnsets = _get_cached_champions_learnsets()
     if not learnsets:
         return []
 
@@ -124,7 +144,7 @@ def _prefetch_counter_candidates(target_name):
     every species on the first meta-analysis request caused hundreds of
     PokeAPI/history lookups and made a single target take minutes. Keep the
     broad candidate pool in meta_analytics, but cap the expensive detail
-    prefetch to the same practical shortlist used by that pipeline.
+    prefetch to a compact practical shortlist.
     """
     target_key = str(target_name).strip().lower()
     with _DETAILS_CACHE_LOCK:
@@ -169,11 +189,11 @@ def _prefetch_counter_candidates(target_name):
             ranked.append((score, display_name))
 
         ranked.sort(key=lambda item: (-item[0], item[1].casefold()))
-        names = [name for _, name in ranked[:60]]
+        names = [name for _, name in ranked[:24]]
 
         try:
             partner_names = []
-            for partner_key, _count in get_tournament_partners(target_name, top_n=24):
+            for partner_key, _count in get_tournament_partners(target_name, top_n=12):
                 partner_name = display_name_for_species_key(partner_key)
                 if (
                     partner_name
@@ -181,7 +201,7 @@ def _prefetch_counter_candidates(target_name):
                     and canonical_species_key(partner_name) != target_key_canonical
                 ):
                     partner_names.append(partner_name)
-            names = list(dict.fromkeys(partner_names + names))[:72]
+            names = list(dict.fromkeys(partner_names + names))[:24]
         except Exception:
             pass
 
@@ -194,7 +214,7 @@ def _prefetch_counter_candidates(target_name):
                 _DETAILS_MEMORY_CACHE[name.casefold()] = data
             return data
 
-        with ThreadPoolExecutor(max_workers=16) as executor:
+        with ThreadPoolExecutor(max_workers=12) as executor:
             futures = [executor.submit(load_one, name) for name in names]
             for future in as_completed(futures):
                 try:
