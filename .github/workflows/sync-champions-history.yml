@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Champions data branch
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: champions-tournament-data
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -70,4 +70,4 @@ jobs:
             exit 0
           fi
           git commit -m "Automated Champions history sync"
-          git push origin HEAD:champions-tournament-data
+          git push origin HEAD:main
