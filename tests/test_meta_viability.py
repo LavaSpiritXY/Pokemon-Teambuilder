@@ -47,9 +47,9 @@ class MetaViabilityTests(unittest.TestCase):
             },
             external_stats={"meta_usage_tier": None},
         )
-        # 60% win rate + 12.5% top-cut rate produce a 60% tournament
-        # signal, so the result must not silently fall back to the 50 baseline.
-        self.assertEqual(result["viability_index"], 58)
+        # 60% win rate and a benchmark-level 12.5% top-cut rate produce a
+        # strong tournament signal; do not silently fall back to 50.
+        self.assertEqual(result["viability_index"], 72)
 
 
 if __name__ == "__main__":
