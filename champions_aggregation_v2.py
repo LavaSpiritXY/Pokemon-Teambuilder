@@ -97,6 +97,64 @@ def _empty_stats() -> Dict[str, Any]:
         "placement_count": 0,
         "best_placement": None,
         "regulations": {},
+        "regulation_metrics": {},
+    }
+
+
+def _empty_regulation_stats() -> Dict[str, Any]:
+    return {
+        "appearances": 0,
+        "wins": 0,
+        "losses": 0,
+        "draws": 0,
+        "top_cut_count": 0,
+        "placement_sum": 0.0,
+        "placement_count": 0,
+        "best_placement": None,
+    }
+
+
+def _record_regulation_stats(
+    stats: Dict[str, Any],
+    result: Dict[str, Any],
+) -> None:
+    wins = int(result.get("wins", 0) or 0)
+    losses = int(result.get("losses", 0) or 0)
+    draws = int(result.get("draws", 0) or 0)
+    stats["appearances"] += 1
+    stats["wins"] += wins
+    stats["losses"] += losses
+    stats["draws"] += draws
+    if result.get("top_cut") is True:
+        stats["top_cut_count"] += 1
+    placement = _placement(result)
+    if placement is not None:
+        stats["placement_sum"] += placement
+        stats["placement_count"] += 1
+        stats["best_placement"] = (
+            placement if stats["best_placement"] is None
+            else min(stats["best_placement"], placement)
+        )
+
+
+def _finalize_regulation_stats(stats: Dict[str, Any]) -> Dict[str, Any]:
+    games = stats["wins"] + stats["losses"] + stats["draws"]
+    return {
+        "appearances": stats["appearances"],
+        "wins": stats["wins"],
+        "losses": stats["losses"],
+        "draws": stats["draws"],
+        "top_cut_count": stats["top_cut_count"],
+        "win_rate": stats["wins"] / games if games else None,
+        "top_cut_rate": (
+            stats["top_cut_count"] / stats["appearances"]
+            if stats["appearances"] else None
+        ),
+        "average_placement": (
+            stats["placement_sum"] / stats["placement_count"]
+            if stats["placement_count"] else None
+        ),
+        "best_placement": stats["best_placement"],
     }
 
 
@@ -121,6 +179,10 @@ def _finalize_stats(stats: Dict[str, Any]) -> None:
         stats["weighted_top_cut"] / stats["weighted_appearances"]
         if stats["weighted_appearances"] else 0.0
     )
+    stats["regulation_metrics"] = {
+        str(regulation).strip().upper(): _finalize_regulation_stats(regulation_stats)
+        for regulation, regulation_stats in (stats.get("regulation_metrics") or {}).items()
+    }
 
 
 def _empty_partner() -> Dict[str, Any]:
@@ -183,6 +245,11 @@ def aggregate(cache_dir: Path) -> Dict[str, Any]:
                 pokemon[key]["regulations"][regulation] = (
                     pokemon[key]["regulations"].get(regulation, 0) + 1
                 )
+                regulation_stats = pokemon[key]["regulation_metrics"].setdefault(
+                    regulation,
+                    _empty_regulation_stats(),
+                )
+                _record_regulation_stats(regulation_stats, result)
             for left, right in combinations(sorted(set(n.lower() for n in unique_names)), 2):
                 partner = partners[left][right]
                 partner["teams_together"] += 1
