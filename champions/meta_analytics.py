@@ -7,10 +7,10 @@ from champions.meta_utils import detect_archetypes
 from champions.meta_viability import calculate_meta_viability
 from champions.pokemon_data import fetch_pokemon_details
 from champions.roles import infer_slot_role
-from champions.roster_data import display_name_for_species_key, fetch_champions_pokedex_entries
+from champions.roster_data import display_name_for_species_key
 from champions.species_keys import canonical_species_key
 from champions.smogon_data import get_smogon_stats_for
-from champions.tournament_data import calculate_tournament_metrics, get_tournament_partners
+from champions.tournament_data import calculate_tournament_metrics, get_tournament_partners, load_champions_history
 from champions.type_chart import get_type_relationships
 
 
@@ -106,16 +106,28 @@ def get_all_type_names() -> List[str]:
 
 
 def _candidate_names(target_name: str) -> List[str]:
+    """Return tournament-relevant Champions candidates for meta analysis.
+
+    The Champions Showdown mod does not expose a ``pokedex.ts`` file, so the
+    old roster lookup always returned an empty list.  The generated tournament
+    history already contains the canonical species keys for every Pokémon seen
+    in the processed Champions events, making it the correct source here.
+    """
+    history = load_champions_history() or {}
+    species_keys = history.get("pokemon", {}).keys()
+    target_key = canonical_species_key(target_name)
+
     names = []
-    for species_key in fetch_champions_pokedex_entries():
+    for species_key in species_keys:
         display_name = display_name_for_species_key(species_key)
         if not display_name:
             continue
-        if display_name.lower() == target_name.lower():
+        if canonical_species_key(display_name) == target_key:
             continue
         if display_name.lower().startswith("mega "):
             continue
         names.append(display_name)
+
     return list(dict.fromkeys(names))
 
 
