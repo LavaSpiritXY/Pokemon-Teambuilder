@@ -6,7 +6,7 @@ from champions.counter_engine import rank_counters
 from champions.history_data import history_revision
 from champions.meta_utils import detect_archetypes
 from champions.meta_viability import calculate_meta_viability
-from champions.pokemon_data import fetch_pokemon_details
+from champions.pokemon_data import fetch_pokemon_details, fetch_pokemon_details_batch
 from champions.roles import infer_slot_role
 from champions.roster_data import display_name_for_species_key
 from champions.species_keys import canonical_species_key
@@ -348,9 +348,12 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
     teammate_scores = []
     candidates = []
 
-    for candidate_name in _candidate_names(mon_name):
+    candidate_names = _candidate_names(mon_name)
+    candidate_details = fetch_pokemon_details_batch(candidate_names, max_workers=12)
+
+    for candidate_name in candidate_names:
         try:
-            candidate_data = fetch_pokemon_details(candidate_name)
+            candidate_data = candidate_details.get(candidate_name)
             if not candidate_data or not candidate_data.get("types"):
                 continue
             teammate_score = _candidate_score(mon_data, candidate_data, tournament_partners, candidate_name)
