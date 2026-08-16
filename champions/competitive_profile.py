@@ -13,6 +13,7 @@ import streamlit as st
 
 from champions_integration import get_champions_profile
 from champions.counter_evidence import rank_counters_with_evidence
+from champions.recommended_moves_ui import render_recommended_moves
 
 _CSS = """
 <style>
@@ -215,6 +216,8 @@ def render_champions_profile_v6(
             st.markdown("<div class='ch185-card'>" + "".join(rows) + "</div>", unsafe_allow_html=True)
         else:
             st.markdown("<div class='ch185-card'><span class='ch185-muted'>No tournament-supported checks are available from the current evidence pool.</span></div>", unsafe_allow_html=True)
+
+        render_recommended_moves(meta.get("recommended_moves") or [])
     else:
         st.markdown("<div class='ch185-card'><div class='ch185-value'>Tournament data unavailable</div><div class='ch185-note'>This Pokémon/form is recognised by the builder, but no collected Champions tournament evidence is currently available. The profile remains visible and the base Strategizer score is not penalised.</div></div>", unsafe_allow_html=True)
 
