@@ -150,7 +150,12 @@ def get_history_metrics(
     current_regulation: Optional[str] = None,
     history_path: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Return clean overall, recent, and regulation-aware history metrics."""
+    """Return clean overall, recent, and regulation-aware history metrics.
+
+    When neither ``regulation`` nor ``current_regulation`` is supplied, use
+    the active regulation recorded by the history sync job. Explicit caller
+    arguments always take precedence.
+    """
     record = get_history_pokemon_record(
         pokemon_name,
         regulation=regulation,
@@ -160,10 +165,18 @@ def get_history_metrics(
         return None
 
     requested_regulation = str(regulation).strip().upper() if regulation else None
-    active_regulation = (
-        str(current_regulation).strip().upper()
-        if current_regulation else None
-    )
+
+    if current_regulation:
+        active_regulation = str(current_regulation).strip().upper()
+    elif requested_regulation:
+        active_regulation = requested_regulation
+    else:
+        history = load_champions_history(history_path)
+        raw_active_regulation = history.get("active_regulation")
+        active_regulation = (
+            str(raw_active_regulation).strip().upper()
+            if raw_active_regulation else None
+        )
 
     overall_appearances = _safe_non_negative_int(record.get("appearances"))
     overall_wins = _safe_non_negative_int(record.get("wins"))
