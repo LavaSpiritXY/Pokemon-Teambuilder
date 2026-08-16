@@ -1,8 +1,11 @@
+from functools import lru_cache
+
 from champions.constants import CURRENT_REGULATION
 from champions.history_data import (
     build_legacy_meta_db,
     get_history_metrics,
     get_history_partners,
+    history_revision,
     load_champions_history,
 )
 from champions.move_data import get_champions_species_key
@@ -92,9 +95,6 @@ def import_champions_tournament(event):
                 }
 
             record = CHAMPIONS_META_DB[pokemon]
-            # Marks only records created by this explicit compatibility API.
-            # Startup history records do not get this marker, so they cannot
-            # mask newer data from the automatic sync.
             record["_explicit_import"] = True
             record["appearances"] += 1
 
@@ -179,11 +179,21 @@ def _legacy_metrics(record, active_regulation=None):
     }
 
 
-def _history_metrics_for_active_regulation(pokemon_name, active_regulation):
-    """Read the current synced history rather than the startup legacy snapshot."""
+@lru_cache(maxsize=512)
+def _cached_history_metrics(pokemon_name, active_regulation, revision_token):
+    """Cache normalized history lookup until the synced history changes."""
     return get_history_metrics(
         pokemon_name,
         current_regulation=active_regulation,
+    )
+
+
+def _history_metrics_for_active_regulation(pokemon_name, active_regulation):
+    """Read the current synced history rather than the startup legacy snapshot."""
+    return _cached_history_metrics(
+        pokemon_name,
+        active_regulation,
+        history_revision(),
     )
 
 
@@ -193,8 +203,6 @@ def calculate_tournament_metrics(pokemon_name):
     key = get_champions_species_key(pokemon_name)
     legacy_record = CHAMPIONS_META_DB.get(key)
 
-    # Explicit imports are retained for the small legacy compatibility API and
-    # its tests. Normal application reads always go through the synced history.
     if legacy_record is not None and legacy_record.get("_explicit_import"):
         return _legacy_metrics(legacy_record, active_regulation)
 
@@ -281,6 +289,31 @@ def calculate_tournament_metrics(pokemon_name):
     }
 
 
+@lru_cache(maxsize=512)
+def _cached_history_partners(pokemon_name, top_n, revision_token):
+    """Cache history partner expansion until tournament history changes."""
+    results = []
+    for partner in get_history_partners(pokemon_name, top_n=top_n):
+        partner_key = str(partner.get("pokemon", "")).strip().lower()
+        if not partner_key:
+            continue
+
+        display_name = display_name_for_species_key(partner_key)
+        if not display_name:
+            continue
+
+        if display_name.lower().startswith("mega "):
+            continue
+
+        results.append(
+            (partner_key, int(partner.get("teams_together", 0) or 0))
+        )
+        if len(results) >= top_n:
+            break
+
+    return tuple(results)
+
+
 def get_tournament_partners(pokemon_name, top_n=10):
     """Return strongest tournament partners for a Pokémon.
 
@@ -301,23 +334,10 @@ def get_tournament_partners(pokemon_name, top_n=10):
         pairs.sort(key=lambda item: (-item[1], item[0]))
         return pairs[:top_n]
 
-    results = []
-    for partner in get_history_partners(pokemon_name, top_n=top_n):
-        partner_key = str(partner.get("pokemon", "")).strip().lower()
-        if not partner_key:
-            continue
-
-        display_name = display_name_for_species_key(partner_key)
-        if not display_name:
-            continue
-
-        if display_name.lower().startswith("mega "):
-            continue
-
-        results.append(
-            (partner_key, int(partner.get("teams_together", 0) or 0))
+    return list(
+        _cached_history_partners(
+            pokemon_name,
+            int(top_n),
+            history_revision(),
         )
-        if len(results) >= top_n:
-            break
-
-    return results
+    )
