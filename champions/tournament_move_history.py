@@ -8,6 +8,7 @@ payloads have used several decklist shapes over time.
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Optional
 
@@ -168,6 +169,24 @@ def enrich_history_with_tournament_moves(
     return True
 
 
+@lru_cache(maxsize=8)
+def _load_history_cached(history_path_str: str, mtime_ns: int) -> Dict[str, Any]:
+    """Load one history JSON once per file version."""
+    try:
+        data = json.loads(Path(history_path_str).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _load_history(history_path: Path) -> Dict[str, Any]:
+    try:
+        mtime_ns = history_path.stat().st_mtime_ns
+    except OSError:
+        return {}
+    return _load_history_cached(str(history_path.resolve()), mtime_ns)
+
+
 def get_tournament_move_usage(
     pokemon_name: Any,
     *,
@@ -178,10 +197,8 @@ def get_tournament_move_usage(
     key = get_champions_species_key(pokemon_name)
     if not key or not history_path.exists():
         return {}
-    try:
-        history = json.loads(history_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
+
+    history = _load_history(history_path)
     record = (history.get("pokemon") or {}).get(key)
     if not isinstance(record, dict):
         return {}
