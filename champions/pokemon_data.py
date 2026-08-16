@@ -118,7 +118,14 @@ def _fetch_pokemon_details_uncached(mon_name):
 
 
 def _prefetch_counter_candidates(target_name):
-    """Warm every current-history candidate in parallel instead of serial network calls."""
+    """Warm only the high-value current-history candidates in parallel.
+
+    The counter engine does not need the entire Champions Pokédex. Fetching
+    every species on the first meta-analysis request caused hundreds of
+    PokeAPI/history lookups and made a single target take minutes. Keep the
+    broad candidate pool in meta_analytics, but cap the expensive detail
+    prefetch to the same practical shortlist used by that pipeline.
+    """
     target_key = str(target_name).strip().lower()
     with _DETAILS_CACHE_LOCK:
         if target_key in _PREFETCHED_TARGETS:
@@ -127,34 +134,57 @@ def _prefetch_counter_candidates(target_name):
 
     try:
         from champions.history_data import load_champions_history
+        from champions.species_keys import canonical_species_key
+        from champions.tournament_data import get_tournament_partners
+
         history = load_champions_history() or {}
         records = history.get("pokemon") or {}
         if not isinstance(records, dict):
             return
 
-        candidates = []
-        for species_key in records:
-            display_name = display_name_for_species_key(species_key)
-            if not display_name:
-                continue
-            if display_name.lower().startswith("mega "):
-                continue
-            if display_name.casefold() == target_name.casefold():
-                continue
-            candidates.append(display_name)
+        active_regulation = str(history.get("active_regulation") or "").strip().upper()
+        target_key_canonical = canonical_species_key(target_name)
+        ranked = []
 
-        # Always include observed target partners even if a future history
-        # representation does not expose them in the main Pokémon table.
+        for species_key, record in records.items():
+            display_name = display_name_for_species_key(species_key)
+            if not display_name or display_name.lower().startswith("mega "):
+                continue
+            if canonical_species_key(display_name) == target_key_canonical:
+                continue
+            record = record if isinstance(record, dict) else {}
+            regulations = record.get("regulation_metrics") or {}
+            current = regulations.get(active_regulation, {}) if active_regulation else {}
+            current = current if isinstance(current, dict) else {}
+            appearances = float(current.get("appearances", 0) or record.get("appearances", 0) or 0)
+            recent = float(record.get("recent_usage_weight", 0) or 0)
+            top_cut = float(current.get("top_cut_rate", 0) or record.get("top_cut_rate", 0) or 0)
+            usage = float(record.get("usage", 0) or 0)
+            score = (
+                min(50.0, appearances / 20.0)
+                + min(25.0, recent * 25.0)
+                + min(15.0, top_cut * 30.0)
+                + min(10.0, usage * 10.0)
+            )
+            ranked.append((score, display_name))
+
+        ranked.sort(key=lambda item: (-item[0], item[1].casefold()))
+        names = [name for _, name in ranked[:60]]
+
         try:
-            from champions.tournament_data import get_tournament_partners
+            partner_names = []
             for partner_key, _count in get_tournament_partners(target_name, top_n=24):
                 partner_name = display_name_for_species_key(partner_key)
-                if partner_name and not partner_name.lower().startswith("mega "):
-                    candidates.append(partner_name)
+                if (
+                    partner_name
+                    and not partner_name.lower().startswith("mega ")
+                    and canonical_species_key(partner_name) != target_key_canonical
+                ):
+                    partner_names.append(partner_name)
+            names = list(dict.fromkeys(partner_names + names))[:72]
         except Exception:
             pass
 
-        names = list(dict.fromkeys(candidates))
         if not names:
             return
 
@@ -164,8 +194,6 @@ def _prefetch_counter_candidates(target_name):
                 _DETAILS_MEMORY_CACHE[name.casefold()] = data
             return data
 
-        # 16 workers keeps the first-load latency low without opening hundreds
-        # of simultaneous HTTP connections to PokeAPI.
         with ThreadPoolExecutor(max_workers=16) as executor:
             futures = [executor.submit(load_one, name) for name in names]
             for future in as_completed(futures):
@@ -174,8 +202,6 @@ def _prefetch_counter_candidates(target_name):
                 except Exception:
                     pass
     except Exception:
-        # Prefetch is an optimisation only. The normal per-Pokémon fallback
-        # remains authoritative if the history/cache layer is unavailable.
         return
 
 
@@ -187,9 +213,6 @@ def fetch_pokemon_details(mon_name):
     if cached is not None:
         return cached
 
-    # The first target lookup warms the complete current candidate pool in
-    # parallel. Subsequent candidate lookups are memory hits instead of serial
-    # PokeAPI requests.
     _prefetch_counter_candidates(mon_name)
 
     with _DETAILS_CACHE_LOCK:
