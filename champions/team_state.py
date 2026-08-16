@@ -3,11 +3,7 @@ from typing import Any, Dict
 import streamlit as strlit
 
 from champions.constants import CUSTOM_MEGAS_DATA
-
-MEGA_STONE_MAP = {
-    name: f"{name.replace('Mega ', '')}ite"
-    for name in CUSTOM_MEGAS_DATA.keys()
-}
+from champions.item_data import MEGA_STONE_MAP
 
 from champions.pokemon_data import fetch_pokemon_details
 from champions.smogon_data import get_smogon_stats_for
