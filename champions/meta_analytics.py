@@ -194,6 +194,116 @@ def _tier_for_viability(value: int) -> str:
     return "D / Low Meta Presence"
 
 
+def _counter_tournament_evidence(target_name: str, candidate_name: str) -> Dict[str, float]:
+    """Return tournament evidence used to decide whether a counter is practical.
+
+    Pairings are deliberately interpreted as *adoption evidence*, not as proof
+    that the candidate won the matchup.  This keeps the engine from treating a
+    popular teammate as an automatic counter while still suppressing purely
+    theoretical Pokédex answers.
+    """
+    target_metrics = calculate_tournament_metrics(target_name) or {}
+    candidate_metrics = calculate_tournament_metrics(candidate_name) or {}
+    partners = dict(get_tournament_partners(target_name, top_n=500) or [])
+    pair_count = float(partners.get(canonical_species_key(candidate_name), 0) or 0)
+    target_appearances = float(
+        target_metrics.get("current_regulation_appearances")
+        or target_metrics.get("overall", {}).get("appearances", 0)
+        or 0
+    )
+    candidate_appearances = float(
+        candidate_metrics.get("current_regulation_appearances")
+        or candidate_metrics.get("overall", {}).get("appearances", 0)
+        or 0
+    )
+    pair_ratio = pair_count / target_appearances if target_appearances > 0 else 0.0
+    candidate_usage = float(candidate_metrics.get("usage", 0) or 0)
+    candidate_score = float(candidate_metrics.get("tournament_score", 0) or 0)
+    candidate_win_rate = float(candidate_metrics.get("win_rate", 0) or 0)
+    target_win_rate = float(target_metrics.get("win_rate", 0) or 0)
+    return {
+        "pair_count": pair_count,
+        "pair_ratio": pair_ratio,
+        "target_appearances": target_appearances,
+        "candidate_appearances": candidate_appearances,
+        "candidate_usage": candidate_usage,
+        "candidate_tournament_score": candidate_score,
+        "candidate_win_rate": candidate_win_rate,
+        "target_win_rate": target_win_rate,
+    }
+
+
+def _counter_is_practical(
+    target_name: str,
+    assessment,
+    candidate_name: str,
+) -> tuple[bool, str, Dict[str, float]]:
+    """Gate counter suggestions on evidence that survives real-world scrutiny.
+
+    A theoretical matchup is no longer enough.  A candidate must have a real
+    offensive route, enough matchup/survival quality, and at least one practical
+    evidence channel: meaningful tournament adoption, observed tournament move
+    evidence, or exceptionally strong matchup evidence.
+    """
+    evidence = _counter_tournament_evidence(target_name, candidate_name)
+    matchup = float(getattr(assessment, "matchup", 0.0) or 0.0)
+    survival = float(getattr(assessment, "survival", 0.0) or 0.0)
+    move_quality = float(getattr(assessment, "move_quality", 0.0) or 0.0)
+    offensive = float(getattr(assessment, "offensive", 0.0) or 0.0)
+    best_moves = list(getattr(assessment, "best_moves", []) or [])
+    move_evidence = list(getattr(assessment, "move_evidence", []) or [])
+    observed_move = any(float(row.get("frequency", 0.0) or 0.0) >= 0.05 for row in move_evidence)
+
+    # These are intentionally hard floors.  They prevent a good type-chart
+    # interaction from surviving when the candidate cannot actually convert it.
+    if not best_moves:
+        return False, "No verified damaging pressure route", evidence
+    if matchup < 70.0:
+        return False, "Matchup quality below practical threshold", evidence
+    if survival < 45.0:
+        return False, "Candidate is too fragile against the target", evidence
+    if move_quality < 55.0 or offensive < 55.0:
+        return False, "Offensive route is not convincing enough", evidence
+
+    # Relative team adoption is much more useful than an arbitrary raw count:
+    # 300 pairings means very different things for a target seen 1,000 vs
+    # 10,000 times.  A 3% pair ratio is a meaningful practical signal.
+    if evidence["pair_ratio"] >= 0.03:
+        return True, "Strong tournament adoption against the target", evidence
+
+    # Once tournament move data is available, a genuinely observed pressure
+    # move can substitute for broad team-pairing evidence.
+    if observed_move and matchup >= 80.0 and survival >= 55.0:
+        return True, "Observed tournament move evidence supports the matchup", evidence
+
+    # Allow a small number of genuine specialist answers through without
+    # requiring huge team adoption, but only when the direct matchup is elite
+    # AND the candidate itself has substantial tournament presence.
+    if (
+        matchup >= 88.0
+        and survival >= 65.0
+        and move_quality >= 70.0
+        and evidence["candidate_usage"] >= 0.02
+    ):
+        return True, "Elite matchup plus established tournament presence", evidence
+
+    return False, "Insufficient practical tournament evidence", evidence
+
+
+def _practical_counter_sort_key(assessment, evidence: Dict[str, float]) -> float:
+    """Re-rank surviving counters toward repeatable, evidenced answers."""
+    adoption = min(100.0, evidence["pair_ratio"] * 100.0 * 2.5)
+    if evidence["pair_ratio"] >= 0.03:
+        adoption = max(adoption, 70.0)
+    return (
+        float(getattr(assessment, "score", 0.0) or 0.0) * 0.62
+        + float(getattr(assessment, "matchup", 0.0) or 0.0) * 0.13
+        + float(getattr(assessment, "survival", 0.0) or 0.0) * 0.10
+        + float(getattr(assessment, "move_quality", 0.0) or 0.0) * 0.05
+        + adoption * 0.10
+    )
+
+
 @strlit.cache_data(ttl=3600, show_spinner=False)
 def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -> Dict:
     if not mon_name or mon_name == "-- Choose a Pokémon --":
@@ -263,25 +373,54 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
         for _, name, pokemon_type in teammate_scores[:3]
     ]
 
+    # Ask the counter engine for a broad pool first.  The old limit=3 meant
+    # weak theoretical answers could occupy all three slots before practical
+    # evidence was considered.  The policy gate below therefore needs room to
+    # reject them and promote stronger alternatives.
     assessments = rank_counters(
         mon_name,
         mon_data,
         candidates,
-        limit=3,
+        limit=20,
     )
+
+    practical_assessments = []
+    rejected_counter_reasons = []
+    for assessment in assessments:
+        is_practical, reason, evidence = _counter_is_practical(
+            mon_name,
+            assessment,
+            assessment.name,
+        )
+        if is_practical:
+            practical_assessments.append((
+                _practical_counter_sort_key(assessment, evidence),
+                assessment,
+                evidence,
+            ))
+        else:
+            rejected_counter_reasons.append((assessment.name, reason))
+
+    practical_assessments.sort(key=lambda item: item[0], reverse=True)
+    selected_assessments = [item[1] for item in practical_assessments[:3]]
+    evidence_lookup = {item[1].name: item[2] for item in practical_assessments}
+
     candidate_lookup = {name: data for name, data in candidates}
     counters = [
         (
             assessment.name,
             str((candidate_lookup.get(assessment.name, {}).get("types") or ["Unknown"])[0]),
         )
-        for assessment in assessments
+        for assessment in selected_assessments
     ]
-    counter_details = [
-        {
+    counter_details = []
+    for assessment in selected_assessments:
+        evidence = evidence_lookup.get(assessment.name, {})
+        counter_details.append({
             "pokemon": assessment.name,
             "category": assessment.category,
             "score": round(assessment.score, 1),
+            "practical_score": round(_practical_counter_sort_key(assessment, evidence), 1),
             "confidence": round(assessment.confidence * 100.0, 1),
             "offensive": round(assessment.offensive, 1),
             "defensive": round(assessment.defensive, 1),
@@ -291,13 +430,18 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
             "team_context": round(assessment.team_context, 1),
             "matchup": round(assessment.matchup, 1),
             "survival": round(assessment.survival, 1),
+            "pair_count": int(evidence.get("pair_count", 0)),
+            "pair_ratio": round(evidence.get("pair_ratio", 0.0) * 100.0, 2),
+            "candidate_usage": round(evidence.get("candidate_usage", 0.0) * 100.0, 2),
             "best_moves": assessment.best_moves,
             "move_evidence": assessment.move_evidence,
-            "reasons": assessment.reasons,
+            "reasons": assessment.reasons + [
+                f"Practicality gate passed: {evidence.get('pair_ratio', 0.0) * 100.0:.1f}% target pairing rate"
+                if evidence.get("pair_ratio", 0.0) >= 0.03
+                else "Practicality gate passed through specialist matchup evidence"
+            ],
             "warnings": assessment.warnings,
-        }
-        for assessment in assessments
-    ]
+        })
 
     return {
         "tier": _tier_for_viability(viability_value),
