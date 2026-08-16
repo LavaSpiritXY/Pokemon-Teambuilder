@@ -231,9 +231,7 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
     teammate_scores = []
     candidates = []
 
-    # The candidate data is collected once and reused by the counter engine.
-    # This keeps the expensive PokeAPI work bounded and gives both systems the
-    # exact same view of the Champions roster.
+    # Collect candidate data once and reuse it for teammates and counters.
     for candidate_name in _candidate_names(mon_name):
         try:
             candidate_data = fetch_pokemon_details(candidate_name)
@@ -271,8 +269,12 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
         candidates,
         limit=3,
     )
+    candidate_lookup = {name: data for name, data in candidates}
     counters = [
-        (assessment.name, str(assessment.name and (candidates[[n for n, _ in candidates].index(assessment.name)][1].get("types") or ["Unknown"])[0]))
+        (
+            assessment.name,
+            str((candidate_lookup.get(assessment.name, {}).get("types") or ["Unknown"])[0]),
+        )
         for assessment in assessments
     ]
     counter_details = [
@@ -287,6 +289,10 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
             "move_quality": round(assessment.move_quality, 1),
             "tournament": round(assessment.tournament, 1),
             "team_context": round(assessment.team_context, 1),
+            "matchup": round(assessment.matchup, 1),
+            "survival": round(assessment.survival, 1),
+            "best_moves": assessment.best_moves,
+            "move_evidence": assessment.move_evidence,
             "reasons": assessment.reasons,
             "warnings": assessment.warnings,
         }
