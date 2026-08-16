@@ -1,9 +1,17 @@
 import requests
 import streamlit as strlit
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Lock
+
 from champions.constants import CUSTOM_MEGAS_DATA
 from champions.move_data import display_name_for_move, get_champions_species_key
-from champions.roster_data import get_clean_api_name, get_base_api_name
+from champions.roster_data import get_clean_api_name, get_base_api_name, display_name_for_species_key
+
+
+_DETAILS_MEMORY_CACHE = {}
+_DETAILS_CACHE_LOCK = Lock()
+_PREFETCHED_TARGETS = set()
 
 
 def get_champion_moves_for(mon_name):
@@ -36,8 +44,16 @@ def get_champion_moves_for(mon_name):
     return []
 
 
-@strlit.cache_data(ttl=86400, show_spinner=False)
-def fetch_pokemon_details(mon_name):
+def _tournament_moves_for(mon_name):
+    """Return optional observed tournament move frequencies for one species."""
+    try:
+        from champions.tournament_move_history import get_tournament_move_usage
+        return get_tournament_move_usage(mon_name)
+    except Exception:
+        return {}
+
+
+def _fetch_pokemon_details_uncached(mon_name):
     clean_api_name = get_clean_api_name(mon_name)
     sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{clean_api_name}.png"
     box_sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{clean_api_name}.png"
@@ -89,14 +105,104 @@ def fetch_pokemon_details(mon_name):
     except Exception:
         pass
 
+    tournament_moves = _tournament_moves_for(mon_name)
     return {
         "sprite": sprite_url,
         "box_sprite": box_sprite_url,
         "types": types,
         "stats": stats,
         "abilities": abilities,
-        "moves": sorted(list(set(moves)))
+        "moves": sorted(list(set(moves))),
+        "tournament_moves": tournament_moves,
     }
+
+
+def _prefetch_counter_candidates(target_name):
+    """Warm a bounded candidate cache so one counter calculation is not 278 serial HTTP calls."""
+    target_key = str(target_name).strip().lower()
+    with _DETAILS_CACHE_LOCK:
+        if target_key in _PREFETCHED_TARGETS:
+            return
+        _PREFETCHED_TARGETS.add(target_key)
+
+    try:
+        from champions.history_data import load_champions_history
+        history = load_champions_history() or {}
+        records = history.get("pokemon") or {}
+        if not isinstance(records, dict):
+            return
+
+        candidates = []
+        for species_key, record in records.items():
+            display_name = display_name_for_species_key(species_key)
+            if not display_name:
+                continue
+            if display_name.lower().startswith("mega "):
+                continue
+            if display_name.casefold() == target_name.casefold():
+                continue
+            appearances = int((record or {}).get("appearances", 0) or 0)
+            candidates.append((appearances, display_name))
+
+        candidates.sort(reverse=True)
+        names = [name for _, name in candidates[:96]]
+
+        # Always include the target's observed tournament partners, even if
+        # they are outside the global top-96 by appearances.
+        try:
+            from champions.tournament_data import get_tournament_partners
+            for partner_key, _count in get_tournament_partners(target_name, top_n=24):
+                partner_name = display_name_for_species_key(partner_key)
+                if partner_name and not partner_name.lower().startswith("mega "):
+                    names.append(partner_name)
+        except Exception:
+            pass
+
+        names = list(dict.fromkeys(names))
+        if not names:
+            return
+
+        def load_one(name):
+            data = _fetch_pokemon_details_uncached(name)
+            with _DETAILS_CACHE_LOCK:
+                _DETAILS_MEMORY_CACHE[name.casefold()] = data
+            return data
+
+        with ThreadPoolExecutor(max_workers=16) as executor:
+            futures = [executor.submit(load_one, name) for name in names]
+            for future in as_completed(futures):
+                try:
+                    future.result()
+                except Exception:
+                    pass
+    except Exception:
+        # Prefetch is an optimisation only. The normal per-Pokémon fallback
+        # remains authoritative if the history/cache layer is unavailable.
+        return
+
+
+@strlit.cache_data(ttl=86400, show_spinner=False)
+def fetch_pokemon_details(mon_name):
+    key = str(mon_name).strip().casefold()
+    with _DETAILS_CACHE_LOCK:
+        cached = _DETAILS_MEMORY_CACHE.get(key)
+    if cached is not None:
+        return cached
+
+    # The first target lookup warms the most relevant tournament candidates in
+    # parallel. This keeps the counter engine's candidate scan bounded and fast
+    # without changing its scoring logic.
+    _prefetch_counter_candidates(mon_name)
+
+    with _DETAILS_CACHE_LOCK:
+        cached = _DETAILS_MEMORY_CACHE.get(key)
+    if cached is not None:
+        return cached
+
+    data = _fetch_pokemon_details_uncached(mon_name)
+    with _DETAILS_CACHE_LOCK:
+        _DETAILS_MEMORY_CACHE[key] = data
+    return data
 
 
 def get_mini_sprite_url(mon_name):
