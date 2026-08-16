@@ -87,6 +87,23 @@ def _new_regulation_stats() -> Dict[str, Any]:
     }
 
 
+def _new_partner() -> Dict[str, Any]:
+    """Return the canonical empty partner aggregate used by incremental sync.
+
+    Keep this schema identical to ``_empty_partner`` in the full aggregation
+    pipeline so newly discovered partner pairs can be merged safely into an
+    existing history without special cases.
+    """
+    return {
+        "teams_together": 0,
+        "shared_wins": 0,
+        "shared_losses": 0,
+        "weighted_teams_together": 0.0,
+        "weighted_wins": 0.0,
+        "weighted_losses": 0.0,
+    }
+
+
 def _record_regulation_stats(stats: Dict[str, Any], result: Dict[str, Any]) -> None:
     wins = int(result.get("wins", 0) or 0)
     losses = int(result.get("losses", 0) or 0)
