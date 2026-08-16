@@ -12,27 +12,20 @@ from champions.move_data import get_champions_species_key
 from champions.regulation import get_active_regulation_from_history
 from champions.roster_data import display_name_for_species_key
 
-
 CHAMPIONS_META_DB = build_legacy_meta_db()
 
 
 def _get_active_regulation():
-    """Return the sync-recorded active regulation, with a safe fallback."""
     history = load_champions_history()
     if isinstance(history, dict):
         active = str(history.get("active_regulation") or "").strip().upper()
         if active.startswith("M-") and len(active) > 2:
             return active
-    return get_active_regulation_from_history(
-        history,
-        fallback=CURRENT_REGULATION,
-    ) or CURRENT_REGULATION
+    return get_active_regulation_from_history(history, fallback=CURRENT_REGULATION) or CURRENT_REGULATION
 
 
 def _extract_match_record(player):
-    record = player.get("record")
-    if not isinstance(record, dict):
-        record = {}
+    record = player.get("record") if isinstance(player.get("record"), dict) else {}
     wins = player.get("wins", record.get("wins"))
     losses = player.get("losses", record.get("losses"))
     try:
@@ -47,33 +40,26 @@ def _extract_match_record(player):
 
 
 def import_champions_tournament(event):
-    regulation = event.get("regulation", "")
+    regulation = str(event.get("regulation", "") or "").strip()
     active_regulation = _get_active_regulation()
     if regulation and active_regulation and regulation != active_regulation:
         return
     for player in event.get("players", []):
-        team = player.get("team", [])
-        placing = player.get("placing")
         wins, losses = _extract_match_record(player)
-        canonical_team = list(dict.fromkeys(
-            get_champions_species_key(pokemon) for pokemon in team if pokemon
-        ))
+        canonical_team = list(dict.fromkeys(get_champions_species_key(p) for p in player.get("team", []) if p))
         for pokemon in canonical_team:
-            if pokemon not in CHAMPIONS_META_DB:
-                CHAMPIONS_META_DB[pokemon] = {
-                    "appearances": 0, "wins": 0, "losses": 0,
-                    "match_records": 0, "top_cuts": 0, "usage": 0.0,
-                    "win_rate": None, "top_cut_rate": 0.0, "partners": {},
-                    "roles": {}, "moves": {}, "abilities": {}, "items": {},
-                }
-            record = CHAMPIONS_META_DB[pokemon]
+            record = CHAMPIONS_META_DB.setdefault(pokemon, {
+                "appearances": 0, "wins": 0, "losses": 0, "match_records": 0,
+                "top_cuts": 0, "usage": 0.0, "win_rate": None, "top_cut_rate": 0.0,
+                "partners": {}, "roles": {}, "moves": {}, "abilities": {}, "items": {},
+            })
             record["_explicit_import"] = True
             record["appearances"] += 1
             if wins + losses > 0:
                 record["wins"] += wins
                 record["losses"] += losses
                 record["match_records"] += 1
-            if placing is not None and placing <= 8:
+            if player.get("placing") is not None and player["placing"] <= 8:
                 record["top_cuts"] += 1
             for partner in canonical_team:
                 if partner != pokemon:
@@ -90,21 +76,15 @@ def _legacy_metrics(record, active_regulation=None):
     win_rate = wins / (wins + losses) if match_records and wins + losses else None
     top_cut_rate = top_cuts / appearances if appearances else 0.0
     partners = [(str(p).strip().lower(), int(c or 0)) for p, c in (record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
-    partners.sort(key=lambda item: (-item[1], item[0]))
-    tournament_score_parts = [top_cut_rate]
-    if win_rate is not None:
-        tournament_score_parts.append(win_rate)
-    tournament_score = sum(tournament_score_parts) / len(tournament_score_parts)
+    partners.sort(key=lambda x: (-x[1], x[0]))
+    tournament_score = (top_cut_rate + win_rate) / 2 if win_rate is not None else top_cut_rate
     return {
-        "usage": float(record.get("usage", 0.0) or 0.0),
-        "top_cut_rate": top_cut_rate, "win_rate": win_rate,
-        "tournament_score": tournament_score,
+        "usage": float(record.get("usage", 0.0) or 0.0), "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate, "tournament_score": tournament_score,
         "partner_score": min(1.0, sum(c for _, c in partners) / max(1, appearances * 5)) if partners else 0.0,
-        "win_rate_available": win_rate is not None,
-        "current_regulation": active_regulation,
+        "win_rate_available": win_rate is not None, "current_regulation": active_regulation,
         "current_regulation_appearances": record.get("appearances", 0),
-        "current_regulation_win_rate": win_rate,
-        "current_regulation_top_cut_rate": top_cut_rate,
+        "current_regulation_win_rate": win_rate, "current_regulation_top_cut_rate": top_cut_rate,
         "current_regulation_win_rate_available": win_rate is not None,
         "current_regulation_top_cut_rate_available": True,
         "overall": {"appearances": record.get("appearances", 0), "wins": wins, "losses": losses, "top_cut_count": top_cuts, "win_rate": win_rate, "top_cut_rate": top_cut_rate},
@@ -113,64 +93,47 @@ def _legacy_metrics(record, active_regulation=None):
     }
 
 
-def _history_metrics_for_active_regulation(pokemon_name, active_regulation):
-    """Read history metrics directly so patched/test data is never hidden by a second cache layer."""
-    return get_history_metrics(pokemon_name, current_regulation=active_regulation)
-
-
 def calculate_tournament_metrics(pokemon_name):
     active_regulation = _get_active_regulation()
     key = get_champions_species_key(pokemon_name)
-    legacy_record = CHAMPIONS_META_DB.get(key)
-    if legacy_record is not None and legacy_record.get("_explicit_import"):
-        return _legacy_metrics(legacy_record, active_regulation)
-    history_metrics = _history_metrics_for_active_regulation(pokemon_name, active_regulation)
-    if not history_metrics:
+    record = CHAMPIONS_META_DB.get(key)
+    if record is not None and record.get("_explicit_import"):
+        return _legacy_metrics(record, active_regulation)
+    history = get_history_metrics(pokemon_name, current_regulation=active_regulation)
+    if not history:
         return {"usage": 0.0, "top_cut_rate": 0.0, "win_rate": None, "tournament_score": 0.0, "partner_score": 0.0, "win_rate_available": False, "current_regulation": active_regulation, "current_regulation_appearances": None, "overall": None, "recent": None, "current": None}
-    overall = history_metrics["overall"]
-    recent = history_metrics["recent"]
-    current = history_metrics["current"]
-    appearances = max(1, current.get("appearances") or 0)
-    top_cut_rate = current.get("top_cut_rate")
-    top_cut_rate = 0.0 if top_cut_rate is None else max(0.0, min(1.0, float(top_cut_rate)))
+    overall = history.get("overall") or {}
+    recent = history.get("recent") or {}
+    current = history.get("current") or {}
+    metrics_regulation = str(current.get("regulation") or active_regulation).strip().upper() or active_regulation
+    appearances = max(1, int(current.get("appearances") or 0))
+    top_cut_rate = max(0.0, min(1.0, float(current.get("top_cut_rate") or 0.0)))
     win_rate = current.get("win_rate")
     win_rate_available = win_rate is not None
     if win_rate_available:
         win_rate = max(0.0, min(1.0, float(win_rate)))
-    partner_values = [int(partner.get("teams_together", 0) or 0) for partner in get_history_partners(pokemon_name, top_n=10)]
-    partner_values = [value for value in partner_values if value > 0]
-    partner_score = min(1.0, sum(partner_values) / max(1, appearances * 5)) if partner_values else 0.0
+    partner_values = [int(p.get("teams_together", 0) or 0) for p in get_history_partners(pokemon_name, top_n=10)]
+    partner_score = min(1.0, sum(v for v in partner_values if v > 0) / max(1, appearances * 5))
     recent_usage_score = min(1.0, max(0.0, float(recent.get("usage_weight", 0.0) or 0.0)) / 200.0)
     components = [(recent_usage_score, 0.20), (top_cut_rate, 0.35), (partner_score, 0.10)]
     if win_rate_available:
         components.append((win_rate, 0.35))
-    total_weight = sum(weight for _, weight in components)
-    tournament_score = sum(score * weight for score, weight in components) / total_weight if total_weight else 0.0
-    return {
-        "usage": recent_usage_score, "top_cut_rate": top_cut_rate, "win_rate": win_rate,
-        "tournament_score": tournament_score, "partner_score": partner_score,
-        "win_rate_available": win_rate_available,
-        "current_regulation": current.get("regulation") or active_regulation,
-        "current_regulation_appearances": current.get("appearances"),
-        "current_regulation_win_rate": current.get("win_rate"),
-        "current_regulation_top_cut_rate": current.get("top_cut_rate"),
-        "current_regulation_win_rate_available": current.get("win_rate_available", False),
-        "current_regulation_top_cut_rate_available": current.get("top_cut_rate_available", False),
-        "overall": overall, "recent": recent, "current": current,
-    }
+    total_weight = sum(w for _, w in components)
+    tournament_score = sum(v * w for v, w in components) / total_weight if total_weight else 0.0
+    return {"usage": recent_usage_score, "top_cut_rate": top_cut_rate, "win_rate": win_rate, "tournament_score": tournament_score, "partner_score": partner_score, "win_rate_available": win_rate_available, "current_regulation": metrics_regulation, "current_regulation_appearances": current.get("appearances"), "current_regulation_win_rate": current.get("win_rate"), "current_regulation_top_cut_rate": current.get("top_cut_rate"), "current_regulation_win_rate_available": current.get("win_rate_available", False), "current_regulation_top_cut_rate_available": current.get("top_cut_rate_available", False), "overall": overall, "recent": recent, "current": current}
 
 
 @lru_cache(maxsize=512)
 def _cached_history_partners(pokemon_name, top_n, revision_token):
     results = []
     for partner in get_history_partners(pokemon_name, top_n=top_n):
-        partner_key = str(partner.get("pokemon", "")).strip().lower()
-        if not partner_key:
+        key = str(partner.get("pokemon", "")).strip().lower()
+        if not key:
             continue
-        display_name = display_name_for_species_key(partner_key)
+        display_name = display_name_for_species_key(key)
         if not display_name or display_name.lower().startswith("mega "):
             continue
-        results.append((partner_key, int(partner.get("teams_together", 0) or 0)))
+        results.append((key, int(partner.get("teams_together", 0) or 0)))
         if len(results) >= top_n:
             break
     return tuple(results)
@@ -178,9 +141,9 @@ def _cached_history_partners(pokemon_name, top_n, revision_token):
 
 def get_tournament_partners(pokemon_name, top_n=10):
     key = get_champions_species_key(pokemon_name)
-    legacy_record = CHAMPIONS_META_DB.get(key)
-    if legacy_record is not None and legacy_record.get("_explicit_import"):
-        pairs = [(str(p).strip().lower(), int(c or 0)) for p, c in (legacy_record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
-        pairs.sort(key=lambda item: (-item[1], item[0]))
+    record = CHAMPIONS_META_DB.get(key)
+    if record is not None and record.get("_explicit_import"):
+        pairs = [(str(p).strip().lower(), int(c or 0)) for p, c in (record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
+        pairs.sort(key=lambda x: (-x[1], x[0]))
         return pairs[:top_n]
     return list(_cached_history_partners(pokemon_name, int(top_n), history_revision()))
