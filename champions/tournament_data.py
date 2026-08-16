@@ -44,10 +44,9 @@ def import_champions_tournament(event):
     regulation = str(event.get("regulation", "") or "").strip().upper()
     active_regulation = _get_active_regulation()
 
-    # The legacy tournament API is also used by unit tests and by callers that
-    # explicitly identify the current configured regulation. Treat that value
-    # as authoritative for this imported event rather than rejecting it because
-    # a generated history file has a different/stale active-regulation value.
+    # An explicitly configured current regulation is valid even when the
+    # generated history file is temporarily one regulation behind. Any other
+    # mismatching regulation is ignored.
     if (
         regulation
         and regulation != CURRENT_REGULATION
@@ -64,30 +63,34 @@ def import_champions_tournament(event):
             if p
         ))
         for pokemon in canonical_team:
-            # Explicitly imported tournament records must start clean. This
-            # prevents legacy data from leaking wins/losses into a synced event.
-            record = {
-                "appearances": 0,
-                "wins": 0,
-                "losses": 0,
-                "match_records": 0,
-                "top_cuts": 0,
-                "usage": 0.0,
-                "win_rate": None,
-                "top_cut_rate": 0.0,
-                "partners": {},
-                "roles": {},
-                "moves": {},
-                "abilities": {},
-                "items": {},
-                "_explicit_import": True,
-            }
             existing = CHAMPIONS_META_DB.get(pokemon)
-            if isinstance(existing, dict) and existing.get("_explicit_import"):
+            if not isinstance(existing, dict) or not existing.get("_explicit_import"):
+                record = {
+                    "appearances": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "match_records": 0,
+                    "top_cuts": 0,
+                    "usage": 0.0,
+                    "win_rate": None,
+                    "top_cut_rate": 0.0,
+                    "partners": {},
+                    "roles": {},
+                    "moves": {},
+                    "abilities": {},
+                    "items": {},
+                    "_explicit_import": True,
+                    "_import_regulation": regulation or active_regulation,
+                }
+                CHAMPIONS_META_DB[pokemon] = record
+            else:
                 record = existing
-            CHAMPIONS_META_DB[pokemon] = record
-            record["_explicit_import"] = True
+                record["_explicit_import"] = True
+                record["_import_regulation"] = regulation or record.get("_import_regulation") or active_regulation
+
             record["appearances"] += 1
+            # Only a real wins/losses pair creates a match record. Placement
+            # data alone must never manufacture a win rate.
             if wins + losses > 0:
                 record["wins"] += wins
                 record["losses"] += losses
@@ -106,7 +109,14 @@ def _legacy_metrics(record, active_regulation=None):
     losses = max(0, int(record.get("losses", 0) or 0))
     match_records = max(0, int(record.get("match_records", 0) or 0))
     top_cuts = max(0, int(record.get("top_cuts", 0) or 0))
-    win_rate = wins / (wins + losses) if match_records and wins + losses else None
+
+    # A placement-only record has no evidence of match results. Keep its win
+    # rate unknown rather than inheriting or inventing one from legacy data.
+    if match_records <= 0 or wins + losses <= 0:
+        win_rate = None
+    else:
+        win_rate = wins / (wins + losses)
+
     top_cut_rate = top_cuts / appearances if appearances else 0.0
     partners = [(str(p).strip().lower(), int(c or 0)) for p, c in (record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
     partners.sort(key=lambda x: (-x[1], x[0]))
@@ -118,7 +128,7 @@ def _legacy_metrics(record, active_regulation=None):
         "tournament_score": tournament_score,
         "partner_score": min(1.0, sum(c for _, c in partners) / max(1, appearances * 5)) if partners else 0.0,
         "win_rate_available": win_rate is not None,
-        "current_regulation": active_regulation,
+        "current_regulation": record.get("_import_regulation") or active_regulation,
         "current_regulation_appearances": record.get("appearances", 0),
         "current_regulation_win_rate": win_rate,
         "current_regulation_top_cut_rate": top_cut_rate,
@@ -126,7 +136,7 @@ def _legacy_metrics(record, active_regulation=None):
         "current_regulation_top_cut_rate_available": True,
         "overall": {"appearances": record.get("appearances", 0), "wins": wins, "losses": losses, "top_cut_count": top_cuts, "win_rate": win_rate, "top_cut_rate": top_cut_rate},
         "recent": None,
-        "current": {"regulation": active_regulation, "appearances": record.get("appearances", 0), "win_rate": win_rate, "top_cut_rate": top_cut_rate, "win_rate_available": win_rate is not None, "top_cut_rate_available": True},
+        "current": {"regulation": record.get("_import_regulation") or active_regulation, "appearances": record.get("appearances", 0), "win_rate": win_rate, "top_cut_rate": top_cut_rate, "win_rate_available": win_rate is not None, "top_cut_rate_available": True},
     }
 
 
@@ -135,8 +145,9 @@ def calculate_tournament_metrics(pokemon_name):
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # Only records explicitly imported by the current tournament-data API may
-    # override synced history. Legacy fallback records must never shadow it.
+    # Explicit tournament imports are authoritative for this legacy API. They
+    # must not fall through to synced history, because that would allow an
+    # unrelated historical match record to leak into a placement-only import.
     if isinstance(record, dict) and record.get("_explicit_import"):
         return _legacy_metrics(record, active_regulation)
 
@@ -156,18 +167,16 @@ def calculate_tournament_metrics(pokemon_name):
             "current": None,
         }
 
-    # A history provider can expose a concrete current-regulation value. Use
-    # that value for the returned metrics when present. This is important both
-    # for generated history and for isolated callers/tests supplying a history
-    # snapshot whose active regulation differs from the module fallback.
-    current = history.get("current") or {}
-    snapshot_regulation = str(current.get("regulation") or "").strip().upper()
-    if snapshot_regulation:
-        active_regulation = snapshot_regulation
-
     overall = history.get("overall") or {}
     recent = history.get("recent") or {}
-    metrics_regulation = active_regulation
+    current = history.get("current") or {}
+
+    # The current snapshot is the authoritative regulation for these metrics.
+    # Do not replace it with CURRENT_REGULATION or another fallback after the
+    # history provider has supplied a concrete snapshot.
+    snapshot_regulation = str(current.get("regulation") or "").strip().upper()
+    metrics_regulation = snapshot_regulation or active_regulation
+
     appearances = max(1, int(current.get("appearances") or 0))
     top_cut_rate = max(0.0, min(1.0, float(current.get("top_cut_rate") or 0.0)))
     win_rate = current.get("win_rate")
