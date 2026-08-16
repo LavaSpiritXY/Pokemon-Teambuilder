@@ -286,3 +286,68 @@ def get_tournament_move_sample_size(
         return max(0, int(record.get("move_sample_size", 0) or 0))
     except (TypeError, ValueError):
         return 0
+
+
+def get_tournament_move_recommendations(
+    pokemon_name: Any,
+    *,
+    legal_moves: Optional[Iterable[str]] = None,
+    top_n: int = 6,
+    min_frequency: float = 0.05,
+    history_path: Path = DEFAULT_HISTORY_PATH,
+) -> list[Dict[str, Any]]:
+    """Return structured tournament move evidence for a future UI.
+
+    ``legal_moves`` can be supplied by the Champions learnset layer so the
+    recommendation API never suggests a move that is unavailable in the
+    current game rules. Results retain count, sample size and frequency so a
+    later UI can distinguish a 70% move over 2,000 teams from a 70% move over
+    10 teams.
+    """
+    key = get_champions_species_key(pokemon_name)
+    if not key or not history_path.exists():
+        return []
+
+    history = _load_history(history_path)
+    record = (history.get("pokemon") or {}).get(key)
+    if not isinstance(record, dict):
+        return []
+    rows = record.get("move_usage") or []
+    if not isinstance(rows, list):
+        return []
+
+    legal = None
+    if legal_moves is not None:
+        legal = {str(move).strip().casefold() for move in legal_moves if str(move).strip()}
+
+    threshold = max(0.0, min(1.0, float(min_frequency)))
+    recommendations: list[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        move = str(row.get("move") or "").strip()
+        if not move:
+            continue
+        if legal is not None and move.casefold() not in legal:
+            continue
+        try:
+            frequency = float(row.get("frequency", 0.0) or 0.0)
+            count = int(row.get("count", 0) or 0)
+            sample_size = int(row.get("sample_size", 0) or 0)
+        except (TypeError, ValueError):
+            continue
+        if frequency < threshold or count <= 0:
+            continue
+        # Confidence rises with sample size but never changes the observed
+        # frequency itself. This is evidence quality, not fake precision.
+        confidence = min(1.0, sample_size / 250.0)
+        recommendations.append({
+            "move": move,
+            "frequency": max(0.0, min(1.0, frequency)),
+            "count": max(0, count),
+            "sample_size": max(0, sample_size),
+            "confidence": confidence,
+        })
+        if len(recommendations) >= max(1, int(top_n)):
+            break
+    return recommendations
