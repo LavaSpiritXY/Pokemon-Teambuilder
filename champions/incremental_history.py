@@ -70,17 +70,63 @@ def _new_stats() -> Dict[str, Any]:
         "placement_count": 0,
         "best_placement": None,
         "regulations": {},
+        "regulation_metrics": {},
     }
 
 
-def _new_partner() -> Dict[str, Any]:
+def _new_regulation_stats() -> Dict[str, Any]:
     return {
-        "teams_together": 0,
-        "shared_wins": 0,
-        "shared_losses": 0,
-        "weighted_teams_together": 0.0,
-        "weighted_wins": 0.0,
-        "weighted_losses": 0.0,
+        "appearances": 0,
+        "wins": 0,
+        "losses": 0,
+        "draws": 0,
+        "top_cut_count": 0,
+        "placement_sum": 0.0,
+        "placement_count": 0,
+        "best_placement": None,
+    }
+
+
+def _record_regulation_stats(stats: Dict[str, Any], result: Dict[str, Any]) -> None:
+    wins = int(result.get("wins", 0) or 0)
+    losses = int(result.get("losses", 0) or 0)
+    draws = int(result.get("draws", 0) or 0)
+    stats["appearances"] += 1
+    stats["wins"] += wins
+    stats["losses"] += losses
+    stats["draws"] += draws
+    if result.get("top_cut") is True:
+        stats["top_cut_count"] += 1
+    placement = result.get("placement")
+    try:
+        placement_value = float(placement) if placement is not None else None
+    except (TypeError, ValueError):
+        placement_value = None
+    if placement_value is not None:
+        stats["placement_sum"] += placement_value
+        stats["placement_count"] += 1
+        best = stats.get("best_placement")
+        stats["best_placement"] = placement_value if best is None else min(best, placement_value)
+
+
+def _finalize_regulation_stats(stats: Dict[str, Any]) -> Dict[str, Any]:
+    games = stats["wins"] + stats["losses"] + stats["draws"]
+    return {
+        "appearances": int(stats.get("appearances", 0) or 0),
+        "wins": int(stats.get("wins", 0) or 0),
+        "losses": int(stats.get("losses", 0) or 0),
+        "draws": int(stats.get("draws", 0) or 0),
+        "top_cut_count": int(stats.get("top_cut_count", 0) or 0),
+        "win_rate": stats["wins"] / games if games else None,
+        "top_cut_rate": (
+            stats["top_cut_count"] / stats["appearances"]
+            if stats["appearances"] else None
+        ),
+        "average_placement": (
+            stats["placement_sum"] / stats["placement_count"]
+            if stats["placement_count"] else None
+        ),
+        "best_placement": stats.get("best_placement"),
     }
 
 
@@ -104,6 +150,11 @@ def _finalize(stats: Dict[str, Any]) -> None:
         stats["weighted_top_cut"] / stats["weighted_appearances"]
         if stats["weighted_appearances"] else 0.0
     )
+    stats["regulation_metrics"] = {
+        str(regulation).strip().upper(): _finalize_regulation_stats(regulation_stats)
+        for regulation, regulation_stats in (stats.get("regulation_metrics") or {}).items()
+        if isinstance(regulation_stats, dict)
+    }
 
 
 def _decay_existing(report: Dict[str, Any], reference: datetime) -> None:
@@ -166,7 +217,7 @@ def _add_partner_delta(
 
 def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: datetime) -> None:
     event = snapshot.get("event") or {}
-    regulation = str(event.get("regulation") or "Unknown")
+    regulation = str(event.get("regulation") or "Unknown").strip().upper()
     event_date = _event_date(snapshot)
     weight = _weight(event_date, reference)
 
@@ -197,6 +248,7 @@ def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: d
         for name in names:
             key = name.lower()
             stats = pokemon.setdefault(key, _new_stats())
+            stats.setdefault("regulation_metrics", {})
             stats["display_name"] = name
             stats["appearances"] += 1
             stats["wins"] += wins
@@ -220,13 +272,14 @@ def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: d
                 stats["best_placement"] = placement_value if best is None else min(best, placement_value)
             regulation_counts = stats.setdefault("regulations", {})
             regulation_counts[regulation] = int(regulation_counts.get(regulation, 0) or 0) + 1
+            regulation_stats = stats["regulation_metrics"].setdefault(
+                regulation,
+                _new_regulation_stats(),
+            )
+            _record_regulation_stats(regulation_stats, result)
 
         keys = sorted(set(name.lower() for name in names))
         for left, right in combinations(keys, 2):
-            # Partner relationships are undirected. Look in both possible
-            # orientations before creating a new row, so older aggregates
-            # generated with the opposite ordering are merged rather than
-            # duplicated.
             existing = _find_partner_row(partners, left, right)
             if existing is None:
                 existing = {"pokemon": right, **_new_partner()}
@@ -234,7 +287,6 @@ def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: d
 
             _add_partner_delta(existing, wins, losses, weight)
 
-            # Keep the reverse lookup synchronized with the same aggregate.
             reverse_rows = partners.setdefault(right, [])
             reverse = next(
                 (
@@ -247,9 +299,6 @@ def _add_snapshot(report: Dict[str, Any], snapshot: Dict[str, Any], reference: d
                 reverse = {"pokemon": left, **_new_partner()}
                 reverse_rows.append(reverse)
 
-            # The reverse row represents the same undirected relationship.
-            # Copy the aggregate values instead of incrementing it a second
-            # time, which would double-count the team.
             for key, value in existing.items():
                 if key != "pokemon":
                     reverse[key] = value
@@ -305,6 +354,13 @@ def incremental_update(previous_history: Path, new_cache_dir: Path) -> Dict[str,
     reference = max(dates + ([previous_reference] if previous_reference else []), default=datetime.now(timezone.utc))
 
     _decay_existing(report, reference)
+
+    # Older history files may predate regulation_metrics. Preserve their
+    # existing aggregate while allowing new events to build the richer
+    # per-regulation breakdown from this point forward.
+    for stats in (report.get("pokemon") or {}).values():
+        stats.setdefault("regulation_metrics", {})
+
     for snapshot in snapshots:
         _add_snapshot(report, snapshot, reference)
 
