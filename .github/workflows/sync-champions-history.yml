@@ -31,9 +31,18 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
         run: |
           python -m pip install -r requirements.txt
           python -m pip install pytest
+
+      - name: Migrate Champions history schema
+        run: python tools/migrate_champions_history_schema.py
 
       - name: Automatically discover and sync Champions tournaments
         run: |
@@ -58,7 +67,8 @@ jobs:
             champions/regulation.py \
             champions/tournament_data.py \
             champions_aggregation_v2.py \
-            tools/sync_champions_history.py
+            tools/sync_champions_history.py \
+            tools/migrate_champions_history_schema.py
 
       - name: Commit updated history
         run: |
