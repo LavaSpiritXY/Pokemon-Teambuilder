@@ -113,13 +113,9 @@ def _legacy_metrics(record, active_regulation=None):
     }
 
 
-@lru_cache(maxsize=512)
-def _cached_history_metrics(pokemon_name, active_regulation, revision_token):
-    return get_history_metrics(pokemon_name, current_regulation=active_regulation)
-
-
 def _history_metrics_for_active_regulation(pokemon_name, active_regulation):
-    return _cached_history_metrics(pokemon_name, active_regulation, history_revision())
+    """Read history metrics directly so patched/test data is never hidden by a second cache layer."""
+    return get_history_metrics(pokemon_name, current_regulation=active_regulation)
 
 
 def calculate_tournament_metrics(pokemon_name):
