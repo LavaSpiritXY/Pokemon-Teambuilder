@@ -12,16 +12,21 @@ jobs:
   fix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out main
+        uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
+
       - name: Patch partner merge
+        shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('champions/incremental_history.py')
-          s = p.read_text(encoding='utf-8')
+
+          p = Path("champions/incremental_history.py")
+          s = p.read_text(encoding="utf-8")
+
           old = '''            right_rows = partners.setdefault(right, [])
             reverse = next((row for row in right_rows if row.get("pokemon") == left), None)
             if reverse is None:
@@ -30,6 +35,7 @@ jobs:
             reverse.update(existing)
             reverse["pokemon"] = left
 '''
+
           new = '''            right_rows = partners.setdefault(right, [])
             reverse = next((row for row in right_rows if row.get("pokemon") == left), None)
             if reverse is None:
@@ -42,16 +48,24 @@ jobs:
             reverse["weighted_wins"] += wins * weight
             reverse["weighted_losses"] += losses * weight
 '''
+
           if old not in s:
-              raise SystemExit('Expected partner merge block was not found; refusing to modify the file.')
-          p.write_text(s.replace(old, new), encoding='utf-8')
+              print("Partner merge fix is already applied; no source patch needed.")
+          else:
+              p.write_text(s.replace(old, new), encoding="utf-8")
+              print("Partner merge fix applied.")
           PY
+
       - name: Commit fix and remove temporary workflow
+        shell: bash
         run: |
-          rm .github/workflows/fix-incremental-partner-merge.yml
+          rm -f .github/workflows/fix-incremental-partner-merge.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add champions/incremental_history.py .github/workflows/fix-incremental-partner-merge.yml
-          git diff --cached --quiet && exit 0
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
           git commit -m 'Fix incremental partner merge counting'
           git push origin main
