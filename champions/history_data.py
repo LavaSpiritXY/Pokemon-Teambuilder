@@ -82,6 +82,14 @@ def load_champions_history(path: Optional[str] = None) -> Dict[str, Any]:
     )
 
 
+# Backwards-compatible cache invalidation hook.
+# Older tests and the sync/regulation code intentionally use
+# ``load_champions_history.cache_clear()``. The public loader itself is a thin
+# wrapper around the revision-aware cached implementation, so expose the
+# cached function's invalidator on the wrapper rather than removing that API.
+load_champions_history.cache_clear = _load_champions_history_cached.cache_clear
+
+
 def history_revision(path: Optional[str] = None) -> str:
     """Return a stable revision token for cache keys in higher-level analytics."""
     history_path = Path(path) if path is not None else DEFAULT_HISTORY_PATH
