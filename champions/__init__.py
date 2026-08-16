@@ -21,6 +21,18 @@ try:
     # fallback path, so this remains backwards compatible.
     _counter_engine._fetch_move_metadata = _get_move_metadata
 
+    # Cache the already-local move resolver too. The counter hot path can ask
+    # for the same move from pressure, utility/priority, and target-STAB checks.
+    # The resolver returns fresh dicts and the engine only reads them, so an
+    # immutable-key cache is safe and avoids repeated normalisation/dict work.
+    _original_move_metadata = _counter_engine._move_metadata
+
+    @lru_cache(maxsize=4096)
+    def _cached_move_metadata(move_name: str):
+        return _original_move_metadata(str(move_name))
+
+    _counter_engine._move_metadata = _cached_move_metadata
+
     # Cache tournament metrics by both Pokémon and history revision. The same
     # candidate can be inspected by the counter engine and then again by the
     # practical-ranking layer; both should reuse the exact same metrics object
