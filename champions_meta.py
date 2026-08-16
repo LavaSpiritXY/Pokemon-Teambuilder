@@ -27,7 +27,6 @@ def _candidate_keys(name: str) -> List[str]:
     key = _normalise_name(name)
     if not key:
         return []
-
     candidates = [key]
 
     def add(value: str) -> None:
@@ -35,8 +34,9 @@ def _candidate_keys(name: str) -> List[str]:
         if value and value not in candidates:
             candidates.append(value)
 
-    # Mega display forms. Preserve the exact form first, then fall back to
-    # the base species because tournament data may only contain that species.
+    # Mega display forms. Preserve the exact form first, then progressively
+    # fall back to the species. Both "Mega Charizard X" and "Charizard Mega X"
+    # therefore resolve to the tournament species "charizard" when needed.
     if key.startswith("mega "):
         remainder = key[5:].strip()
         add(remainder)
@@ -47,20 +47,30 @@ def _candidate_keys(name: str) -> List[str]:
         add(key[:-5].strip())
     for suffix in (" mega x", " mega y"):
         if key.endswith(suffix):
-            add(key[:-len(suffix)].strip())
+            base = key[:-len(suffix)].strip()
+            add(base)
+            if base.endswith(" mega"):
+                add(base[:-5].strip())
 
     # Regional display prefixes.
     for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
         if key.startswith(prefix):
-            add(key[len(prefix):])
+            base = key[len(prefix):].strip()
+            add(base)
+            # Paldean/other regional display names can also be represented as
+            # a species + form suffix in the tournament dataset.
+            for suffix in (" combat breed", " blaze breed", " aqua breed"):
+                if base.endswith(suffix):
+                    add(base[:-len(suffix)].strip())
 
-    # Important: Paldean Tauros has meaningful breed identities. Keep the
-    # exact breed candidate rather than stripping it to generic Tauros.
-    # This makes the resolver safe for both aggregate and form-specific data.
+    # Form suffixes. Keep the exact form first; these are fallbacks only.
     for suffix in (" combat breed", " blaze breed", " aqua breed"):
         if key.endswith(suffix):
             base = key[:-len(suffix)].strip()
             add(base)
+            for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
+                if base.startswith(prefix):
+                    add(base[len(prefix):].strip())
 
     if key == "eternal flower floette":
         add("floette")

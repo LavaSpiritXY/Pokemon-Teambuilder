@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local/generated caches
+champions_cache/
+
+# Local backup files
+*.backup
+*.bak
+*.tmp
+app.before_*.py
+app.phase*_backup_*.py
+champions_phase*_*.before_*.py
+
+# Local test artefacts
+plotly_test.py
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/

@@ -1,9 +1,11 @@
 """Tournament move-frequency extraction and history enrichment.
 
 The Champions history aggregate stores team-level usage today. This module
-adds an optional move-usage layer from the raw tournament decklists when the
-source exposes moves. It is deliberately schema-tolerant because Limitless
-payloads have used several decklist shapes over time.
+adds a move-usage layer from the raw tournament decklists when the source
+exposes moves. Move frequency is measured as the percentage of observed team
+lists containing a move, not as a percentage of all move slots. The enrichment
+is rebuilt from cached snapshots each run so repeated workflow executions are
+idempotent.
 """
 from __future__ import annotations
 
@@ -65,23 +67,49 @@ def _walk_decklist(value: Any) -> Iterable[tuple[str, list[str]]]:
             yield from _walk_decklist(child)
 
 
-def extract_tournament_moves(snapshot: Mapping[str, Any]) -> Dict[str, Dict[str, int]]:
-    """Return raw move counts keyed by canonical Pokémon species key."""
-    output: Dict[str, Dict[str, int]] = {}
+def extract_tournament_move_observations(snapshot: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """Return per-Pokémon move counts plus the number of observed teams.
+
+    A move counts once per team list for a Pokémon. The sample size counts team
+    lists in which that Pokémon had usable move information. This produces a
+    genuine "percentage of sets using this move" rather than percentages that
+    merely sum to 100 across move slots.
+    """
+    output: Dict[str, Dict[str, Any]] = {}
     for team in snapshot.get("teams") or []:
         if not isinstance(team, Mapping):
             continue
         decklist = team.get("raw_decklist") or team.get("decklist")
+        seen_species: set[str] = set()
+        seen_moves: set[tuple[str, str]] = set()
         for pokemon_name, moves in _walk_decklist(decklist):
             species_key = get_champions_species_key(pokemon_name)
             if not species_key:
                 continue
-            counts = output.setdefault(species_key, {})
+            record = output.setdefault(species_key, {"counts": {}, "sample_size": 0})
+            if species_key not in seen_species:
+                record["sample_size"] = int(record.get("sample_size", 0)) + 1
+                seen_species.add(species_key)
+            counts = record["counts"]
             for move in moves:
                 move_key = str(move).strip()
-                if move_key:
-                    counts[move_key] = counts.get(move_key, 0) + 1
+                if not move_key:
+                    continue
+                marker = (species_key, move_key.casefold())
+                if marker in seen_moves:
+                    continue
+                seen_moves.add(marker)
+                counts[move_key] = int(counts.get(move_key, 0)) + 1
     return output
+
+
+def extract_tournament_moves(snapshot: Mapping[str, Any]) -> Dict[str, Dict[str, int]]:
+    """Backward-compatible move-count-only view of a tournament snapshot."""
+    observations = extract_tournament_move_observations(snapshot)
+    return {
+        species_key: dict(record.get("counts") or {})
+        for species_key, record in observations.items()
+    }
 
 
 def _merge_counts(target: Dict[str, int], source: Mapping[str, Any]) -> None:
@@ -99,7 +127,12 @@ def enrich_history_with_tournament_moves(
     history_path: Path = DEFAULT_HISTORY_PATH,
     cache_dir: Path = DEFAULT_CACHE_DIR,
 ) -> bool:
-    """Merge move observations from downloaded event snapshots into history."""
+    """Rebuild move observations from all cached tournament snapshots.
+
+    Rebuilding rather than incrementally adding to the existing aggregate is
+    intentional: the same cached event must never be counted twice when the
+    scheduled GitHub Actions workflow runs again.
+    """
     if not history_path.exists() or not cache_dir.exists():
         return False
 
@@ -111,7 +144,8 @@ def enrich_history_with_tournament_moves(
         return False
 
     pokemon_records = history.setdefault("pokemon", {})
-    changed = False
+    rebuilt_counts: Dict[str, Dict[str, int]] = {}
+    rebuilt_samples: Dict[str, int] = {}
 
     for path in sorted(cache_dir.glob("*.json")):
         if path.name == "manifest.json":
@@ -123,39 +157,52 @@ def enrich_history_with_tournament_moves(
         if not isinstance(snapshot, dict):
             continue
 
-        move_counts = extract_tournament_moves(snapshot)
-        for species_key, counts in move_counts.items():
-            record = pokemon_records.get(species_key)
-            if not isinstance(record, dict):
-                continue
-            aggregate = record.setdefault("move_counts", {})
-            before = dict(aggregate)
-            _merge_counts(aggregate, counts)
-            if aggregate != before:
-                changed = True
+        observations = extract_tournament_move_observations(snapshot)
+        for species_key, observation in observations.items():
+            counts = rebuilt_counts.setdefault(species_key, {})
+            _merge_counts(counts, observation.get("counts") or {})
+            rebuilt_samples[species_key] = rebuilt_samples.get(species_key, 0) + int(observation.get("sample_size", 0) or 0)
 
-    for record in pokemon_records.values():
+    changed = False
+    touched = set(rebuilt_counts) | set(rebuilt_samples)
+    for species_key in touched:
+        record = pokemon_records.get(species_key)
         if not isinstance(record, dict):
             continue
-        counts = record.get("move_counts") or {}
-        if not isinstance(counts, Mapping) or not counts:
-            continue
-        total = sum(max(0, int(v or 0)) for v in counts.values())
-        if not total:
-            continue
+
+        counts = rebuilt_counts.get(species_key, {})
+        sample_size = max(0, int(rebuilt_samples.get(species_key, 0) or 0))
         usage = [
             {
                 "move": move,
                 "count": int(count),
-                "frequency": int(count) / total,
+                "sample_size": sample_size,
+                "frequency": min(1.0, int(count) / sample_size) if sample_size else 0.0,
             }
             for move, count in counts.items()
             if int(count or 0) > 0
         ]
-        usage.sort(key=lambda row: (-row["frequency"], row["move"].lower()))
+        usage.sort(key=lambda row: (-row["frequency"], -row["count"], row["move"].lower()))
+
+        if record.get("move_counts") != counts:
+            record["move_counts"] = counts
+            changed = True
         if record.get("move_usage") != usage:
             record["move_usage"] = usage
             changed = True
+        if record.get("move_sample_size") != sample_size:
+            record["move_sample_size"] = sample_size
+            changed = True
+
+    # Remove stale move observations for Pokémon that no longer appear in the
+    # available cache. This keeps the generated history faithful to its source.
+    for species_key, record in pokemon_records.items():
+        if not isinstance(record, dict) or species_key in touched:
+            continue
+        for field, empty in (("move_counts", {}), ("move_usage", []), ("move_sample_size", 0)):
+            if record.get(field) != empty and field in record:
+                record[field] = empty
+                changed = True
 
     if not changed:
         return False
@@ -166,29 +213,25 @@ def enrich_history_with_tournament_moves(
         encoding="utf-8",
     )
     temporary.replace(history_path)
-    _load_history_cached.cache_clear()
     return True
 
 
-@lru_cache(maxsize=4)
-def _load_history_cached(path_str: str, modified_ns: int, file_size: int) -> Dict[str, Any]:
-    """Load move history once per file revision instead of once per Pokémon."""
-    path = Path(path_str)
-    if not path.exists():
-        return {}
+@lru_cache(maxsize=8)
+def _load_history_cached(history_path_str: str, mtime_ns: int) -> Dict[str, Any]:
+    """Load one history JSON once per file version."""
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(Path(history_path_str).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return {}
-    return payload if isinstance(payload, dict) else {}
+    return data if isinstance(data, dict) else {}
 
 
-def _history_revision(path: Path) -> tuple[int, int]:
+def _load_history(history_path: Path) -> Dict[str, Any]:
     try:
-        stat = path.stat()
-        return stat.st_mtime_ns, stat.st_size
+        mtime_ns = history_path.stat().st_mtime_ns
     except OSError:
-        return 0, 0
+        return {}
+    return _load_history_cached(str(history_path.resolve()), mtime_ns)
 
 
 def get_tournament_move_usage(
@@ -197,26 +240,19 @@ def get_tournament_move_usage(
     top_n: Optional[int] = None,
     history_path: Path = DEFAULT_HISTORY_PATH,
 ) -> Dict[str, float]:
-    """Return observed move frequencies as {display_name: 0..1}.
-
-    The generated history file is large enough that reading/parsing it once for
-    every candidate creates a major avoidable cost during counter analysis.
-    Cache it by modification time and size so the sync job can still invalidate
-    the cache naturally when the file changes.
-    """
+    """Return observed move frequencies as {display_name: 0..1}."""
     key = get_champions_species_key(pokemon_name)
     if not key or not history_path.exists():
         return {}
 
-    modified_ns, file_size = _history_revision(history_path)
-    history = _load_history_cached(str(history_path), modified_ns, file_size)
+    history = _load_history(history_path)
     record = (history.get("pokemon") or {}).get(key)
     if not isinstance(record, dict):
         return {}
     rows = record.get("move_usage") or []
     if not isinstance(rows, list):
         return {}
-    output = {}
+    output: Dict[str, float] = {}
     for row in rows:
         if not isinstance(row, Mapping):
             continue
@@ -231,3 +267,87 @@ def get_tournament_move_usage(
         if top_n and len(output) >= top_n:
             break
     return output
+
+
+def get_tournament_move_sample_size(
+    pokemon_name: Any,
+    *,
+    history_path: Path = DEFAULT_HISTORY_PATH,
+) -> int:
+    """Return the number of observed team lists supporting move evidence."""
+    key = get_champions_species_key(pokemon_name)
+    if not key or not history_path.exists():
+        return 0
+    history = _load_history(history_path)
+    record = (history.get("pokemon") or {}).get(key)
+    if not isinstance(record, dict):
+        return 0
+    try:
+        return max(0, int(record.get("move_sample_size", 0) or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def get_tournament_move_recommendations(
+    pokemon_name: Any,
+    *,
+    legal_moves: Optional[Iterable[str]] = None,
+    top_n: int = 6,
+    min_frequency: float = 0.05,
+    history_path: Path = DEFAULT_HISTORY_PATH,
+) -> list[Dict[str, Any]]:
+    """Return structured tournament move evidence for a future UI.
+
+    ``legal_moves`` can be supplied by the Champions learnset layer so the
+    recommendation API never suggests a move that is unavailable in the
+    current game rules. Results retain count, sample size and frequency so a
+    later UI can distinguish a 70% move over 2,000 teams from a 70% move over
+    10 teams.
+    """
+    key = get_champions_species_key(pokemon_name)
+    if not key or not history_path.exists():
+        return []
+
+    history = _load_history(history_path)
+    record = (history.get("pokemon") or {}).get(key)
+    if not isinstance(record, dict):
+        return []
+    rows = record.get("move_usage") or []
+    if not isinstance(rows, list):
+        return []
+
+    legal = None
+    if legal_moves is not None:
+        legal = {str(move).strip().casefold() for move in legal_moves if str(move).strip()}
+
+    threshold = max(0.0, min(1.0, float(min_frequency)))
+    recommendations: list[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        move = str(row.get("move") or "").strip()
+        if not move:
+            continue
+        if legal is not None and move.casefold() not in legal:
+            continue
+        try:
+            frequency = float(row.get("frequency", 0.0) or 0.0)
+            count = int(row.get("count", 0) or 0)
+            sample_size = int(row.get("sample_size", 0) or 0)
+        except (TypeError, ValueError):
+            continue
+        if frequency < threshold or count <= 0:
+            continue
+        # Confidence rises with sample size but never changes the observed
+        # frequency itself. This is evidence quality, not fake precision.
+        confidence = min(1.0, sample_size / 250.0)
+        recommendations.append({
+            "move": move,
+            "frequency": max(0.0, min(1.0, frequency)),
+            "count": max(0, count),
+            "sample_size": max(0, sample_size),
+            "confidence": confidence,
+        })
+        if len(recommendations) >= max(1, int(top_n)):
+            break
+    return recommendations

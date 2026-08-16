@@ -1,0 +1,168 @@
+import json
+from pathlib import Path
+
+from champions import history_data
+from champions.tournament_data import calculate_tournament_metrics, get_tournament_partners
+
+
+def _write_history(path: Path) -> None:
+    payload = {
+        "schema_version": 1,
+        "events_processed": 929,
+        "regulations": {"M-A": 499, "M-B": 430},
+        "pokemon": {
+            "garchomp": {
+                "appearances": 19608,
+                "wins": 53055,
+                "losses": 52419,
+                "top_cut_count": 2624,
+                "top_cut_rate": 0.1338229294,
+                "win_rate": 0.5023339046,
+                "recent_usage_weight": 8646.6461,
+                "recent_win_rate": 0.4975472815,
+                "recent_top_cut_rate": 0.137,
+                "display_name": "Garchomp",
+                "regulations": {"M-A": 10417, "M-B": 9191},
+                "regulation_metrics": {
+                    "M-A": {
+                        "win_rate": 0.23,
+                        "top_cut_rate": 0.08,
+                    },
+                    "M-B": {
+                        "win_rate": 0.61,
+                        "top_cut_rate": 0.21,
+                    },
+                },
+            }
+        },
+        "partners": {
+            "garchomp": [
+                {
+                    "pokemon": "kingambit",
+                    "teams_together": 6253,
+                    "shared_wins": 18224,
+                    "shared_losses": 15956,
+                    "shared_win_rate": 0.533,
+                },
+                {
+                    "pokemon": "sneasler",
+                    "teams_together": 5314,
+                    "shared_wins": 15361,
+                    "shared_losses": 13945,
+                    "shared_win_rate": 0.524,
+                },
+            ]
+        },
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_history_loader_and_legacy_translation(tmp_path):
+    history_path = tmp_path / "champions_meta_history.json"
+    _write_history(history_path)
+
+    history_data.load_champions_history.cache_clear()
+    loaded = history_data.load_champions_history(str(history_path))
+    assert loaded["events_processed"] == 929
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        assert history_data.get_history_pokemon_record("Garchomp", regulation="M-B")["appearances"] == 19608
+        assert history_data.get_history_pokemon_record("Garchomp", regulation="M-Z") is None
+
+        legacy = history_data.build_legacy_meta_db()
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+    assert legacy["garchomp"]["appearances"] == 19608
+    assert legacy["garchomp"]["wins"] == 53055
+    assert legacy["garchomp"]["partners"]["kingambit"] == 6253
+    assert legacy["garchomp"]["partners"]["sneasler"] == 5314
+
+
+def test_history_helpers_do_not_break_when_file_is_missing(tmp_path):
+    missing = tmp_path / "missing.json"
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = missing
+    try:
+        assert history_data.load_champions_history() == {}
+        assert history_data.get_history_pokemon_record("Garchomp") is None
+        assert history_data.get_history_partners("Garchomp") == []
+        assert history_data.get_history_metrics("Garchomp") is None
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+
+def test_clean_history_metrics_expose_overall_recent_and_current(tmp_path):
+    history_path = tmp_path / "champions_meta_history.json"
+    _write_history(history_path)
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        metrics = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-B",
+        )
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+    assert metrics is not None
+    assert metrics["overall"]["appearances"] == 19608
+    assert metrics["overall"]["wins"] == 53055
+    assert metrics["recent"]["win_rate"] == 0.4975472815
+    assert metrics["current"]["regulation"] == "M-B"
+    assert metrics["current"]["appearances"] == 9191
+    assert metrics["current"]["win_rate"] == 0.61
+    assert metrics["current"]["top_cut_rate"] == 0.21
+    assert metrics["current"]["win_rate_available"] is True
+
+
+def test_regulation_metrics_do_not_leak_across_regulations(tmp_path):
+    """Selecting M-B must never silently return the M-A performance signal."""
+    history_path = tmp_path / "champions_meta_history.json"
+    _write_history(history_path)
+
+    history_data.load_champions_history.cache_clear()
+    original_path = history_data.DEFAULT_HISTORY_PATH
+    history_data.DEFAULT_HISTORY_PATH = history_path
+    try:
+        m_a = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-A",
+        )
+        m_b = history_data.get_history_metrics(
+            "Garchomp",
+            current_regulation="M-B",
+        )
+    finally:
+        history_data.DEFAULT_HISTORY_PATH = original_path
+        history_data.load_champions_history.cache_clear()
+
+    assert m_a is not None
+    assert m_b is not None
+    assert m_a["current"]["regulation"] == "M-A"
+    assert m_b["current"]["regulation"] == "M-B"
+    assert m_a["current"]["win_rate"] == 0.23
+    assert m_b["current"]["win_rate"] == 0.61
+    assert m_a["current"]["top_cut_rate"] == 0.08
+    assert m_b["current"]["top_cut_rate"] == 0.21
+    assert m_a["current"]["win_rate"] != m_b["current"]["win_rate"]
+
+
+def test_existing_tournament_api_returns_normalized_metrics():
+    metrics = calculate_tournament_metrics("Garchomp")
+    partners = get_tournament_partners("Garchomp")
+
+    assert isinstance(metrics, dict)
+    assert 0.0 <= metrics["tournament_score"] <= 1.0
+    assert metrics["current_regulation"] == "M-B"
+    assert isinstance(partners, list)
