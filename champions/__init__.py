@@ -10,6 +10,7 @@ try:
 
     from champions import counter_engine as _counter_engine
     from champions import tournament_data as _tournament_data
+    from champions import meta_analytics as _meta_analytics
     from champions.counter_quality import apply_tournament_move_quality as _apply_tournament_move_quality
     from champions.counter_practical import apply_practical_counter_ranking as _apply_practical_counter_ranking
     from champions.history_data import history_revision as _history_revision
@@ -93,6 +94,82 @@ try:
         )
 
     _counter_engine._target_damaging_stabs = _target_damaging_stabs_cached
+
+    # ------------------------------------------------------------------
+    # Teammate candidate-score reuse
+    # ------------------------------------------------------------------
+    # _candidate_score is called once per candidate, but the old implementation
+    # rebuilt the target's archetypes and weakness set on every call. Cache that
+    # target-wide context for the current target and memoize the small type-chart
+    # relation sets used by each candidate type. This changes no score formula;
+    # it only moves repeated deterministic work out of the 60-candidate loop.
+    _candidate_context_cache = {"key": None, "archetypes": frozenset(), "weaknesses": frozenset()}
+
+    @lru_cache(maxsize=32)
+    def _candidate_type_relations(type_name: str):
+        relations = _meta_analytics.get_type_relationships(type_name) or {}
+        resistances = frozenset(
+            item["name"].title()
+            for item in relations.get("half_damage_from", [])
+            if isinstance(item, dict) and item.get("name")
+        )
+        immunities = frozenset(
+            item["name"].title()
+            for item in relations.get("no_damage_from", [])
+            if isinstance(item, dict) and item.get("name")
+        )
+        return resistances, immunities
+
+    def _candidate_score_optimized(
+        target_data,
+        candidate_data,
+        tournament_partners,
+        candidate_name,
+    ):
+        target_types = tuple(str(item) for item in target_data.get("types", []))
+        target_stats = target_data.get("stats", {}) or {}
+        target_moves = tuple(str(item) for item in target_data.get("moves", []))
+        target_abilities = tuple(str(item) for item in target_data.get("abilities", []))
+        context_key = (
+            target_types,
+            tuple(sorted((str(k), float(v or 0)) for k, v in target_stats.items())),
+            target_moves,
+            target_abilities,
+        )
+        if _candidate_context_cache["key"] != context_key:
+            _candidate_context_cache["key"] = context_key
+            _candidate_context_cache["archetypes"] = frozenset(
+                a.get("name") for a in _meta_analytics.detect_archetypes(target_data)
+            )
+            _candidate_context_cache["weaknesses"] = frozenset(
+                _meta_analytics._type_weaknesses(list(target_types))
+            )
+
+        score = 0.0
+        key = _meta_analytics.canonical_species_key(candidate_name)
+        score += min(40.0, float(tournament_partners.get(key, 0) or 0) * 8.0)
+
+        candidate_archetypes = {
+            a.get("name") for a in _meta_analytics.detect_archetypes(candidate_data)
+        }
+        score += len(_candidate_context_cache["archetypes"] & candidate_archetypes) * 4.0
+
+        for candidate_type in candidate_data.get("types", []):
+            resistances, immunities = _candidate_type_relations(str(candidate_type))
+            score += sum(
+                8.0 if weakness in immunities else 5.0
+                for weakness in _candidate_context_cache["weaknesses"]
+                if weakness in immunities or weakness in resistances
+            )
+
+        candidate_stats = candidate_data.get("stats", {}) or {}
+        if (target_stats.get("attack", 100) >= target_stats.get("special-attack", 100)) != (
+            candidate_stats.get("attack", 100) >= candidate_stats.get("special-attack", 100)
+        ):
+            score += 2.0
+        return score
+
+    _meta_analytics._candidate_score = _candidate_score_optimized
 
     # Keep matchup logic dominant, then apply tournament move evidence and a
     # separate practical ranking pass. Both layers operate on already-computed
