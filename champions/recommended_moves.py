@@ -7,6 +7,7 @@ move quality, and evidence confidence.
 """
 from __future__ import annotations
 
+import math
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 import streamlit as strlit
@@ -55,17 +56,41 @@ def _effectiveness(attacking_type: str, defending_types: Sequence[str]) -> float
     return multiplier
 
 
+def _effectiveness_score(effectiveness: float) -> float:
+    return {
+        0.0: 0.0,
+        0.25: 8.0,
+        0.5: 20.0,
+        1.0: 48.0,
+        2.0: 82.0,
+        4.0: 100.0,
+    }.get(effectiveness, min(100.0, max(0.0, effectiveness * 42.0)))
+
+
+def _move_quality(metadata: Mapping[str, Any]) -> float:
+    name = str(metadata.get("name", "")).casefold()
+    category = str(metadata.get("damage_class") or "status").lower()
+    power = float(metadata.get("power", 0) or 0)
+
+    if category == "status":
+        return _STATUS_UTILITY.get(name, 0.25) * 100.0
+
+    # 120 BP represents excellent direct damage without making enormous-power
+    # outliers dominate the recommendation system.
+    return min(100.0, power / 1.2)
+
+
 def _pressure_score(metadata: Mapping[str, Any], target_types: Sequence[str], own_types: Sequence[str]) -> float:
     move_type = str(metadata.get("type") or "Normal").title()
-    power = float(metadata.get("power", 0) or 0)
     category = str(metadata.get("damage_class") or "status").lower()
     if category == "status":
         return 25.0 * _STATUS_UTILITY.get(str(metadata.get("name", "")).casefold(), 0.25)
 
     effectiveness = _effectiveness(move_type, target_types)
     stab = 1.0 if move_type in {str(item).title() for item in own_types} else 0.0
+    power = float(metadata.get("power", 0) or 0)
     power_score = min(100.0, power / 1.2) if power > 0 else 0.0
-    effectiveness_score = {0.0: 0.0, 0.25: 10.0, 0.5: 20.0, 1.0: 48.0, 2.0: 82.0, 4.0: 100.0}.get(effectiveness, min(100.0, effectiveness * 42.0))
+    effectiveness_score = _effectiveness_score(effectiveness)
     return power_score * 0.35 + effectiveness_score * 0.50 + stab * 15.0
 
 
@@ -96,9 +121,14 @@ def rank_recommended_moves(
 ) -> list[Dict[str, Any]]:
     """Rank legal moves using tournament evidence plus matchup quality.
 
-    Tournament frequency is the strongest signal, but it cannot by itself make
-    an obviously irrelevant move rank first. This keeps recommendations useful
-    both for a selected Pokémon and when a target matchup is supplied.
+    Frequency is the strongest signal, but it is deliberately compressed so a
+    99% move does not automatically receive the same score as every other
+    common move. Matchup pressure, move quality, evidence confidence and
+    priority then provide meaningful separation.
+
+    A second greedy selection pass adds move diversity without changing the
+    displayed score: duplicate move types/categories receive a small selection
+    penalty so the final list is useful as a practical recommendation set.
     """
     legal = {str(move).strip().casefold(): str(move).strip() for move in legal_moves if str(move).strip()}
     if not legal:
@@ -117,25 +147,28 @@ def rank_recommended_moves(
 
     for key, move_name in legal.items():
         row = observed_by_key.get(key, {})
-        frequency = float(row.get("frequency", 0.0) or 0.0)
+        frequency = max(0.0, min(1.0, float(row.get("frequency", 0.0) or 0.0)))
         count = int(row.get("count", 0) or 0)
         sample_size = int(row.get("sample_size", 0) or 0)
-        confidence = float(row.get("confidence", 0.0) or 0.0)
+        confidence = max(0.0, min(1.0, float(row.get("confidence", 0.0) or 0.0)))
         meta = metadata.get(move_name) or {}
-        pressure = _pressure_score(meta, target_types, own_types) if target_types else 50.0
-        utility = _STATUS_UTILITY.get(str(meta.get("name", move_name)).casefold(), 0.0)
-        quality = min(100.0, float(meta.get("power", 0) or 0) / 1.2) if str(meta.get("damage_class", "status")).lower() != "status" else utility * 100.0
-        priority = max(0.0, min(1.0, (float(meta.get("priority", 0) or 0) + 1.0) / 4.0))
 
-        # Observed tournament frequency dominates. Matchup pressure and move
-        # quality break ties and make the list useful for a specific target.
+        pressure = _pressure_score(meta, target_types, own_types) if target_types else 50.0
+        quality = _move_quality(meta)
+        priority_raw = float(meta.get("priority", 0) or 0)
+        priority = max(0.0, min(1.0, (priority_raw + 1.0) / 4.0))
+
+        # Frequency is converted to a percentage and square-root compressed.
+        # This preserves the value of tournament staples while preventing a
+        # handful of 90-100% moves from collapsing into identical 100 scores.
+        usage_component = 45.0 * math.sqrt(frequency)
         score = (
-            frequency * 55.0
-            + pressure * 25.0
-            + quality * 10.0
-            + confidence * 5.0
+            usage_component
+            + pressure * 0.25
+            + quality * 0.10
+            + confidence * 10.0
             + priority * 5.0
-        )
+        ) / 0.95
         if frequency <= 0.0:
             score *= 0.72
 
@@ -153,10 +186,33 @@ def rank_recommended_moves(
             "priority": int(meta.get("priority", 0) or 0),
             "effectiveness": effectiveness,
             "reason": _role_label(meta, target_types, own_types),
+            "_selection_score": score,
         })
 
-    ranked.sort(key=lambda row: (-row["score"], -row["frequency"], -row["count"], row["move"].casefold()))
-    return ranked[: max(1, int(top_n))]
+    ranked.sort(key=lambda row: (-row["_selection_score"], -row["frequency"], -row["count"], row["move"].casefold()))
+
+    selected: list[Dict[str, Any]] = []
+    remaining = list(ranked)
+    limit = max(1, int(top_n))
+    while remaining and len(selected) < limit:
+        best_index = 0
+        best_selection_score = float("-inf")
+        for index, row in enumerate(remaining):
+            penalty = 0.0
+            if any(row["type"] == chosen["type"] for chosen in selected):
+                penalty += 4.0
+            if any(row["category"] == chosen["category"] for chosen in selected):
+                penalty += 2.0
+            candidate_selection_score = row["_selection_score"] - penalty
+            if candidate_selection_score > best_selection_score:
+                best_selection_score = candidate_selection_score
+                best_index = index
+
+        chosen = remaining.pop(best_index)
+        chosen.pop("_selection_score", None)
+        selected.append(chosen)
+
+    return selected
 
 
 def get_recommended_moves(
