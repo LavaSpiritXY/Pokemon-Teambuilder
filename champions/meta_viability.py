@@ -50,6 +50,60 @@ def get_smogon_stats_for(mon_name):
     }
 
 
+def _tournament_score_from_metrics(tournament_metrics):
+    """Extract or derive a normalized tournament signal.
+
+    The normal application path supplies ``tournament_score`` from
+    ``calculate_tournament_metrics``.  Some callers, however, intentionally
+    pass only the regulation-level ``current`` payload.  That payload contains
+    real performance evidence but no precomputed score, so it must not silently
+    fall back to the strategic default of 50.
+
+    Win rate is centred around 50%, while top-cut rate is scaled against a
+    12.5% benchmark (roughly one top-cut place per eight teams).  Both inputs
+    remain clamped to [0, 1], and missing win rate is simply omitted.
+    """
+    if not isinstance(tournament_metrics, dict):
+        return None
+
+    explicit_score = tournament_metrics.get("tournament_score")
+    if explicit_score is not None:
+        try:
+            return max(0.0, min(1.0, float(explicit_score)))
+        except (TypeError, ValueError):
+            pass
+
+    current = tournament_metrics.get("current")
+    if not isinstance(current, dict):
+        current = tournament_metrics
+
+    win_rate = current.get("win_rate")
+    top_cut_rate = current.get("top_cut_rate")
+
+    components = []
+    try:
+        if win_rate is not None:
+            components.append((max(0.0, min(1.0, float(win_rate))), 0.55))
+    except (TypeError, ValueError):
+        pass
+
+    try:
+        if top_cut_rate is not None:
+            top_cut_score = max(
+                0.0,
+                min(1.0, float(top_cut_rate) / 0.125),
+            )
+            components.append((top_cut_score, 0.45))
+    except (TypeError, ValueError):
+        pass
+
+    if not components:
+        return None
+
+    total_weight = sum(weight for _, weight in components)
+    return sum(score * weight for score, weight in components) / total_weight
+
+
 # ==========================================
 # META-INDEX AWARE VIABILITY & TIERING
 # ==========================================
@@ -68,11 +122,7 @@ def calculate_meta_viability(
     pkmn_name = pkmn_data.get("name", "Unknown")
     archetypes = detect_archetypes(pkmn_data)
 
-    tournament_score = None
-    if tournament_metrics:
-        tournament_score = tournament_metrics.get("tournament_score")
-        if tournament_score is not None:
-            tournament_score = max(0.0, min(1.0, float(tournament_score)))
+    tournament_score = _tournament_score_from_metrics(tournament_metrics)
 
     # Allow callers/tests to supply an already-fetched external signal. This
     # also avoids coupling this scoring function to a particular data source.
