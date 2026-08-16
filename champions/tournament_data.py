@@ -17,8 +17,14 @@ CHAMPIONS_META_DB = build_legacy_meta_db()
 
 
 def _get_active_regulation():
+    """Return the sync-recorded active regulation, with a safe fallback."""
+    history = load_champions_history()
+    if isinstance(history, dict):
+        active = str(history.get("active_regulation") or "").strip().upper()
+        if active.startswith("M-") and len(active) > 2:
+            return active
     return get_active_regulation_from_history(
-        load_champions_history(),
+        history,
         fallback=CURRENT_REGULATION,
     ) or CURRENT_REGULATION
 
