@@ -41,6 +41,9 @@ jobs:
             --batch-size 25 \
             --delay 1.5
 
+      - name: Enrich history with tournament move frequencies
+        run: python -c "from pathlib import Path; from champions.tournament_move_history import enrich_history_with_tournament_moves; changed=enrich_history_with_tournament_moves(history_path=Path('champions_meta_history.json'), cache_dir=Path('champions_cache')); print('Tournament move history changed:', changed)"
+
       - name: Run Champions regression tests
         run: python -m pytest test_champions_auto_sync.py test_champions_history_data.py test_champions_incremental_history.py tests/test_meta_analytics.py tests/test_meta_viability.py tests/test_tournament_data.py tests/test_type_chart.py tests/test_champions_end_to_end.py -v
 
@@ -55,6 +58,8 @@ jobs:
             champions/history_data.py \
             champions/regulation.py \
             champions/tournament_data.py \
+            champions/tournament_move_history.py \
+            champions/pokemon_data.py \
             champions_aggregation_v2.py \
             tools/sync_champions_history.py
 
