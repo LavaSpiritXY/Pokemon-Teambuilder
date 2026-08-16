@@ -7,6 +7,7 @@ from champions.history_data import history_revision
 from champions.meta_utils import detect_archetypes
 from champions.meta_viability import calculate_meta_viability
 from champions.pokemon_data import fetch_pokemon_details, fetch_pokemon_details_batch
+from champions.recommended_moves import get_recommended_moves
 from champions.roles import infer_slot_role
 from champions.roster_data import display_name_for_species_key
 from champions.species_keys import canonical_species_key
@@ -26,6 +27,7 @@ _EMPTY_PROFILE = {
     "teammates": [],
     "counters": [],
     "counter_details": [],
+    "recommended_moves": [],
 }
 
 
@@ -448,6 +450,26 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
             "warnings": assessment.warnings,
         })
 
+    # Recommended moves are deliberately calculated after the counter ranking.
+    # The counter engine remains untouched: its selected practical counters
+    # provide the target types, while the recommendation layer combines those
+    # targets with the already-cached tournament move evidence for this Pokémon.
+    counter_target_types = tuple(
+        dict.fromkeys(
+            str(pokemon_type).title()
+            for assessment in selected_assessments
+            for pokemon_type in (candidate_lookup.get(assessment.name, {}).get("types") or [])
+            if str(pokemon_type).strip()
+        )
+    )
+    recommended_moves = get_recommended_moves(
+        mon_name,
+        mon_data,
+        target_types=counter_target_types,
+        top_n=6,
+        history_revision_token=history_revision_token,
+    )
+
     return {
         "tier": _tier_for_viability(viability_value),
         "viability": f"{viability_value} / 100",
@@ -459,6 +481,7 @@ def _compute_meta_analytics_cached(mon_name: str, history_revision_token: str) -
         "teammates": teammates,
         "counters": counters,
         "counter_details": counter_details,
+        "recommended_moves": recommended_moves,
     }
 
 
