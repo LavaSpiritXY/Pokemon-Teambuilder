@@ -118,7 +118,7 @@ def _fetch_pokemon_details_uncached(mon_name):
 
 
 def _prefetch_counter_candidates(target_name):
-    """Warm a bounded candidate cache so one counter calculation is not 278 serial HTTP calls."""
+    """Warm every current-history candidate in parallel instead of serial network calls."""
     target_key = str(target_name).strip().lower()
     with _DETAILS_CACHE_LOCK:
         if target_key in _PREFETCHED_TARGETS:
@@ -133,7 +133,7 @@ def _prefetch_counter_candidates(target_name):
             return
 
         candidates = []
-        for species_key, record in records.items():
+        for species_key in records:
             display_name = display_name_for_species_key(species_key)
             if not display_name:
                 continue
@@ -141,24 +141,20 @@ def _prefetch_counter_candidates(target_name):
                 continue
             if display_name.casefold() == target_name.casefold():
                 continue
-            appearances = int((record or {}).get("appearances", 0) or 0)
-            candidates.append((appearances, display_name))
+            candidates.append(display_name)
 
-        candidates.sort(reverse=True)
-        names = [name for _, name in candidates[:96]]
-
-        # Always include the target's observed tournament partners, even if
-        # they are outside the global top-96 by appearances.
+        # Always include observed target partners even if a future history
+        # representation does not expose them in the main Pokémon table.
         try:
             from champions.tournament_data import get_tournament_partners
             for partner_key, _count in get_tournament_partners(target_name, top_n=24):
                 partner_name = display_name_for_species_key(partner_key)
                 if partner_name and not partner_name.lower().startswith("mega "):
-                    names.append(partner_name)
+                    candidates.append(partner_name)
         except Exception:
             pass
 
-        names = list(dict.fromkeys(names))
+        names = list(dict.fromkeys(candidates))
         if not names:
             return
 
@@ -168,6 +164,8 @@ def _prefetch_counter_candidates(target_name):
                 _DETAILS_MEMORY_CACHE[name.casefold()] = data
             return data
 
+        # 16 workers keeps the first-load latency low without opening hundreds
+        # of simultaneous HTTP connections to PokeAPI.
         with ThreadPoolExecutor(max_workers=16) as executor:
             futures = [executor.submit(load_one, name) for name in names]
             for future in as_completed(futures):
@@ -189,9 +187,9 @@ def fetch_pokemon_details(mon_name):
     if cached is not None:
         return cached
 
-    # The first target lookup warms the most relevant tournament candidates in
-    # parallel. This keeps the counter engine's candidate scan bounded and fast
-    # without changing its scoring logic.
+    # The first target lookup warms the complete current candidate pool in
+    # parallel. Subsequent candidate lookups are memory hits instead of serial
+    # PokeAPI requests.
     _prefetch_counter_candidates(mon_name)
 
     with _DETAILS_CACHE_LOCK:
