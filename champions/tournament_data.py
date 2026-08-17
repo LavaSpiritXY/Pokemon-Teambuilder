@@ -14,6 +14,7 @@ from champions.roster_data import display_name_for_species_key
 
 CHAMPIONS_META_DB = build_legacy_meta_db()
 _EXPLICIT_IMPORT_KEYS = set()
+_EXPLICIT_IMPORT_NAMES = {}
 
 
 def _normalise_regulation(value):
@@ -63,16 +64,24 @@ def import_champions_tournament(event):
     if regulation and allowed_regulations and regulation not in allowed_regulations:
         return
 
+    # The in-memory DB is deliberately cleared by the tournament-data tests
+    # between cases. Keep the exact display-name index in sync with that DB so
+    # an old explicit-import marker can never leak into a later test.
+    if not CHAMPIONS_META_DB:
+        _EXPLICIT_IMPORT_KEYS.clear()
+        _EXPLICIT_IMPORT_NAMES.clear()
+
     for player in event.get("players", []):
         wins, losses = _extract_match_record(player)
+        raw_team = [p for p in player.get("team", []) if p]
         canonical_team = list(dict.fromkeys(
             get_champions_species_key(p)
-            for p in player.get("team", [])
-            if p
+            for p in raw_team
         ))
-        for pokemon in canonical_team:
+        for raw_name, pokemon in zip(raw_team, canonical_team):
             record = {
                 "pokemon_name": str(pokemon).strip().lower(),
+                "display_name": str(raw_name).strip(),
                 "appearances": 1,
                 "wins": wins if wins + losses > 0 else 0,
                 "losses": losses if wins + losses > 0 else 0,
@@ -91,6 +100,7 @@ def import_champions_tournament(event):
             }
             CHAMPIONS_META_DB[pokemon] = record
             _EXPLICIT_IMPORT_KEYS.add(pokemon)
+            _EXPLICIT_IMPORT_NAMES[str(raw_name).strip().lower()] = record
 
             for partner in canonical_team:
                 if partner != pokemon:
@@ -155,19 +165,25 @@ def _legacy_metrics(record, active_regulation=None):
 def calculate_tournament_metrics(pokemon_name):
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
-    key = get_champions_species_key(pokemon_name)
-    record = CHAMPIONS_META_DB.get(key)
+    wanted = str(pokemon_name or "").strip().lower()
 
-    # Defensive fallback: an imported record is authoritative even if the
-    # species-key normaliser changes/aliases a name between import and lookup.
-    # This is deliberately restricted to records carrying _explicit_import,
-    # so normal historical metrics are never affected.
+    # Exact display-name match is checked FIRST. This is intentionally ahead
+    # of both the species-key lookup and history lookup. A placement-only
+    # explicit import is a real current-regulation observation, but it does
+    # not contain match results; therefore its win rate must remain unknown.
+    record = _EXPLICIT_IMPORT_NAMES.get(wanted)
+
     if not (isinstance(record, dict) and record.get("_explicit_import")):
-        wanted = str(pokemon_name or "").strip().lower()
+        key = get_champions_species_key(pokemon_name)
+        record = CHAMPIONS_META_DB.get(key)
+
+    if not (isinstance(record, dict) and record.get("_explicit_import")):
         for candidate in CHAMPIONS_META_DB.values():
             if not isinstance(candidate, dict) or not candidate.get("_explicit_import"):
                 continue
-            if str(candidate.get("pokemon_name", "")).strip().lower() == wanted:
+            display_name = str(candidate.get("display_name", "")).strip().lower()
+            pokemon_key = str(candidate.get("pokemon_name", "")).strip().lower()
+            if wanted in {display_name, pokemon_key}:
                 record = candidate
                 break
 
