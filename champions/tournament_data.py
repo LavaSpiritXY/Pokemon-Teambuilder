@@ -172,14 +172,13 @@ def _find_explicit_import(pokemon_name):
             return record
     return None
 
-
 def calculate_tournament_metrics(pokemon_name):
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
 
     # An explicitly imported tournament record is authoritative.
-    # Look directly in the live DB first. This avoids stale history data
-    # or alias-cache state overriding a freshly imported tournament.
+    # Check the live DB directly so a placement-only import cannot inherit
+    # an old historical win rate.
     wanted = str(pokemon_name or "").strip().lower()
 
     explicit_record = CHAMPIONS_META_DB.get(wanted)
@@ -201,11 +200,124 @@ def calculate_tournament_metrics(pokemon_name):
     ):
         return _legacy_metrics(explicit_record, active_regulation)
 
+    # No explicit import exists, so use the synced historical data.
     history = get_history_metrics(
         pokemon_name,
         current_regulation=active_regulation,
     )
 
+    if not history:
+        return {
+            "usage": 0.0,
+            "top_cut_rate": 0.0,
+            "win_rate": None,
+            "tournament_score": 0.0,
+            "partner_score": 0.0,
+            "win_rate_available": False,
+            "current_regulation": active_regulation,
+            "current_regulation_appearances": None,
+            "current_regulation_win_rate": None,
+            "current_regulation_top_cut_rate": None,
+            "current_regulation_win_rate_available": False,
+            "current_regulation_top_cut_rate_available": False,
+            "overall": None,
+            "recent": None,
+            "current": None,
+        }
+
+    overall = history.get("overall") or {}
+    recent = history.get("recent") or {}
+    current = history.get("current") or {}
+
+    metrics_regulation = (
+        _normalise_regulation(current.get("regulation"))
+        or active_regulation
+    )
+
+    top_cut_rate = max(
+        0.0,
+        min(1.0, float(current.get("top_cut_rate") or 0.0)),
+    )
+
+    win_rate = current.get("win_rate")
+    win_rate_available = win_rate is not None
+
+    if win_rate_available:
+        win_rate = max(
+            0.0,
+            min(1.0, float(win_rate)),
+        )
+
+    partner_values = [
+        int(p.get("teams_together", 0) or 0)
+        for p in get_history_partners(
+            pokemon_name,
+            top_n=10,
+        )
+    ]
+
+    appearances = max(
+        1,
+        int(current.get("appearances") or 0),
+    )
+
+    partner_score = min(
+        1.0,
+        sum(v for v in partner_values if v > 0)
+        / max(1, appearances * 5),
+    )
+
+    recent_usage_score = min(
+        1.0,
+        max(
+            0.0,
+            float(recent.get("usage_weight", 0.0) or 0.0),
+        ) / 200.0,
+    )
+
+    components = [
+        (recent_usage_score, 0.20),
+        (top_cut_rate, 0.35),
+        (partner_score, 0.10),
+    ]
+
+    if win_rate_available:
+        components.append((win_rate, 0.35))
+
+    total_weight = sum(
+        weight for _, weight in components
+    )
+
+    tournament_score = (
+        sum(value * weight for value, weight in components)
+        / total_weight
+        if total_weight
+        else 0.0
+    )
+
+    return {
+        "usage": recent_usage_score,
+        "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate,
+        "tournament_score": tournament_score,
+        "partner_score": partner_score,
+        "win_rate_available": win_rate_available,
+        "current_regulation": metrics_regulation,
+        "current_regulation_appearances": current.get("appearances"),
+        "current_regulation_win_rate": current.get("win_rate"),
+        "current_regulation_top_cut_rate": current.get("top_cut_rate"),
+        "current_regulation_win_rate_available": current.get(
+            "win_rate_available",
+            False,
+        ),
+        "current_regulation_top_cut_rate_available": current.get(
+            "top_cut_rate_available",
+            False,
+        ),
+        "overall": overall,
+        "recent": recent,
+        "current": current,
+    }
 
 @lru_cache(maxsize=512)
 def _cached_history_partners(pokemon_name, top_n, revision_token):
