@@ -15,14 +15,25 @@ from champions.roster_data import display_name_for_species_key
 CHAMPIONS_META_DB = build_legacy_meta_db()
 
 
-def _get_active_regulation():
-    """Return the regulation recorded by the synced history first."""
-    history = load_champions_history()
+def _get_active_regulation(history=None):
+    """Return the regulation recorded by synced history first.
+
+    Accepting an already-loaded history object is important here: callers that
+    load history and then calculate metrics must use the exact same snapshot,
+    rather than resolving the active regulation through a second load.
+    """
+    if history is None:
+        history = load_champions_history()
+
     if isinstance(history, dict):
         active = str(history.get("active_regulation") or "").strip().upper()
         if active:
             return active
-    return get_active_regulation_from_history(history, fallback=CURRENT_REGULATION) or CURRENT_REGULATION
+
+    return get_active_regulation_from_history(
+        history,
+        fallback=CURRENT_REGULATION,
+    ) or CURRENT_REGULATION
 
 
 def _extract_match_record(player):
@@ -134,18 +145,20 @@ def _legacy_metrics(record, active_regulation=None):
 
 
 def calculate_tournament_metrics(pokemon_name):
-    active_regulation = _get_active_regulation()
+    # Load the synced history once and resolve the active regulation from that
+    # exact snapshot. This makes the function deterministic under tests and
+    # prevents a stale fallback from overriding synced active-regulation data.
+    history_snapshot = load_champions_history()
+    active_regulation = _get_active_regulation(history_snapshot)
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # A legacy/imported record is only authoritative while it belongs to the
-    # same regulation as the synced history. This prevents stale M-B records
-    # from winning over a mocked/newer active regulation in tests and, more
-    # importantly, prevents cross-regulation metric leakage in production.
+    # Explicit tournament imports are authoritative for this legacy API. The
+    # importer has already validated their regulation, so a placement-only
+    # import must not fall through to historical match data and accidentally
+    # inherit a historical win rate.
     if isinstance(record, dict) and record.get("_explicit_import"):
-        record_regulation = str(record.get("_import_regulation") or "").strip().upper()
-        if not record_regulation or not active_regulation or record_regulation == active_regulation:
-            return _legacy_metrics(record, active_regulation)
+        return _legacy_metrics(record, active_regulation)
 
     history = get_history_metrics(pokemon_name, current_regulation=active_regulation)
     if not history:
