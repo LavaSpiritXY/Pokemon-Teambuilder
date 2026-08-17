@@ -79,10 +79,6 @@ def import_champions_tournament(event):
                 "_explicit_import": True,
                 "_import_regulation": regulation or active_regulation or configured_regulation,
             }
-            # Store the explicit record under the canonical key and also retain
-            # the exact submitted name. This makes a placement-only import win
-            # rate authoritative even when historical data exists for the same
-            # species.
             CHAMPIONS_META_DB[pokemon_key] = record
             _EXPLICIT_IMPORT_NAMES[str(raw_name).strip().lower()] = record
             for partner in canonical_team:
@@ -128,9 +124,16 @@ def _find_explicit_import(pokemon_name):
     if not wanted:
         return None
 
+    # The public CHAMPIONS_META_DB is intentionally reset by tests and can
+    # also be rebuilt by the application.  _EXPLICIT_IMPORT_NAMES is only an
+    # alias index, so never return an index entry that is no longer present in
+    # the live DB.  Without this check, a previous test's 3-1 record could leak
+    # into a later placement-only import and incorrectly produce win_rate=0.75.
     record = _EXPLICIT_IMPORT_NAMES.get(wanted)
     if isinstance(record, dict) and record.get("_explicit_import"):
-        return record
+        live_records = CHAMPIONS_META_DB.values()
+        if any(record is live_record for live_record in live_records):
+            return record
 
     try:
         canonical = str(get_champions_species_key(pokemon_name)).strip().lower()
@@ -142,9 +145,9 @@ def _find_explicit_import(pokemon_name):
         if isinstance(record, dict) and record.get("_explicit_import"):
             return record
 
-    # Last-resort scan is intentional: tests clear the exported DB object and
-    # production code can encounter form/name aliases. Never let a historical
-    # record win over an explicit current import.
+    # Last-resort scan is intentional: production code can encounter form/name
+    # aliases. Only records in the live DB are eligible, so stale alias-index
+    # entries can never override current data.
     for record in CHAMPIONS_META_DB.values():
         if not isinstance(record, dict) or not record.get("_explicit_import"):
             continue
