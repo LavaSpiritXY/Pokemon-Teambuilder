@@ -134,6 +134,12 @@ def _legacy_metrics(record, active_regulation=None):
 
 def _find_explicit_import(pokemon_name):
     wanted = str(pokemon_name or "").strip().lower()
+    print("DEBUG CALCULATE WANTED:", wanted)
+    print("DEBUG CALCULATE DB:", CHAMPIONS_META_DB)
+    print(
+        "DEBUG DIRECT RECORD:",
+        CHAMPIONS_META_DB.get(wanted),
+    )
     if not wanted:
         return None
 
@@ -199,6 +205,7 @@ def calculate_tournament_metrics(pokemon_name):
         and explicit_record.get("_explicit_import")
     ):
         return _legacy_metrics(explicit_record, active_regulation)
+    print("DEBUG EXPLICIT RECORD WAS NOT USED")
 
     # No explicit import exists, so use the synced historical data.
     history = get_history_metrics(
