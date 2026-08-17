@@ -30,7 +30,14 @@ class TournamentDataTests(unittest.TestCase):
                 {"team": ["Whimsicott", "Farigiraf"], "placing": 1}
             ],
         })
+        from champions import tournament_data
 
+        print("DEBUG DB:", tournament_data.CHAMPIONS_META_DB)
+        print("DEBUG ALIASES:", tournament_data._EXPLICIT_IMPORT_NAMES)
+        print(
+            "DEBUG WHIMSICOTT:",
+            tournament_data.CHAMPIONS_META_DB.get("whimsicott"),
+        )
         metrics = calculate_tournament_metrics("Whimsicott")
 
         self.assertIsNone(metrics["win_rate"])
