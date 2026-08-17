@@ -13,11 +13,6 @@ from champions.regulation import get_active_regulation_from_history
 from champions.roster_data import display_name_for_species_key
 
 CHAMPIONS_META_DB = build_legacy_meta_db()
-
-# Kept for compatibility with the in-memory importer.  The record itself is
-# the source of truth; this set is deliberately not used to decide whether a
-# record is explicit because tests and callers are allowed to clear the public
-# CHAMPIONS_META_DB between imports.
 _EXPLICIT_IMPORT_KEYS = set()
 
 
@@ -62,12 +57,6 @@ def import_champions_tournament(event):
     active_regulation = _get_active_regulation()
     configured_regulation = _normalise_regulation(CURRENT_REGULATION)
 
-    # A supplied event regulation must match the synced active regulation.
-    # CURRENT_REGULATION is also accepted as the application's configured
-    # regulation. This matters immediately after a regulation transition,
-    # where the generated history file and the in-memory application constant
-    # can briefly be one step apart. Arbitrary/wrong regulations are still
-    # rejected, preserving regulation isolation.
     allowed_regulations = {
         value for value in (active_regulation, configured_regulation) if value
     }
@@ -82,10 +71,8 @@ def import_champions_tournament(event):
             if p
         ))
         for pokemon in canonical_team:
-            # Every successful import replaces any previous in-memory record.
-            # In particular, a placement-only import must erase old wins/losses
-            # rather than inheriting a historical or previous-test match record.
             record = {
+                "pokemon_name": str(pokemon).strip().lower(),
                 "appearances": 1,
                 "wins": wins if wins + losses > 0 else 0,
                 "losses": losses if wins + losses > 0 else 0,
@@ -166,18 +153,24 @@ def _legacy_metrics(record, active_regulation=None):
 
 
 def calculate_tournament_metrics(pokemon_name):
-    # Resolve the regulation from the exact history snapshot used by this
-    # calculation. Do not make a second history read here.
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # The public record is authoritative when it is explicitly marked as an
-    # in-memory tournament import.  Do NOT use _EXPLICIT_IMPORT_KEYS here:
-    # CHAMPIONS_META_DB is intentionally cleared by tests/callers, and the set
-    # can outlive the corresponding record.  Conversely, an explicit import
-    # that exists in the DB must never fall through to historical metrics.
+    # Defensive fallback: an imported record is authoritative even if the
+    # species-key normaliser changes/aliases a name between import and lookup.
+    # This is deliberately restricted to records carrying _explicit_import,
+    # so normal historical metrics are never affected.
+    if not (isinstance(record, dict) and record.get("_explicit_import")):
+        wanted = str(pokemon_name or "").strip().lower()
+        for candidate in CHAMPIONS_META_DB.values():
+            if not isinstance(candidate, dict) or not candidate.get("_explicit_import"):
+                continue
+            if str(candidate.get("pokemon_name", "")).strip().lower() == wanted:
+                record = candidate
+                break
+
     if isinstance(record, dict) and record.get("_explicit_import"):
         return _legacy_metrics(record, active_regulation)
 
