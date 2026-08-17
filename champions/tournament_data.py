@@ -14,9 +14,10 @@ from champions.roster_data import display_name_for_species_key
 
 CHAMPIONS_META_DB = build_legacy_meta_db()
 
-# Keys imported by the current in-memory tournament importer.  This is kept
-# separately from the legacy DB so a placement-only import can never silently
-# fall back to historical win/loss data during the same calculation.
+# Kept for compatibility with the in-memory importer.  The record itself is
+# the source of truth; this set is deliberately not used to decide whether a
+# record is explicit because tests and callers are allowed to clear the public
+# CHAMPIONS_META_DB between imports.
 _EXPLICIT_IMPORT_KEYS = set()
 
 
@@ -25,11 +26,7 @@ def _normalise_regulation(value):
 
 
 def _get_active_regulation(history=None):
-    """Resolve the active regulation from one history snapshot.
-
-    The synced ``active_regulation`` field is authoritative. The static
-    constant is only a fallback for missing/legacy history.
-    """
+    """Resolve the active regulation from one history snapshot."""
     if history is None:
         history = load_champions_history()
 
@@ -65,8 +62,6 @@ def import_champions_tournament(event):
     active_regulation = _get_active_regulation()
 
     # A supplied event regulation must match the synced active regulation.
-    # If history is unavailable, CURRENT_REGULATION is the fallback through
-    # _get_active_regulation().
     if regulation and active_regulation and regulation != active_regulation:
         return
 
@@ -78,12 +73,15 @@ def import_champions_tournament(event):
             if p
         ))
         for pokemon in canonical_team:
+            # Every successful import replaces any previous in-memory record.
+            # In particular, a placement-only import must erase old wins/losses
+            # rather than inheriting a historical or previous-test match record.
             record = {
-                "appearances": 0,
-                "wins": 0,
-                "losses": 0,
-                "match_records": 0,
-                "top_cuts": 0,
+                "appearances": 1,
+                "wins": wins if wins + losses > 0 else 0,
+                "losses": losses if wins + losses > 0 else 0,
+                "match_records": 1 if wins + losses > 0 else 0,
+                "top_cuts": 1 if player.get("placing") is not None and player["placing"] <= 8 else 0,
                 "usage": 0.0,
                 "win_rate": None,
                 "top_cut_rate": 0.0,
@@ -98,15 +96,6 @@ def import_champions_tournament(event):
             CHAMPIONS_META_DB[pokemon] = record
             _EXPLICIT_IMPORT_KEYS.add(pokemon)
 
-            record["appearances"] += 1
-            # A placement is an appearance/top-cut signal, not a match record.
-            # Without both wins/losses information, win_rate must remain None.
-            if wins + losses > 0:
-                record["wins"] += wins
-                record["losses"] += losses
-                record["match_records"] += 1
-            if player.get("placing") is not None and player["placing"] <= 8:
-                record["top_cuts"] += 1
             for partner in canonical_team:
                 if partner != pokemon:
                     record["partners"][partner] = record["partners"].get(partner, 0) + 1
@@ -175,14 +164,13 @@ def calculate_tournament_metrics(pokemon_name):
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # Explicit imports always take precedence over historical aggregates.
-    # This is especially important for placement-only records: a tournament
-    # result with no match record must return win_rate=None rather than picking
-    # up an unrelated historical win rate for the same Pokémon.
-    if key in _EXPLICIT_IMPORT_KEYS and isinstance(record, dict):
-        record_regulation = _normalise_regulation(record.get("_import_regulation"))
-        if not record_regulation or record_regulation == active_regulation:
-            return _legacy_metrics(record, active_regulation)
+    # The public record is authoritative when it is explicitly marked as an
+    # in-memory tournament import.  Do NOT use _EXPLICIT_IMPORT_KEYS here:
+    # CHAMPIONS_META_DB is intentionally cleared by tests/callers, and the set
+    # can outlive the corresponding record.  Conversely, an explicit import
+    # that exists in the DB must never fall through to historical metrics.
+    if isinstance(record, dict) and record.get("_explicit_import"):
+        return _legacy_metrics(record, active_regulation)
 
     history = get_history_metrics(pokemon_name, current_regulation=active_regulation)
     if not history:
