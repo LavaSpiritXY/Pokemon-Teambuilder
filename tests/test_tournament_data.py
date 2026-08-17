@@ -9,7 +9,10 @@ from champions.tournament_data import (
     get_tournament_partners,
     import_champions_tournament,
 )
+import champions.tournament_data as tournament_data_module
 
+print("=== LOADED TOURNAMENT DATA ===")
+print("MODULE FILE:", tournament_data_module.__file__)
 
 class TournamentDataTests(unittest.TestCase):
     def setUp(self):
