@@ -186,9 +186,19 @@ def calculate_tournament_metrics(pokemon_name):
     # Check the live DB directly so a placement-only import cannot inherit
     # an old historical win rate.
     wanted = str(pokemon_name or "").strip().lower()
-
+    print("=== CALCULATE DEBUG ===")
+    print("wanted:", wanted)
+    print("DB id:", id(CHAMPIONS_META_DB))
+    print("DB record:", CHAMPIONS_META_DB.get(wanted))
+    print("DB keys:", list(CHAMPIONS_META_DB.keys()))
     explicit_record = CHAMPIONS_META_DB.get(wanted)
-
+    print("explicit_record:", explicit_record)
+    print("is dict:", isinstance(explicit_record, dict))
+    print(
+        "is explicit:",
+        isinstance(explicit_record, dict)
+        and explicit_record.get("_explicit_import")
+    )
     if not isinstance(explicit_record, dict) or not explicit_record.get("_explicit_import"):
         try:
             canonical = str(
@@ -204,6 +214,9 @@ def calculate_tournament_metrics(pokemon_name):
         isinstance(explicit_record, dict)
         and explicit_record.get("_explicit_import")
     ):
+        print("!!! RETURNING LEGACY METRICS !!!")
+        print("legacy input:", explicit_record)
+        print("legacy output:", _legacy_metrics(explicit_record, active_regulation))    
         return _legacy_metrics(explicit_record, active_regulation)
     print("DEBUG EXPLICIT RECORD WAS NOT USED")
 
