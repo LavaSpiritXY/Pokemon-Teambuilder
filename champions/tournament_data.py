@@ -48,7 +48,12 @@ def _extract_match_record(player):
 
 def import_champions_tournament(event):
     regulation = _normalise_regulation(event.get("regulation"))
-    active_regulation = _get_active_regulation()
+
+    # Use the SAME synced history snapshot that the metrics system uses.
+    # This prevents CURRENT_REGULATION (e.g. M-B) from overriding the
+    # synced active regulation (e.g. M-C).
+    history_snapshot = load_champions_history()
+    active_regulation = _get_active_regulation(history_snapshot)
     configured_regulation = _normalise_regulation(CURRENT_REGULATION)
     allowed_regulations = {r for r in (active_regulation, configured_regulation) if r}
     if regulation and allowed_regulations and regulation not in allowed_regulations:
