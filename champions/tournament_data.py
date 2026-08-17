@@ -60,9 +60,18 @@ def _extract_match_record(player):
 def import_champions_tournament(event):
     regulation = _normalise_regulation(event.get("regulation"))
     active_regulation = _get_active_regulation()
+    configured_regulation = _normalise_regulation(CURRENT_REGULATION)
 
     # A supplied event regulation must match the synced active regulation.
-    if regulation and active_regulation and regulation != active_regulation:
+    # CURRENT_REGULATION is also accepted as the application's configured
+    # regulation. This matters immediately after a regulation transition,
+    # where the generated history file and the in-memory application constant
+    # can briefly be one step apart. Arbitrary/wrong regulations are still
+    # rejected, preserving regulation isolation.
+    allowed_regulations = {
+        value for value in (active_regulation, configured_regulation) if value
+    }
+    if regulation and allowed_regulations and regulation not in allowed_regulations:
         return
 
     for player in event.get("players", []):
@@ -91,7 +100,7 @@ def import_champions_tournament(event):
                 "abilities": {},
                 "items": {},
                 "_explicit_import": True,
-                "_import_regulation": regulation or active_regulation,
+                "_import_regulation": regulation or active_regulation or configured_regulation,
             }
             CHAMPIONS_META_DB[pokemon] = record
             _EXPLICIT_IMPORT_KEYS.add(pokemon)
