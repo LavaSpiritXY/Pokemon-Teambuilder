@@ -14,6 +14,11 @@ from champions.roster_data import display_name_for_species_key
 
 CHAMPIONS_META_DB = build_legacy_meta_db()
 
+# Keys imported by the current in-memory tournament importer.  This is kept
+# separately from the legacy DB so a placement-only import can never silently
+# fall back to historical win/loss data during the same calculation.
+_EXPLICIT_IMPORT_KEYS = set()
+
 
 def _normalise_regulation(value):
     return str(value or "").strip().upper()
@@ -59,9 +64,9 @@ def import_champions_tournament(event):
     regulation = _normalise_regulation(event.get("regulation"))
     active_regulation = _get_active_regulation()
 
-    # Tournament imports are accepted only for the regulation that is active
-    # in the synced history. CURRENT_REGULATION is not allowed to override a
-    # synced active regulation.
+    # A supplied event regulation must match the synced active regulation.
+    # If history is unavailable, CURRENT_REGULATION is the fallback through
+    # _get_active_regulation().
     if regulation and active_regulation and regulation != active_regulation:
         return
 
@@ -91,6 +96,7 @@ def import_champions_tournament(event):
                 "_import_regulation": regulation or active_regulation,
             }
             CHAMPIONS_META_DB[pokemon] = record
+            _EXPLICIT_IMPORT_KEYS.add(pokemon)
 
             record["appearances"] += 1
             # A placement is an appearance/top-cut signal, not a match record.
@@ -169,10 +175,11 @@ def calculate_tournament_metrics(pokemon_name):
     key = get_champions_species_key(pokemon_name)
     record = CHAMPIONS_META_DB.get(key)
 
-    # Explicitly imported tournament data is authoritative for that imported
-    # record. This is what keeps placement-only imports from falling through
-    # to historical win/loss data.
-    if isinstance(record, dict) and record.get("_explicit_import"):
+    # Explicit imports always take precedence over historical aggregates.
+    # This is especially important for placement-only records: a tournament
+    # result with no match record must return win_rate=None rather than picking
+    # up an unrelated historical win rate for the same Pokémon.
+    if key in _EXPLICIT_IMPORT_KEYS and isinstance(record, dict):
         record_regulation = _normalise_regulation(record.get("_import_regulation"))
         if not record_regulation or record_regulation == active_regulation:
             return _legacy_metrics(record, active_regulation)
@@ -197,8 +204,6 @@ def calculate_tournament_metrics(pokemon_name):
     recent = history.get("recent") or {}
     current = history.get("current") or {}
 
-    # Prefer the regulation attached to the returned current snapshot, while
-    # falling back to the synced active regulation when the snapshot omits it.
     snapshot_regulation = _normalise_regulation(current.get("regulation"))
     metrics_regulation = snapshot_regulation or active_regulation
 
