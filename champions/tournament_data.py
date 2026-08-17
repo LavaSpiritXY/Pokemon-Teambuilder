@@ -49,6 +49,14 @@ def _extract_match_record(player):
 def import_champions_tournament(event):
     regulation = _normalise_regulation(event.get("regulation"))
 
+    # Tests and application rebuilds can clear the public DB while leaving the
+    # private alias index pointing at records from the previous DB contents.
+    # Treat an empty DB as a new import generation and discard those aliases.
+    # This guarantees that a placement-only import cannot inherit an old
+    # match record (for example a previous 3-1 record).
+    if not CHAMPIONS_META_DB:
+        _EXPLICIT_IMPORT_NAMES.clear()
+
     # Use the SAME synced history snapshot that the metrics system uses.
     # This prevents CURRENT_REGULATION (e.g. M-B) from overriding the
     # synced active regulation (e.g. M-C).
