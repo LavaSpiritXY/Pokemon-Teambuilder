@@ -9,7 +9,6 @@ from champions.constants import TYPE_COLORS, TYPE_SVG_URLS
 from champions.move_data import fetch_move_type, get_hardcoded_move_type
 from champions.pokemon_data import fetch_pokemon_details
 from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input
-from champions.type_chart import render_type_chips
 
 
 _ALL_TYPES = tuple(TYPE_COLORS.keys())
@@ -97,10 +96,10 @@ def _move_card(move: str) -> str:
     icon_html = f'<img src="{icon}" width="18" height="18" style="filter: brightness(0) invert(1);" />' if icon else ""
     return (
         '<div style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;'
-        'width:118px;min-height:42px;padding:7px 9px;margin:4px 9px 5px 0;border-radius:10px;'
+        'width:168px;min-height:44px;padding:8px 11px;margin:6px 14px 6px 0;border-radius:10px;'
         'background:' + background + ';color:white;box-sizing:border-box;box-shadow:0 4px 10px rgba(0,0,0,0.25);vertical-align:top;">'
-        f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:850;font-size:13px;line-height:1.1;">{display_name}</span>'
-        '<span style="display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:9px;font-weight:900;">'
+        f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:850;font-size:14px;line-height:1.15;">{display_name}</span>'
+        '<span style="display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:10px;font-weight:900;">'
         f'{icon_html}<span>{str(move_type).upper()}</span></span>'
         '</div>'
     )
@@ -124,7 +123,7 @@ def _weather_pill(value: str) -> str:
         "Hail": ("#69b8d8", "#effcff"),
     }
     background, text_colour = palette.get(display, ("#64748b", "#f8fafc"))
-    return f'<span style="display:inline-flex;align-items:center;justify-content:center;min-width:105px;height:38px;padding:0 12px;margin:4px 9px 5px 0;border-radius:11px;background:{background};color:{text_colour};font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">☁️ {display}</span>'
+    return f'<span style="display:inline-flex;align-items:center;justify-content:center;min-width:118px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:{text_colour};font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{display}</span>'
 
 
 def _terrain_pill(value: str) -> str:
@@ -134,7 +133,7 @@ def _terrain_pill(value: str) -> str:
     background = TYPE_COLORS.get(terrain_type, "#777")
     icon = TYPE_SVG_URLS.get(terrain_type, "")
     icon_html = f'<img src="{icon}" width="18" height="18" style="filter: brightness(0) invert(1);" />' if icon else ""
-    return f'<span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:140px;height:38px;padding:0 12px;margin:4px 9px 5px 0;border-radius:11px;background:{background};color:white;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{icon_html}{display}</span>'
+    return f'<span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:150px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:white;font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{icon_html}{display}</span>'
 
 
 def _tool_pills(values, kind: str = "tool") -> None:
@@ -165,7 +164,7 @@ def _analyzer_type_chips(values, multipliers=None) -> None:
         icon_html = f'<img src="{icon}" width="20" height="20" style="filter: brightness(0) invert(1);" />' if icon else ""
         mult = multipliers.get(t)
         suffix = f'<span style="font-size:12px;font-weight:900;opacity:.95;">×{mult:g}</span>' if isinstance(mult, (int, float)) and mult != 1 else ""
-        cards.append(f'<span style="display:inline-flex;align-items:center;justify-content:space-between;gap:7px;min-width:112px;height:40px;padding:0 11px;margin:5px 10px 5px 0;border-radius:11px;background:{background};color:white;font-weight:900;font-size:13px;box-sizing:border-box;box-shadow:0 3px 9px rgba(0,0,0,0.20);">{icon_html}<span style="flex:1;text-align:left;">{t}</span>{suffix}</span>')
+        cards.append(f'<span style="display:inline-flex;align-items:center;justify-content:space-between;gap:7px;min-width:126px;height:42px;padding:0 12px;margin:6px 12px 7px 0;border-radius:12px;background:{background};color:white;font-weight:900;font-size:14px;box-sizing:border-box;box-shadow:0 3px 9px rgba(0,0,0,0.20);">{icon_html}<span style="flex:1;text-align:left;">{t}</span>{suffix}</span>')
     st.markdown("".join(cards), unsafe_allow_html=True)
 
 
@@ -232,7 +231,6 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
             st.caption(f"Grade **{result['grade']}** · {result['team_size']}/6 selected")
         with top_cols[1]:
             _score_bar("Overall team health", result["overall_score"])
-            st.caption("Score colour follows the same continuous red → orange → yellow → green scale used by EV training.")
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:6px 0 12px;color:#f0f6fc;'>📊 Performance Profile</div>", unsafe_allow_html=True)
     profile_cols = st.columns(2)
@@ -250,25 +248,31 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
     st.markdown("<div style='font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;'>🧩 Functional Toolkit</div>", unsafe_allow_html=True)
     toolkit_cols = st.columns(2)
     toolkit = [
-        ("Speed Control", functions["speed_control"], "moves"),
-        ("Priority", functions["priority_moves"], "moves"),
-        ("Weather", functions["weather"], "pills"),
-        ("Terrain", functions["terrain"], "pills"),
-        ("Disruption", functions["disruption"], "moves"),
-        ("Support", functions["support"], "moves"),
-        ("Setup", functions["setup"], "moves"),
+        ("Speed Control", functions["speed_control"]),
+        ("Priority", functions["priority_moves"]),
+        ("Disruption", functions["disruption"]),
+        ("Support", functions["support"]),
+        ("Setup", functions["setup"]),
     ]
-    for index, (label, values, renderer) in enumerate(toolkit):
+    for index, (label, values) in enumerate(toolkit):
         with toolkit_cols[index % 2]:
-            st.markdown(f"**{'✅' if values else '◽'} {label}**")
-            if renderer == "moves":
-                _move_cards(values)
-            elif label == "Weather":
-                _tool_pills(values, "weather")
-            elif label == "Terrain":
-                _tool_pills(values, "terrain")
-            else:
-                _tool_pills(values)
+            st.markdown(f"<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>{'✅' if values else '◽'} {label}</div>", unsafe_allow_html=True)
+            _move_cards(values)
+
+    st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;'>🌦️ Field Control</div>", unsafe_allow_html=True)
+    field_cols = st.columns(2)
+    with field_cols[0]:
+        st.markdown("<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>Weather</div>", unsafe_allow_html=True)
+        if functions["weather"]:
+            _tool_pills(functions["weather"], "weather")
+        else:
+            st.caption("Not detected")
+    with field_cols[1]:
+        st.markdown("<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>Terrain</div>", unsafe_allow_html=True)
+        if functions["terrain"]:
+            _tool_pills(functions["terrain"], "terrain")
+        else:
+            st.caption("Not detected")
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;'>🔍 Coverage Snapshot</div>", unsafe_allow_html=True)
     coverage_cols = st.columns(3)
@@ -322,17 +326,25 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
         else:
             st.success("No heavy typing redundancy")
 
-    st.markdown("<div style='font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;'>🧠 Team Verdict</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;'>🧠 Team Verdict</div>", unsafe_allow_html=True)
     summary = result["summary"]
     verdict_cols = st.columns(2)
     with verdict_cols[0]:
-        st.markdown("<div style='font-size:16px;font-weight:900;margin-bottom:8px;color:#f0f6fc;'>✅ Strengths</div>", unsafe_allow_html=True)
-        for item in summary["strengths"][:5] or ["No standout strength detected yet."]:
-            st.markdown(f"✅ {item}")
+        with st.container(border=True):
+            st.markdown("<div style='font-size:16px;font-weight:900;margin-bottom:8px;color:#7ac74c;'>Strengths</div>", unsafe_allow_html=True)
+            if summary["strengths"]:
+                for item in summary["strengths"][:5]:
+                    st.markdown(f"✅ {item}")
+            else:
+                st.caption("No standout strength detected yet.")
     with verdict_cols[1]:
-        st.markdown("<div style='font-size:16px;font-weight:900;margin-bottom:8px;color:#f0f6fc;'>⚠️ Things to watch</div>", unsafe_allow_html=True)
-        for item in summary["concerns"][:5] or ["No major concern detected yet."]:
-            st.markdown(f"⚠️ {item}")
+        with st.container(border=True):
+            st.markdown("<div style='font-size:16px;font-weight:900;margin-bottom:8px;color:#f59e0b;'>Things to watch</div>", unsafe_allow_html=True)
+            if summary["concerns"]:
+                for item in summary["concerns"][:5]:
+                    st.markdown(f"⚠️ {item}")
+            else:
+                st.caption("No major team-wide concern detected.")
 
     with st.expander("📋 Detailed coverage", expanded=False):
         detail_cols = st.columns(2)
