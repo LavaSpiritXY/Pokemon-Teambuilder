@@ -14,6 +14,7 @@ import champions.tournament_data as tournament_data_module
 print("=== LOADED TOURNAMENT DATA ===")
 print("MODULE FILE:", tournament_data_module.__file__)
 
+
 class TournamentDataTests(unittest.TestCase):
     def setUp(self):
         CHAMPIONS_META_DB.clear()
@@ -33,8 +34,38 @@ class TournamentDataTests(unittest.TestCase):
                 {"team": ["Whimsicott", "Farigiraf"], "placing": 1}
             ],
         })
-        
+
+        # Diagnostic checkpoint: determine whether the explicit test import was
+        # accepted and stored before calculate_tournament_metrics() can fall
+        # back to the generated historical JSON.
+        explicit_record = CHAMPIONS_META_DB.get("whimsicott")
+        alias_record = tournament_data_module._EXPLICIT_IMPORT_NAMES.get("whimsicott")
+        print("=== EXPLICIT IMPORT DIAGNOSTIC ===")
+        print("CURRENT_REGULATION:", CURRENT_REGULATION)
+        print("HISTORY ACTIVE_REGULATION:", history.get("active_regulation"))
+        print("TEST ACTIVE_REGULATION:", active_regulation)
+        print("CHAMPIONS_META_DB KEYS:", sorted(CHAMPIONS_META_DB.keys()))
+        print("WHIMSICOTT DB RECORD:", explicit_record)
+        print("WHIMSICOTT ALIAS RECORD:", alias_record)
+        print(
+            "SAME OBJECT:",
+            explicit_record is alias_record,
+        )
+
+        self.assertIsNotNone(
+            explicit_record,
+            "Diagnostic: the explicit Whimsicott tournament import was not inserted into CHAMPIONS_META_DB."
+        )
+        self.assertTrue(
+            explicit_record.get("_explicit_import"),
+            "Diagnostic: Whimsicott exists in CHAMPIONS_META_DB but is not marked as an explicit import."
+        )
+        self.assertEqual(explicit_record.get("wins"), 0)
+        self.assertEqual(explicit_record.get("losses"), 0)
+        self.assertEqual(explicit_record.get("match_records"), 0)
+
         metrics = calculate_tournament_metrics("Whimsicott")
+        print("METRICS AFTER EXPLICIT IMPORT:", metrics)
 
         self.assertIsNone(metrics["win_rate"])
         self.assertFalse(metrics["win_rate_available"])
