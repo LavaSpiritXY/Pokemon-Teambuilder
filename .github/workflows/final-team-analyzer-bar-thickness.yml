@@ -1,0 +1,45 @@
+name: Final Team Analyzer Bar Thickness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/final-team-analyzer-bar-thickness.yml"
+      - "tools/thicken_team_analyzer_bars.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply final bar thickness
+        run: python tools/thicken_team_analyzer_bars.py
+
+      - name: Validate
+        run: |
+          python -m py_compile champions/team_analyzer_ui.py tools/thicken_team_analyzer_bars.py
+          python -m pip install pytest streamlit requests
+          python -m pytest tests/test_team_analyzer.py -v
+
+      - name: Commit final UI tweak
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add champions/team_analyzer_ui.py tools/thicken_team_analyzer_bars.py .github/workflows/final-team-analyzer-bar-thickness.yml
+          git diff --cached --quiet && { echo 'No changes made'; exit 0; }
+          git commit -m "Match Team Analyzer score bars to EV bar thickness"
+          git push origin HEAD:main
