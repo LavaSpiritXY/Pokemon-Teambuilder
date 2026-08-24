@@ -95,17 +95,34 @@ def _meta_relevance(name: str) -> float:
 
 def recommend_team_additions(team: Sequence[Mapping[str, Any]], *, top_n: int = 4, candidate_limit: int = 36) -> List[Dict[str, Any]]:
     """Return candidates ranked by measurable improvement to the current team."""
-    active_team = [dict(member) for member in team if str(member.get("name") or "").strip()]
-    if not active_team or len(active_team) >= 6:
+    raw_team = [dict(member) for member in team if str(member.get("name") or "").strip()]
+    if not raw_team or len(raw_team) >= 6:
         return []
-    active_names = [str(member["name"]) for member in active_team]
+
+    active_names = [str(member["name"]) for member in raw_team]
     candidate_names = _candidate_shortlist(active_names, limit=candidate_limit)
-    candidate_details = fetch_pokemon_details_batch(candidate_names, max_workers=12)
+    resolved = fetch_pokemon_details_batch(active_names + candidate_names, max_workers=12)
+
+    # Enrich the raw Streamlit slot state with authoritative typing, stats, abilities,
+    # and moves before TeamAnalyzer compares the candidate against the real team.
+    active_team: List[Dict[str, Any]] = []
+    for member in raw_team:
+        name = str(member["name"])
+        details = dict(resolved.get(name) or {})
+        enriched = dict(member)
+        enriched.update({
+            "types": list(details.get("types") or member.get("types") or []),
+            "stats": dict(details.get("stats") or member.get("stats") or {}),
+            "abilities": list(details.get("abilities") or member.get("abilities") or []),
+        })
+        active_team.append(enriched)
+
     base_result = TeamAnalyzer(active_team).analyze()
     base_result["team"] = active_team
     results: List[Dict[str, Any]] = []
+
     for name in candidate_names:
-        data = candidate_details.get(name)
+        data = resolved.get(name)
         if not data or not data.get("types"):
             continue
         candidate = dict(data)
@@ -134,6 +151,7 @@ def recommend_team_additions(team: Sequence[Mapping[str, Any]], *, top_n: int = 
             "reasons": _reason_summary(base_result, improved, candidate),
             "archetypes": candidate["archetypes"],
         })
+
     results.sort(key=lambda row: (-row["score"], -row["team_delta"], row["name"].casefold()))
     return results[: max(1, int(top_n))]
 
