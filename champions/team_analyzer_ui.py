@@ -94,11 +94,12 @@ def _move_card(move: str) -> str:
     background = TYPE_COLORS.get(move_type, "#555")
     icon = TYPE_SVG_URLS.get(move_type, "")
     icon_html = f'<img src="{icon}" width="18" height="18" style="filter: brightness(0) invert(1);" />' if icon else ""
+    card_width = min(220, max(150, 104 + len(display_name) * 7))
     return (
         '<div style="display:inline-flex;align-items:center;justify-content:space-between;gap:8px;'
-        'width:168px;min-height:44px;padding:8px 11px;margin:6px 14px 6px 0;border-radius:10px;'
+        f'width:{card_width}px;min-height:44px;padding:8px 11px;margin:6px 14px 6px 0;border-radius:10px;'
         'background:' + background + ';color:white;box-sizing:border-box;box-shadow:0 4px 10px rgba(0,0,0,0.25);vertical-align:top;">'
-        f'<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:850;font-size:14px;line-height:1.15;">{display_name}</span>'
+        f'<span style="min-width:0;white-space:nowrap;font-weight:850;font-size:14px;line-height:1.15;">{display_name}</span>'
         '<span style="display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:10px;font-weight:900;">'
         f'{icon_html}<span>{str(move_type).upper()}</span></span>'
         '</div>'
@@ -233,7 +234,7 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
             _score_bar("Overall team health", result["overall_score"])
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:6px 0 12px;color:#f0f6fc;'>📊 Performance Profile</div>", unsafe_allow_html=True)
-    profile_cols = st.columns(2)
+    profile_cols = [st.container()]
     profile = [
         ("Defensive Coverage", defensive["score"]),
         ("Offensive Coverage", offensive["score"]),
@@ -241,9 +242,9 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
         ("Team Variety", redundancy["score"]),
         ("Archetype Coherence", archetypes["score"]),
     ]
-    for index, (label, value) in enumerate(profile):
-        with profile_cols[index % 2]:
-            _score_bar(label, value, compact=True)
+    for label, value in profile:
+        with profile_cols[0]:
+            _score_bar(label, value, compact=False)
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;'>🧩 Functional Toolkit</div>", unsafe_allow_html=True)
     toolkit_cols = st.columns(2)
@@ -258,6 +259,23 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
         with toolkit_cols[index % 2]:
             st.markdown(f"<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>{'✅' if values else '◽'} {label}</div>", unsafe_allow_html=True)
             _move_cards(values)
+
+    coverage_cols = st.columns(3)
+    defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)
+    offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)
+    variety_colour = _interpolate_colour(redundancy["score"])
+    with coverage_cols[0]:
+        _coverage_count_card("Defensive Answers", "🛡️", len(defensive["covered_types"]), 18, defensive_colour, "types answered")
+    with coverage_cols[1]:
+        _coverage_count_card("Offensive Pressure", "⚔️", len(offensive["covered_types"]), 18, offensive_colour, "types hit super-effectively")
+    with coverage_cols[2]:
+        _coverage_count_card("Team Variety", "♻️", round(redundancy["score"]), 100, variety_colour, "composition diversity")
+    if defensive["uncovered_types"]:
+        st.caption("Defensive gaps")
+        _analyzer_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]})
+    if offensive["quad_coverage"]:
+        st.caption("4× offensive pressure")
+        _analyzer_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]})
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;'>🌦️ Field Control</div>", unsafe_allow_html=True)
     field_cols = st.columns(2)
@@ -274,7 +292,6 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
         else:
             st.caption("Not detected")
 
-    st.markdown("<div style='font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;'>🔍 Coverage Snapshot</div>", unsafe_allow_html=True)
     coverage_cols = st.columns(3)
     defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)
     offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)
@@ -366,8 +383,8 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
             else:
                 st.caption("No major offensive gaps.")
         if archetypes["counts"]:
-            st.markdown("**🧩 Archetypes**")
-            st.caption(" · ".join(sorted(archetypes["counts"])))
+            st.markdown("<div style='font-size:17px;font-weight:900;margin-top:12px;color:#f0f6fc;'>🧩 Archetypes</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:15px;line-height:1.7;font-weight:800;color:#e6edf3;padding:8px 0;'>" + " · ".join(sorted(archetypes["counts"])) + "</div>", unsafe_allow_html=True)
 
 
 def render_team_analyzer_sidebar(team_slots: Mapping[int, Mapping[str, Any]]) -> None:
