@@ -524,7 +524,12 @@ with tabs[6]:
             import_input = strlit.text_area("Paste Showdown format team below:", height=120)
             if strlit.button("Import Team"):
                 if import_input.strip():
-                    parsed = parse_showdown_text(import_input)
+                    parsed = parse_showdown_text(
+                        import_input,
+                        CHAMPIONS_ALL_FORMS,
+                        NATURES,
+                        MEGA_STONE_MAP,
+                    )
                     for idx in range(6):
                         if idx < len(parsed):
                             strlit.session_state.team_slots[idx] = parsed[idx]
