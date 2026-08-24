@@ -19,67 +19,136 @@ def _active_slots(team_slots: Mapping[int, Mapping[str, Any]]):
     ]
 
 
-def render_team_analyzer_sidebar(team_slots: Mapping[int, Mapping[str, Any]]) -> None:
-    """Render the whole-team analyzer in the persistent sidebar."""
+def _bar(label: str, value: float, width: float = 100.0):
+    value = max(0.0, min(width, float(value)))
+    st.markdown(f"**{label}** · {value:.0f}/100")
+    st.progress(int(value), text="")
+
+
+def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> None:
+    """Render the whole-team analyzer as a full-width Team Overview dashboard."""
     active = _active_slots(team_slots)
 
-    with st.sidebar.expander("🧠 Whole-Team Analyzer", expanded=True):
-        if not active:
-            st.caption("Build at least one Pokémon to start the team-wide analysis.")
-            return
+    st.markdown("## 🧠 Whole-Team Analysis")
+    st.caption("A team-wide view of defensive coverage, offensive pressure, competitive functions, redundancy, and archetype structure.")
 
-        details: Dict[str, Dict[str, Any]] = {}
-        with st.spinner("Analyzing team…"):
-            for _, slot in active:
-                name = str(slot["name"])
-                details[name] = fetch_pokemon_details(name)
+    if not active:
+        st.info("Add Pokémon to your team slots to unlock the full team analysis.")
+        return
 
-        team = build_team_analyzer_input(active, details)
-        result = TeamAnalyzer(team).analyze()
+    details: Dict[str, Dict[str, Any]] = {}
+    with st.spinner("Analyzing team…"):
+        for _, slot in active:
+            name = str(slot["name"])
+            details[name] = fetch_pokemon_details(name)
 
-        st.metric("Team Score", f"{result['overall_score']:.1f} / 100", result["grade"])
-        st.caption(f"Analyzing {result['team_size']} active Pokémon")
+    team = build_team_analyzer_input(active, details)
+    result = TeamAnalyzer(team).analyze()
 
-        score_cols = st.columns(2)
-        score_cols[0].metric("🛡️ Defense", f"{result['defensive']['score']:.0f}")
-        score_cols[1].metric("⚔️ Offense", f"{result['offensive']['score']:.0f}")
-        score_cols = st.columns(2)
-        score_cols[0].metric("🎛️ Function", f"{result['functions']['score']:.0f}")
-        score_cols[1].metric("♻️ Redundancy", f"{result['redundancy']['score']:.0f}")
+    hero_cols = st.columns([1.35, 1, 1, 1, 1])
+    with hero_cols[0]:
+        st.metric("Overall Team Score", f"{result['overall_score']:.1f} / 100", result["grade"])
+    with hero_cols[1]:
+        st.metric("🛡️ Defense", f"{result['defensive']['score']:.0f}")
+    with hero_cols[2]:
+        st.metric("⚔️ Offense", f"{result['offensive']['score']:.0f}")
+    with hero_cols[3]:
+        st.metric("🎛️ Function", f"{result['functions']['score']:.0f}")
+    with hero_cols[4]:
+        st.metric("♻️ Variety", f"{result['redundancy']['score']:.0f}")
 
-        summary = result["summary"]
-        if summary["strengths"]:
-            st.markdown("**What the team does well**")
-            for item in summary["strengths"][:4]:
-                st.markdown(f"✅ {item}")
+    st.divider()
 
-        if summary["concerns"]:
-            st.markdown("**Potential problems**")
-            for item in summary["concerns"][:4]:
-                st.markdown(f"⚠️ {item}")
+    graph_cols = st.columns(2)
+    with graph_cols[0]:
+        st.markdown("### 📊 Team Performance Profile")
+        _bar("Defensive Coverage", result["defensive"]["score"])
+        _bar("Offensive Coverage", result["offensive"]["score"])
+        _bar("Competitive Function", result["functions"]["score"])
+        _bar("Team Variety", result["redundancy"]["score"])
+        _bar("Archetype Coherence", result["archetypes"]["score"])
 
-        if result["functions"]["speed_control"]:
-            st.markdown("**Speed control**")
-            st.caption(", ".join(result["functions"]["speed_control"]))
+    with graph_cols[1]:
+        st.markdown("### 🧩 Functional Toolkit")
+        function_rows = [
+            ("Speed Control", bool(result["functions"]["speed_control"])),
+            ("Priority", bool(result["functions"]["priority_moves"])),
+            ("Weather", bool(result["functions"]["weather"])),
+            ("Terrain", bool(result["functions"]["terrain"])),
+            ("Disruption", bool(result["functions"]["disruption"])),
+            ("Support", bool(result["functions"]["support"])),
+            ("Setup", bool(result["functions"]["setup"])),
+        ]
+        for label, present in function_rows:
+            status = "✅ Present" if present else "— Not detected"
+            st.markdown(f"**{label}**  ")
+            st.caption(status)
+            st.divider()
+
+    st.markdown("### 🔍 Coverage Overview")
+    coverage_cols = st.columns(3)
+    defensive = result["defensive"]
+    offensive = result["offensive"]
+    with coverage_cols[0]:
+        st.markdown("**🛡️ Defensive answers**")
+        st.metric("Types covered", f"{len(defensive['covered_types'])} / 18")
+        if defensive["best_answers"]:
+            st.caption("Multiple answers: " + ", ".join(defensive["best_answers"]))
         else:
-            st.caption("No obvious speed-control option detected in the current moves/abilities.")
+            st.caption("No attacking type currently has multiple clear defensive answers.")
 
-        with st.expander("Coverage details", expanded=False):
-            defensive = result["defensive"]
-            offensive = result["offensive"]
-            st.markdown(f"**Defensively covered:** {len(defensive['covered_types'])}/{18} attacking types")
-            if defensive["severe_gaps"]:
-                st.markdown("**Defensive gaps:** " + ", ".join(defensive["severe_gaps"]))
-            st.markdown(f"**Offensive super-effective coverage:** {len(offensive['covered_types'])}/{18} defending types")
-            if offensive["quad_coverage"]:
-                st.markdown("**4× pressure:** " + ", ".join(offensive["quad_coverage"]))
-            if result["functions"]["priority_moves"]:
-                st.markdown("**Priority:** " + ", ".join(result["functions"]["priority_moves"]))
-            if result["functions"]["weather"]:
-                st.markdown("**Weather:** " + ", ".join(result["functions"]["weather"]))
-            if result["functions"]["terrain"]:
-                st.markdown("**Terrain:** " + ", ".join(result["functions"]["terrain"]))
-            if result["functions"]["disruption"]:
-                st.markdown("**Disruption:** " + ", ".join(result["functions"]["disruption"][:8]))
-            if result["archetypes"]["counts"]:
-                st.markdown("**Archetypes:** " + ", ".join(sorted(result["archetypes"]["counts"])))
+    with coverage_cols[1]:
+        st.markdown("**⚔️ Offensive pressure**")
+        st.metric("Super-effective coverage", f"{len(offensive['covered_types'])} / 18")
+        if offensive["quad_coverage"]:
+            st.caption("4× pressure: " + ", ".join(offensive["quad_coverage"]))
+        else:
+            st.caption("No 4× offensive coverage detected from the current moves.")
+
+    with coverage_cols[2]:
+        st.markdown("**⚠️ Major gaps**")
+        if defensive["severe_gaps"]:
+            for gap in defensive["severe_gaps"][:6]:
+                st.markdown(f"⚠️ **{gap}**")
+        else:
+            st.success("No severe team-wide defensive gap detected.")
+
+    st.markdown("### 🧠 What this team is doing")
+    summary = result["summary"]
+    strengths_col, concerns_col = st.columns(2)
+    with strengths_col:
+        st.markdown("#### ✅ Strengths")
+        if summary["strengths"]:
+            for item in summary["strengths"][:6]:
+                st.markdown(f"✅ {item}")
+        else:
+            st.caption("No standout strengths detected yet.")
+    with concerns_col:
+        st.markdown("#### ⚠️ Watch-outs")
+        if summary["concerns"]:
+            for item in summary["concerns"][:6]:
+                st.markdown(f"⚠️ {item}")
+        else:
+            st.success("No major concerns detected yet.")
+
+    with st.expander("📋 Detailed coverage data", expanded=False):
+        detail_cols = st.columns(2)
+        with detail_cols[0]:
+            st.markdown("**Defensively uncovered**")
+            st.write(", ".join(defensive["uncovered_types"]) or "None")
+            st.markdown("**Resistance counts**")
+            st.write(defensive["resistance_counts"] or "None")
+            st.markdown("**Immunity counts**")
+            st.write(defensive["immunity_counts"] or "None")
+        with detail_cols[1]:
+            st.markdown("**Offensively uncovered**")
+            st.write(", ".join(offensive["uncovered_types"]) or "None")
+            st.markdown("**Move-type usage**")
+            st.write(offensive["move_type_counts"] or "None")
+            st.markdown("**Archetypes detected**")
+            st.write(result["archetypes"]["counts"] or "None")
+
+
+def render_team_analyzer_sidebar(team_slots: Mapping[int, Mapping[str, Any]]) -> None:
+    """Legacy compatibility wrapper; the analyzer now belongs in Team Overview."""
+    return
