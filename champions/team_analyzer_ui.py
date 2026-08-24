@@ -6,9 +6,13 @@ from typing import Any, Dict, Mapping
 import streamlit as st
 
 from champions.constants import TYPE_COLORS, TYPE_SVG_URLS
+from champions.move_data import fetch_move_type, get_hardcoded_move_type
 from champions.pokemon_data import fetch_pokemon_details
 from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input
 from champions.type_chart import render_type_chips
+
+
+_ALL_TYPES = tuple(TYPE_COLORS.keys())
 
 
 def _active_slots(team_slots: Mapping[int, Mapping[str, Any]]):
@@ -21,29 +25,47 @@ def _active_slots(team_slots: Mapping[int, Mapping[str, Any]]):
     ]
 
 
-def _score_colour(score: float) -> str:
-    score = max(0.0, min(100.0, float(score)))
-    if score < 50:
-        return "#ef4444"
-    if score < 70:
-        return "#f59e0b"
-    if score < 85:
-        return "#eab308"
-    return "#22c55e"
-
-
-def _score_bar(label: str, value: float) -> None:
+def _interpolate_colour(value: float) -> str:
+    """Interpolate the score colour like the EV stat bars."""
     value = max(0.0, min(100.0, float(value)))
-    colour = _score_colour(value)
+    stops = (
+        (0.00, (239, 68, 68)),
+        (0.30, (245, 95, 20)),
+        (0.55, (234, 179, 8)),
+        (0.76, (180, 200, 50)),
+        (1.00, (122, 199, 76)),
+    )
+
+    for index in range(len(stops) - 1):
+        start_pos, start_rgb = stops[index]
+        end_pos, end_rgb = stops[index + 1]
+        if value <= end_pos * 100:
+            t = (value - start_pos * 100) / ((end_pos - start_pos) * 100)
+            rgb = tuple(
+                round(start_rgb[channel] + (end_rgb[channel] - start_rgb[channel]) * t)
+                for channel in range(3)
+            )
+            return "#%02x%02x%02x" % rgb
+
+    return "#7ac74c"
+
+
+def _score_bar(label: str, value: float, compact: bool = False) -> None:
+    """Render a magnitude-coloured filled bar matching the EV graph aesthetic."""
+    value = max(0.0, min(100.0, float(value)))
+    colour = _interpolate_colour(value)
+    height = 12 if compact else 16
+    margin = 8 if compact else 13
+    label_size = 12 if compact else 13
     st.markdown(
         f"""
-        <div style="margin: 0 0 14px 0;">
+        <div style="margin:0 0 {margin}px 0;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-            <span style="font-weight:700;color:#e6edf3;font-size:13px;">{label}</span>
-            <span style="font-weight:800;color:{colour};font-size:13px;">{value:.0f}</span>
+            <span style="font-weight:700;color:#e6edf3;font-size:{label_size}px;">{label}</span>
+            <span style="font-weight:900;color:{colour};font-size:{label_size}px;">{value:.0f}</span>
           </div>
-          <div style="height:10px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;">
-            <div style="height:100%;width:{value:.1f}%;border-radius:999px;background:linear-gradient(90deg,#ef4444 0%,#f59e0b 45%,#eab308 70%,#22c55e 100%);"></div>
+          <div style="height:{height}px;border-radius:999px;background:#263241;border:1px solid #526071;overflow:hidden;box-sizing:border-box;">
+            <div style="width:{value:.1f}%;height:100%;background:{colour};border-radius:999px;box-shadow:0 0 8px {colour}88;"></div>
           </div>
         </div>
         """,
@@ -51,54 +73,88 @@ def _score_bar(label: str, value: float) -> None:
     )
 
 
-def _move_chip(move: str, kind: str = "utility") -> str:
-    move_type = ""
-    move_name = " ".join(str(move).split()).strip()
-    if not move_name:
+def _type_for_move(move: str) -> str:
+    """Resolve a move type through the same engine as the main move selector."""
+    return get_hardcoded_move_type(move) or fetch_move_type(move)
+
+
+def _display_move_name(move: str) -> str:
+    """Preserve existing display names while fixing lower-case internal keys."""
+    value = " ".join(str(move or "").replace("-", " ").split()).strip()
+    if not value:
         return ""
-    # The analyzer stores utility labels, while actual moves are inferred from the
-    # same canonical move names used elsewhere in the app. Keep the chip neutral
-    # when we do not know a precise move type here.
-    background = "rgba(255,255,255,0.08)"
-    border = "rgba(255,255,255,0.13)"
-    if kind == "priority":
-        background = "rgba(236,72,153,0.16)"
-        border = "rgba(236,72,153,0.35)"
-    elif kind == "speed":
-        background = "rgba(59,130,246,0.16)"
-        border = "rgba(59,130,246,0.35)"
-    elif kind == "support":
-        background = "rgba(16,185,129,0.16)"
-        border = "rgba(16,185,129,0.35)"
-    elif kind == "disruption":
-        background = "rgba(245,158,11,0.16)"
-        border = "rgba(245,158,11,0.35)"
-    elif kind == "setup":
-        background = "rgba(168,85,247,0.16)"
-        border = "rgba(168,85,247,0.35)"
+    return value.title()
+
+
+def _move_card(move: str) -> str:
+    """Return a move card matching the normal teambuilder move selector."""
+    display_name = _display_move_name(move)
+    if not display_name:
+        return ""
+    move_type = _type_for_move(display_name)
+    background = TYPE_COLORS.get(move_type, "#555")
+    icon = TYPE_SVG_URLS.get(move_type, "")
+    icon_html = (
+        f'<img src="{icon}" width="18" height="18" '
+        'style="filter: brightness(0) invert(1);" />'
+        if icon
+        else ""
+    )
     return (
-        f'<span style="display:inline-flex;align-items:center;padding:6px 10px;margin:3px 5px 3px 0;'
-        f'border-radius:9px;background:{background};border:1px solid {border};color:#f0f6fc;'
-        f'font-weight:700;font-size:12px;white-space:nowrap;">{move_name}</span>'
+        '<div style="display:flex;align-items:center;justify-content:space-between;'
+        'gap:10px;padding:8px 11px;border-radius:9px;'
+        f'background:{background};color:white;min-height:38px;box-sizing:border-box;'
+        'box-shadow:0 4px 10px rgba(0,0,0,0.24);margin:2px 0;">'
+        f'<span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;'
+        f'text-overflow:ellipsis;font-weight:800;font-size:13px;">{display_name}</span>'
+        '<span style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;">'
+        f'{icon_html}<span>{str(move_type).upper()}</span></span>'
+        '</div>'
     )
 
 
-def _move_chips(values, kind: str = "utility") -> None:
+def _move_cards(values, *, max_items: int = 5) -> None:
     values = list(values or [])
     if not values:
         st.caption("Not detected")
         return
-    html = "".join(_move_chip(value, kind) for value in values[:8])
+    html = "".join(_move_card(value) for value in values[:max_items])
     st.markdown(html, unsafe_allow_html=True)
 
 
-def _section_card(title: str, body_html: str) -> None:
+def _tool_pill(value: str) -> str:
+    display = " ".join(str(value or "").replace("-", " ").split()).title()
+    return (
+        '<span style="display:inline-flex;align-items:center;padding:7px 11px;margin:2px 5px 4px 0;'
+        'border-radius:9px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);'
+        'color:#f0f6fc;font-weight:800;font-size:12px;white-space:nowrap;">'
+        f'{display}</span>'
+    )
+
+
+def _tool_pills(values) -> None:
+    values = list(values or [])
+    if not values:
+        st.caption("Not detected")
+        return
+    st.markdown("".join(_tool_pill(value) for value in values[:6]), unsafe_allow_html=True)
+
+
+def _coverage_count_card(title: str, icon: str, covered: int, total: int, colour: str, caption: str) -> None:
+    pct = (covered / total * 100.0) if total else 0.0
     st.markdown(
         f"""
-        <div style="background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);'
-        border-radius:14px;padding:14px 16px;margin-bottom:12px;">
-          <div style="font-size:14px;font-weight:800;color:#f0f6fc;margin-bottom:9px;">{title}</div>
-          {body_html}
+        <div style="background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);"
+        "border-radius:14px;padding:13px 14px;margin-bottom:8px;">
+          <div style="font-size:14px;font-weight:800;color:#f0f6fc;margin-bottom:2px;">{icon} {title}</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px;">
+            <span style="font-size:31px;font-weight:900;color:{colour};line-height:1;">{covered}</span>
+            <span style="font-size:13px;color:#8b949e;font-weight:700;">/ {total}</span>
+          </div>
+          <div style="height:10px;border-radius:999px;background:#263241;border:1px solid #526071;overflow:hidden;">
+            <div style="width:{pct:.1f}%;height:100%;background:{colour};border-radius:999px;"></div>
+          </div>
+          <div style="font-size:11px;color:#8b949e;margin-top:6px;">{caption}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -109,9 +165,11 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
     """Render the whole-team analyzer as the single Team Overview analysis dashboard."""
     active = _active_slots(team_slots)
 
-    st.markdown("## 🧠 Team Analysis")
-    st.caption("A single, unified view of how the six Pokémon work together."
-               )
+    st.markdown(
+        "<div style='margin-bottom:3px;font-size:25px;font-weight:900;color:#f0f6fc;'>🧠 Team Analysis</div>",
+        unsafe_allow_html=True,
+    )
+    st.caption("A unified view of how the selected Pokémon work together.")
 
     if not active:
         st.info("Add Pokémon to your team slots to unlock the full team analysis.")
@@ -130,96 +188,105 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
     functions = result["functions"]
     redundancy = result["redundancy"]
     archetypes = result["archetypes"]
+    overall_colour = _interpolate_colour(result["overall_score"])
 
-    hero = st.container(border=True)
-    with hero:
-        score_cols = st.columns([1.4, 1, 1, 1])
-        with score_cols[0]:
-            st.markdown("### Overall Team Score")
+    with st.container(border=True):
+        top_cols = st.columns([1.15, 3.0])
+        with top_cols[0]:
+            st.markdown("**Overall Team Score**")
             st.markdown(
-                f"<div style='font-size:42px;font-weight:900;color:{_score_colour(result['overall_score'])};line-height:1;'>{result['overall_score']:.0f}<span style='font-size:16px;color:#8b949e;'> / 100</span></div>",
+                f"<div style='font-size:48px;font-weight:950;color:{overall_colour};line-height:1;'>"
+                f"{result['overall_score']:.0f}<span style='font-size:17px;color:#8b949e;'> / 100</span></div>",
                 unsafe_allow_html=True,
             )
-            st.caption(f"Grade **{result['grade']}** · {result['team_size']}/6 Pokémon selected")
-            _score_bar("Overall", result["overall_score"])
-        with score_cols[1]:
-            st.metric("Defense", f"{defensive['score']:.0f}")
-        with score_cols[2]:
-            st.metric("Offense", f"{offensive['score']:.0f}")
-        with score_cols[3]:
-            st.metric("Function", f"{functions['score']:.0f}")
+            st.caption(f"Grade **{result['grade']}** · {result['team_size']}/6 selected")
+        with top_cols[1]:
+            _score_bar("Overall team health", result["overall_score"])
+            st.caption("Score colour follows the same continuous red → orange → yellow → green scale used by EV training.")
 
     st.markdown("### 📊 Performance Profile")
-    profile_cols = st.columns(5)
+    profile_cols = st.columns(2)
     profile = [
-        ("Defense", defensive["score"]),
-        ("Offense", offensive["score"]),
-        ("Function", functions["score"]),
-        ("Variety", redundancy["score"]),
-        ("Coherence", archetypes["score"]),
+        ("Defensive Coverage", defensive["score"]),
+        ("Offensive Coverage", offensive["score"]),
+        ("Competitive Function", functions["score"]),
+        ("Team Variety", redundancy["score"]),
+        ("Archetype Coherence", archetypes["score"]),
     ]
-    for col, (label, value) in zip(profile_cols, profile):
-        with col:
-            _score_bar(label, value)
+    for index, (label, value) in enumerate(profile):
+        with profile_cols[index % 2]:
+            _score_bar(label, value, compact=True)
 
     st.markdown("### 🧩 Functional Toolkit")
-    toolkit_cols = st.columns(2)
+    toolkit_cols = st.columns(3)
     toolkit = [
-        ("Speed Control", functions["speed_control"], "speed"),
-        ("Priority", functions["priority_moves"], "priority"),
-        ("Weather", functions["weather"], "utility"),
-        ("Terrain", functions["terrain"], "utility"),
-        ("Disruption", functions["disruption"], "disruption"),
-        ("Support", functions["support"], "support"),
-        ("Setup", functions["setup"], "setup"),
+        ("Speed Control", functions["speed_control"], "moves"),
+        ("Priority", functions["priority_moves"], "moves"),
+        ("Weather", functions["weather"], "pills"),
+        ("Terrain", functions["terrain"], "pills"),
+        ("Disruption", functions["disruption"], "moves"),
+        ("Support", functions["support"], "moves"),
+        ("Setup", functions["setup"], "moves"),
     ]
-    for idx, (label, values, kind) in enumerate(toolkit):
-        with toolkit_cols[idx % 2]:
-            mark = "✅" if values else "◽"
-            st.markdown(f"**{mark} {label}**")
-            _move_chips(values, kind)
+    for index, (label, values, renderer) in enumerate(toolkit):
+        with toolkit_cols[index % 3]:
+            st.markdown(f"**{'✅' if values else '◽'} {label}**")
+            if renderer == "moves":
+                _move_cards(values)
+            else:
+                _tool_pills(values)
 
     st.markdown("### 🔍 Coverage Snapshot")
     coverage_cols = st.columns(3)
+    defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)
+    offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)
+    variety_colour = _interpolate_colour(redundancy["score"])
 
     with coverage_cols[0]:
-        with st.container(border=True):
-            st.markdown("**🛡️ Defensive answers**")
-            st.markdown(
-                f"<div style='font-size:28px;font-weight:900;'>{len(defensive['covered_types'])}<span style='font-size:13px;color:#8b949e;'> / 18 types</span></div>",
-                unsafe_allow_html=True,
-            )
-            _score_bar("Coverage", len(defensive["covered_types"]) / 18 * 100)
-            if defensive["uncovered_types"]:
-                st.caption("Gaps")
-                st.html(render_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]}))
-            else:
-                st.success("All attacking types covered")
+        _coverage_count_card(
+            "Defensive Answers",
+            "🛡️",
+            len(defensive["covered_types"]),
+            18,
+            defensive_colour,
+            "attacking types with at least one team answer",
+        )
+        if defensive["uncovered_types"]:
+            st.caption("Gaps")
+            st.html(render_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]}))
+        else:
+            st.success("All attacking types covered")
 
     with coverage_cols[1]:
-        with st.container(border=True):
-            st.markdown("**⚔️ Offensive pressure**")
-            st.markdown(
-                f"<div style='font-size:28px;font-weight:900;'>{len(offensive['covered_types'])}<span style='font-size:13px;color:#8b949e;'> / 18 types</span></div>",
-                unsafe_allow_html=True,
-            )
-            _score_bar("Coverage", len(offensive["covered_types"]) / 18 * 100)
-            if offensive["quad_coverage"]:
-                st.caption("4× pressure")
-                st.html(render_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]}))
-            else:
-                st.caption("No 4× coverage detected")
+        _coverage_count_card(
+            "Offensive Pressure",
+            "⚔️",
+            len(offensive["covered_types"]),
+            18,
+            offensive_colour,
+            "defending types hit super-effectively",
+        )
+        if offensive["quad_coverage"]:
+            st.caption("4× pressure")
+            st.html(render_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]}))
+        else:
+            st.caption("No 4× coverage detected")
 
     with coverage_cols[2]:
-        with st.container(border=True):
-            st.markdown("**♻️ Team variety**")
-            _score_bar("Typing diversity", redundancy["score"])
-            duplicates = redundancy["duplicate_types"]
-            if duplicates:
-                st.caption("Repeated typings")
-                st.html(render_type_chips(sorted(duplicates), {t: float(c) for t, c in duplicates.items()}))
-            else:
-                st.success("No heavy typing redundancy")
+        _coverage_count_card(
+            "Team Variety",
+            "♻️",
+            round(redundancy["score"]),
+            100,
+            variety_colour,
+            "typing and team composition diversity score",
+        )
+        duplicates = redundancy["duplicate_types"]
+        if duplicates:
+            st.caption("Repeated typings")
+            st.html(render_type_chips(sorted(duplicates), {t: float(c) for t, c in duplicates.items()}))
+        else:
+            st.success("No heavy typing redundancy")
 
     st.markdown("### 🧠 Team Verdict")
     summary = result["summary"]
