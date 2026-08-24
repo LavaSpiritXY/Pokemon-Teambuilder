@@ -49,7 +49,7 @@ def _interpolate_colour(value: float) -> str:
     return "#7ac74c"
 
 
-def _score_bar(label: str, value: float, compact: bool = False) -> None:
+def _score_bar(label: str, value: float, compact: bool = False, top_padding: int = 0) -> None:
     """Render a magnitude-coloured filled bar matching the EV graph aesthetic."""
     value = max(0.0, min(100.0, float(value)))
     colour = _interpolate_colour(value)
@@ -58,7 +58,7 @@ def _score_bar(label: str, value: float, compact: bool = False) -> None:
     label_size = 12 if compact else 13
     st.markdown(
         f"""
-        <div style="margin:0 0 {margin}px 0;">
+        <div style="margin:0 0 {margin}px 0;padding-top:{top_padding}px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
             <span style="font-weight:700;color:#e6edf3;font-size:{label_size}px;">{label}</span>
             <span style="font-weight:900;color:{colour};font-size:{label_size}px;">{value:.0f}</span>
@@ -231,7 +231,7 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
             )
             st.caption(f"Grade **{result['grade']}** · {result['team_size']}/6 selected")
         with top_cols[1]:
-            _score_bar("Overall team health", result["overall_score"])
+            _score_bar("Overall team health", result["overall_score"], top_padding=28)
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:6px 0 12px;color:#f0f6fc;'>📊 Performance Profile</div>", unsafe_allow_html=True)
     profile_cols = [st.container()]
@@ -260,22 +260,49 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
             st.markdown(f"<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>{'✅' if values else '◽'} {label}</div>", unsafe_allow_html=True)
             _move_cards(values)
 
-    coverage_cols = st.columns(3)
-    defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)
-    offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)
-    variety_colour = _interpolate_colour(redundancy["score"])
-    with coverage_cols[0]:
-        _coverage_count_card("Defensive Answers", "🛡️", len(defensive["covered_types"]), 18, defensive_colour, "types answered")
-    with coverage_cols[1]:
-        _coverage_count_card("Offensive Pressure", "⚔️", len(offensive["covered_types"]), 18, offensive_colour, "types hit super-effectively")
-    with coverage_cols[2]:
-        _coverage_count_card("Team Variety", "♻️", round(redundancy["score"]), 100, variety_colour, "composition diversity")
-    if defensive["uncovered_types"]:
-        st.caption("Defensive gaps")
-        _analyzer_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]})
-    if offensive["quad_coverage"]:
-        st.caption("4× offensive pressure")
-        _analyzer_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]})
+    st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 10px;color:#f0f6fc;'>📌 Team Snapshot</div>", unsafe_allow_html=True)
+    snapshot_cols = st.columns(3)
+
+    physical_members = int(functions.get("physical_members", 0))
+    special_members = int(functions.get("special_members", 0))
+    unique_types = len(redundancy.get("type_counts", {}))
+    team_size = int(result.get("team_size", 0))
+    damage_total = max(physical_members + special_members, 1)
+    physical_pct = physical_members / damage_total * 100.0
+    special_pct = special_members / damage_total * 100.0
+
+    with snapshot_cols[0]:
+        st.markdown(
+            f"""<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>
+<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>⚔️ Damage Profile</div>
+<div style='display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:6px;'><span>Physical</span><span>{physical_members}</span></div>
+<div style='display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:8px;'><span>Special</span><span>{special_members}</span></div>
+<div style='display:flex;height:11px;border-radius:999px;overflow:hidden;background:#263241;border:1px solid #526071;'>
+<div style='width:{physical_pct:.1f}%;background:#e67e22;'></div>
+<div style='width:{special_pct:.1f}%;background:#5b8ff9;'></div>
+</div></div>""",
+            unsafe_allow_html=True,
+        )
+
+    with snapshot_cols[1]:
+        st.markdown(
+            f"""<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>
+<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>🔷 Typing Diversity</div>
+<div style='font-size:30px;font-weight:950;color:#e6edf3;line-height:1;'>{unique_types}<span style='font-size:13px;color:#8b949e;font-weight:800;'> / 18 types</span></div>
+<div style='font-size:11px;color:#8b949e;margin-top:7px;'>unique team typing represented across the six members</div>
+</div>""",
+            unsafe_allow_html=True,
+        )
+
+    with snapshot_cols[2]:
+        st.markdown(
+            f"""<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>
+<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>👥 Active Team</div>
+<div style='font-size:30px;font-weight:950;color:#e6edf3;line-height:1;'>{team_size}<span style='font-size:13px;color:#8b949e;font-weight:800;'> / 6 selected</span></div>
+<div style='height:10px;border-radius:999px;background:#263241;border:1px solid #526071;overflow:hidden;margin-top:10px;'><div style='width:{min(100, team_size / 6 * 100):.1f}%;height:100%;background:#7ac74c;border-radius:999px;'></div></div>
+</div>""",
+            unsafe_allow_html=True,
+        )
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;'>🌦️ Field Control</div>", unsafe_allow_html=True)
     field_cols = st.columns(2)
