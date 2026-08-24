@@ -2,9 +2,7 @@
 
 import re
 
-import streamlit as st
-
-from champions.team_analyzer import render_team_analyzer_sidebar
+from champions.team_analyzer_ui import render_team_analyzer_sidebar
 
 
 def export_slot_to_showdown(slot):
