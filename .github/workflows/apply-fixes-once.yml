@@ -1,0 +1,67 @@
+name: One-time analyzer and item repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/apply-fixes-once.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply Champions item registry migration
+        run: python tools/wire_champions_item_selector.py
+
+      - name: Patch analyzer logic
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("champions/team_analyzer.py")
+          text = path.read_text(encoding="utf-8")
+
+          old = '''def _defensive_multiplier(attacking_type: str, defending_types: Sequence[str]) -> float:\n    mult = 1.0\n    for defending_type in defending_types:\n        mult *= TYPE_CHART_DATA.get(attacking_type, {}).get(defending_type, 1.0)\n    return mult\n'''
+          new = '''def _defensive_multiplier(attacking_type: str, defending_types: Sequence[str]) -> float:\n    mult = 1.0\n    for defending_type in defending_types:\n        mult *= TYPE_CHART_DATA.get(attacking_type, {}).get(defending_type, 1.0)\n    return mult\n\n\ndef _mon_defensive_multiplier(attacking_type: str, mon: Mapping[str, Any]) -> float:\n    mult = _defensive_multiplier(attacking_type, _types(mon))\n    abilities = _abilities(mon)\n    if attacking_type == "Ground" and "levitate" in abilities:\n        return 0.0\n    return mult\n'''
+          if old not in text:
+              raise SystemExit("Expected defensive multiplier block not found")
+          text = text.replace(old, new, 1)
+
+          old = 'multipliers = [_defensive_multiplier(attack_type, _types(mon)) for mon in self.team]'
+          new = 'multipliers = [_mon_defensive_multiplier(attack_type, mon) for mon in self.team]'
+          if old not in text:
+              raise SystemExit("Expected defensive coverage line not found")
+          text = text.replace(old, new, 1)
+
+          old = 'disruption = sorted(move for move in moves if move in _DISRUPTION)'
+          new = 'disruption = sorted(move.title() for move in moves if move in _DISRUPTION)'
+          if old not in text:
+              raise SystemExit("Expected disruption line not found")
+          text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Validate relevant tests
+        run: |
+          python -m pytest tests/test_team_analyzer.py tests/test_item_data.py tests/test_item_selector_wiring.py -v
+
+      - name: Commit repaired files and remove this temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions/team_analyzer.py .github/workflows/apply-fixes-once.yml
+          git rm .github/workflows/apply-fixes-once.yml
+          git commit -m "Fix team analyzer and Champions item wiring"
+          git push origin HEAD:main
