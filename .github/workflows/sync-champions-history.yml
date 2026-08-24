@@ -7,6 +7,8 @@ on:
       - ".github/workflows/sync-champions-history.yml"
       - "tools/migrate_champions_history_schema.py"
       - "tests/test_history_schema_migration.py"
+      - "tests/test_tournament_data.py"
+      - "champions/tournament_data.py"
   schedule:
     # Run four times per day so new tournaments are picked up without manual work.
     - cron: "17 */6 * * *"
@@ -89,5 +91,5 @@ jobs:
             echo "No Champions history changes detected."
             exit 0
           fi
-          git commit -m "Automated Champions history sync"
+          git commit -m "Run tournament import diagnostic in CI"
           git push origin HEAD:main
