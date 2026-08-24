@@ -44,7 +44,22 @@ try:
         return _original_calculate_tournament_metrics(name)
 
     def _calculate_tournament_metrics_cached(name):
-        return _cached_tournament_metrics(str(name or ""), str(_history_revision()))
+        lookup_name = str(name or "")
+        lookup_key = lookup_name.strip().lower()
+
+        # Explicit tournament imports are mutable test/runtime state and are
+        # intentionally independent of the generated historical JSON. Never
+        # reuse a history-only cached result for one of these records because
+        # the in-memory CHAMPIONS_META_DB may have changed without a history
+        # file revision.
+        explicit_record = _tournament_data.CHAMPIONS_META_DB.get(lookup_key)
+        if isinstance(explicit_record, dict) and explicit_record.get("_explicit_import"):
+            return _original_calculate_tournament_metrics(lookup_name)
+
+        return _cached_tournament_metrics(
+            lookup_name,
+            str(_history_revision()),
+        )
 
     _tournament_data.calculate_tournament_metrics = _calculate_tournament_metrics_cached
 
