@@ -38,6 +38,9 @@ jobs:
       - name: Migrate Champions history schema
         run: python tools/migrate_champions_history_schema.py
 
+      - name: Test Champions history schema migration
+        run: python -m pytest tests/test_history_schema_migration.py -v
+
       - name: Automatically discover and sync Champions tournaments
         run: |
           python tools/sync_champions_history.py \
@@ -80,5 +83,5 @@ jobs:
             echo "No Champions history changes detected."
             exit 0
           fi
-          git commit -m "Isolate tournament data regression tests"
+          git commit -m "Automated Champions history sync"
           git push origin HEAD:main
