@@ -49,13 +49,10 @@ def _extract_match_record(player):
 def import_champions_tournament(event):
     regulation = _normalise_regulation(event.get("regulation"))
 
-    # Explicit imports are an isolated, in-memory test/application snapshot.
-    # If the public DB has been cleared, discard every alias from the previous
-    # snapshot.  More importantly, always replace the live record below rather
-    # than merging it with an older record, so a placement-only import can
-    # never inherit a previous match record.
-    if not CHAMPIONS_META_DB:
-        _EXPLICIT_IMPORT_NAMES.clear()
+    # Explicit imports are a fresh in-memory snapshot. Clear the private alias
+    # index for every new event so a previous test/import can never leak a
+    # match record into a placement-only event.
+    _EXPLICIT_IMPORT_NAMES.clear()
 
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
@@ -89,12 +86,8 @@ def import_champions_tournament(event):
                 "_explicit_import": True,
                 "_import_regulation": regulation or active_regulation or configured_regulation,
             }
-            # Replace, never accumulate, explicit-import records. This keeps
-            # placement-only imports authoritative even after previous tests or
-            # UI interactions imported a match record for the same species.
             CHAMPIONS_META_DB[pokemon_key] = record
             _EXPLICIT_IMPORT_NAMES[str(raw_name).strip().lower()] = record
-            _EXPLICIT_IMPORT_NAMES[pokemon_key] = record
             for partner in canonical_team:
                 partner_key = str(partner).strip().lower()
                 if partner_key and partner_key != pokemon_key:
@@ -140,7 +133,8 @@ def _find_explicit_import(pokemon_name):
 
     record = _EXPLICIT_IMPORT_NAMES.get(wanted)
     if isinstance(record, dict) and record.get("_explicit_import"):
-        if any(record is live_record for live_record in CHAMPIONS_META_DB.values()):
+        live_records = CHAMPIONS_META_DB.values()
+        if any(record is live_record for live_record in live_records):
             return record
 
     try:
@@ -169,11 +163,16 @@ def calculate_tournament_metrics(pokemon_name):
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
 
-    # An explicitly imported tournament record is authoritative. Resolve it
-    # from the live DB first; this prevents stale alias entries from supplying
-    # a previous test's match record.
-    explicit_record = _find_explicit_import(pokemon_name)
-    if isinstance(explicit_record, dict):
+    explicit_record = CHAMPIONS_META_DB.get(str(pokemon_name or "").strip().lower())
+    if not isinstance(explicit_record, dict) or not explicit_record.get("_explicit_import"):
+        try:
+            canonical = str(get_champions_species_key(pokemon_name)).strip().lower()
+        except Exception:
+            canonical = ""
+        if canonical:
+            explicit_record = CHAMPIONS_META_DB.get(canonical)
+
+    if isinstance(explicit_record, dict) and explicit_record.get("_explicit_import"):
         return _legacy_metrics(explicit_record, active_regulation)
 
     history = get_history_metrics(
@@ -195,22 +194,81 @@ def calculate_tournament_metrics(pokemon_name):
             "current_regulation_top_cut_rate": None,
             "current_regulation_win_rate_available": False,
             "current_regulation_top_cut_rate_available": False,
-            "overall": {"appearances": 0, "wins": 0, "losses": 0, "top_cut_count": 0, "win_rate": None, "top_cut_rate": 0.0},
+            "overall": None,
             "recent": None,
-            "current": {"regulation": active_regulation, "appearances": 0, "win_rate": None, "top_cut_rate": None, "win_rate_available": False, "top_cut_rate_available": False},
+            "current": None,
         }
 
-    return history
+    overall = history.get("overall") or {}
+    recent = history.get("recent") or {}
+    current = history.get("current") or {}
+
+    metrics_regulation = _normalise_regulation(current.get("regulation")) or active_regulation
+    top_cut_rate = max(0.0, min(1.0, float(current.get("top_cut_rate") or 0.0)))
+    win_rate = current.get("win_rate")
+    win_rate_available = win_rate is not None
+
+    if win_rate_available:
+        win_rate = max(0.0, min(1.0, float(win_rate)))
+
+    partner_values = [
+        int(p.get("teams_together", 0) or 0)
+        for p in get_history_partners(pokemon_name, top_n=10)
+    ]
+    appearances = max(1, int(current.get("appearances") or 0))
+    partner_score = min(1.0, sum(v for v in partner_values if v > 0) / max(1, appearances * 5))
+    recent_usage_score = min(1.0, max(0.0, float(recent.get("usage_weight", 0.0) or 0.0)) / 200.0)
+
+    components = [
+        (recent_usage_score, 0.20),
+        (top_cut_rate, 0.35),
+        (partner_score, 0.10),
+    ]
+    if win_rate_available:
+        components.append((win_rate, 0.35))
+    total_weight = sum(weight for _, weight in components)
+    tournament_score = sum(value * weight for value, weight in components) / total_weight if total_weight else 0.0
+
+    return {
+        "usage": recent_usage_score,
+        "top_cut_rate": top_cut_rate,
+        "win_rate": win_rate,
+        "tournament_score": tournament_score,
+        "partner_score": partner_score,
+        "win_rate_available": win_rate_available,
+        "current_regulation": metrics_regulation,
+        "current_regulation_appearances": current.get("appearances"),
+        "current_regulation_win_rate": current.get("win_rate"),
+        "current_regulation_top_cut_rate": current.get("top_cut_rate"),
+        "current_regulation_win_rate_available": current.get("win_rate_available", False),
+        "current_regulation_top_cut_rate_available": current.get("top_cut_rate_available", False),
+        "overall": overall,
+        "recent": recent,
+        "current": current,
+    }
 
 
-def get_tournament_partners(pokemon_name):
-    explicit = _find_explicit_import(pokemon_name)
-    if explicit:
-        partners = [(str(p).strip().lower(), int(c or 0)) for p, c in (explicit.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
-        partners.sort(key=lambda x: (-x[1], x[0]))
-        return partners
-    return get_history_partners(pokemon_name, current_regulation=_get_active_regulation())
+@lru_cache(maxsize=512)
+def _cached_history_partners(pokemon_name, top_n, revision_token):
+    results = []
+    for partner in get_history_partners(pokemon_name, top_n=top_n):
+        key = str(partner.get("pokemon", "")).strip().lower()
+        if not key:
+            continue
+        display_name = display_name_for_species_key(key)
+        if not display_name or display_name.lower().startswith("mega "):
+            continue
+        results.append((key, int(partner.get("teams_together", 0) or 0)))
+        if len(results) >= top_n:
+            break
+    return tuple(results)
 
 
-def get_tournament_data_revision():
-    return history_revision()
+def get_tournament_partners(pokemon_name, top_n=10):
+    key = get_champions_species_key(pokemon_name)
+    record = CHAMPIONS_META_DB.get(str(key).strip().lower())
+    if isinstance(record, dict) and record.get("_explicit_import"):
+        pairs = [(str(p).strip().lower(), int(c or 0)) for p, c in (record.get("partners") or {}).items() if str(p).strip() and int(c or 0) > 0]
+        pairs.sort(key=lambda x: (-x[1], x[0]))
+        return pairs[:top_n]
+    return list(_cached_history_partners(pokemon_name, int(top_n), history_revision()))
