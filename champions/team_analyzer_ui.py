@@ -53,7 +53,7 @@ def _score_bar(label: str, value: float, compact: bool = False, top_padding: int
     """Render a magnitude-coloured filled bar matching the EV graph aesthetic."""
     value = max(0.0, min(100.0, float(value)))
     colour = _interpolate_colour(value)
-    height = 12 if compact else 16
+    height = 12 if compact else 20
     margin = 8 if compact else 13
     label_size = 12 if compact else 13
     st.markdown(
