@@ -17,25 +17,33 @@ def main() -> None:
     new_profile_loop = '''    for label, value in profile:\n        with profile_cols[0]:\n            _score_bar(label, value, compact=False)\n'''
     text = text.replace(old_profile_loop, new_profile_loop, 1)
 
-    # Insert compact coverage cards directly beneath the performance profile.
+    # Center the overall health bar vertically without changing its horizontal placement.
+    text = text.replace(
+        'def _score_bar(label: str, value: float, compact: bool = False) -> None:',
+        'def _score_bar(label: str, value: float, compact: bool = False, top_padding: int = 0) -> None:',
+        1,
+    )
+    text = text.replace(
+        '<div style="margin:0 0 {margin}px 0;">',
+        '<div style="margin:0 0 {margin}px 0;padding-top:{top_padding}px;">',
+        1,
+    )
+    text = text.replace(
+        '_score_bar("Overall team health", result["overall_score"])',
+        '_score_bar("Overall team health", result["overall_score"], top_padding=28)',
+        1,
+    )
+
+    # Remove the duplicated coverage-score row and replace it with genuinely new team-composition information.
+    coverage_start = text.find('    coverage_cols = st.columns(3)\n')
     field_marker = '    st.markdown("<div style=\'font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;\'>🌦️ Field Control</div>", unsafe_allow_html=True)\n'
-    coverage_block = '''    coverage_cols = st.columns(3)\n    defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)\n    offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)\n    variety_colour = _interpolate_colour(redundancy["score"])\n    with coverage_cols[0]:\n        _coverage_count_card("Defensive Answers", "🛡️", len(defensive["covered_types"]), 18, defensive_colour, "types answered")\n    with coverage_cols[1]:\n        _coverage_count_card("Offensive Pressure", "⚔️", len(offensive["covered_types"]), 18, offensive_colour, "types hit super-effectively")\n    with coverage_cols[2]:\n        _coverage_count_card("Team Variety", "♻️", round(redundancy["score"]), 100, variety_colour, "composition diversity")\n    if defensive["uncovered_types"]:\n        st.caption("Defensive gaps")\n        _analyzer_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]})\n    if offensive["quad_coverage"]:\n        st.caption("4× offensive pressure")\n        _analyzer_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]})\n\n'''
+    field_start = text.find(field_marker, coverage_start if coverage_start != -1 else 0)
 
-    # Remove an existing standalone Coverage Snapshot section if present; otherwise use Field Control as the insertion anchor.
-    coverage_heading = '    st.markdown("<div style=\'font-size:20px;font-weight:900;margin:14px 0 12px;color:#f0f6fc;\'>🔍 Coverage Snapshot</div>", unsafe_allow_html=True)\n'
-    coverage_start = text.find(coverage_heading)
-    field_start = text.find(field_marker)
-
-    if field_start == -1:
-        raise RuntimeError("Field Control section marker not found in team_analyzer_ui.py")
-
-    if coverage_start != -1 and coverage_start < field_start:
-        text = text[:coverage_start] + coverage_block + text[field_start:]
+    if coverage_start != -1 and field_start != -1 and coverage_start < field_start:
+        snapshot_block = '''    st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 10px;color:#f0f6fc;'>📌 Team Snapshot</div>", unsafe_allow_html=True)\n    snapshot_cols = st.columns(3)\n\n    physical_members = int(functions.get("physical_members", 0))\n    special_members = int(functions.get("special_members", 0))\n    unique_types = len(redundancy.get("type_counts", {}))\n    team_size = int(result.get("team_size", 0))\n    damage_total = max(physical_members + special_members, 1)\n    physical_pct = physical_members / damage_total * 100.0\n    special_pct = special_members / damage_total * 100.0\n\n    with snapshot_cols[0]:\n        st.markdown(\n            f\"\"\"<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>\n<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>⚔️ Damage Profile</div>\n<div style='display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:6px;'><span>Physical</span><span>{physical_members}</span></div>\n<div style='display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:8px;'><span>Special</span><span>{special_members}</span></div>\n<div style='display:flex;height:11px;border-radius:999px;overflow:hidden;background:#263241;border:1px solid #526071;'>\n<div style='width:{physical_pct:.1f}%;background:#e67e22;'></div>\n<div style='width:{special_pct:.1f}%;background:#5b8ff9;'></div>\n</div></div>\"\"\",\n            unsafe_allow_html=True,\n        )\n\n    with snapshot_cols[1]:\n        st.markdown(\n            f\"\"\"<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>\n<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>🔷 Typing Diversity</div>\n<div style='font-size:30px;font-weight:950;color:#e6edf3;line-height:1;'>{unique_types}<span style='font-size:13px;color:#8b949e;font-weight:800;'> / 18 types</span></div>\n<div style='font-size:11px;color:#8b949e;margin-top:7px;'>unique team typing represented across the six members</div>\n</div>\"\"\",\n            unsafe_allow_html=True,\n        )\n\n    with snapshot_cols[2]:\n        st.markdown(\n            f\"\"\"<div style='background:rgba(18,23,35,0.72);border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:15px 16px;height:100%;box-sizing:border-box;'>\n<div style='font-size:14px;font-weight:900;color:#f0f6fc;margin-bottom:8px;'>👥 Active Team</div>\n<div style='font-size:30px;font-weight:950;color:#e6edf3;line-height:1;'>{team_size}<span style='font-size:13px;color:#8b949e;font-weight:800;'> / 6 selected</span></div>\n<div style='height:10px;border-radius:999px;background:#263241;border:1px solid #526071;overflow:hidden;margin-top:10px;'><div style='width:{min(100, team_size / 6 * 100):.1f}%;height:100%;background:#7ac74c;border-radius:999px;'></div></div>\n</div>\"\"\",\n            unsafe_allow_html=True,\n        )\n\n'''
+        text = text[:coverage_start] + snapshot_block + text[field_start:]
     else:
-        text = text[:field_start] + coverage_block + text[field_start:]
-
-    # Make Field Control a balanced row with Weather and Terrain side-by-side.
-    text = text.replace('    field_cols = st.columns(2)\n', '    field_cols = st.columns(2)\n', 1)
+        raise RuntimeError("Expected coverage and field-control layout markers were not found in team_analyzer_ui.py")
 
     # Keep archetype details prominent in the detailed coverage drawer.
     text = text.replace(
@@ -43,9 +51,6 @@ def main() -> None:
         '            st.markdown("<div style=\'font-size:17px;font-weight:900;margin-top:12px;color:#f0f6fc;\'>🧩 Archetypes</div>", unsafe_allow_html=True)\n            st.markdown("<div style=\'font-size:15px;line-height:1.7;font-weight:800;color:#e6edf3;padding:8px 0;\'>" + " · ".join(sorted(archetypes["counts"])) + "</div>", unsafe_allow_html=True)',
         1,
     )
-
-    # Remove any remaining standalone coverage heading if an earlier revision left it behind.
-    text = text.replace(coverage_heading, '', 1)
 
     PATH.write_text(text, encoding="utf-8")
 
