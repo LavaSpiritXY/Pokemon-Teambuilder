@@ -1,6 +1,12 @@
 name: Sync Pokémon Champions tournament history
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/sync-champions-history.yml"
+      - "tools/migrate_champions_history_schema.py"
+      - "tests/test_history_schema_migration.py"
   schedule:
     # Run four times per day so new tournaments are picked up without manual work.
     - cron: "17 */6 * * *"
