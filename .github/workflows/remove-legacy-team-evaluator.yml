@@ -23,31 +23,22 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           path = Path("app.py")
           text = path.read_text(encoding="utf-8")
 
           text = text.replace(
-              "from champions.meta_engine import (\n    MonMetaProfile,\n    TeamEvaluator,\n    slot_to_mon_meta_profile,\n)\n",
+              "from champions.meta_engine import (\n    MonMetaProfile,\n    TeamEvaluator,\n    slot_to_mon_meta_profile,\n)\n\n",
               "",
               1,
           )
 
-          start_marker = '    if not active_slots:\n        st.info("💡 Add Pokémon to your team slots to run dynamic competitive evaluation.")\n'
-          start = text.find(start_marker)
+          legacy_start = '    strlit.divider()\n\n    if not active_slots:'
+          start = text.find(legacy_start)
           if start == -1:
-              raise SystemExit("Legacy TeamEvaluator block start not found")
+              raise SystemExit("Legacy evaluator removal anchor not found")
 
-          end_marker = '    strlit.success("✓ `TeamEvaluator` integrated: candidate scoring, defensive weakness mitigation, and threat coverage active.")\n    strlit.success("✓ Authoritative Smogon Chaos usage statistics engine integrated for tiering, abilities, items, and partner metrics.")\n    strlit.success("✓ Dynamic moveset names fetched directly from Pokémon Showdown\'s GitHub repository.")\n    strlit.success("✓ Showdown text format Pokepaste import and export functional.")\n'
-          end = text.find(end_marker, start)
-          if end == -1:
-              raise SystemExit("Legacy TeamEvaluator block end not found")
-          end += len(end_marker)
-
-          replacement = '''    st.markdown("### 🧰 Team Management")\n\n    exp_col, imp_col = strlit.columns(2)\n    with exp_col:\n        with strlit.expander("📤 Export Showdown Pokepaste Text", expanded=False):\n            exported_text = export_team_to_showdown(strlit.session_state.team_slots)\n            stlit.code(exported_text if exported_text else "No Pokémon selected.", language="text")\n\n    with imp_col:\n        with strlit.expander("📥 Import Showdown Format", expanded=False):\n            import_input = strlit.text_area("Paste Showdown format team below:", height=120)\n            if strlit.button("Import Team"):\n                if import_input.strip():\n                    parsed = parse_showdown_text(\n                        import_input,\n                        CHAMPIONS_ALL_FORMS,\n                        NATURES,\n                        MEGA_STONE_MAP,\n                    )\n                    for idx in range(6):\n                        if idx < len(parsed):\n                            strlit.session_state.team_slots[idx] = parsed[idx]\n                        else:\n                            ensure_slot_structure(idx, "-- Choose a Pokémon --")\n                    strlit.success(f"Imported {len(parsed)} Pokémon into team slots!")\n                    strlit.rerun()\n\n'''.replace('stlit.', 'strlit.')
-
-          text = text[:start] + replacement + text[end:]
+          text = text[:start].rstrip() + "\n"
           path.write_text(text, encoding="utf-8")
 
       - name: Validate app
