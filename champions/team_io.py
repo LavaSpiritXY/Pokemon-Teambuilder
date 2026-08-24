@@ -2,6 +2,10 @@
 
 import re
 
+import streamlit as st
+
+from champions.team_analyzer import render_team_analyzer_sidebar
+
 
 def export_slot_to_showdown(slot):
     """Convert one team slot dictionary to Showdown text."""
@@ -29,6 +33,7 @@ def export_slot_to_showdown(slot):
 
 def export_team_to_showdown(team_slots):
     """Convert the six-slot team state into Showdown text."""
+    render_team_analyzer_sidebar(team_slots)
     return "\n\n".join(
         export_slot_to_showdown(team_slots[index])
         for index in range(6)
