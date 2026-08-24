@@ -36,12 +36,6 @@ from champions.type_chart import (
     render_type_chips,
 )
 
-from champions.meta_engine import (
-    MonMetaProfile,
-    TeamEvaluator,
-    slot_to_mon_meta_profile,
-)
-
 from champions.competitive_profile import render_champions_profile_v6
 from champions.stat_training import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
@@ -534,84 +528,3 @@ with tabs[6]:
                             ensure_slot_structure(idx, "-- Choose a Pokémon --")
                     strlit.success(f"Imported {len(parsed)} Pokémon into team slots!")
                     strlit.rerun()
-
-    strlit.divider()
-
-    if not active_slots:
-        strlit.info("💡 Add Pokémon to your team slots to run dynamic competitive evaluation.")
-    else:
-        # Build meta profiles for current team and evaluation candidates
-        active_names = [slot["name"] for _, slot in active_slots]
-        meta_db: Dict[str, MonMetaProfile] = {}
-
-        for _, slot in active_slots:
-            meta_db[slot["name"]] = slot_to_mon_meta_profile(slot)
-
-        # Pre-populate meta DB with a sample pool of candidate threats for counter / synergy calculation
-        top_candidates = ["Garchomp", "Gengar", "Dragonite", "Tyranitar", "Lucario", "Rotom Wash", "Ferrothorn", "Corviknight", "Clefable"]
-        for cand_name in top_candidates:
-            if cand_name not in meta_db:
-                cand_slot = {"name": cand_name, "moves": ["Earthquake", "Swords Dance", "Stealth Rock", "Protect"], "ability": "Standard", "item": "Leftovers"}
-                meta_db[cand_name] = slot_to_mon_meta_profile(cand_slot)
-
-        evaluator = TeamEvaluator(meta_db)
-
-        strlit.markdown("### 🏆 Team Synergy & Fit Ratings (`TeamEvaluator`)")
-        
-        slot_eval_cols = strlit.columns(len(active_slots))
-        team_ratings = []
-
-        for col_idx, (slot_i, slot) in enumerate(active_slots):
-            mon_name = slot["name"]
-            other_team = [n for n in active_names if n != mon_name]
-
-            eval_res = evaluator.evaluate_candidate(mon_name, other_team)
-            team_ratings.append(eval_res["final_rating"])
-
-            with slot_eval_cols[col_idx]:
-                mon_info = fetch_pokemon_details(mon_name)
-                strlit.image(mon_info["box_sprite"], width=60)
-                strlit.markdown(f"**{mon_name}**")
-                strlit.metric("Fit Score", f"{eval_res['final_rating']} / 100")
-                strlit.caption(f"**Class:** {eval_res['recommendation_class']}")
-                strlit.markdown(
-                    f"- **Defensive Fit:** {eval_res['defensive_fit']}\n"
-                    f"- **Meta Coverage:** {eval_res['meta_coverage']}\n"
-                    f"- **Synergy Index:** {eval_res['synergy_index']}\n"
-                    f"- **Counter Utility:** {eval_res['counter_utility']}"
-                )
-
-        avg_score = round(sum(team_ratings) / len(team_ratings), 1) if team_ratings else 0
-        strlit.markdown(f"#### 📊 Overall Composite Team Rating: **{avg_score} / 100**")
-
-        # Candidate Suggestions for Open Slots
-        if len(active_slots) < 6:
-            strlit.markdown("### 💡 Top Recommended Picks for Next Slot")
-            candidate_pool = [c for c in CHAMPIONS_ALL_FORMS if c != "-- Choose a Pokémon --" and c not in active_names][:12]
-            
-            recommendations = []
-            for cand in candidate_pool:
-                if cand not in meta_db:
-                    meta_db[cand] = slot_to_mon_meta_profile({"name": cand, "moves": ["Protect"], "ability": "Standard", "item": ""})
-                evaluator.meta = meta_db
-                score = evaluator.evaluate_candidate(cand, active_names)
-                recommendations.append((score["final_rating"], cand, score["recommendation_class"]))
-
-            recommendations.sort(key=lambda x: -x[0])
-            rec_cols = strlit.columns(min(4, len(recommendations)))
-            for i_rec, (score_val, cand_name, rec_class) in enumerate(recommendations[:4]):
-                with rec_cols[i_rec]:
-                    c_info = fetch_pokemon_details(cand_name)
-                    strlit.image(c_info["box_sprite"], width=50)
-                    strlit.markdown(f"**{cand_name}**")
-                    strlit.metric("Fit Score", f"{score_val} / 100")
-                    strlit.caption(rec_class)
-
-    strlit.divider()
-    strlit.success("✓ `TeamEvaluator` integrated: candidate scoring, defensive weakness mitigation, and threat coverage active.")
-    strlit.success("✓ Authoritative Smogon Chaos usage statistics engine integrated for tiering, abilities, items, and partner metrics.")
-    strlit.success("✓ Dynamic moveset names fetched directly from Pokémon Showdown's GitHub repository.")
-    strlit.success("✓ Showdown text format Pokepaste import and export functional.")
-
-
-
