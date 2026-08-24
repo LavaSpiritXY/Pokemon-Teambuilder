@@ -2,6 +2,8 @@
 
 import re
 
+from champions.item_data import MEGA_STONE_MAP, normalize_item_name
+
 
 def export_slot_to_showdown(slot):
     """Convert one team slot dictionary to Showdown text."""
@@ -36,21 +38,57 @@ def export_team_to_showdown(team_slots):
     )
 
 
+def _mega_species_for_item(item_name: str):
+    normalized = normalize_item_name(item_name).casefold()
+    if not normalized:
+        return None
+    for species, stone in MEGA_STONE_MAP.items():
+        if normalize_item_name(stone).casefold() == normalized:
+            return species
+    return None
+
+
+def _match_species_name(species: str, champions_all_forms):
+    """Resolve exact form names first, then conservative aliases/substrings."""
+    species = str(species or "").strip()
+    if not species:
+        return "-- Choose a Pokémon --"
+
+    for option in champions_all_forms:
+        if option.casefold() == species.casefold():
+            return option
+
+    # Showdown commonly uses hyphenated Mega-form names.
+    normalized = re.sub(r"[^a-z0-9]", "", species.casefold())
+    for option in champions_all_forms:
+        if re.sub(r"[^a-z0-9]", "", option.casefold()) == normalized:
+            return option
+
+    return "-- Choose a Pokémon --"
+
+
 def parse_showdown_text(text, champions_all_forms, natures, mega_stone_map):
-    """Parse Showdown text into normalized slot dictionaries."""
+    """Parse Showdown text into normalized slot dictionaries.
+
+    Mega Stones are authoritative for Mega-form resolution: when an imported
+    set contains a known Champions Mega Stone, the corresponding Mega species
+    is selected even if Showdown's species spelling differs from the UI label.
+    """
     blocks = [block.strip() for block in text.strip().split("\n\n") if block.strip()]
     parsed_slots = []
     for block in blocks[:6]:
         lines = [line.strip() for line in block.split("\n") if line.strip()]
         if not lines:
             continue
+
         line1 = lines[0]
         item = ""
         if " @ " in line1:
             name_part, item = line1.split(" @ ", 1)
-            name_part, item = name_part.strip(), item.strip()
+            name_part, item = name_part.strip(), normalize_item_name(item)
         else:
             name_part = line1.strip()
+
         species = name_part
         if "(" in name_part and ")" in name_part:
             match = re.search(r"\(([^)]+)\)", name_part)
@@ -58,20 +96,30 @@ def parse_showdown_text(text, champions_all_forms, natures, mega_stone_map):
                 species = match.group(1).strip()
             else:
                 species = name_part.split("(")[0].strip()
-        matched_species = "-- Choose a Pokémon --"
-        for option in champions_all_forms:
-            if option.lower() == species.lower():
-                matched_species = option
-                break
+
+        # The item's Mega Stone is more authoritative than a fuzzy species
+        # match because it unambiguously identifies the intended Mega form.
+        mega_species = _mega_species_for_item(item)
+        if mega_species:
+            matched_species = _match_species_name(mega_species, champions_all_forms)
+            if matched_species == "-- Choose a Pokémon --":
+                matched_species = mega_species
+        else:
+            matched_species = _match_species_name(species, champions_all_forms)
+
         if matched_species == "-- Choose a Pokémon --":
+            # Final conservative fallback for non-Mega aliases.
+            species_folded = species.casefold()
             for option in champions_all_forms:
-                if species.lower() in option.lower():
+                if species_folded in option.casefold() or option.casefold() in species_folded:
                     matched_species = option
                     break
+
         ability = "Standard"
         nature = "Hardy"
         evs = {"HP": 0, "Atk": 0, "Def": 0, "SpA": 0, "SpD": 0, "Spe": 0}
         moves = []
+
         for line in lines[1:]:
             if line.startswith("Ability:"):
                 ability = line.replace("Ability:", "", 1).strip()
@@ -90,13 +138,17 @@ def parse_showdown_text(text, champions_all_forms, natures, mega_stone_map):
                 move_name = line.replace("-", "", 1).strip()
                 if move_name:
                     moves.append(move_name)
+
         final_species = matched_species if matched_species != "-- Choose a Pokémon --" else species.title()
+        final_item = item if item else mega_stone_map.get(final_species, "Focus Sash")
+
         parsed_slots.append({
             "name": final_species,
             "ability": ability,
-            "item": item if item else mega_stone_map.get(final_species, "Focus Sash"),
+            "item": final_item,
             "nature": nature,
             "moves": moves[:4] if moves else ["Protect", "Substitute", "Rest", "Toxic"],
             "evs": evs,
         })
+
     return parsed_slots
