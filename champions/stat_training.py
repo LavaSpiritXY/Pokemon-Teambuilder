@@ -67,7 +67,6 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
 
     for label, key in _STAT_KEYS:
         max_allowed = _slider_max(values, key)
-        current = min(values[key], max_allowed)
         widget_key = f"stat_sp_slider_{slot_index}_{key}"
 
         if max_allowed == 0:
@@ -83,12 +82,13 @@ def render_dynamic_stat_controls(slot_index: int, pokemon_name: str, nature: str
             )
             st.session_state[widget_key] = 0
         else:
-            st.session_state[widget_key] = current
+            # The widget key is already initialized in Session State above.
+            # Do not also pass a default `value`; Streamlit warns when both
+            # Session State and a widget default are used for the same key.
             st.slider(
                 f"{label} EVs",
                 0,
                 max_allowed,
-                value=current,
                 step=1,
                 key=widget_key,
                 on_change=_sync_slider,
@@ -110,4 +110,3 @@ def render_dynamic_stat_graph(slot_index:int,pokemon_name:str,base_stats:Optiona
         base=_base_stat(base_stats,key); ev=values[key]; pre_nature=base+ev; delta=round(pre_nature*.10) if key==boosted else -round(pre_nature*.10) if key==lowered else 0; total=max(0,pre_nature+delta); nature_text=f"+{delta}" if delta>0 else str(delta); marker=" ↑" if key==boosted else " ↓" if key==lowered else ""
         cols=st.columns([1.15,1.05,1.05,1.05,3.0,0.85]); cols[0].markdown(f"**{label}{marker}**"); cols[1].markdown(f"<span style='color:#f1f5f9'>{base}</span>",unsafe_allow_html=True); cols[2].markdown(f"<span style='color:#f1f5f9'>+{ev}</span>",unsafe_allow_html=True); cols[3].markdown(f"<span style='color:#f1f5f9'>{nature_text}</span>",unsafe_allow_html=True); cols[4].html(_stat_bar_html(total)); cols[5].markdown(f"<span style='color:#f1f5f9;font-weight:700'>{total}</span>",unsafe_allow_html=True)
     st.caption("🔴 low → 🟠 medium → 🟢 high · colour changes continuously with the final stat"); return values
-
