@@ -9,6 +9,7 @@ from champions.constants import TYPE_COLORS, TYPE_SVG_URLS
 from champions.move_data import fetch_move_type, get_hardcoded_move_type
 from champions.pokemon_data import fetch_pokemon_details
 from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input
+from champions.team_recommendations_ui import render_team_add_recommendations
 
 
 _ALL_TYPES = tuple(TYPE_COLORS.keys())
@@ -254,6 +255,8 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
         with toolkit_cols[index % 2]:
             st.markdown(f"<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>{'✅' if values else '◽'} {label}</div>", unsafe_allow_html=True)
             _move_cards(values)
+
+    render_team_add_recommendations(active)
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 10px;color:#f0f6fc;'>📌 Team Snapshot</div>", unsafe_allow_html=True)
     snapshot_cols = st.columns(3)
