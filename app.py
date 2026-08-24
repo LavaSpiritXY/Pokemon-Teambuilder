@@ -1,4 +1,3 @@
-
 import streamlit as strlit
 from champions.constants import (
     TYPE_COLORS,
@@ -46,6 +45,7 @@ from champions.meta_engine import (
 from champions.competitive_profile import render_champions_profile_v6
 from champions.stat_training import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
+from champions.team_analyzer_ui import render_team_analyzer_sidebar
 
 from champions.team_state import ensure_slot_structure, on_species_change
 
@@ -281,6 +281,10 @@ if "team_slots" not in strlit.session_state:
     strlit.session_state.team_slots = {}
 for i in range(6):
     ensure_slot_structure(i, "-- Choose a Pokémon --")
+
+# Whole-team analyzer: render independently of the individual slot tabs.
+# It reads the same live team_slots state and therefore updates whenever a slot changes.
+render_team_analyzer_sidebar(strlit.session_state.team_slots)
 
 # -----------------------------------------------------------------------------
 # 5. APP INTERFACE
