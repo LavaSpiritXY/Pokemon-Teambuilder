@@ -1,0 +1,128 @@
+name: Repair Team Analyzer dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/repair-team-analyzer-dashboard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply repairs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # 1) Use the existing Champions-specific item registry.
+          app = Path('app.py')
+          text = app.read_text(encoding='utf-8')
+
+          old_import = '''from champions.constants import (\n    TYPE_COLORS,\n    TYPE_SVG_URLS,\n    NATURES,\n    CUSTOM_MEGAS_DATA,\n    BASE_HELD_ITEMS,\n)\n'''
+          new_import = '''from champions.constants import (\n    TYPE_COLORS,\n    TYPE_SVG_URLS,\n    NATURES,\n)\n\nfrom champions.item_data import CHAMPIONS_HELD_ITEMS, MEGA_STONE_MAP\n'''
+          if old_import in text:
+              text = text.replace(old_import, new_import, 1)
+          elif 'from champions.item_data import CHAMPIONS_HELD_ITEMS, MEGA_STONE_MAP' not in text:
+              raise SystemExit('Expected app.py constants import block not found')
+
+          text = re.sub(r'\nMEGA_STONE_MAP = \{name: f"\{name\.replace\(\'Mega \', \'\'\)\}ite" for name in CUSTOM_MEGAS_DATA\.keys\(\)\}\n', '\n', text, count=1)
+          text = re.sub(r'\nCHAMPIONS_HELD_ITEMS = sorted\(list\(set\(BASE_HELD_ITEMS \+ list\(MEGA_STONE_MAP\.values\(\)\)\)\)\)\n', '\n', text, count=1)
+
+          # 2) Put Team Analyzer inside the existing Team Overview tab.
+          text = text.replace(
+              'from champions.team_analyzer_ui import render_team_analyzer_sidebar',
+              'from champions.team_analyzer_ui import render_team_analyzer_main',
+              1,
+          )
+          text = text.replace(
+              '\n# Whole-team analyzer: render independently of the individual slot tabs.\n# It reads the same live team_slots state and therefore updates whenever a slot changes.\nrender_team_analyzer_sidebar(strlit.session_state.team_slots)\n',
+              '\n',
+              1,
+          )
+          marker = 'with tabs[6]:\n    strlit.subheader("📊 Comprehensive Team Overview & Meta Evaluator")'
+          replacement = 'with tabs[6]:\n    render_team_analyzer_main(strlit.session_state.team_slots)\n    strlit.divider()\n    strlit.subheader("📊 Comprehensive Team Overview & Meta Evaluator")'
+          if marker in text:
+              text = text.replace(marker, replacement, 1)
+          elif 'render_team_analyzer_main(strlit.session_state.team_slots)' not in text:
+              raise SystemExit('Team Overview insertion point not found')
+          app.write_text(text, encoding='utf-8')
+
+          # 3) Make Ground immunities from Levitate count in team defense.
+          analyzer = Path('champions/team_analyzer.py')
+          a = analyzer.read_text(encoding='utf-8')
+          old = '''def _defensive_multiplier(attacking_type: str, defending_types: Sequence[str]) -> float:\n    mult = 1.0\n    for defending_type in defending_types:\n        mult *= TYPE_CHART_DATA.get(attacking_type, {}).get(defending_type, 1.0)\n    return mult\n'''
+          new = '''def _defensive_multiplier(attacking_type: str, mon: Mapping[str, Any]) -> float:\n    """Return the team's effective defensive multiplier for one member.\n\n    Account for ability-based immunities that are relevant to team coverage.\n    """\n    defending_types = _types(mon)\n    if attacking_type == "Ground" and "levitate" in _abilities(mon):\n        return 0.0\n    mult = 1.0\n    for defending_type in defending_types:\n        mult *= TYPE_CHART_DATA.get(attacking_type, {}).get(defending_type, 1.0)\n    return mult\n'''
+          if old not in a:
+              raise SystemExit('Expected defensive multiplier implementation not found')
+          a = a.replace(old, new, 1)
+          a = a.replace(
+              'multipliers = [_defensive_multiplier(attack_type, _types(mon)) for mon in self.team]',
+              'multipliers = [_defensive_multiplier(attack_type, mon) for mon in self.team]',
+              1,
+          )
+
+          # Display move names nicely for human-facing analysis while keeping internal move keys normalized.
+          helper = '''def _display_move_name(value: str) -> str:\n    return " ".join(part.capitalize() for part in value.split())\n\n\n'''
+          if '_display_move_name' not in a:
+              a = a.replace('def _move_names(mon: Mapping[str, Any]) -> List[str]:\n', helper + 'def _move_names(mon: Mapping[str, Any]) -> List[str]:\n', 1)
+          a = a.replace(
+              'disruption = sorted(move for move in moves if move in _DISRUPTION)',
+              'disruption = sorted(_display_move_name(move) for move in moves if move in _DISRUPTION)',
+              1,
+          )
+          a = a.replace(
+              'support = sorted(move for move in moves if move in _SUPPORT)',
+              'support = sorted(_display_move_name(move) for move in moves if move in _SUPPORT)',
+              1,
+          )
+          analyzer.write_text(a, encoding='utf-8')
+
+          # 4) Improve analyzer UI: compact type chips instead of raw dictionaries.
+          ui = Path('champions/team_analyzer_ui.py')
+          u = ui.read_text(encoding='utf-8')
+          if 'from champions.type_chart import render_type_chips' not in u:
+              u = u.replace('from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input\n', 'from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input\nfrom champions.type_chart import render_type_chips\n', 1)
+
+          start = u.find('    with st.expander("📋 Detailed coverage data", expanded=False):')
+          end = u.find('\n\ndef render_team_analyzer_sidebar', start)
+          if start == -1 or end == -1:
+              raise SystemExit('Analyzer detail section boundary not found')
+          new_detail = '''    with st.expander("📋 Detailed coverage data", expanded=False):\n        detail_cols = st.columns(2)\n        with detail_cols[0]:\n            st.markdown("**🛡️ Defensive coverage**")\n            st.caption("Types with at least one defensive answer")\n            covered_mult = {t: 1.0 for t in defensive["covered_types"]}\n            st.html(render_type_chips(defensive["covered_types"], covered_mult))\n\n            if defensive["uncovered_types"]:\n                st.markdown("**⚠️ Uncovered**")\n                uncovered_mult = {t: 2.0 for t in defensive["uncovered_types"]}\n                st.html(render_type_chips(defensive["uncovered_types"], uncovered_mult))\n            else:\n                st.success("Every attacking type has at least one defensive answer.")\n\n            st.markdown("**Resistance depth**")\n            resistance_types = sorted(defensive["resistance_counts"].items(), key=lambda item: (-item[1], item[0]))[:10]\n            if resistance_types:\n                resistance_mult = {t: float(count) for t, count in resistance_types}\n                st.html(render_type_chips([t for t, _ in resistance_types], resistance_mult))\n            else:\n                st.caption("No resistances detected.")\n\n        with detail_cols[1]:\n            st.markdown("**⚔️ Offensive coverage**")\n            st.caption("Types your moves can hit super-effectively")\n            offensive_mult = {t: float(offensive["best_multipliers"].get(t, 2.0)) for t in offensive["covered_types"]}\n            st.html(render_type_chips(offensive["covered_types"], offensive_mult))\n\n            if offensive["uncovered_types"]:\n                st.markdown("**◽ Offensive gaps**")\n                gap_mult = {t: 1.0 for t in offensive["uncovered_types"]}\n                st.html(render_type_chips(offensive["uncovered_types"], gap_mult))\n\n            if offensive["quad_coverage"]:\n                st.markdown("**💥 4× pressure**")\n                quad_mult = {t: 4.0 for t in offensive["quad_coverage"]}\n                st.html(render_type_chips(offensive["quad_coverage"], quad_mult))\n\n            if result["archetypes"]["counts"]:\n                st.markdown("**🧩 Archetypes**")\n                st.write(", ".join(sorted(result["archetypes"]["counts"])))\n'''
+          u = u[:start] + new_detail + u[end:]
+          ui.write_text(u, encoding='utf-8')
+          PY
+
+      - name: Validate repaired code and tests
+        run: |
+          python tools/wire_champions_item_selector.py
+          python -m pytest tests/test_team_analyzer.py tests/test_item_data.py tests/test_item_selector_wiring.py -v
+          python -m py_compile app.py champions/team_analyzer.py champions/team_analyzer_ui.py
+
+      - name: Commit validated repairs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions/team_analyzer.py champions/team_analyzer_ui.py
+          git diff --cached --quiet && { echo 'No changes to commit'; exit 0; }
+          git commit -m "Fix Team Analyzer placement, coverage UI, and item wiring"
+          git push origin HEAD:main
