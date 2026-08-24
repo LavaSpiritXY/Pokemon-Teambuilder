@@ -3,9 +3,9 @@ from champions.constants import (
     TYPE_COLORS,
     TYPE_SVG_URLS,
     NATURES,
-    CUSTOM_MEGAS_DATA,
-    BASE_HELD_ITEMS,
 )
+
+from champions.item_data import CHAMPIONS_HELD_ITEMS, MEGA_STONE_MAP
 
 from typing import Dict, List, Set, Tuple
 
@@ -45,7 +45,7 @@ from champions.meta_engine import (
 from champions.competitive_profile import render_champions_profile_v6
 from champions.stat_training import render_dynamic_stat_controls, render_dynamic_stat_graph
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
-from champions.team_analyzer_ui import render_team_analyzer_sidebar
+from champions.team_analyzer_ui import render_team_analyzer_main
 
 from champions.team_state import ensure_slot_structure, on_species_change
 
@@ -246,7 +246,6 @@ strlit.markdown("""
 # -----------------------------------------------------------------------------
 
 
-MEGA_STONE_MAP = {name: f"{name.replace('Mega ', '')}ite" for name in CUSTOM_MEGAS_DATA.keys()}
 
 
 
@@ -254,7 +253,6 @@ MEGA_STONE_MAP = {name: f"{name.replace('Mega ', '')}ite" for name in CUSTOM_MEG
 
 CHAMPIONS_ALL_FORMS = fetch_pokemon_roster()
 
-CHAMPIONS_HELD_ITEMS = sorted(list(set(BASE_HELD_ITEMS + list(MEGA_STONE_MAP.values()))))
 
 # -----------------------------------------------------------------------------
 # 3. HELPER FUNCTIONS & API FETCHING
@@ -282,9 +280,6 @@ if "team_slots" not in strlit.session_state:
 for i in range(6):
     ensure_slot_structure(i, "-- Choose a Pokémon --")
 
-# Whole-team analyzer: render independently of the individual slot tabs.
-# It reads the same live team_slots state and therefore updates whenever a slot changes.
-render_team_analyzer_sidebar(strlit.session_state.team_slots)
 
 # -----------------------------------------------------------------------------
 # 5. APP INTERFACE
@@ -505,6 +500,8 @@ for i in range(6):
 # 6. TAB 7: TEAM OVERVIEW & TEAM EVALUATOR INTEGRATION
 # -----------------------------------------------------------------------------
 with tabs[6]:
+    render_team_analyzer_main(strlit.session_state.team_slots)
+    strlit.divider()
     strlit.subheader("📊 Comprehensive Team Overview & Meta Evaluator")
 
     active_slots = [

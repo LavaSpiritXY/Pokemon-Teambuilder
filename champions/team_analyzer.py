@@ -90,6 +90,10 @@ def _norm(value: Any) -> str:
     return str(value or "").strip().lower()
 
 
+def _display_move_name(value: str) -> str:
+    return " ".join(part.capitalize() for part in value.split())
+
+
 def _move_names(mon: Mapping[str, Any]) -> List[str]:
     raw = mon.get("moves") or []
     if isinstance(raw, Mapping):
@@ -112,7 +116,14 @@ def _species_key(mon: Mapping[str, Any]) -> str:
     return _norm(mon.get("name"))
 
 
-def _defensive_multiplier(attacking_type: str, defending_types: Sequence[str]) -> float:
+def _defensive_multiplier(attacking_type: str, mon: Mapping[str, Any]) -> float:
+    """Return the team's effective defensive multiplier for one member.
+
+    Account for ability-based immunities that are relevant to team coverage.
+    """
+    defending_types = _types(mon)
+    if attacking_type == "Ground" and "levitate" in _abilities(mon):
+        return 0.0
     mult = 1.0
     for defending_type in defending_types:
         mult *= TYPE_CHART_DATA.get(attacking_type, {}).get(defending_type, 1.0)
@@ -175,7 +186,7 @@ class TeamAnalyzer:
         severe_gaps: List[Tuple[str, float]] = []
 
         for attack_type in TYPE_NAMES:
-            multipliers = [_defensive_multiplier(attack_type, _types(mon)) for mon in self.team]
+            multipliers = [_defensive_multiplier(attack_type, mon) for mon in self.team]
             answers[attack_type] = sum(mult < 1.0 for mult in multipliers)
             if multipliers and all(mult > 1.0 for mult in multipliers):
                 severe_gaps.append((attack_type, max(multipliers)))
@@ -255,8 +266,8 @@ class TeamAnalyzer:
         priority = sorted(move for move in moves if move in _PRIORITY_MOVES)
         weather = sorted({label for move, label in _WEATHER.items() if move in moves} | {label for ability, label in _WEATHER_ABILITIES.items() if ability in abilities})
         terrain = sorted({label for move, label in _TERRAIN.items() if move in moves} | {label for ability, label in _TERRAIN_ABILITIES.items() if ability in abilities})
-        disruption = sorted(move for move in moves if move in _DISRUPTION)
-        support = sorted(move for move in moves if move in _SUPPORT)
+        disruption = sorted(_display_move_name(move) for move in moves if move in _DISRUPTION)
+        support = sorted(_display_move_name(move) for move in moves if move in _SUPPORT)
         setup = sorted(move for move in moves if move in _SETUP)
 
         physical = 0

@@ -7,6 +7,7 @@ import streamlit as st
 
 from champions.pokemon_data import fetch_pokemon_details
 from champions.team_analyzer import TeamAnalyzer, build_team_analyzer_input
+from champions.type_chart import render_type_chips
 
 
 def _active_slots(team_slots: Mapping[int, Mapping[str, Any]]):
@@ -139,19 +140,45 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
     with st.expander("📋 Detailed coverage data", expanded=False):
         detail_cols = st.columns(2)
         with detail_cols[0]:
-            st.markdown("**Defensively uncovered**")
-            st.write(", ".join(defensive["uncovered_types"]) or "None")
-            st.markdown("**Resistance counts**")
-            st.write(defensive["resistance_counts"] or "None")
-            st.markdown("**Immunity counts**")
-            st.write(defensive["immunity_counts"] or "None")
+            st.markdown("**🛡️ Defensive coverage**")
+            st.caption("Types with at least one defensive answer")
+            covered_mult = {t: 1.0 for t in defensive["covered_types"]}
+            st.html(render_type_chips(defensive["covered_types"], covered_mult))
+
+            if defensive["uncovered_types"]:
+                st.markdown("**⚠️ Uncovered**")
+                uncovered_mult = {t: 2.0 for t in defensive["uncovered_types"]}
+                st.html(render_type_chips(defensive["uncovered_types"], uncovered_mult))
+            else:
+                st.success("Every attacking type has at least one defensive answer.")
+
+            st.markdown("**Resistance depth**")
+            resistance_types = sorted(defensive["resistance_counts"].items(), key=lambda item: (-item[1], item[0]))[:10]
+            if resistance_types:
+                resistance_mult = {t: float(count) for t, count in resistance_types}
+                st.html(render_type_chips([t for t, _ in resistance_types], resistance_mult))
+            else:
+                st.caption("No resistances detected.")
+
         with detail_cols[1]:
-            st.markdown("**Offensively uncovered**")
-            st.write(", ".join(offensive["uncovered_types"]) or "None")
-            st.markdown("**Move-type usage**")
-            st.write(offensive["move_type_counts"] or "None")
-            st.markdown("**Archetypes detected**")
-            st.write(result["archetypes"]["counts"] or "None")
+            st.markdown("**⚔️ Offensive coverage**")
+            st.caption("Types your moves can hit super-effectively")
+            offensive_mult = {t: float(offensive["best_multipliers"].get(t, 2.0)) for t in offensive["covered_types"]}
+            st.html(render_type_chips(offensive["covered_types"], offensive_mult))
+
+            if offensive["uncovered_types"]:
+                st.markdown("**◽ Offensive gaps**")
+                gap_mult = {t: 1.0 for t in offensive["uncovered_types"]}
+                st.html(render_type_chips(offensive["uncovered_types"], gap_mult))
+
+            if offensive["quad_coverage"]:
+                st.markdown("**💥 4× pressure**")
+                quad_mult = {t: 4.0 for t in offensive["quad_coverage"]}
+                st.html(render_type_chips(offensive["quad_coverage"], quad_mult))
+
+            if result["archetypes"]["counts"]:
+                st.markdown("**🧩 Archetypes**")
+                st.write(", ".join(sorted(result["archetypes"]["counts"])))
 
 
 def render_team_analyzer_sidebar(team_slots: Mapping[int, Mapping[str, Any]]) -> None:
