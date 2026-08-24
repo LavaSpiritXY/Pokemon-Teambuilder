@@ -1,4 +1,6 @@
-﻿import unittest
+﻿import os
+import sys
+import unittest
 from unittest.mock import patch
 
 from champions.constants import CURRENT_REGULATION
@@ -47,10 +49,7 @@ class TournamentDataTests(unittest.TestCase):
         print("CHAMPIONS_META_DB KEYS:", sorted(CHAMPIONS_META_DB.keys()))
         print("WHIMSICOTT DB RECORD:", explicit_record)
         print("WHIMSICOTT ALIAS RECORD:", alias_record)
-        print(
-            "SAME OBJECT:",
-            explicit_record is alias_record,
-        )
+        print("SAME OBJECT:", explicit_record is alias_record)
 
         self.assertIsNotNone(
             explicit_record,
@@ -63,6 +62,35 @@ class TournamentDataTests(unittest.TestCase):
         self.assertEqual(explicit_record.get("wins"), 0)
         self.assertEqual(explicit_record.get("losses"), 0)
         self.assertEqual(explicit_record.get("match_records"), 0)
+
+        # Runtime identity diagnostic: prove which module/function/global DB
+        # object calculate_tournament_metrics() is actually using.
+        function_globals = calculate_tournament_metrics.__globals__
+        runtime_db = function_globals.get("CHAMPIONS_META_DB")
+        runtime_explicit_aliases = function_globals.get("_EXPLICIT_IMPORT_NAMES")
+        runtime_module = sys.modules.get(calculate_tournament_metrics.__module__)
+        print("=== RUNTIME IDENTITY DIAGNOSTIC ===")
+        print("GITHUB_SHA:", os.environ.get("GITHUB_SHA", "<missing>"))
+        print("FUNCTION MODULE:", calculate_tournament_metrics.__module__)
+        print("FUNCTION FILE:", function_globals.get("__file__"))
+        print("FUNCTION NAME:", calculate_tournament_metrics.__name__)
+        print("FUNCTION DB ID:", id(runtime_db))
+        print("TEST DB ID:", id(CHAMPIONS_META_DB))
+        print("MODULE DB ID:", id(tournament_data_module.CHAMPIONS_META_DB))
+        print("FUNCTION DB IS TEST DB:", runtime_db is CHAMPIONS_META_DB)
+        print("FUNCTION DB IS MODULE DB:", runtime_db is tournament_data_module.CHAMPIONS_META_DB)
+        print("FUNCTION ALIAS ID:", id(runtime_explicit_aliases))
+        print("TEST ALIAS ID:", id(tournament_data_module._EXPLICIT_IMPORT_NAMES))
+        print(
+            "FUNCTION ALIAS IS MODULE ALIAS:",
+            runtime_explicit_aliases is tournament_data_module._EXPLICIT_IMPORT_NAMES,
+        )
+        print("SYS.MODULE ID:", id(runtime_module))
+        print("IMPORTED MODULE ID:", id(tournament_data_module))
+        print("SYS.MODULE IS IMPORTED MODULE:", runtime_module is tournament_data_module)
+        print("FUNCTION DB WHIMSICOTT:", runtime_db.get("whimsicott") if isinstance(runtime_db, dict) else None)
+        print("TEST DB WHIMSICOTT:", CHAMPIONS_META_DB.get("whimsicott"))
+        print("FUNCTION GLOBALS KEYS CONTAIN DB:", "CHAMPIONS_META_DB" in function_globals)
 
         metrics = calculate_tournament_metrics("Whimsicott")
         print("METRICS AFTER EXPLICIT IMPORT:", metrics)
