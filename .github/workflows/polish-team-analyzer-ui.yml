@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/polish-team-analyzer-ui.yml"
-      - "tools/polish_team_analyzer_ui.py"
+      - "tools/rebuild_team_analyzer_ui.py"
   workflow_dispatch:
 
 permissions:
@@ -28,20 +28,20 @@ jobs:
       - name: Install test dependencies
         run: python -m pip install pytest streamlit requests
 
-      - name: Apply visual polish
-        run: python tools/polish_team_analyzer_ui.py
+      - name: Rebuild analyzer presentation
+        run: python tools/rebuild_team_analyzer_ui.py
 
       - name: Validate
         run: |
           python -m pytest tests/test_team_analyzer.py -v
-          python -m py_compile champions/team_analyzer_ui.py tools/polish_team_analyzer_ui.py
+          python -m py_compile champions/team_analyzer_ui.py tools/rebuild_team_analyzer_ui.py
 
-      - name: Commit and remove this workflow
+      - name: Commit validated UI rebuild
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add champions/team_analyzer_ui.py tools/polish_team_analyzer_ui.py .github/workflows/polish-team-analyzer-ui.yml
+          git add champions/team_analyzer_ui.py tools/rebuild_team_analyzer_ui.py .github/workflows/polish-team-analyzer-ui.yml
           git diff --cached --quiet && { echo 'No changes made'; exit 0; }
-          git commit -m "Polish Team Analyzer visual layout"
+          git commit -m "Rebuild Team Analyzer presentation layout"
           git push origin HEAD:main
