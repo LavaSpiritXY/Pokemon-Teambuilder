@@ -114,27 +114,22 @@ def _move_cards(values, *, max_items: int = 6) -> None:
     st.markdown("".join(_move_card(value) for value in values[:max_items]), unsafe_allow_html=True)
 
 
-def _weather_pill(value: str) -> str:
-    display = " ".join(str(value or "").replace("-", " ").split()).title()
-    palette = {
-        "Sun": ("#e87922", "#fff7ed"),
-        "Rain": ("#3b82f6", "#eff6ff"),
-        "Sand": ("#a8873b", "#fff8df"),
-        "Snow": ("#69b8d8", "#effcff"),
-        "Hail": ("#69b8d8", "#effcff"),
-    }
-    background, text_colour = palette.get(display, ("#64748b", "#f8fafc"))
-    return f'<span style="display:inline-flex;align-items:center;justify-content:center;min-width:118px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:{text_colour};font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{display}</span>'
+def _weather_pill(source: Mapping[str, Any]) -> str:
+    label = " ".join(str(source.get("label") or "").replace("-", " ").split()).title()
+    weather_type = str(source.get("type") or "Normal").title()
+    background = TYPE_COLORS.get(weather_type, "#64748b")
+    icon = TYPE_SVG_URLS.get(weather_type, "")
+    icon_html = f'<img src="{icon}" width="20" height="20" style="filter: brightness(0) invert(1);" />' if icon else ""
+    return f'<span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:148px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:white;font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{icon_html}{label}</span>'
 
 
-def _terrain_pill(value: str) -> str:
-    display = " ".join(str(value or "").replace("-", " ").split()).title()
-    type_for_terrain = {"Electric Terrain": "Electric", "Grassy Terrain": "Grass", "Misty Terrain": "Fairy", "Psychic Terrain": "Psychic"}
-    terrain_type = type_for_terrain.get(display, "Psychic")
+def _terrain_pill(source: Mapping[str, Any]) -> str:
+    label = " ".join(str(source.get("label") or "").replace("-", " ").split()).title()
+    terrain_type = str(source.get("type") or "Psychic").title()
     background = TYPE_COLORS.get(terrain_type, "#777")
     icon = TYPE_SVG_URLS.get(terrain_type, "")
-    icon_html = f'<img src="{icon}" width="18" height="18" style="filter: brightness(0) invert(1);" />' if icon else ""
-    return f'<span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:150px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:white;font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{icon_html}{display}</span>'
+    icon_html = f'<img src="{icon}" width="20" height="20" style="filter: brightness(0) invert(1);" />' if icon else ""
+    return f'<span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:150px;height:40px;padding:0 13px;margin:6px 10px 6px 0;border-radius:12px;background:{background};color:white;font-weight:900;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.22);">{icon_html}{label}</span>'
 
 
 def _tool_pills(values, kind: str = "tool") -> None:
@@ -308,67 +303,16 @@ def render_team_analyzer_main(team_slots: Mapping[int, Mapping[str, Any]]) -> No
     field_cols = st.columns(2)
     with field_cols[0]:
         st.markdown("<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>Weather</div>", unsafe_allow_html=True)
-        if functions["weather"]:
-            _tool_pills(functions["weather"], "weather")
+        if functions.get("weather_sources"):
+            _tool_pills(functions["weather_sources"], "weather")
         else:
             st.caption("Not detected")
     with field_cols[1]:
         st.markdown("<div style='font-size:15px;font-weight:900;margin:3px 0 5px;color:#f0f6fc;'>Terrain</div>", unsafe_allow_html=True)
-        if functions["terrain"]:
-            _tool_pills(functions["terrain"], "terrain")
+        if functions.get("terrain_sources"):
+            _tool_pills(functions["terrain_sources"], "terrain")
         else:
             st.caption("Not detected")
-
-    coverage_cols = st.columns(3)
-    defensive_colour = _interpolate_colour(len(defensive["covered_types"]) / 18 * 100)
-    offensive_colour = _interpolate_colour(len(offensive["covered_types"]) / 18 * 100)
-    variety_colour = _interpolate_colour(redundancy["score"])
-
-    with coverage_cols[0]:
-        _coverage_count_card(
-            "Defensive Answers",
-            "🛡️",
-            len(defensive["covered_types"]),
-            18,
-            defensive_colour,
-            "attacking types with at least one team answer",
-        )
-        if defensive["uncovered_types"]:
-            st.caption("Gaps")
-            _analyzer_type_chips(defensive["uncovered_types"], {t: 2.0 for t in defensive["uncovered_types"]})
-        else:
-            st.success("All attacking types covered")
-
-    with coverage_cols[1]:
-        _coverage_count_card(
-            "Offensive Pressure",
-            "⚔️",
-            len(offensive["covered_types"]),
-            18,
-            offensive_colour,
-            "defending types hit super-effectively",
-        )
-        if offensive["quad_coverage"]:
-            st.caption("4× pressure")
-            _analyzer_type_chips(offensive["quad_coverage"], {t: 4.0 for t in offensive["quad_coverage"]})
-        else:
-            st.caption("No 4× coverage detected")
-
-    with coverage_cols[2]:
-        _coverage_count_card(
-            "Team Variety",
-            "♻️",
-            round(redundancy["score"]),
-            100,
-            variety_colour,
-            "typing and team composition diversity score",
-        )
-        duplicates = redundancy["duplicate_types"]
-        if duplicates:
-            st.caption("Repeated typings")
-            _analyzer_type_chips(sorted(duplicates), {t: float(c) for t, c in duplicates.items()})
-        else:
-            st.success("No heavy typing redundancy")
 
     st.markdown("<div style='font-size:20px;font-weight:900;margin:16px 0 12px;color:#f0f6fc;'>🧠 Team Verdict</div>", unsafe_allow_html=True)
     summary = result["summary"]

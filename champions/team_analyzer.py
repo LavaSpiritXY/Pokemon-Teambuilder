@@ -266,6 +266,44 @@ class TeamAnalyzer:
         priority = sorted(move for move in moves if move in _PRIORITY_MOVES)
         weather = sorted({label for move, label in _WEATHER.items() if move in moves} | {label for ability, label in _WEATHER_ABILITIES.items() if ability in abilities})
         terrain = sorted({label for move, label in _TERRAIN.items() if move in moves} | {label for ability, label in _TERRAIN_ABILITIES.items() if ability in abilities})
+
+        weather_sources = []
+        seen_weather_sources = set()
+        for move in moves:
+            if move in _WEATHER:
+                key = ("move", move)
+                if key not in seen_weather_sources:
+                    seen_weather_sources.add(key)
+                    weather_sources.append({"label": _display_move_name(move), "type": _move_type(move) or "Normal"})
+        weather_ability_types = {
+            "drizzle": "Water", "primordial sea": "Water",
+            "drought": "Fire", "desolate land": "Fire",
+            "sand stream": "Rock", "snow warning": "Ice",
+        }
+        for ability in abilities:
+            if ability in _WEATHER_ABILITIES:
+                key = ("ability", ability)
+                if key not in seen_weather_sources:
+                    seen_weather_sources.add(key)
+                    weather_sources.append({"label": _display_move_name(ability), "type": weather_ability_types.get(ability, "Normal")})
+
+        terrain_sources = []
+        seen_terrain_sources = set()
+        for move in moves:
+            if move in _TERRAIN:
+                key = ("move", move)
+                if key not in seen_terrain_sources:
+                    seen_terrain_sources.add(key)
+                    terrain_type = _TERRAIN[move].replace(" Terrain", "")
+                    terrain_sources.append({"label": _display_move_name(move), "type": terrain_type})
+        for ability in abilities:
+            if ability in _TERRAIN_ABILITIES:
+                key = ("ability", ability)
+                if key not in seen_terrain_sources:
+                    seen_terrain_sources.add(key)
+                    terrain_type = _TERRAIN_ABILITIES[ability].replace(" Terrain", "")
+                    terrain_sources.append({"label": _display_move_name(ability), "type": terrain_type})
+
         disruption = sorted(_display_move_name(move) for move in moves if move in _DISRUPTION)
         support = sorted(_display_move_name(move) for move in moves if move in _SUPPORT)
         setup = sorted(move for move in moves if move in _SETUP)
@@ -302,7 +340,9 @@ class TeamAnalyzer:
             "speed_control": speed_control,
             "priority_moves": priority,
             "weather": weather,
+            "weather_sources": weather_sources,
             "terrain": terrain,
+            "terrain_sources": terrain_sources,
             "disruption": disruption,
             "support": support,
             "setup": setup,
