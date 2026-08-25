@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  migrate:
+  validate:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,10 +31,7 @@ jobs:
           fi
           python -m pip install pytest
 
-      - name: Apply item selector and Mega promotion fix
-        run: python tools/fix_mega_items_and_selector.py
-
-      - name: Validate from repository root
+      - name: Validate Mega item promotion and selector wiring
         working-directory: .
         env:
           PYTHONPATH: ${{ github.workspace }}
@@ -42,21 +39,11 @@ jobs:
           python -m py_compile app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
           pytest -q tests/test_item_data.py tests/test_item_selector_wiring.py
 
-      - name: Commit application changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
-          if git diff --cached --quiet; then
-            echo "No application changes were necessary."
-          else
-            git commit -m "Fix Mega item promotion and selector behaviour"
-            git push
-          fi
-
       - name: Remove completed migration workflow
         if: success()
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git pull --ff-only origin main
           if [ -f .github/workflows/fix-mega-items-and-selector.yml ]; then
