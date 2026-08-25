@@ -6,7 +6,7 @@ from typing import Any, Mapping, Sequence
 import streamlit as st
 
 from champions.constants import TYPE_COLORS, TYPE_SVG_URLS
-from champions.team_recommendations import recommendation_cache_token, recommend_team_additions
+from champions.team_recommendations_corrected import recommendation_cache_token, recommend_team_additions
 
 
 def _type_pill(type_name: str) -> str:
