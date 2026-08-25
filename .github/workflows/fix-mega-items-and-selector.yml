@@ -11,39 +11,58 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install test dependencies
-        run: python -m pip install streamlit pytest
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Apply safe item selector migration
+      - name: Install project test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+          else
+            python -m pip install streamlit pytest
+          fi
+          python -m pip install pytest
+
+      - name: Apply item selector and Mega promotion fix
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
-          app = Path('app.py')
-          text = app.read_text()
+          app_path = Path("app.py")
+          state_path = Path("champions/team_state.py")
+          app = app_path.read_text(encoding="utf-8")
+          state = state_path.read_text(encoding="utf-8")
 
-          old_import = 'from champions.team_state import ensure_slot_structure, on_species_change'
-          new_import = 'from champions.team_state import ensure_slot_structure, on_species_change, on_item_change'
-          if old_import in text:
-              text = text.replace(old_import, new_import, 1)
+          # Wire the item callback exactly once.
+          old_import = "from champions.team_state import ensure_slot_structure, on_species_change"
+          new_import = "from champions.team_state import ensure_slot_structure, on_species_change, on_item_change"
+          if "from champions.team_state import ensure_slot_structure, on_species_change, on_item_change" not in app:
+              if old_import not in app:
+                  raise RuntimeError("Team-state import anchor not found")
+              app = app.replace(old_import, new_import, 1)
 
-          start_marker = '                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)'
-          end_marker = '                slot["item"] = selected_item'
-          start = text.find(start_marker)
-          end = text.find(end_marker, start)
-          if start == -1 or end == -1:
-              raise RuntimeError('Contextual item selector block not found')
-          end += len(end_marker)
+          # Replace the old selectable-heading implementation. Category headings
+          # are presentation only; selectbox options must contain real items only.
+          block = re.compile(
+              r'''(?ms)^                mega_items, species_items, standard_items = get_contextual_item_groups\(slot_name\)\n.*?^                slot\["item"\] = selected_item\n'''
+          )
 
           replacement = '''                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
+                mega_items = list(mega_items)
+                species_items = list(species_items)
+                standard_items = list(standard_items)
 
-                # Keep category headings visual only. Streamlit selectboxes do not
-                # support disabled options, so headings must never be inserted into
-                # the actual option values: every selectable value is a real item.
-                item_options = list(mega_items) + list(species_items) + list(standard_items)
+                # Never put category headings into the selectbox options. They
+                # looked like items and could therefore become the selected item.
+                # Ordering still keeps Mega / Pokémon-specific items at the top.
+                item_options = mega_items + species_items + standard_items
                 mega_set = set(mega_items)
                 species_set = set(species_items)
 
@@ -53,10 +72,10 @@ jobs:
 
                 def _format_item_option(item):
                     if item in mega_set:
-                        return f"⭐ Mega Evolution  •  {item}"
+                        return f"⭐ Mega Stone  •  {item}"
                     if item in species_set:
                         return f"◆ Pokémon-specific  •  {item}"
-                    return f"General held item  •  {item}"
+                    return item
 
                 selected_item = strlit.selectbox(
                     "Held Item",
@@ -67,16 +86,21 @@ jobs:
                     on_change=on_item_change,
                     args=(i,),
                 )
-                slot["item"] = selected_item'''
+                slot["item"] = selected_item
+'''
 
-          text = text[:start] + replacement + text[end:]
-          app.write_text(text)
+          if not block.search(app):
+              # A previous successful run may already contain the new structure.
+              if "on_change=on_item_change" not in app or "item_options = mega_items + species_items + standard_items" not in app:
+                  raise RuntimeError("Held-item selector block not found")
+          else:
+              app = block.sub(replacement, app, count=1)
 
-          state = Path('champions/team_state.py')
-          state_text = state.read_text()
-          if 'def on_item_change(' not in state_text:
-              state_text += '''\n\n\ndef on_item_change(slot_idx):
-    """Promote a base Pokémon when its matching Mega Stone is selected."""
+          # Add the callback once. Selecting a base Pokémon's matching Mega Stone
+          # promotes the slot to the Mega form so name, sprite and analytics follow it.
+          if "def on_item_change(" not in state:
+              state += '''\n\n\ndef on_item_change(slot_idx):
+    """Promote a base Pokémon to its Mega form when its matching stone is selected."""
     selected_item = strlit.session_state.get(f"item_{slot_idx}", "")
     if not selected_item:
         return
@@ -99,19 +123,26 @@ jobs:
     slot["item"] = selected_item
     strlit.session_state[f"species_select_{slot_idx}"] = mega_species
 '''
-              state.write_text(state_text)
+
+          app_path.write_text(app, encoding="utf-8")
+          state_path.write_text(state, encoding="utf-8")
+          print("Item selector migration applied safely.")
           PY
 
-      - name: Validate
+      - name: Validate from repository root
+        working-directory: .
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python -m py_compile app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
+          pytest -q tests/test_item_data.py tests/test_item_selector_wiring.py
           python - <<'PY'
           from champions.item_data import MEGA_STONE_MAP
           from champions.team_state import on_item_change
-          assert 'Mega Abomasnow' in MEGA_STONE_MAP
-          assert 'Mega Charizard Y' in MEGA_STONE_MAP
+          assert "Mega Abomasnow" in MEGA_STONE_MAP
+          assert "Mega Charizard Y" in MEGA_STONE_MAP
           assert callable(on_item_change)
-          print('Item selector and Mega promotion checks passed')
+          print("Mega promotion and item-selector checks passed")
           PY
 
       - name: Commit application changes
@@ -119,12 +150,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add app.py champions/team_state.py
-          git commit -m "Make item selector categories non-selectable"
-          git push
+          if git diff --cached --quiet; then
+            echo "No application changes were necessary."
+          else
+            git commit -m "Prevent item category headers from being selectable"
+            git push
+          fi
 
-      - name: Remove migration workflow
+      - name: Remove one-time migration workflow
         if: success()
         run: |
-          git rm .github/workflows/fix-mega-items-and-selector.yml
-          git commit -m "Remove one-time item selector migration"
-          git push
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          if [ -f .github/workflows/fix-mega-items-and-selector.yml ]; then
+            git rm .github/workflows/fix-mega-items-and-selector.yml
+            git commit -m "Remove completed Mega item selector migration"
+            git push
+          else
+            echo "Migration workflow already removed."
+          fi
