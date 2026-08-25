@@ -28,12 +28,10 @@ _SPEED_CONTROL = {
     "trick room": "Trick Room",
     "icy wind": "Icy Wind",
     "electroweb": "Electroweb",
-    "pollen puff": "Pollen Puff",
-    "mud shot": "Speed reduction",
-    "string shot": "Speed reduction",
+    "mud shot": "Mud Shot",
+    "string shot": "String Shot",
     "quash": "Quash",
-    "bulldoze": "Speed reduction",
-    "electro drift": "Offensive pressure",
+    "bulldoze": "Bulldoze",
 }
 
 _WEATHER = {
