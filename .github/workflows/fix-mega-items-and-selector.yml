@@ -1,0 +1,130 @@
+name: Fix Mega item promotion and item selector
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: python -m pip install streamlit pytest
+
+      - name: Apply safe item selector migration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('app.py')
+          text = app.read_text()
+
+          old_import = 'from champions.team_state import ensure_slot_structure, on_species_change'
+          new_import = 'from champions.team_state import ensure_slot_structure, on_species_change, on_item_change'
+          if old_import in text:
+              text = text.replace(old_import, new_import, 1)
+
+          start_marker = '                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)'
+          end_marker = '                slot["item"] = selected_item'
+          start = text.find(start_marker)
+          end = text.find(end_marker, start)
+          if start == -1 or end == -1:
+              raise RuntimeError('Contextual item selector block not found')
+          end += len(end_marker)
+
+          replacement = '''                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
+
+                # Keep category headings visual only. Streamlit selectboxes do not
+                # support disabled options, so headings must never be inserted into
+                # the actual option values: every selectable value is a real item.
+                item_options = list(mega_items) + list(species_items) + list(standard_items)
+                mega_set = set(mega_items)
+                species_set = set(species_items)
+
+                current_item = slot.get("item", "")
+                if current_item not in item_options:
+                    current_item = item_options[0] if item_options else ""
+
+                def _format_item_option(item):
+                    if item in mega_set:
+                        return f"⭐ Mega Evolution  •  {item}"
+                    if item in species_set:
+                        return f"◆ Pokémon-specific  •  {item}"
+                    return f"General held item  •  {item}"
+
+                selected_item = strlit.selectbox(
+                    "Held Item",
+                    options=item_options,
+                    index=item_options.index(current_item) if current_item in item_options else 0,
+                    key=f"item_{i}",
+                    format_func=_format_item_option,
+                    on_change=on_item_change,
+                    args=(i,),
+                )
+                slot["item"] = selected_item'''
+
+          text = text[:start] + replacement + text[end:]
+          app.write_text(text)
+
+          state = Path('champions/team_state.py')
+          state_text = state.read_text()
+          if 'def on_item_change(' not in state_text:
+              state_text += '''\n\n\ndef on_item_change(slot_idx):
+    """Promote a base Pokémon when its matching Mega Stone is selected."""
+    selected_item = strlit.session_state.get(f"item_{slot_idx}", "")
+    if not selected_item:
+        return
+
+    mega_species = next(
+        (species for species, stone in MEGA_STONE_MAP.items() if stone == selected_item),
+        None,
+    )
+    if not mega_species:
+        return
+
+    slot = ensure_slot_structure(slot_idx)
+    current_species = str(slot.get("name") or "")
+    base_species = mega_species.removeprefix("Mega ")
+    if current_species.casefold() != base_species.casefold():
+        return
+
+    slot["name"] = mega_species
+    slot["ability"] = CUSTOM_MEGAS_DATA.get(mega_species, {}).get("ability", "Standard")
+    slot["item"] = selected_item
+    strlit.session_state[f"species_select_{slot_idx}"] = mega_species
+'''
+              state.write_text(state_text)
+          PY
+
+      - name: Validate
+        run: |
+          python -m py_compile app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
+          python - <<'PY'
+          from champions.item_data import MEGA_STONE_MAP
+          from champions.team_state import on_item_change
+          assert 'Mega Abomasnow' in MEGA_STONE_MAP
+          assert 'Mega Charizard Y' in MEGA_STONE_MAP
+          assert callable(on_item_change)
+          print('Item selector and Mega promotion checks passed')
+          PY
+
+      - name: Commit application changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.py champions/team_state.py
+          git commit -m "Make item selector categories non-selectable"
+          git push
+
+      - name: Remove migration workflow
+        if: success()
+        run: |
+          git rm .github/workflows/fix-mega-items-and-selector.yml
+          git commit -m "Remove one-time item selector migration"
+          git push
