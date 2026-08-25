@@ -7,6 +7,9 @@ on:
 permissions:
   contents: write
 
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
 jobs:
   fix:
     if: ${{ !contains(github.event.head_commit.message, 'Fix speed control analyzer labels') }}
@@ -14,8 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Patch speed control data
+        working-directory: ${{ github.workspace }}
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -55,11 +61,13 @@ jobs:
           PY
 
       - name: Verify analyzer
+        working-directory: ${{ github.workspace }}
         run: |
           python -m pip install pytest
-          pytest -q tests/test_team_analyzer.py
+          python -m pytest -q tests/test_team_analyzer.py
 
       - name: Commit fix and remove temporary workflow
+        working-directory: ${{ github.workspace }}
         run: |
           rm -f .github/workflows/fix-speed-control.yml
           git config user.name "github-actions[bot]"
