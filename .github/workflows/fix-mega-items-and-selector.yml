@@ -2,6 +2,8 @@ name: Fix Mega item promotion and item selector
 
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -30,104 +32,7 @@ jobs:
           python -m pip install pytest
 
       - name: Apply item selector and Mega promotion fix
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          app_path = Path("app.py")
-          state_path = Path("champions/team_state.py")
-          app = app_path.read_text(encoding="utf-8")
-          state = state_path.read_text(encoding="utf-8")
-
-          # Wire the item callback exactly once.
-          old_import = "from champions.team_state import ensure_slot_structure, on_species_change"
-          new_import = "from champions.team_state import ensure_slot_structure, on_species_change, on_item_change"
-          if "from champions.team_state import ensure_slot_structure, on_species_change, on_item_change" not in app:
-              if old_import not in app:
-                  raise RuntimeError("Team-state import anchor not found")
-              app = app.replace(old_import, new_import, 1)
-
-          # Replace the old selectable-heading implementation. Category headings
-          # are presentation only; selectbox options must contain real items only.
-          block = re.compile(
-              r'''(?ms)^                mega_items, species_items, standard_items = get_contextual_item_groups\(slot_name\)\n.*?^                slot\["item"\] = selected_item\n'''
-          )
-
-          replacement = '''                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
-                mega_items = list(mega_items)
-                species_items = list(species_items)
-                standard_items = list(standard_items)
-
-                # Never put category headings into the selectbox options. They
-                # looked like items and could therefore become the selected item.
-                # Ordering still keeps Mega / Pokémon-specific items at the top.
-                item_options = mega_items + species_items + standard_items
-                mega_set = set(mega_items)
-                species_set = set(species_items)
-
-                current_item = slot.get("item", "")
-                if current_item not in item_options:
-                    current_item = item_options[0] if item_options else ""
-
-                def _format_item_option(item):
-                    if item in mega_set:
-                        return f"⭐ Mega Stone  •  {item}"
-                    if item in species_set:
-                        return f"◆ Pokémon-specific  •  {item}"
-                    return item
-
-                selected_item = strlit.selectbox(
-                    "Held Item",
-                    options=item_options,
-                    index=item_options.index(current_item) if current_item in item_options else 0,
-                    key=f"item_{i}",
-                    format_func=_format_item_option,
-                    on_change=on_item_change,
-                    args=(i,),
-                )
-                slot["item"] = selected_item
-'''
-
-          if not block.search(app):
-              # A previous successful run may already contain the new structure.
-              if "on_change=on_item_change" not in app or "item_options = mega_items + species_items + standard_items" not in app:
-                  raise RuntimeError("Held-item selector block not found")
-          else:
-              app = block.sub(replacement, app, count=1)
-
-          # Add the callback once. Selecting a base Pokémon's matching Mega Stone
-          # promotes the slot to the Mega form so name, sprite and analytics follow it.
-          if "def on_item_change(" not in state:
-              state += '''\n\n\ndef on_item_change(slot_idx):
-    """Promote a base Pokémon to its Mega form when its matching stone is selected."""
-    selected_item = strlit.session_state.get(f"item_{slot_idx}", "")
-    if not selected_item:
-        return
-
-    mega_species = next(
-        (species for species, stone in MEGA_STONE_MAP.items() if stone == selected_item),
-        None,
-    )
-    if not mega_species:
-        return
-
-    slot = ensure_slot_structure(slot_idx)
-    current_species = str(slot.get("name") or "")
-    base_species = mega_species.removeprefix("Mega ")
-    if current_species.casefold() != base_species.casefold():
-        return
-
-    slot["name"] = mega_species
-    slot["ability"] = CUSTOM_MEGAS_DATA.get(mega_species, {}).get("ability", "Standard")
-    slot["item"] = selected_item
-    strlit.session_state[f"species_select_{slot_idx}"] = mega_species
-'''
-
-          app_path.write_text(app, encoding="utf-8")
-          state_path.write_text(state, encoding="utf-8")
-          print("Item selector migration applied safely.")
-          PY
+        run: python tools/fix_mega_items_and_selector.py
 
       - name: Validate from repository root
         working-directory: .
@@ -136,32 +41,23 @@ jobs:
         run: |
           python -m py_compile app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
           pytest -q tests/test_item_data.py tests/test_item_selector_wiring.py
-          python - <<'PY'
-          from champions.item_data import MEGA_STONE_MAP
-          from champions.team_state import on_item_change
-          assert "Mega Abomasnow" in MEGA_STONE_MAP
-          assert "Mega Charizard Y" in MEGA_STONE_MAP
-          assert callable(on_item_change)
-          print("Mega promotion and item-selector checks passed")
-          PY
 
       - name: Commit application changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.py champions/team_state.py
+          git add app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
           if git diff --cached --quiet; then
             echo "No application changes were necessary."
           else
-            git commit -m "Prevent item category headers from being selectable"
+            git commit -m "Fix Mega item promotion and selector behaviour"
             git push
           fi
 
-      - name: Remove one-time migration workflow
+      - name: Remove completed migration workflow
         if: success()
         run: |
           git fetch origin main
-          git checkout main
           git pull --ff-only origin main
           if [ -f .github/workflows/fix-mega-items-and-selector.yml ]; then
             git rm .github/workflows/fix-mega-items-and-selector.yml
