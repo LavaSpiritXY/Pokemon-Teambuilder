@@ -63,7 +63,7 @@ jobs:
       - name: Verify analyzer
         working-directory: ${{ github.workspace }}
         run: |
-          python -m pip install pytest
+          python -m pip install pytest streamlit requests
           python -m pytest -q tests/test_team_analyzer.py
 
       - name: Commit fix and remove temporary workflow
