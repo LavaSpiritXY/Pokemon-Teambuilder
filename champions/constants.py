@@ -117,6 +117,7 @@ TYPE_CHART_DATA: Dict[str, Dict[str, float]] = {
 }
 
 CUSTOM_MEGAS_DATA = {
+    "Mega Abomasnow": {"ability": "Snow Warning", "hp": 90, "atk": 132, "def": 105, "spa": 132, "spd": 105, "spd_stat": 30},
     "Mega Venusaur": {"ability": "Thick Fat", "hp": 80, "atk": 100, "def": 123, "spa": 122, "spd": 120, "spd_stat": 80},
     "Mega Charizard X": {"ability": "Tough Claws", "hp": 78, "atk": 130, "def": 111, "spa": 130, "spd": 85, "spd_stat": 100},
     "Mega Charizard Y": {"ability": "Drought", "hp": 78, "atk": 104, "def": 78, "spa": 159, "spd": 115, "spd_stat": 100},

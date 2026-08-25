@@ -42,6 +42,7 @@ CHAMPIONS_STANDARD_HELD_ITEMS = (
 # entries such as ``CharizardYite`` or ``Blastoisite``.
 _MEGA_STONE_OVERRIDES = {
     "Mega Venusaur": "Venusaurite",
+    "Mega Abomasnow": "Abomasite",
     "Mega Charizard X": "Charizardite X",
     "Mega Charizard Y": "Charizardite Y",
     "Mega Blastoise": "Blastoisinite",
@@ -127,6 +128,43 @@ def get_champions_held_items(include_mega_stones: bool = True) -> List[str]:
     return sorted(items, key=str.casefold)
 
 
+# Items that are meaningfully associated with one species/form.  These are
+# surfaced separately in the UI, but remain legal only when appropriate.
+POKEMON_SPECIFIC_ITEMS = {
+    "Pikachu": ("Light Ball",),
+}
+
+
+def _base_species_for_mega(species: str) -> str:
+    value = str(species or "").strip()
+    if value.startswith("Mega "):
+        value = value[5:]
+        # Mega Raichu X/Y and Mega Charizard X/Y share their base species.
+        value = value.rsplit(" ", 1)[0] if value.endswith((" X", " Y")) else value
+    return value
+
+
+def get_contextual_item_groups(species: str):
+    """Return (mega_items, species_items, standard_items) for one species."""
+    species = str(species or "").strip()
+    base = _base_species_for_mega(species)
+
+    mega_items = []
+    for mega_name, stone in get_mega_stone_map().items():
+        if _base_species_for_mega(mega_name).casefold() == base.casefold():
+            mega_items.append(stone)
+
+    species_items = list(POKEMON_SPECIFIC_ITEMS.get(base, ()))
+    mega_items = sorted(set(mega_items), key=str.casefold)
+    species_items = sorted(set(species_items), key=str.casefold)
+    special = set(mega_items) | set(species_items)
+    standard_items = [
+        item for item in CHAMPIONS_STANDARD_HELD_ITEMS
+        if item not in special
+    ]
+    return mega_items, species_items, standard_items
+
+
 _ITEM_ALIASES = {
     "kings rock": "King's Rock",
     "never melt ice": "Never-Melt Ice",
@@ -168,4 +206,6 @@ __all__ = [
     "get_mega_stone_map",
     "normalize_item_name",
     "is_champions_item",
+    "POKEMON_SPECIFIC_ITEMS",
+    "get_contextual_item_groups",
 ]

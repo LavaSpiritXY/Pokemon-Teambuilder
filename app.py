@@ -5,7 +5,11 @@ from champions.constants import (
     NATURES,
 )
 
-from champions.item_data import CHAMPIONS_HELD_ITEMS, MEGA_STONE_MAP
+from champions.item_data import (
+    CHAMPIONS_HELD_ITEMS,
+    MEGA_STONE_MAP,
+    get_contextual_item_groups,
+)
 
 from typing import Dict, List, Set, Tuple
 
@@ -354,11 +358,48 @@ for i in range(6):
                 slot["item"] = correct_stone
                 strlit.text_input("Held Item", value=correct_stone, key=f"item_locked_{i}_{slot_name}", disabled=True)
             else:
-                item_opts = CHAMPIONS_HELD_ITEMS
-                current_item = slot.get("item", item_opts[0])
-                if current_item not in item_opts:
-                    current_item = item_opts[0]
-                slot["item"] = strlit.selectbox("Held Item", options=item_opts, index=item_opts.index(current_item), key=f"item_{i}")
+                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
+                item_options = []
+                item_labels = {}
+
+                if mega_items:
+                    item_options.append("── ⭐ Mega Evolution ──")
+                    item_options.extend(mega_items)
+                    for item in mega_items:
+                        item_labels[item] = item
+
+                if species_items:
+                    item_options.append("── ⭐ Pokémon-specific ──")
+                    item_options.extend(species_items)
+                    for item in species_items:
+                        item_labels[item] = item
+
+                item_options.append("── General Held Items ──")
+                item_options.extend(standard_items)
+
+                current_item = slot.get("item", "")
+                selectable = [x for x in item_options if not x.startswith("── ")]
+                if current_item not in selectable:
+                    current_item = selectable[0] if selectable else ""
+
+                def _format_item_option(item):
+                    return item if not item.startswith("── ") else item
+
+                selected_item = strlit.selectbox(
+                    "Held Item",
+                    options=item_options,
+                    index=item_options.index(current_item) if current_item in item_options else (
+                        next((idx for idx, value in enumerate(item_options) if not value.startswith("── ")), 0)
+                    ),
+                    key=f"item_{i}",
+                    format_func=_format_item_option,
+                )
+                if selected_item.startswith("── "):
+                    # Streamlit selectboxes cannot make a true non-selectable
+                    # category row, so immediately keep the previous/current
+                    # legal item if a heading is selected.
+                    selected_item = current_item
+                slot["item"] = selected_item
 
             nat_opts = NATURES
             current_nature = slot.get("nature", "Hardy")
