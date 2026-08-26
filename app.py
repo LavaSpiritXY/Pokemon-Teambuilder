@@ -45,7 +45,7 @@ from champions.stat_training import render_dynamic_stat_controls, render_dynamic
 from champions.team_io import export_slot_to_showdown, export_team_to_showdown, parse_showdown_text
 from champions.team_analyzer_ui import render_team_analyzer_main
 
-from champions.team_state import ensure_slot_structure, on_species_change
+from champions.team_state import ensure_slot_structure, on_species_change, on_item_change
 
 
 # ==========================================
@@ -359,46 +359,36 @@ for i in range(6):
                 strlit.text_input("Held Item", value=correct_stone, key=f"item_locked_{i}_{slot_name}", disabled=True)
             else:
                 mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
-                item_options = []
-                item_labels = {}
+                mega_items = list(mega_items)
+                species_items = list(species_items)
+                standard_items = list(standard_items)
 
-                if mega_items:
-                    item_options.append("── ⭐ Mega Evolution ──")
-                    item_options.extend(mega_items)
-                    for item in mega_items:
-                        item_labels[item] = item
-
-                if species_items:
-                    item_options.append("── ⭐ Pokémon-specific ──")
-                    item_options.extend(species_items)
-                    for item in species_items:
-                        item_labels[item] = item
-
-                item_options.append("── General Held Items ──")
-                item_options.extend(standard_items)
+                # Category labels are display text only. They are never values
+                # in the selectbox, so "General Held Items" cannot become an item.
+                item_options = mega_items + species_items + standard_items
+                mega_set = set(mega_items)
+                species_set = set(species_items)
 
                 current_item = slot.get("item", "")
-                selectable = [x for x in item_options if not x.startswith("── ")]
-                if current_item not in selectable:
-                    current_item = selectable[0] if selectable else ""
+                if current_item not in item_options:
+                    current_item = item_options[0] if item_options else ""
 
                 def _format_item_option(item):
-                    return item if not item.startswith("── ") else item
+                    if item in mega_set:
+                        return f"⭐ Mega Stone  •  {item}"
+                    if item in species_set:
+                        return f"◆ Pokémon-specific  •  {item}"
+                    return item
 
                 selected_item = strlit.selectbox(
                     "Held Item",
                     options=item_options,
-                    index=item_options.index(current_item) if current_item in item_options else (
-                        next((idx for idx, value in enumerate(item_options) if not value.startswith("── ")), 0)
-                    ),
+                    index=item_options.index(current_item) if current_item in item_options else 0,
                     key=f"item_{i}",
                     format_func=_format_item_option,
+                    on_change=on_item_change,
+                    args=(i,),
                 )
-                if selected_item.startswith("── "):
-                    # Streamlit selectboxes cannot make a true non-selectable
-                    # category row, so immediately keep the previous/current
-                    # legal item if a heading is selected.
-                    selected_item = current_item
                 slot["item"] = selected_item
 
             nat_opts = NATURES

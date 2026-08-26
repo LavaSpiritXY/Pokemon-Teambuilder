@@ -109,3 +109,31 @@ def on_species_change(slot_idx):
         ),
         "evs": evs,
     })
+
+
+def on_item_change(slot_idx):
+    """Promote a base Pokémon when its matching Mega Stone is selected."""
+    selected_item = strlit.session_state.get(f"item_{slot_idx}", "")
+    if not selected_item:
+        return
+
+    mega_species = next(
+        (species for species, stone in MEGA_STONE_MAP.items() if stone == selected_item),
+        None,
+    )
+    if not mega_species:
+        return
+
+    slot = ensure_slot_structure(slot_idx)
+    current_species = str(slot.get("name") or "")
+    base_species = mega_species.removeprefix("Mega ")
+
+    # Only the matching base species can promote to this Mega form.
+    if current_species.casefold() != base_species.casefold():
+        return
+
+    slot["name"] = mega_species
+    slot["ability"] = CUSTOM_MEGAS_DATA.get(mega_species, {}).get("ability", "Standard")
+    slot["item"] = selected_item
+    strlit.session_state[f"species_select_{slot_idx}"] = mega_species
+
