@@ -30,10 +30,11 @@ jobs:
       - name: Apply migration
         run: python tools/fix_item_selector_and_mega_promotion.py
 
-      - name: Validate migration
+      - name: Validate migration against current main
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
+          git rev-parse HEAD
           python -m py_compile app.py champions/team_state.py champions/item_data.py champions/team_recommendations.py
           python -m pytest -q tests/test_item_data.py tests/test_item_selector_wiring.py tests/test_team_analyzer.py
 
