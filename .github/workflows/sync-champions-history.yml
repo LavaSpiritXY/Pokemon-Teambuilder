@@ -49,9 +49,13 @@ jobs:
         run: python tools/migrate_champions_history_schema.py
 
       - name: Test Champions history schema migration
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python -m pytest tests/test_history_schema_migration.py -v
 
       - name: Automatically discover and sync Champions tournaments
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python tools/sync_champions_history.py \
             --discovery-pages 10 \
@@ -60,12 +64,18 @@ jobs:
             --delay 1.5
 
       - name: Rebuild tournament move history from cached decklists
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python tools/enrich_tournament_moves.py
 
       - name: Run tournament data regression tests in isolation
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python -m pytest tests/test_tournament_data.py -v
 
       - name: Run remaining Champions regression tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python -m pytest \
             test_champions_auto_sync.py \
@@ -78,6 +88,8 @@ jobs:
             tests/test_champions_end_to_end.py -v
 
       - name: Validate generated data and compile modules
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python -m json.tool champions_meta_history.json > /dev/null
           python -m json.tool champions_event_ids.json > /dev/null
