@@ -309,8 +309,13 @@ for i in range(6):
         slot_name = slot.get('name', '-- Choose a Pokémon --')
         strlit.subheader(f"Slot {i+1}: {slot_name if slot_name != '-- Choose a Pokémon --' else '(Empty Slot)'}")
         
+        selector_name = slot_name
+        if selector_name.startswith("Mega "):
+            selector_name = selector_name[5:].strip()
+            if selector_name.endswith(" X") or selector_name.endswith(" Y"):
+                selector_name = selector_name[:-2].strip()
         try:
-            default_index = CHAMPIONS_ALL_FORMS.index(slot_name)
+            default_index = CHAMPIONS_ALL_FORMS.index(selector_name)
         except ValueError:
             default_index = 0
 
@@ -353,43 +358,32 @@ for i in range(6):
             slot["ability"] = strlit.selectbox("Ability", options=ability_options, index=ability_options.index(current_ability), key=f"ab_{i}")
             strlit.caption(f"Suggested role: {infer_slot_role(slot)}")
 
-            if slot_name in MEGA_STONE_MAP:
-                correct_stone = MEGA_STONE_MAP[slot_name]
-                slot["item"] = correct_stone
-                strlit.text_input("Held Item", value=correct_stone, key=f"item_locked_{i}_{slot_name}", disabled=True)
-            else:
-                mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
-                mega_items = list(mega_items)
-                species_items = list(species_items)
-                standard_items = list(standard_items)
+            mega_items, species_items, standard_items = get_contextual_item_groups(slot_name)
+            item_options = list(mega_items) + list(species_items) + list(standard_items)
+            mega_set = set(mega_items)
+            species_set = set(species_items)
 
-                # Category labels are display text only. They are never values
-                # in the selectbox, so "General Held Items" cannot become an item.
-                item_options = mega_items + species_items + standard_items
-                mega_set = set(mega_items)
-                species_set = set(species_items)
+            current_item = slot.get("item", "")
+            if current_item not in item_options:
+                current_item = item_options[0] if item_options else ""
 
-                current_item = slot.get("item", "")
-                if current_item not in item_options:
-                    current_item = item_options[0] if item_options else ""
+            def _format_item_option(item):
+                if item in mega_set:
+                    return f"⭐ Mega Stone  •  {item}"
+                if item in species_set:
+                    return f"◆ Pokémon-specific  •  {item}"
+                return item
 
-                def _format_item_option(item):
-                    if item in mega_set:
-                        return f"⭐ Mega Stone  •  {item}"
-                    if item in species_set:
-                        return f"◆ Pokémon-specific  •  {item}"
-                    return item
-
-                selected_item = strlit.selectbox(
-                    "Held Item",
-                    options=item_options,
-                    index=item_options.index(current_item) if current_item in item_options else 0,
-                    key=f"item_{i}",
-                    format_func=_format_item_option,
-                    on_change=on_item_change,
-                    args=(i,),
-                )
-                slot["item"] = selected_item
+            selected_item = strlit.selectbox(
+                "Held Item",
+                options=item_options,
+                index=item_options.index(current_item) if current_item in item_options else 0,
+                key=f"item_{i}",
+                format_func=_format_item_option,
+                on_change=on_item_change,
+                args=(i,),
+            )
+            slot["item"] = selected_item
 
             nat_opts = NATURES
             current_nature = slot.get("nature", "Hardy")

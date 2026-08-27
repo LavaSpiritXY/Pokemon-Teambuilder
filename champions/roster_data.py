@@ -323,12 +323,17 @@ def fetch_pokemon_roster():
     ):
         roster.append(display_name_for_species_key(species_key))
 
+    # Mega forms are not independently selectable in the species dropdown.
+    # The base species is the stable selector; the matching Mega Stone drives
+    # the Mega form stored in the slot state.
+    base_only_roster = {
+        item for item in roster
+        if not str(item).startswith("Mega ")
+    }
+
     return ["-- Choose a Pokémon --"] + sorted(
-        set(roster),
-        key=lambda item: (
-            not item.startswith("Mega "),
-            item.lower(),
-        ),
+        base_only_roster,
+        key=str.lower,
     )
 
 def get_clean_api_name(mon_name):

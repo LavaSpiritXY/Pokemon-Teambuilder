@@ -126,32 +126,45 @@ def _base_species_for_mega(mega_species: str) -> str:
 
 
 def on_item_change(slot_idx):
-    """Promote a base Pokémon when its matching Mega Stone is selected."""
+    """Use the selected Mega Stone to control the slot's Mega form.
+
+    Base species and its X/Y Mega variants share one family. Selecting the
+    matching stone promotes the base slot; selecting another matching stone
+    switches Mega forms; selecting a non-Mega item demotes back to the base.
+    """
     selected_item = strlit.session_state.get(f"item_{slot_idx}", "")
     if not selected_item:
         return
 
-    # Find the exact Mega form associated with the selected stone.
-    mega_species = next(
-        (
-            species
-            for species, stone in MEGA_STONE_MAP.items()
-            if stone.casefold() == selected_item.casefold()
-        ),
+    def mega_base(name):
+        value = str(name or "").strip()
+        if value.lower().startswith("mega "):
+            value = value[5:].strip()
+        if value.endswith(" X") or value.endswith(" Y"):
+            value = value[:-2].strip()
+        return value
+
+    current_slot = ensure_slot_structure(slot_idx)
+    current_species = str(current_slot.get("name") or "")
+    current_base = mega_base(current_species)
+
+    target_mega = next(
+        (species for species, stone in MEGA_STONE_MAP.items() if stone == selected_item),
         None,
     )
-    if not mega_species:
+
+    # Matching Mega Stone: promote from the base or switch between Mega forms.
+    if target_mega and current_base.casefold() == mega_base(target_mega).casefold():
+        current_slot["name"] = target_mega
+        current_slot["ability"] = CUSTOM_MEGAS_DATA.get(target_mega, {}).get("ability", "Standard")
+        current_slot["item"] = selected_item
+        strlit.session_state[f"species_select_{slot_idx}"] = current_base
         return
 
-    slot = ensure_slot_structure(slot_idx)
-    current_species = str(slot.get("name") or "").strip()
-    base_species = _base_species_for_mega(mega_species)
+    # Picking any ordinary item while a Mega form is active returns the slot
+    # to its base species. This keeps the base+stone model reversible.
+    if current_species.lower().startswith("mega ") and not target_mega:
+        current_slot["name"] = current_base
+        current_slot["item"] = selected_item
+        strlit.session_state[f"species_select_{slot_idx}"] = current_base
 
-    # Only the matching base species can promote to this Mega form.
-    if current_species.casefold() != base_species.casefold():
-        return
-
-    slot["name"] = mega_species
-    slot["ability"] = CUSTOM_MEGAS_DATA.get(mega_species, {}).get("ability", "Standard")
-    slot["item"] = selected_item
-    strlit.session_state[f"species_select_{slot_idx}"] = mega_species
