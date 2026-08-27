@@ -12,11 +12,14 @@ def test_mega_form_move_history_is_preserved_and_idempotent(tmp_path):
     cache_dir = tmp_path / "champions_cache"
     cache_dir.mkdir()
 
+    # The canonical Champions species-key layer removes the "Mega-" prefix
+    # for lookup compatibility, so Mega Charizard Y is stored under
+    # "charizard-y" while retaining its display_name as the exact form.
     history = {
         "schema_version": 1,
         "active_regulation": "M-B",
         "pokemon": {
-            "mega-charizard-y": {
+            "charizard-y": {
                 "display_name": "Mega Charizard Y",
                 "appearances": 4,
             },
