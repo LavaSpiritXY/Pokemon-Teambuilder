@@ -6,11 +6,13 @@ on:
     paths:
       - ".github/workflows/sync-champions-history.yml"
       - "tools/migrate_champions_history_schema.py"
+      - "tools/enrich_tournament_moves.py"
       - "tests/test_history_schema_migration.py"
       - "tests/test_tournament_data.py"
+      - "tests/test_tournament_move_history.py"
       - "champions/tournament_data.py"
+      - "champions/tournament_move_history.py"
   schedule:
-    # Run four times per day so new tournaments are picked up without manual work.
     - cron: "17 */6 * * *"
   workflow_dispatch:
 
@@ -57,15 +59,23 @@ jobs:
             --batch-size 25 \
             --delay 1.5
 
-      # Keep tournament-data tests in their own Python process. They exercise
-      # module-level state (CHAMPIONS_META_DB) and mock module-level loaders;
-      # running them after the other regression modules can leave stale module
-      # references behind. The production code is unchanged by this isolation.
+      - name: Rebuild tournament move history from cached decklists
+        run: python tools/enrich_tournament_moves.py
+
       - name: Run tournament data regression tests in isolation
         run: python -m pytest tests/test_tournament_data.py -v
 
       - name: Run remaining Champions regression tests
-        run: python -m pytest test_champions_auto_sync.py test_champions_history_data.py test_champions_incremental_history.py tests/test_meta_analytics.py tests/test_meta_viability.py tests/test_type_chart.py tests/test_champions_end_to_end.py -v
+        run: |
+          python -m pytest \
+            test_champions_auto_sync.py \
+            test_champions_history_data.py \
+            test_champions_incremental_history.py \
+            tests/test_tournament_move_history.py \
+            tests/test_meta_analytics.py \
+            tests/test_meta_viability.py \
+            tests/test_type_chart.py \
+            tests/test_champions_end_to_end.py -v
 
       - name: Validate generated data and compile modules
         run: |
@@ -78,8 +88,11 @@ jobs:
             champions/history_data.py \
             champions/regulation.py \
             champions/tournament_data.py \
-            champions_aggregation_v2.py \
+            champions/tournament_move_history.py \
+            champions_meta.py \
+            champions_integration.py \
             tools/sync_champions_history.py \
+            tools/enrich_tournament_moves.py \
             tools/migrate_champions_history_schema.py
 
       - name: Commit updated history
@@ -91,5 +104,5 @@ jobs:
             echo "No Champions history changes detected."
             exit 0
           fi
-          git commit -m "Run tournament import diagnostic in CI"
+          git commit -m "Sync tournament move history"
           git push origin HEAD:main
