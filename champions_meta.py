@@ -35,19 +35,25 @@ def _candidate_keys(name: str) -> List[str]:
             candidates.append(value)
 
     # Mega display forms. Preserve the exact form first, then progressively
-    # fall back to the species. Both "Mega Charizard X" and "Charizard Mega X"
-    # therefore resolve to the tournament species "charizard" when needed.
+    # fall back to the canonical Champions species key and base species.
     if key.startswith("mega "):
         remainder = key[5:].strip()
         add(remainder)
         match = re.match(r"^(.+?)\s+([xy])$", remainder)
         if match:
-            add(match.group(1))
+            base, variant = match.groups()
+            # champions.move_data.get_champions_species_key preserves the
+            # canonical form separator used by history (for example,
+            # "Mega Charizard Y" -> "charizard-y").
+            add(f"{base}-{variant}")
+            add(base)
     if key.endswith(" mega"):
         add(key[:-5].strip())
     for suffix in (" mega x", " mega y"):
         if key.endswith(suffix):
             base = key[:-len(suffix)].strip()
+            variant = suffix[-1]
+            add(f"{base}-{variant}")
             add(base)
             if base.endswith(" mega"):
                 add(base[:-5].strip())
