@@ -145,7 +145,7 @@ def get_base_api_name(mon_name):
         if base_entry.get("api_slug"):
             return str(base_entry["api_slug"])
 
-    name = re.sub(r"^Mega\\s+", "", str(mon_name or "")).strip()
-    name = re.sub(r"\\s+(?:X|Y|Z)$", "", name, flags=re.IGNORECASE)
+    name = re.sub(r"^Mega\s+", "", str(mon_name or "")).strip()
+    name = re.sub(r"\s+(?:X|Y|Z)$", "", name, flags=re.IGNORECASE)
     return get_clean_api_name(name)
 
