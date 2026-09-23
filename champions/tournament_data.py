@@ -56,7 +56,7 @@ def import_champions_tournament(event):
 
     history_snapshot = load_champions_history()
     active_regulation = _get_active_regulation(history_snapshot)
-    configured_regulation = _normalise_regulation(CURRENT_REGULATION)
+    configured_regulation = _normalise_regulation(get_current_regulation())
     allowed_regulations = {r for r in (active_regulation, configured_regulation) if r}
     if regulation and allowed_regulations and regulation not in allowed_regulations:
         return
