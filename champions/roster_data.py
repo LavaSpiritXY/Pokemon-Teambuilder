@@ -5,6 +5,7 @@ import streamlit as strlit
 
 from champions.registry import (
     get_species,
+    get_species_by_canonical_key,
     get_species_by_display_name,
     load_registry,
 )
@@ -93,7 +94,7 @@ def display_name_for_species_key(species_key):
         return species_key
 
     key = str(species_key).strip().casefold()
-    entry = get_species(key)
+    entry = get_species(key) or get_species_by_canonical_key(key)
     if entry:
         return str(entry.get("display_name") or entry.get("source_name") or species_key)
 
