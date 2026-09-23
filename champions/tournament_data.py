@@ -1,6 +1,5 @@
 from functools import lru_cache
 
-from champions.constants import CURRENT_REGULATION
 from champions.history_data import (
     build_legacy_meta_db,
     get_history_metrics,
@@ -11,6 +10,7 @@ from champions.history_data import (
 from champions.move_data import get_champions_species_key
 from champions.regulation import get_active_regulation_from_history
 from champions.roster_data import display_name_for_species_key
+from champions.registry import get_current_regulation
 
 CHAMPIONS_META_DB = build_legacy_meta_db()
 _EXPLICIT_IMPORT_NAMES = {}
@@ -27,8 +27,8 @@ def _get_active_regulation(history=None):
         active = _normalise_regulation(history.get("active_regulation"))
         if active:
             return active
-    derived = get_active_regulation_from_history(history, fallback=CURRENT_REGULATION)
-    return _normalise_regulation(derived) or _normalise_regulation(CURRENT_REGULATION)
+    derived = get_active_regulation_from_history(history, fallback=get_current_regulation())
+    return _normalise_regulation(derived) or _normalise_regulation(get_current_regulation())
 
 
 def _extract_match_record(player):
