@@ -97,8 +97,8 @@ def _fetch_pokemon_details_uncached(mon_name):
             data = res.json()
             sprite_url = data.get("sprites", {}).get("other", {}).get("official-artwork", {}).get("front_default") or sprite_url
             box_sprite_url = data.get("sprites", {}).get("front_default") or box_sprite_url
-            types = [t["type"]["name"].title() for t in data.get("types", [])]
             if not registry_data:
+                types = [t["type"]["name"].title() for t in data.get("types", [])]
                 api_stats = {
                     entry["stat"]["name"]: entry["base_stat"]
                     for entry in data.get("stats", [])
@@ -108,8 +108,6 @@ def _fetch_pokemon_details_uncached(mon_name):
             api_abilities = [a["ability"]["name"].replace("-", " ").title() for a in data.get("abilities", [])]
             if registry_data.get("abilities"):
                 abilities = list(registry_data["abilities"])
-            elif api_abilities:
-                abilities = api_abilities
             elif api_abilities:
                 abilities = api_abilities
             if not champion_moves:
