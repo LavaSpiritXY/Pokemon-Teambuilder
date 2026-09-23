@@ -36,6 +36,19 @@ CHAMPIONS_REGULATIONS = {
     "M-C",
 }
 
+_CHAMPIONS_REGULATION_RE = re.compile(r"^M-[A-Z0-9]+$")
+
+
+def is_champions_regulation(value: Any) -> bool:
+    """Return whether a format string matches the Champions M-* convention.
+
+    The named set above remains useful as a record of regulations already
+    observed by the project, but ingestion accepts future regulations such as
+    M-D without requiring a source-code update.
+    """
+    normalized = str(value or "").strip().upper()
+    return bool(_CHAMPIONS_REGULATION_RE.fullmatch(normalized))
+
 REQUEST_HEADERS = {
     "User-Agent": (
         "Pokemon-Teambuilder/ChampionsData "
@@ -240,7 +253,7 @@ def list_limitless_tournaments(
         raise ValueError("page must be >= 1")
     if limit < 1 or limit > 100:
         raise ValueError("limit must be between 1 and 100")
-    if regulation is not None and regulation not in CHAMPIONS_REGULATIONS:
+    if regulation is not None and not is_champions_regulation(regulation):
         raise ValueError(f"Unsupported Champions regulation: {regulation!r}.")
 
     url = build_limitless_api_url(
@@ -516,10 +529,10 @@ def load_limitless_event_data(event_id: Any) -> Dict[str, Any]:
             candidate = candidate.replace("_", "-")
             candidate = re.sub(r"\s+", "-", candidate)
 
-            if candidate in CHAMPIONS_REGULATIONS:
+            if is_champions_regulation(candidate):
                 regulation = candidate
 
-    if regulation not in CHAMPIONS_REGULATIONS:
+    if not is_champions_regulation(regulation):
         raise ValueError(
             f"Tournament {event_key} uses unsupported format {raw_format!r}; "
             "it was not imported into Champions data."
@@ -648,6 +661,7 @@ __all__ = [
     "CHAMPIONS_DATA_VERSION",
     "REQUEST_TIMEOUT_SECONDS",
     "CHAMPIONS_REGULATIONS",
+    "is_champions_regulation",
     "LIMITLESS_BASE_URL",
     "LIMITLESS_API_BASE_URL",
     "LIMITLESS_TOURNAMENTS_URL",
