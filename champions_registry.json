@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-23T17:57:46.424995+00:00",
+  "generated_at": "2026-09-23T18:04:31.036118+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
@@ -16,6 +16,9 @@
   "species": {
     "abomasnow": {
       "display_name": "Abomasnow",
+      "source_name": "Abomasnow",
+      "canonical_key": "abomasnow",
+      "api_slug": "abomasnow",
       "base_species_key": "abomasnow",
       "forme": "",
       "types": [
@@ -39,6 +42,9 @@
     },
     "abomasnowmega": {
       "display_name": "Mega Abomasnow",
+      "source_name": "Abomasnow-Mega",
+      "canonical_key": "abomasnow",
+      "api_slug": "abomasnow",
       "base_species_key": "abomasnow",
       "forme": "Mega",
       "types": [
@@ -61,6 +67,9 @@
     },
     "absol": {
       "display_name": "Absol",
+      "source_name": "Absol",
+      "canonical_key": "absol",
+      "api_slug": "absol",
       "base_species_key": "absol",
       "forme": "",
       "types": [
@@ -84,6 +93,9 @@
     },
     "absolmega": {
       "display_name": "Mega Absol",
+      "source_name": "Absol-Mega",
+      "canonical_key": "absol",
+      "api_slug": "absol",
       "base_species_key": "absol",
       "forme": "Mega",
       "types": [
@@ -105,6 +117,9 @@
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
+      "source_name": "Absol-Mega-Z",
+      "canonical_key": "absol-z",
+      "api_slug": "absol",
       "base_species_key": "absol",
       "forme": "Mega-Z",
       "types": [
@@ -127,6 +142,9 @@
     },
     "aegislash": {
       "display_name": "Aegislash",
+      "source_name": "Aegislash",
+      "canonical_key": "aegislash",
+      "api_slug": "aegislash",
       "base_species_key": "aegislash",
       "forme": "",
       "types": [
@@ -149,6 +167,9 @@
     },
     "aerodactyl": {
       "display_name": "Aerodactyl",
+      "source_name": "Aerodactyl",
+      "canonical_key": "aerodactyl",
+      "api_slug": "aerodactyl",
       "base_species_key": "aerodactyl",
       "forme": "",
       "types": [
@@ -173,6 +194,9 @@
     },
     "aerodactylmega": {
       "display_name": "Mega Aerodactyl",
+      "source_name": "Aerodactyl-Mega",
+      "canonical_key": "aerodactyl",
+      "api_slug": "aerodactyl",
       "base_species_key": "aerodactyl",
       "forme": "Mega",
       "types": [
@@ -195,6 +219,9 @@
     },
     "aggron": {
       "display_name": "Aggron",
+      "source_name": "Aggron",
+      "canonical_key": "aggron",
+      "api_slug": "aggron",
       "base_species_key": "aggron",
       "forme": "",
       "types": [
@@ -219,6 +246,9 @@
     },
     "aggronmega": {
       "display_name": "Mega Aggron",
+      "source_name": "Aggron-Mega",
+      "canonical_key": "aggron",
+      "api_slug": "aggron",
       "base_species_key": "aggron",
       "forme": "Mega",
       "types": [
@@ -240,6 +270,9 @@
     },
     "alakazam": {
       "display_name": "Alakazam",
+      "source_name": "Alakazam",
+      "canonical_key": "alakazam",
+      "api_slug": "alakazam",
       "base_species_key": "alakazam",
       "forme": "",
       "types": [
@@ -263,6 +296,9 @@
     },
     "alakazammega": {
       "display_name": "Mega Alakazam",
+      "source_name": "Alakazam-Mega",
+      "canonical_key": "alakazam",
+      "api_slug": "alakazam",
       "base_species_key": "alakazam",
       "forme": "Mega",
       "types": [
@@ -284,6 +320,9 @@
     },
     "alcremie": {
       "display_name": "Alcremie",
+      "source_name": "Alcremie",
+      "canonical_key": "alcremie",
+      "api_slug": "alcremie",
       "base_species_key": "alcremie",
       "forme": "",
       "types": [
@@ -306,6 +345,9 @@
     },
     "altaria": {
       "display_name": "Altaria",
+      "source_name": "Altaria",
+      "canonical_key": "altaria",
+      "api_slug": "altaria",
       "base_species_key": "altaria",
       "forme": "",
       "types": [
@@ -329,6 +371,9 @@
     },
     "altariamega": {
       "display_name": "Mega Altaria",
+      "source_name": "Altaria-Mega",
+      "canonical_key": "altaria",
+      "api_slug": "altaria",
       "base_species_key": "altaria",
       "forme": "Mega",
       "types": [
@@ -351,6 +396,9 @@
     },
     "ampharos": {
       "display_name": "Ampharos",
+      "source_name": "Ampharos",
+      "canonical_key": "ampharos",
+      "api_slug": "ampharos",
       "base_species_key": "ampharos",
       "forme": "",
       "types": [
@@ -373,6 +421,9 @@
     },
     "ampharosmega": {
       "display_name": "Mega Ampharos",
+      "source_name": "Ampharos-Mega",
+      "canonical_key": "ampharos",
+      "api_slug": "ampharos",
       "base_species_key": "ampharos",
       "forme": "Mega",
       "types": [
@@ -395,6 +446,9 @@
     },
     "annihilape": {
       "display_name": "Annihilape",
+      "source_name": "Annihilape",
+      "canonical_key": "annihilape",
+      "api_slug": "annihilape",
       "base_species_key": "annihilape",
       "forme": "",
       "types": [
@@ -419,6 +473,9 @@
     },
     "appletun": {
       "display_name": "Appletun",
+      "source_name": "Appletun",
+      "canonical_key": "appletun",
+      "api_slug": "appletun",
       "base_species_key": "appletun",
       "forme": "",
       "types": [
@@ -443,6 +500,9 @@
     },
     "araquanid": {
       "display_name": "Araquanid",
+      "source_name": "Araquanid",
+      "canonical_key": "araquanid",
+      "api_slug": "araquanid",
       "base_species_key": "araquanid",
       "forme": "",
       "types": [
@@ -466,6 +526,9 @@
     },
     "arbok": {
       "display_name": "Arbok",
+      "source_name": "Arbok",
+      "canonical_key": "arbok",
+      "api_slug": "arbok",
       "base_species_key": "arbok",
       "forme": "",
       "types": [
@@ -489,6 +552,9 @@
     },
     "arboliva": {
       "display_name": "Arboliva",
+      "source_name": "Arboliva",
+      "canonical_key": "arboliva",
+      "api_slug": "arboliva",
       "base_species_key": "arboliva",
       "forme": "",
       "types": [
@@ -512,6 +578,9 @@
     },
     "arcanine": {
       "display_name": "Arcanine",
+      "source_name": "Arcanine",
+      "canonical_key": "arcanine",
+      "api_slug": "arcanine",
       "base_species_key": "arcanine",
       "forme": "",
       "types": [
@@ -535,6 +604,9 @@
     },
     "arcaninehisui": {
       "display_name": "Arcanine Hisui",
+      "source_name": "Arcanine-Hisui",
+      "canonical_key": "arcanine-hisui",
+      "api_slug": "arcanine-hisui",
       "base_species_key": "arcanine",
       "forme": "Hisui",
       "types": [
@@ -559,6 +631,9 @@
     },
     "archaludon": {
       "display_name": "Archaludon",
+      "source_name": "Archaludon",
+      "canonical_key": "archaludon",
+      "api_slug": "archaludon",
       "base_species_key": "archaludon",
       "forme": "",
       "types": [
@@ -583,6 +658,9 @@
     },
     "ariados": {
       "display_name": "Ariados",
+      "source_name": "Ariados",
+      "canonical_key": "ariados",
+      "api_slug": "ariados",
       "base_species_key": "ariados",
       "forme": "",
       "types": [
@@ -607,6 +685,9 @@
     },
     "armarouge": {
       "display_name": "Armarouge",
+      "source_name": "Armarouge",
+      "canonical_key": "armarouge",
+      "api_slug": "armarouge",
       "base_species_key": "armarouge",
       "forme": "",
       "types": [
@@ -630,6 +711,9 @@
     },
     "aromatisse": {
       "display_name": "Aromatisse",
+      "source_name": "Aromatisse",
+      "canonical_key": "aromatisse",
+      "api_slug": "aromatisse",
       "base_species_key": "aromatisse",
       "forme": "",
       "types": [
@@ -652,6 +736,9 @@
     },
     "audino": {
       "display_name": "Audino",
+      "source_name": "Audino",
+      "canonical_key": "audino",
+      "api_slug": "audino",
       "base_species_key": "audino",
       "forme": "",
       "types": [
@@ -675,6 +762,9 @@
     },
     "audinomega": {
       "display_name": "Mega Audino",
+      "source_name": "Audino-Mega",
+      "canonical_key": "audino",
+      "api_slug": "audino",
       "base_species_key": "audino",
       "forme": "Mega",
       "types": [
@@ -697,6 +787,9 @@
     },
     "aurorus": {
       "display_name": "Aurorus",
+      "source_name": "Aurorus",
+      "canonical_key": "aurorus",
+      "api_slug": "aurorus",
       "base_species_key": "aurorus",
       "forme": "",
       "types": [
@@ -720,6 +813,9 @@
     },
     "avalugg": {
       "display_name": "Avalugg",
+      "source_name": "Avalugg",
+      "canonical_key": "avalugg",
+      "api_slug": "avalugg",
       "base_species_key": "avalugg",
       "forme": "",
       "types": [
@@ -743,6 +839,9 @@
     },
     "avalugghisui": {
       "display_name": "Avalugg Hisui",
+      "source_name": "Avalugg-Hisui",
+      "canonical_key": "avalugg-hisui",
+      "api_slug": "avalugg-hisui",
       "base_species_key": "avalugg",
       "forme": "Hisui",
       "types": [
@@ -767,6 +866,9 @@
     },
     "azumarill": {
       "display_name": "Azumarill",
+      "source_name": "Azumarill",
+      "canonical_key": "azumarill",
+      "api_slug": "azumarill",
       "base_species_key": "azumarill",
       "forme": "",
       "types": [
@@ -791,6 +893,9 @@
     },
     "banette": {
       "display_name": "Banette",
+      "source_name": "Banette",
+      "canonical_key": "banette",
+      "api_slug": "banette",
       "base_species_key": "banette",
       "forme": "",
       "types": [
@@ -814,6 +919,9 @@
     },
     "banettemega": {
       "display_name": "Mega Banette",
+      "source_name": "Banette-Mega",
+      "canonical_key": "banette",
+      "api_slug": "banette",
       "base_species_key": "banette",
       "forme": "Mega",
       "types": [
@@ -835,6 +943,9 @@
     },
     "barbaracle": {
       "display_name": "Barbaracle",
+      "source_name": "Barbaracle",
+      "canonical_key": "barbaracle",
+      "api_slug": "barbaracle",
       "base_species_key": "barbaracle",
       "forme": "",
       "types": [
@@ -859,6 +970,9 @@
     },
     "barbaraclemega": {
       "display_name": "Mega Barbaracle",
+      "source_name": "Barbaracle-Mega",
+      "canonical_key": "barbaracle",
+      "api_slug": "barbaracle",
       "base_species_key": "barbaracle",
       "forme": "Mega",
       "types": [
@@ -881,6 +995,9 @@
     },
     "basculegion": {
       "display_name": "Basculegion",
+      "source_name": "Basculegion",
+      "canonical_key": "basculegion",
+      "api_slug": "basculegion",
       "base_species_key": "basculegion",
       "forme": "",
       "types": [
@@ -904,7 +1021,10 @@
       "is_mega": false
     },
     "basculegionf": {
-      "display_name": "Basculegion F",
+      "display_name": "Basculegion Female",
+      "source_name": "Basculegion-F",
+      "canonical_key": "basculegion-female",
+      "api_slug": "basculegion-female",
       "base_species_key": "basculegion",
       "forme": "F",
       "types": [
@@ -929,6 +1049,9 @@
     },
     "bastiodon": {
       "display_name": "Bastiodon",
+      "source_name": "Bastiodon",
+      "canonical_key": "bastiodon",
+      "api_slug": "bastiodon",
       "base_species_key": "bastiodon",
       "forme": "",
       "types": [
@@ -952,6 +1075,9 @@
     },
     "baxcalibur": {
       "display_name": "Baxcalibur",
+      "source_name": "Baxcalibur",
+      "canonical_key": "baxcalibur",
+      "api_slug": "baxcalibur",
       "base_species_key": "baxcalibur",
       "forme": "",
       "types": [
@@ -975,6 +1101,9 @@
     },
     "baxcaliburmega": {
       "display_name": "Mega Baxcalibur",
+      "source_name": "Baxcalibur-Mega",
+      "canonical_key": "baxcalibur",
+      "api_slug": "baxcalibur",
       "base_species_key": "baxcalibur",
       "forme": "Mega",
       "types": [
@@ -997,6 +1126,9 @@
     },
     "beartic": {
       "display_name": "Beartic",
+      "source_name": "Beartic",
+      "canonical_key": "beartic",
+      "api_slug": "beartic",
       "base_species_key": "beartic",
       "forme": "",
       "types": [
@@ -1020,6 +1152,9 @@
     },
     "beedrill": {
       "display_name": "Beedrill",
+      "source_name": "Beedrill",
+      "canonical_key": "beedrill",
+      "api_slug": "beedrill",
       "base_species_key": "beedrill",
       "forme": "",
       "types": [
@@ -1043,6 +1178,9 @@
     },
     "beedrillmega": {
       "display_name": "Mega Beedrill",
+      "source_name": "Beedrill-Mega",
+      "canonical_key": "beedrill",
+      "api_slug": "beedrill",
       "base_species_key": "beedrill",
       "forme": "Mega",
       "types": [
@@ -1065,6 +1203,9 @@
     },
     "bellibolt": {
       "display_name": "Bellibolt",
+      "source_name": "Bellibolt",
+      "canonical_key": "bellibolt",
+      "api_slug": "bellibolt",
       "base_species_key": "bellibolt",
       "forme": "",
       "types": [
@@ -1088,6 +1229,9 @@
     },
     "blastoise": {
       "display_name": "Blastoise",
+      "source_name": "Blastoise",
+      "canonical_key": "blastoise",
+      "api_slug": "blastoise",
       "base_species_key": "blastoise",
       "forme": "",
       "types": [
@@ -1110,6 +1254,9 @@
     },
     "blastoisemega": {
       "display_name": "Mega Blastoise",
+      "source_name": "Blastoise-Mega",
+      "canonical_key": "blastoise",
+      "api_slug": "blastoise",
       "base_species_key": "blastoise",
       "forme": "Mega",
       "types": [
@@ -1131,6 +1278,9 @@
     },
     "blaziken": {
       "display_name": "Blaziken",
+      "source_name": "Blaziken",
+      "canonical_key": "blaziken",
+      "api_slug": "blaziken",
       "base_species_key": "blaziken",
       "forme": "",
       "types": [
@@ -1154,6 +1304,9 @@
     },
     "blazikenmega": {
       "display_name": "Mega Blaziken",
+      "source_name": "Blaziken-Mega",
+      "canonical_key": "blaziken",
+      "api_slug": "blaziken",
       "base_species_key": "blaziken",
       "forme": "Mega",
       "types": [
@@ -1176,6 +1329,9 @@
     },
     "camerupt": {
       "display_name": "Camerupt",
+      "source_name": "Camerupt",
+      "canonical_key": "camerupt",
+      "api_slug": "camerupt",
       "base_species_key": "camerupt",
       "forme": "",
       "types": [
@@ -1200,6 +1356,9 @@
     },
     "cameruptmega": {
       "display_name": "Mega Camerupt",
+      "source_name": "Camerupt-Mega",
+      "canonical_key": "camerupt",
+      "api_slug": "camerupt",
       "base_species_key": "camerupt",
       "forme": "Mega",
       "types": [
@@ -1222,6 +1381,9 @@
     },
     "castform": {
       "display_name": "Castform",
+      "source_name": "Castform",
+      "canonical_key": "castform",
+      "api_slug": "castform",
       "base_species_key": "castform",
       "forme": "",
       "types": [
@@ -1243,6 +1405,9 @@
     },
     "ceruledge": {
       "display_name": "Ceruledge",
+      "source_name": "Ceruledge",
+      "canonical_key": "ceruledge",
+      "api_slug": "ceruledge",
       "base_species_key": "ceruledge",
       "forme": "",
       "types": [
@@ -1266,6 +1431,9 @@
     },
     "chandelure": {
       "display_name": "Chandelure",
+      "source_name": "Chandelure",
+      "canonical_key": "chandelure",
+      "api_slug": "chandelure",
       "base_species_key": "chandelure",
       "forme": "",
       "types": [
@@ -1290,6 +1458,9 @@
     },
     "chandeluremega": {
       "display_name": "Mega Chandelure",
+      "source_name": "Chandelure-Mega",
+      "canonical_key": "chandelure",
+      "api_slug": "chandelure",
       "base_species_key": "chandelure",
       "forme": "Mega",
       "types": [
@@ -1312,6 +1483,9 @@
     },
     "charizard": {
       "display_name": "Charizard",
+      "source_name": "Charizard",
+      "canonical_key": "charizard",
+      "api_slug": "charizard",
       "base_species_key": "charizard",
       "forme": "",
       "types": [
@@ -1335,6 +1509,9 @@
     },
     "charizardmegax": {
       "display_name": "Mega Charizard X",
+      "source_name": "Charizard-Mega-X",
+      "canonical_key": "charizard-x",
+      "api_slug": "charizard",
       "base_species_key": "charizard",
       "forme": "Mega-X",
       "types": [
@@ -1357,6 +1534,9 @@
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
+      "source_name": "Charizard-Mega-Y",
+      "canonical_key": "charizard-y",
+      "api_slug": "charizard",
       "base_species_key": "charizard",
       "forme": "Mega-Y",
       "types": [
@@ -1379,6 +1559,9 @@
     },
     "chesnaught": {
       "display_name": "Chesnaught",
+      "source_name": "Chesnaught",
+      "canonical_key": "chesnaught",
+      "api_slug": "chesnaught",
       "base_species_key": "chesnaught",
       "forme": "",
       "types": [
@@ -1402,6 +1585,9 @@
     },
     "chesnaughtmega": {
       "display_name": "Mega Chesnaught",
+      "source_name": "Chesnaught-Mega",
+      "canonical_key": "chesnaught",
+      "api_slug": "chesnaught",
       "base_species_key": "chesnaught",
       "forme": "Mega",
       "types": [
@@ -1424,6 +1610,9 @@
     },
     "chimecho": {
       "display_name": "Chimecho",
+      "source_name": "Chimecho",
+      "canonical_key": "chimecho",
+      "api_slug": "chimecho",
       "base_species_key": "chimecho",
       "forme": "",
       "types": [
@@ -1445,6 +1634,9 @@
     },
     "chimechomega": {
       "display_name": "Mega Chimecho",
+      "source_name": "Chimecho-Mega",
+      "canonical_key": "chimecho",
+      "api_slug": "chimecho",
       "base_species_key": "chimecho",
       "forme": "Mega",
       "types": [
@@ -1467,6 +1659,9 @@
     },
     "cinderace": {
       "display_name": "Cinderace",
+      "source_name": "Cinderace",
+      "canonical_key": "cinderace",
+      "api_slug": "cinderace",
       "base_species_key": "cinderace",
       "forme": "",
       "types": [
@@ -1489,6 +1684,9 @@
     },
     "clawitzer": {
       "display_name": "Clawitzer",
+      "source_name": "Clawitzer",
+      "canonical_key": "clawitzer",
+      "api_slug": "clawitzer",
       "base_species_key": "clawitzer",
       "forme": "",
       "types": [
@@ -1510,6 +1708,9 @@
     },
     "clefable": {
       "display_name": "Clefable",
+      "source_name": "Clefable",
+      "canonical_key": "clefable",
+      "api_slug": "clefable",
       "base_species_key": "clefable",
       "forme": "",
       "types": [
@@ -1533,6 +1734,9 @@
     },
     "clefablemega": {
       "display_name": "Mega Clefable",
+      "source_name": "Clefable-Mega",
+      "canonical_key": "clefable",
+      "api_slug": "clefable",
       "base_species_key": "clefable",
       "forme": "Mega",
       "types": [
@@ -1555,6 +1759,9 @@
     },
     "cofagrigus": {
       "display_name": "Cofagrigus",
+      "source_name": "Cofagrigus",
+      "canonical_key": "cofagrigus",
+      "api_slug": "cofagrigus",
       "base_species_key": "cofagrigus",
       "forme": "",
       "types": [
@@ -1576,6 +1783,9 @@
     },
     "conkeldurr": {
       "display_name": "Conkeldurr",
+      "source_name": "Conkeldurr",
+      "canonical_key": "conkeldurr",
+      "api_slug": "conkeldurr",
       "base_species_key": "conkeldurr",
       "forme": "",
       "types": [
@@ -1599,6 +1809,9 @@
     },
     "corviknight": {
       "display_name": "Corviknight",
+      "source_name": "Corviknight",
+      "canonical_key": "corviknight",
+      "api_slug": "corviknight",
       "base_species_key": "corviknight",
       "forme": "",
       "types": [
@@ -1623,6 +1836,9 @@
     },
     "crabominable": {
       "display_name": "Crabominable",
+      "source_name": "Crabominable",
+      "canonical_key": "crabominable",
+      "api_slug": "crabominable",
       "base_species_key": "crabominable",
       "forme": "",
       "types": [
@@ -1647,6 +1863,9 @@
     },
     "crabominablemega": {
       "display_name": "Mega Crabominable",
+      "source_name": "Crabominable-Mega",
+      "canonical_key": "crabominable",
+      "api_slug": "crabominable",
       "base_species_key": "crabominable",
       "forme": "Mega",
       "types": [
@@ -1669,6 +1888,9 @@
     },
     "decidueye": {
       "display_name": "Decidueye",
+      "source_name": "Decidueye",
+      "canonical_key": "decidueye",
+      "api_slug": "decidueye",
       "base_species_key": "decidueye",
       "forme": "",
       "types": [
@@ -1692,6 +1914,9 @@
     },
     "decidueyehisui": {
       "display_name": "Decidueye Hisui",
+      "source_name": "Decidueye-Hisui",
+      "canonical_key": "decidueye-hisui",
+      "api_slug": "decidueye-hisui",
       "base_species_key": "decidueye",
       "forme": "Hisui",
       "types": [
@@ -1715,6 +1940,9 @@
     },
     "dedenne": {
       "display_name": "Dedenne",
+      "source_name": "Dedenne",
+      "canonical_key": "dedenne",
+      "api_slug": "dedenne",
       "base_species_key": "dedenne",
       "forme": "",
       "types": [
@@ -1739,6 +1967,9 @@
     },
     "delphox": {
       "display_name": "Delphox",
+      "source_name": "Delphox",
+      "canonical_key": "delphox",
+      "api_slug": "delphox",
       "base_species_key": "delphox",
       "forme": "",
       "types": [
@@ -1762,6 +1993,9 @@
     },
     "delphoxmega": {
       "display_name": "Mega Delphox",
+      "source_name": "Delphox-Mega",
+      "canonical_key": "delphox",
+      "api_slug": "delphox",
       "base_species_key": "delphox",
       "forme": "Mega",
       "types": [
@@ -1784,6 +2018,9 @@
     },
     "diggersby": {
       "display_name": "Diggersby",
+      "source_name": "Diggersby",
+      "canonical_key": "diggersby",
+      "api_slug": "diggersby",
       "base_species_key": "diggersby",
       "forme": "",
       "types": [
@@ -1808,6 +2045,9 @@
     },
     "ditto": {
       "display_name": "Ditto",
+      "source_name": "Ditto",
+      "canonical_key": "ditto",
+      "api_slug": "ditto",
       "base_species_key": "ditto",
       "forme": "",
       "types": [
@@ -1830,6 +2070,9 @@
     },
     "dragalge": {
       "display_name": "Dragalge",
+      "source_name": "Dragalge",
+      "canonical_key": "dragalge",
+      "api_slug": "dragalge",
       "base_species_key": "dragalge",
       "forme": "",
       "types": [
@@ -1854,6 +2097,9 @@
     },
     "dragalgemega": {
       "display_name": "Mega Dragalge",
+      "source_name": "Dragalge-Mega",
+      "canonical_key": "dragalge",
+      "api_slug": "dragalge",
       "base_species_key": "dragalge",
       "forme": "Mega",
       "types": [
@@ -1876,6 +2122,9 @@
     },
     "dragapult": {
       "display_name": "Dragapult",
+      "source_name": "Dragapult",
+      "canonical_key": "dragapult",
+      "api_slug": "dragapult",
       "base_species_key": "dragapult",
       "forme": "",
       "types": [
@@ -1900,6 +2149,9 @@
     },
     "dragonite": {
       "display_name": "Dragonite",
+      "source_name": "Dragonite",
+      "canonical_key": "dragonite",
+      "api_slug": "dragonite",
       "base_species_key": "dragonite",
       "forme": "",
       "types": [
@@ -1923,6 +2175,9 @@
     },
     "dragonitemega": {
       "display_name": "Mega Dragonite",
+      "source_name": "Dragonite-Mega",
+      "canonical_key": "dragonite",
+      "api_slug": "dragonite",
       "base_species_key": "dragonite",
       "forme": "Mega",
       "types": [
@@ -1945,6 +2200,9 @@
     },
     "drampa": {
       "display_name": "Drampa",
+      "source_name": "Drampa",
+      "canonical_key": "drampa",
+      "api_slug": "drampa",
       "base_species_key": "drampa",
       "forme": "",
       "types": [
@@ -1969,6 +2227,9 @@
     },
     "drampamega": {
       "display_name": "Mega Drampa",
+      "source_name": "Drampa-Mega",
+      "canonical_key": "drampa",
+      "api_slug": "drampa",
       "base_species_key": "drampa",
       "forme": "Mega",
       "types": [
@@ -1991,6 +2252,9 @@
     },
     "eelektross": {
       "display_name": "Eelektross",
+      "source_name": "Eelektross",
+      "canonical_key": "eelektross",
+      "api_slug": "eelektross",
       "base_species_key": "eelektross",
       "forme": "",
       "types": [
@@ -2012,6 +2276,9 @@
     },
     "eelektrossmega": {
       "display_name": "Mega Eelektross",
+      "source_name": "Eelektross-Mega",
+      "canonical_key": "eelektross",
+      "api_slug": "eelektross",
       "base_species_key": "eelektross",
       "forme": "Mega",
       "types": [
@@ -2033,6 +2300,9 @@
     },
     "emboar": {
       "display_name": "Emboar",
+      "source_name": "Emboar",
+      "canonical_key": "emboar",
+      "api_slug": "emboar",
       "base_species_key": "emboar",
       "forme": "",
       "types": [
@@ -2056,6 +2326,9 @@
     },
     "emboarmega": {
       "display_name": "Mega Emboar",
+      "source_name": "Emboar-Mega",
+      "canonical_key": "emboar",
+      "api_slug": "emboar",
       "base_species_key": "emboar",
       "forme": "Mega",
       "types": [
@@ -2078,6 +2351,9 @@
     },
     "emolga": {
       "display_name": "Emolga",
+      "source_name": "Emolga",
+      "canonical_key": "emolga",
+      "api_slug": "emolga",
       "base_species_key": "emolga",
       "forme": "",
       "types": [
@@ -2101,6 +2377,9 @@
     },
     "empoleon": {
       "display_name": "Empoleon",
+      "source_name": "Empoleon",
+      "canonical_key": "empoleon",
+      "api_slug": "empoleon",
       "base_species_key": "empoleon",
       "forme": "",
       "types": [
@@ -2124,6 +2403,9 @@
     },
     "espathra": {
       "display_name": "Espathra",
+      "source_name": "Espathra",
+      "canonical_key": "espathra",
+      "api_slug": "espathra",
       "base_species_key": "espathra",
       "forme": "",
       "types": [
@@ -2147,6 +2429,9 @@
     },
     "espeon": {
       "display_name": "Espeon",
+      "source_name": "Espeon",
+      "canonical_key": "espeon",
+      "api_slug": "espeon",
       "base_species_key": "espeon",
       "forme": "",
       "types": [
@@ -2169,6 +2454,9 @@
     },
     "excadrill": {
       "display_name": "Excadrill",
+      "source_name": "Excadrill",
+      "canonical_key": "excadrill",
+      "api_slug": "excadrill",
       "base_species_key": "excadrill",
       "forme": "",
       "types": [
@@ -2193,6 +2481,9 @@
     },
     "excadrillmega": {
       "display_name": "Mega Excadrill",
+      "source_name": "Excadrill-Mega",
+      "canonical_key": "excadrill",
+      "api_slug": "excadrill",
       "base_species_key": "excadrill",
       "forme": "Mega",
       "types": [
@@ -2215,6 +2506,9 @@
     },
     "falinks": {
       "display_name": "Falinks",
+      "source_name": "Falinks",
+      "canonical_key": "falinks",
+      "api_slug": "falinks",
       "base_species_key": "falinks",
       "forme": "",
       "types": [
@@ -2237,6 +2531,9 @@
     },
     "falinksmega": {
       "display_name": "Mega Falinks",
+      "source_name": "Falinks-Mega",
+      "canonical_key": "falinks",
+      "api_slug": "falinks",
       "base_species_key": "falinks",
       "forme": "Mega",
       "types": [
@@ -2257,7 +2554,10 @@
       "is_mega": true
     },
     "farfetchd": {
-      "display_name": "Farfetch\\U2019D",
+      "display_name": "Farfetch\\u2019d",
+      "source_name": "Farfetch\\u2019d",
+      "canonical_key": "farfetch-u2019d",
+      "api_slug": "farfetch-u2019d",
       "base_species_key": "farfetchd",
       "forme": "",
       "types": [
@@ -2282,6 +2582,9 @@
     },
     "farigiraf": {
       "display_name": "Farigiraf",
+      "source_name": "Farigiraf",
+      "canonical_key": "farigiraf",
+      "api_slug": "farigiraf",
       "base_species_key": "farigiraf",
       "forme": "",
       "types": [
@@ -2306,6 +2609,9 @@
     },
     "feraligatr": {
       "display_name": "Feraligatr",
+      "source_name": "Feraligatr",
+      "canonical_key": "feraligatr",
+      "api_slug": "feraligatr",
       "base_species_key": "feraligatr",
       "forme": "",
       "types": [
@@ -2328,6 +2634,9 @@
     },
     "feraligatrmega": {
       "display_name": "Mega Feraligatr",
+      "source_name": "Feraligatr-Mega",
+      "canonical_key": "feraligatr",
+      "api_slug": "feraligatr",
       "base_species_key": "feraligatr",
       "forme": "Mega",
       "types": [
@@ -2350,6 +2659,9 @@
     },
     "flapple": {
       "display_name": "Flapple",
+      "source_name": "Flapple",
+      "canonical_key": "flapple",
+      "api_slug": "flapple",
       "base_species_key": "flapple",
       "forme": "",
       "types": [
@@ -2374,6 +2686,9 @@
     },
     "flareon": {
       "display_name": "Flareon",
+      "source_name": "Flareon",
+      "canonical_key": "flareon",
+      "api_slug": "flareon",
       "base_species_key": "flareon",
       "forme": "",
       "types": [
@@ -2396,6 +2711,9 @@
     },
     "floetteeternal": {
       "display_name": "Floette Eternal",
+      "source_name": "Floette-Eternal",
+      "canonical_key": "floette-eternal",
+      "api_slug": "floette-eternal",
       "base_species_key": "floette",
       "forme": "Eternal",
       "types": [
@@ -2418,6 +2736,9 @@
     },
     "florges": {
       "display_name": "Florges",
+      "source_name": "Florges",
+      "canonical_key": "florges",
+      "api_slug": "florges",
       "base_species_key": "florges",
       "forme": "",
       "types": [
@@ -2440,6 +2761,9 @@
     },
     "forretress": {
       "display_name": "Forretress",
+      "source_name": "Forretress",
+      "canonical_key": "forretress",
+      "api_slug": "forretress",
       "base_species_key": "forretress",
       "forme": "",
       "types": [
@@ -2463,6 +2787,9 @@
     },
     "froslass": {
       "display_name": "Froslass",
+      "source_name": "Froslass",
+      "canonical_key": "froslass",
+      "api_slug": "froslass",
       "base_species_key": "froslass",
       "forme": "",
       "types": [
@@ -2486,6 +2813,9 @@
     },
     "froslassmega": {
       "display_name": "Mega Froslass",
+      "source_name": "Froslass-Mega",
+      "canonical_key": "froslass",
+      "api_slug": "froslass",
       "base_species_key": "froslass",
       "forme": "Mega",
       "types": [
@@ -2508,6 +2838,9 @@
     },
     "furfrou": {
       "display_name": "Furfrou",
+      "source_name": "Furfrou",
+      "canonical_key": "furfrou",
+      "api_slug": "furfrou",
       "base_species_key": "furfrou",
       "forme": "",
       "types": [
@@ -2529,6 +2862,9 @@
     },
     "gallade": {
       "display_name": "Gallade",
+      "source_name": "Gallade",
+      "canonical_key": "gallade",
+      "api_slug": "gallade",
       "base_species_key": "gallade",
       "forme": "",
       "types": [
@@ -2553,6 +2889,9 @@
     },
     "gallademega": {
       "display_name": "Mega Gallade",
+      "source_name": "Gallade-Mega",
+      "canonical_key": "gallade",
+      "api_slug": "gallade",
       "base_species_key": "gallade",
       "forme": "Mega",
       "types": [
@@ -2575,6 +2914,9 @@
     },
     "garbodor": {
       "display_name": "Garbodor",
+      "source_name": "Garbodor",
+      "canonical_key": "garbodor",
+      "api_slug": "garbodor",
       "base_species_key": "garbodor",
       "forme": "",
       "types": [
@@ -2598,6 +2940,9 @@
     },
     "garchomp": {
       "display_name": "Garchomp",
+      "source_name": "Garchomp",
+      "canonical_key": "garchomp",
+      "api_slug": "garchomp",
       "base_species_key": "garchomp",
       "forme": "",
       "types": [
@@ -2621,6 +2966,9 @@
     },
     "garchompmega": {
       "display_name": "Mega Garchomp",
+      "source_name": "Garchomp-Mega",
+      "canonical_key": "garchomp",
+      "api_slug": "garchomp",
       "base_species_key": "garchomp",
       "forme": "Mega",
       "types": [
@@ -2643,6 +2991,9 @@
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
+      "source_name": "Garchomp-Mega-Z",
+      "canonical_key": "garchomp-z",
+      "api_slug": "garchomp",
       "base_species_key": "garchomp",
       "forme": "Mega-Z",
       "types": [
@@ -2664,6 +3015,9 @@
     },
     "gardevoir": {
       "display_name": "Gardevoir",
+      "source_name": "Gardevoir",
+      "canonical_key": "gardevoir",
+      "api_slug": "gardevoir",
       "base_species_key": "gardevoir",
       "forme": "",
       "types": [
@@ -2688,6 +3042,9 @@
     },
     "gardevoirmega": {
       "display_name": "Mega Gardevoir",
+      "source_name": "Gardevoir-Mega",
+      "canonical_key": "gardevoir",
+      "api_slug": "gardevoir",
       "base_species_key": "gardevoir",
       "forme": "Mega",
       "types": [
@@ -2710,6 +3067,9 @@
     },
     "garganacl": {
       "display_name": "Garganacl",
+      "source_name": "Garganacl",
+      "canonical_key": "garganacl",
+      "api_slug": "garganacl",
       "base_species_key": "garganacl",
       "forme": "",
       "types": [
@@ -2733,6 +3093,9 @@
     },
     "gengar": {
       "display_name": "Gengar",
+      "source_name": "Gengar",
+      "canonical_key": "gengar",
+      "api_slug": "gengar",
       "base_species_key": "gengar",
       "forme": "",
       "types": [
@@ -2755,6 +3118,9 @@
     },
     "gengarmega": {
       "display_name": "Mega Gengar",
+      "source_name": "Gengar-Mega",
+      "canonical_key": "gengar",
+      "api_slug": "gengar",
       "base_species_key": "gengar",
       "forme": "Mega",
       "types": [
@@ -2777,6 +3143,9 @@
     },
     "gholdengo": {
       "display_name": "Gholdengo",
+      "source_name": "Gholdengo",
+      "canonical_key": "gholdengo",
+      "api_slug": "gholdengo",
       "base_species_key": "gholdengo",
       "forme": "",
       "types": [
@@ -2799,6 +3168,9 @@
     },
     "glaceon": {
       "display_name": "Glaceon",
+      "source_name": "Glaceon",
+      "canonical_key": "glaceon",
+      "api_slug": "glaceon",
       "base_species_key": "glaceon",
       "forme": "",
       "types": [
@@ -2821,6 +3193,9 @@
     },
     "glalie": {
       "display_name": "Glalie",
+      "source_name": "Glalie",
+      "canonical_key": "glalie",
+      "api_slug": "glalie",
       "base_species_key": "glalie",
       "forme": "",
       "types": [
@@ -2844,6 +3219,9 @@
     },
     "glaliemega": {
       "display_name": "Mega Glalie",
+      "source_name": "Glalie-Mega",
+      "canonical_key": "glalie",
+      "api_slug": "glalie",
       "base_species_key": "glalie",
       "forme": "Mega",
       "types": [
@@ -2865,6 +3243,9 @@
     },
     "glimmora": {
       "display_name": "Glimmora",
+      "source_name": "Glimmora",
+      "canonical_key": "glimmora",
+      "api_slug": "glimmora",
       "base_species_key": "glimmora",
       "forme": "",
       "types": [
@@ -2888,6 +3269,9 @@
     },
     "glimmoramega": {
       "display_name": "Mega Glimmora",
+      "source_name": "Glimmora-Mega",
+      "canonical_key": "glimmora",
+      "api_slug": "glimmora",
       "base_species_key": "glimmora",
       "forme": "Mega",
       "types": [
@@ -2910,6 +3294,9 @@
     },
     "gliscor": {
       "display_name": "Gliscor",
+      "source_name": "Gliscor",
+      "canonical_key": "gliscor",
+      "api_slug": "gliscor",
       "base_species_key": "gliscor",
       "forme": "",
       "types": [
@@ -2934,6 +3321,9 @@
     },
     "gogoat": {
       "display_name": "Gogoat",
+      "source_name": "Gogoat",
+      "canonical_key": "gogoat",
+      "api_slug": "gogoat",
       "base_species_key": "gogoat",
       "forme": "",
       "types": [
@@ -2956,6 +3346,9 @@
     },
     "golisopod": {
       "display_name": "Golisopod",
+      "source_name": "Golisopod",
+      "canonical_key": "golisopod",
+      "api_slug": "golisopod",
       "base_species_key": "golisopod",
       "forme": "",
       "types": [
@@ -2978,6 +3371,9 @@
     },
     "golisopodmega": {
       "display_name": "Mega Golisopod",
+      "source_name": "Golisopod-Mega",
+      "canonical_key": "golisopod",
+      "api_slug": "golisopod",
       "base_species_key": "golisopod",
       "forme": "Mega",
       "types": [
@@ -3000,6 +3396,9 @@
     },
     "golurk": {
       "display_name": "Golurk",
+      "source_name": "Golurk",
+      "canonical_key": "golurk",
+      "api_slug": "golurk",
       "base_species_key": "golurk",
       "forme": "",
       "types": [
@@ -3024,6 +3423,9 @@
     },
     "golurkmega": {
       "display_name": "Mega Golurk",
+      "source_name": "Golurk-Mega",
+      "canonical_key": "golurk",
+      "api_slug": "golurk",
       "base_species_key": "golurk",
       "forme": "Mega",
       "types": [
@@ -3046,6 +3448,9 @@
     },
     "goodra": {
       "display_name": "Goodra",
+      "source_name": "Goodra",
+      "canonical_key": "goodra",
+      "api_slug": "goodra",
       "base_species_key": "goodra",
       "forme": "",
       "types": [
@@ -3069,6 +3474,9 @@
     },
     "goodrahisui": {
       "display_name": "Goodra Hisui",
+      "source_name": "Goodra-Hisui",
+      "canonical_key": "goodra-hisui",
+      "api_slug": "goodra-hisui",
       "base_species_key": "goodra",
       "forme": "Hisui",
       "types": [
@@ -3093,6 +3501,9 @@
     },
     "gourgeist": {
       "display_name": "Gourgeist",
+      "source_name": "Gourgeist",
+      "canonical_key": "gourgeist",
+      "api_slug": "gourgeist",
       "base_species_key": "gourgeist",
       "forme": "",
       "types": [
@@ -3117,6 +3528,9 @@
     },
     "grapploct": {
       "display_name": "Grapploct",
+      "source_name": "Grapploct",
+      "canonical_key": "grapploct",
+      "api_slug": "grapploct",
       "base_species_key": "grapploct",
       "forme": "",
       "types": [
@@ -3139,6 +3553,9 @@
     },
     "greninja": {
       "display_name": "Greninja",
+      "source_name": "Greninja",
+      "canonical_key": "greninja",
+      "api_slug": "greninja",
       "base_species_key": "greninja",
       "forme": "",
       "types": [
@@ -3163,6 +3580,9 @@
     },
     "greninjamega": {
       "display_name": "Mega Greninja",
+      "source_name": "Greninja-Mega",
+      "canonical_key": "greninja",
+      "api_slug": "greninja",
       "base_species_key": "greninja",
       "forme": "Mega",
       "types": [
@@ -3185,6 +3605,9 @@
     },
     "grimmsnarl": {
       "display_name": "Grimmsnarl",
+      "source_name": "Grimmsnarl",
+      "canonical_key": "grimmsnarl",
+      "api_slug": "grimmsnarl",
       "base_species_key": "grimmsnarl",
       "forme": "",
       "types": [
@@ -3209,6 +3632,9 @@
     },
     "gyarados": {
       "display_name": "Gyarados",
+      "source_name": "Gyarados",
+      "canonical_key": "gyarados",
+      "api_slug": "gyarados",
       "base_species_key": "gyarados",
       "forme": "",
       "types": [
@@ -3232,6 +3658,9 @@
     },
     "gyaradosmega": {
       "display_name": "Mega Gyarados",
+      "source_name": "Gyarados-Mega",
+      "canonical_key": "gyarados",
+      "api_slug": "gyarados",
       "base_species_key": "gyarados",
       "forme": "Mega",
       "types": [
@@ -3254,6 +3683,9 @@
     },
     "hatterene": {
       "display_name": "Hatterene",
+      "source_name": "Hatterene",
+      "canonical_key": "hatterene",
+      "api_slug": "hatterene",
       "base_species_key": "hatterene",
       "forme": "",
       "types": [
@@ -3278,6 +3710,9 @@
     },
     "hawlucha": {
       "display_name": "Hawlucha",
+      "source_name": "Hawlucha",
+      "canonical_key": "hawlucha",
+      "api_slug": "hawlucha",
       "base_species_key": "hawlucha",
       "forme": "",
       "types": [
@@ -3302,6 +3737,9 @@
     },
     "hawluchamega": {
       "display_name": "Mega Hawlucha",
+      "source_name": "Hawlucha-Mega",
+      "canonical_key": "hawlucha",
+      "api_slug": "hawlucha",
       "base_species_key": "hawlucha",
       "forme": "Mega",
       "types": [
@@ -3324,6 +3762,9 @@
     },
     "heliolisk": {
       "display_name": "Heliolisk",
+      "source_name": "Heliolisk",
+      "canonical_key": "heliolisk",
+      "api_slug": "heliolisk",
       "base_species_key": "heliolisk",
       "forme": "",
       "types": [
@@ -3348,6 +3789,9 @@
     },
     "heracross": {
       "display_name": "Heracross",
+      "source_name": "Heracross",
+      "canonical_key": "heracross",
+      "api_slug": "heracross",
       "base_species_key": "heracross",
       "forme": "",
       "types": [
@@ -3372,6 +3816,9 @@
     },
     "heracrossmega": {
       "display_name": "Mega Heracross",
+      "source_name": "Heracross-Mega",
+      "canonical_key": "heracross",
+      "api_slug": "heracross",
       "base_species_key": "heracross",
       "forme": "Mega",
       "types": [
@@ -3394,6 +3841,9 @@
     },
     "hippowdon": {
       "display_name": "Hippowdon",
+      "source_name": "Hippowdon",
+      "canonical_key": "hippowdon",
+      "api_slug": "hippowdon",
       "base_species_key": "hippowdon",
       "forme": "",
       "types": [
@@ -3416,6 +3866,9 @@
     },
     "houndoom": {
       "display_name": "Houndoom",
+      "source_name": "Houndoom",
+      "canonical_key": "houndoom",
+      "api_slug": "houndoom",
       "base_species_key": "houndoom",
       "forme": "",
       "types": [
@@ -3440,6 +3893,9 @@
     },
     "houndoommega": {
       "display_name": "Mega Houndoom",
+      "source_name": "Houndoom-Mega",
+      "canonical_key": "houndoom",
+      "api_slug": "houndoom",
       "base_species_key": "houndoom",
       "forme": "Mega",
       "types": [
@@ -3462,6 +3918,9 @@
     },
     "houndstone": {
       "display_name": "Houndstone",
+      "source_name": "Houndstone",
+      "canonical_key": "houndstone",
+      "api_slug": "houndstone",
       "base_species_key": "houndstone",
       "forme": "",
       "types": [
@@ -3484,6 +3943,9 @@
     },
     "hydrapple": {
       "display_name": "Hydrapple",
+      "source_name": "Hydrapple",
+      "canonical_key": "hydrapple",
+      "api_slug": "hydrapple",
       "base_species_key": "hydrapple",
       "forme": "",
       "types": [
@@ -3508,6 +3970,9 @@
     },
     "hydreigon": {
       "display_name": "Hydreigon",
+      "source_name": "Hydreigon",
+      "canonical_key": "hydreigon",
+      "api_slug": "hydreigon",
       "base_species_key": "hydreigon",
       "forme": "",
       "types": [
@@ -3530,6 +3995,9 @@
     },
     "incineroar": {
       "display_name": "Incineroar",
+      "source_name": "Incineroar",
+      "canonical_key": "incineroar",
+      "api_slug": "incineroar",
       "base_species_key": "incineroar",
       "forme": "",
       "types": [
@@ -3553,6 +4021,9 @@
     },
     "indeedee": {
       "display_name": "Indeedee",
+      "source_name": "Indeedee",
+      "canonical_key": "indeedee",
+      "api_slug": "indeedee",
       "base_species_key": "indeedee",
       "forme": "",
       "types": [
@@ -3577,6 +4048,9 @@
     },
     "indeedeef": {
       "display_name": "Indeedee Female",
+      "source_name": "Indeedee-F",
+      "canonical_key": "indeedee-female",
+      "api_slug": "indeedee-female",
       "base_species_key": "indeedee",
       "forme": "F",
       "types": [
@@ -3601,6 +4075,9 @@
     },
     "infernape": {
       "display_name": "Infernape",
+      "source_name": "Infernape",
+      "canonical_key": "infernape",
+      "api_slug": "infernape",
       "base_species_key": "infernape",
       "forme": "",
       "types": [
@@ -3624,6 +4101,9 @@
     },
     "inteleon": {
       "display_name": "Inteleon",
+      "source_name": "Inteleon",
+      "canonical_key": "inteleon",
+      "api_slug": "inteleon",
       "base_species_key": "inteleon",
       "forme": "",
       "types": [
@@ -3646,6 +4126,9 @@
     },
     "jolteon": {
       "display_name": "Jolteon",
+      "source_name": "Jolteon",
+      "canonical_key": "jolteon",
+      "api_slug": "jolteon",
       "base_species_key": "jolteon",
       "forme": "",
       "types": [
@@ -3668,6 +4151,9 @@
     },
     "kangaskhan": {
       "display_name": "Kangaskhan",
+      "source_name": "Kangaskhan",
+      "canonical_key": "kangaskhan",
+      "api_slug": "kangaskhan",
       "base_species_key": "kangaskhan",
       "forme": "",
       "types": [
@@ -3691,6 +4177,9 @@
     },
     "kangaskhanmega": {
       "display_name": "Mega Kangaskhan",
+      "source_name": "Kangaskhan-Mega",
+      "canonical_key": "kangaskhan",
+      "api_slug": "kangaskhan",
       "base_species_key": "kangaskhan",
       "forme": "Mega",
       "types": [
@@ -3712,6 +4201,9 @@
     },
     "kingambit": {
       "display_name": "Kingambit",
+      "source_name": "Kingambit",
+      "canonical_key": "kingambit",
+      "api_slug": "kingambit",
       "base_species_key": "kingambit",
       "forme": "",
       "types": [
@@ -3736,6 +4228,9 @@
     },
     "kleavor": {
       "display_name": "Kleavor",
+      "source_name": "Kleavor",
+      "canonical_key": "kleavor",
+      "api_slug": "kleavor",
       "base_species_key": "kleavor",
       "forme": "",
       "types": [
@@ -3760,6 +4255,9 @@
     },
     "klefki": {
       "display_name": "Klefki",
+      "source_name": "Klefki",
+      "canonical_key": "klefki",
+      "api_slug": "klefki",
       "base_species_key": "klefki",
       "forme": "",
       "types": [
@@ -3782,7 +4280,10 @@
       "is_mega": false
     },
     "kommoo": {
-      "display_name": "Kommo O",
+      "display_name": "Kommo-o",
+      "source_name": "Kommo-o",
+      "canonical_key": "kommo-o",
+      "api_slug": "kommo-o",
       "base_species_key": "kommoo",
       "forme": "",
       "types": [
@@ -3807,6 +4308,9 @@
     },
     "krookodile": {
       "display_name": "Krookodile",
+      "source_name": "Krookodile",
+      "canonical_key": "krookodile",
+      "api_slug": "krookodile",
       "base_species_key": "krookodile",
       "forme": "",
       "types": [
@@ -3831,6 +4335,9 @@
     },
     "leafeon": {
       "display_name": "Leafeon",
+      "source_name": "Leafeon",
+      "canonical_key": "leafeon",
+      "api_slug": "leafeon",
       "base_species_key": "leafeon",
       "forme": "",
       "types": [
@@ -3853,6 +4360,9 @@
     },
     "liepard": {
       "display_name": "Liepard",
+      "source_name": "Liepard",
+      "canonical_key": "liepard",
+      "api_slug": "liepard",
       "base_species_key": "liepard",
       "forme": "",
       "types": [
@@ -3876,6 +4386,9 @@
     },
     "lopunny": {
       "display_name": "Lopunny",
+      "source_name": "Lopunny",
+      "canonical_key": "lopunny",
+      "api_slug": "lopunny",
       "base_species_key": "lopunny",
       "forme": "",
       "types": [
@@ -3899,6 +4412,9 @@
     },
     "lopunnymega": {
       "display_name": "Mega Lopunny",
+      "source_name": "Lopunny-Mega",
+      "canonical_key": "lopunny",
+      "api_slug": "lopunny",
       "base_species_key": "lopunny",
       "forme": "Mega",
       "types": [
@@ -3921,6 +4437,9 @@
     },
     "lucario": {
       "display_name": "Lucario",
+      "source_name": "Lucario",
+      "canonical_key": "lucario",
+      "api_slug": "lucario",
       "base_species_key": "lucario",
       "forme": "",
       "types": [
@@ -3945,6 +4464,9 @@
     },
     "lucariomega": {
       "display_name": "Mega Lucario",
+      "source_name": "Lucario-Mega",
+      "canonical_key": "lucario",
+      "api_slug": "lucario",
       "base_species_key": "lucario",
       "forme": "Mega",
       "types": [
@@ -3967,6 +4489,9 @@
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
+      "source_name": "Lucario-Mega-Z",
+      "canonical_key": "lucario-z",
+      "api_slug": "lucario",
       "base_species_key": "lucario",
       "forme": "Mega-Z",
       "types": [
@@ -3989,6 +4514,9 @@
     },
     "luxray": {
       "display_name": "Luxray",
+      "source_name": "Luxray",
+      "canonical_key": "luxray",
+      "api_slug": "luxray",
       "base_species_key": "luxray",
       "forme": "",
       "types": [
@@ -4012,6 +4540,9 @@
     },
     "lycanroc": {
       "display_name": "Lycanroc",
+      "source_name": "Lycanroc",
+      "canonical_key": "lycanroc",
+      "api_slug": "lycanroc",
       "base_species_key": "lycanroc",
       "forme": "",
       "types": [
@@ -4035,6 +4566,9 @@
     },
     "lycanrocdusk": {
       "display_name": "Lycanroc Dusk",
+      "source_name": "Lycanroc-Dusk",
+      "canonical_key": "lycanroc-dusk",
+      "api_slug": "lycanroc-dusk",
       "base_species_key": "lycanroc",
       "forme": "Dusk",
       "types": [
@@ -4056,6 +4590,9 @@
     },
     "lycanrocmidnight": {
       "display_name": "Lycanroc Midnight",
+      "source_name": "Lycanroc-Midnight",
+      "canonical_key": "lycanroc-midnight",
+      "api_slug": "lycanroc-midnight",
       "base_species_key": "lycanroc",
       "forme": "Midnight",
       "types": [
@@ -4079,6 +4616,9 @@
     },
     "mabosstiff": {
       "display_name": "Mabosstiff",
+      "source_name": "Mabosstiff",
+      "canonical_key": "mabosstiff",
+      "api_slug": "mabosstiff",
       "base_species_key": "mabosstiff",
       "forme": "",
       "types": [
@@ -4102,6 +4642,9 @@
     },
     "machamp": {
       "display_name": "Machamp",
+      "source_name": "Machamp",
+      "canonical_key": "machamp",
+      "api_slug": "machamp",
       "base_species_key": "machamp",
       "forme": "",
       "types": [
@@ -4125,6 +4668,9 @@
     },
     "malamar": {
       "display_name": "Malamar",
+      "source_name": "Malamar",
+      "canonical_key": "malamar",
+      "api_slug": "malamar",
       "base_species_key": "malamar",
       "forme": "",
       "types": [
@@ -4149,6 +4695,9 @@
     },
     "malamarmega": {
       "display_name": "Mega Malamar",
+      "source_name": "Malamar-Mega",
+      "canonical_key": "malamar",
+      "api_slug": "malamar",
       "base_species_key": "malamar",
       "forme": "Mega",
       "types": [
@@ -4171,6 +4720,9 @@
     },
     "mamoswine": {
       "display_name": "Mamoswine",
+      "source_name": "Mamoswine",
+      "canonical_key": "mamoswine",
+      "api_slug": "mamoswine",
       "base_species_key": "mamoswine",
       "forme": "",
       "types": [
@@ -4195,6 +4747,9 @@
     },
     "manectric": {
       "display_name": "Manectric",
+      "source_name": "Manectric",
+      "canonical_key": "manectric",
+      "api_slug": "manectric",
       "base_species_key": "manectric",
       "forme": "",
       "types": [
@@ -4218,6 +4773,9 @@
     },
     "manectricmega": {
       "display_name": "Mega Manectric",
+      "source_name": "Manectric-Mega",
+      "canonical_key": "manectric",
+      "api_slug": "manectric",
       "base_species_key": "manectric",
       "forme": "Mega",
       "types": [
@@ -4239,6 +4797,9 @@
     },
     "maushold": {
       "display_name": "Maushold",
+      "source_name": "Maushold",
+      "canonical_key": "maushold",
+      "api_slug": "maushold",
       "base_species_key": "maushold",
       "forme": "",
       "types": [
@@ -4262,6 +4823,9 @@
     },
     "mawile": {
       "display_name": "Mawile",
+      "source_name": "Mawile",
+      "canonical_key": "mawile",
+      "api_slug": "mawile",
       "base_species_key": "mawile",
       "forme": "",
       "types": [
@@ -4286,6 +4850,9 @@
     },
     "mawilemega": {
       "display_name": "Mega Mawile",
+      "source_name": "Mawile-Mega",
+      "canonical_key": "mawile",
+      "api_slug": "mawile",
       "base_species_key": "mawile",
       "forme": "Mega",
       "types": [
@@ -4308,6 +4875,9 @@
     },
     "medicham": {
       "display_name": "Medicham",
+      "source_name": "Medicham",
+      "canonical_key": "medicham",
+      "api_slug": "medicham",
       "base_species_key": "medicham",
       "forme": "",
       "types": [
@@ -4331,6 +4901,9 @@
     },
     "medichammega": {
       "display_name": "Mega Medicham",
+      "source_name": "Medicham-Mega",
+      "canonical_key": "medicham",
+      "api_slug": "medicham",
       "base_species_key": "medicham",
       "forme": "Mega",
       "types": [
@@ -4353,6 +4926,9 @@
     },
     "meganium": {
       "display_name": "Meganium",
+      "source_name": "Meganium",
+      "canonical_key": "meganium",
+      "api_slug": "meganium",
       "base_species_key": "meganium",
       "forme": "",
       "types": [
@@ -4375,6 +4951,9 @@
     },
     "meganiummega": {
       "display_name": "Mega Meganium",
+      "source_name": "Meganium-Mega",
+      "canonical_key": "meganium",
+      "api_slug": "meganium",
       "base_species_key": "meganium",
       "forme": "Mega",
       "types": [
@@ -4397,6 +4976,9 @@
     },
     "meowscarada": {
       "display_name": "Meowscarada",
+      "source_name": "Meowscarada",
+      "canonical_key": "meowscarada",
+      "api_slug": "meowscarada",
       "base_species_key": "meowscarada",
       "forme": "",
       "types": [
@@ -4420,6 +5002,9 @@
     },
     "meowstic": {
       "display_name": "Meowstic",
+      "source_name": "Meowstic",
+      "canonical_key": "meowstic",
+      "api_slug": "meowstic",
       "base_species_key": "meowstic",
       "forme": "",
       "types": [
@@ -4443,6 +5028,9 @@
     },
     "meowsticf": {
       "display_name": "Meowstic Female",
+      "source_name": "Meowstic-F",
+      "canonical_key": "meowstic-female",
+      "api_slug": "meowstic-female",
       "base_species_key": "meowstic",
       "forme": "F",
       "types": [
@@ -4465,7 +5053,10 @@
       "is_mega": false
     },
     "meowsticfmega": {
-      "display_name": "Meowstic F Mega",
+      "display_name": "Mega Meowstic F",
+      "source_name": "Meowstic-F-Mega",
+      "canonical_key": "meowstic-f",
+      "api_slug": "meowstic",
       "base_species_key": "meowstic",
       "forme": "F-Mega",
       "types": [
@@ -4486,7 +5077,10 @@
       "is_mega": true
     },
     "meowsticmmega": {
-      "display_name": "Meowstic M Mega",
+      "display_name": "Mega Meowstic M",
+      "source_name": "Meowstic-M-Mega",
+      "canonical_key": "meowstic-m",
+      "api_slug": "meowstic",
       "base_species_key": "meowstic",
       "forme": "M-Mega",
       "types": [
@@ -4508,6 +5102,9 @@
     },
     "metagross": {
       "display_name": "Metagross",
+      "source_name": "Metagross",
+      "canonical_key": "metagross",
+      "api_slug": "metagross",
       "base_species_key": "metagross",
       "forme": "",
       "types": [
@@ -4531,6 +5128,9 @@
     },
     "metagrossmega": {
       "display_name": "Mega Metagross",
+      "source_name": "Metagross-Mega",
+      "canonical_key": "metagross",
+      "api_slug": "metagross",
       "base_species_key": "metagross",
       "forme": "Mega",
       "types": [
@@ -4553,6 +5153,9 @@
     },
     "milotic": {
       "display_name": "Milotic",
+      "source_name": "Milotic",
+      "canonical_key": "milotic",
+      "api_slug": "milotic",
       "base_species_key": "milotic",
       "forme": "",
       "types": [
@@ -4576,6 +5179,9 @@
     },
     "mimikyu": {
       "display_name": "Mimikyu",
+      "source_name": "Mimikyu",
+      "canonical_key": "mimikyu",
+      "api_slug": "mimikyu",
       "base_species_key": "mimikyu",
       "forme": "",
       "types": [
@@ -4598,6 +5204,9 @@
     },
     "morpeko": {
       "display_name": "Morpeko",
+      "source_name": "Morpeko",
+      "canonical_key": "morpeko",
+      "api_slug": "morpeko",
       "base_species_key": "morpeko",
       "forme": "",
       "types": [
@@ -4620,6 +5229,9 @@
     },
     "mrmime": {
       "display_name": "Mr. Mime",
+      "source_name": "Mr. Mime",
+      "canonical_key": "mr-mime",
+      "api_slug": "mr-mime",
       "base_species_key": "mrmime",
       "forme": "",
       "types": [
@@ -4644,6 +5256,9 @@
     },
     "mrrime": {
       "display_name": "Mr. Rime",
+      "source_name": "Mr. Rime",
+      "canonical_key": "mr-rime",
+      "api_slug": "mr-rime",
       "base_species_key": "mrrime",
       "forme": "",
       "types": [
@@ -4668,6 +5283,9 @@
     },
     "mudsdale": {
       "display_name": "Mudsdale",
+      "source_name": "Mudsdale",
+      "canonical_key": "mudsdale",
+      "api_slug": "mudsdale",
       "base_species_key": "mudsdale",
       "forme": "",
       "types": [
@@ -4691,6 +5309,9 @@
     },
     "musharna": {
       "display_name": "Musharna",
+      "source_name": "Musharna",
+      "canonical_key": "musharna",
+      "api_slug": "musharna",
       "base_species_key": "musharna",
       "forme": "",
       "types": [
@@ -4714,6 +5335,9 @@
     },
     "ninetales": {
       "display_name": "Ninetales",
+      "source_name": "Ninetales",
+      "canonical_key": "ninetales",
+      "api_slug": "ninetales",
       "base_species_key": "ninetales",
       "forme": "",
       "types": [
@@ -4736,6 +5360,9 @@
     },
     "ninetalesalola": {
       "display_name": "Ninetales Alola",
+      "source_name": "Ninetales-Alola",
+      "canonical_key": "ninetales-alola",
+      "api_slug": "ninetales-alola",
       "base_species_key": "ninetales",
       "forme": "Alola",
       "types": [
@@ -4759,6 +5386,9 @@
     },
     "noivern": {
       "display_name": "Noivern",
+      "source_name": "Noivern",
+      "canonical_key": "noivern",
+      "api_slug": "noivern",
       "base_species_key": "noivern",
       "forme": "",
       "types": [
@@ -4783,6 +5413,9 @@
     },
     "oranguru": {
       "display_name": "Oranguru",
+      "source_name": "Oranguru",
+      "canonical_key": "oranguru",
+      "api_slug": "oranguru",
       "base_species_key": "oranguru",
       "forme": "",
       "types": [
@@ -4807,6 +5440,9 @@
     },
     "orthworm": {
       "display_name": "Orthworm",
+      "source_name": "Orthworm",
+      "canonical_key": "orthworm",
+      "api_slug": "orthworm",
       "base_species_key": "orthworm",
       "forme": "",
       "types": [
@@ -4829,6 +5465,9 @@
     },
     "overqwil": {
       "display_name": "Overqwil",
+      "source_name": "Overqwil",
+      "canonical_key": "overqwil",
+      "api_slug": "overqwil",
       "base_species_key": "overqwil",
       "forme": "",
       "types": [
@@ -4853,6 +5492,9 @@
     },
     "palafin": {
       "display_name": "Palafin",
+      "source_name": "Palafin",
+      "canonical_key": "palafin",
+      "api_slug": "palafin",
       "base_species_key": "palafin",
       "forme": "",
       "types": [
@@ -4874,6 +5516,9 @@
     },
     "pangoro": {
       "display_name": "Pangoro",
+      "source_name": "Pangoro",
+      "canonical_key": "pangoro",
+      "api_slug": "pangoro",
       "base_species_key": "pangoro",
       "forme": "",
       "types": [
@@ -4898,6 +5543,9 @@
     },
     "passimian": {
       "display_name": "Passimian",
+      "source_name": "Passimian",
+      "canonical_key": "passimian",
+      "api_slug": "passimian",
       "base_species_key": "passimian",
       "forme": "",
       "types": [
@@ -4920,6 +5568,9 @@
     },
     "pawmot": {
       "display_name": "Pawmot",
+      "source_name": "Pawmot",
+      "canonical_key": "pawmot",
+      "api_slug": "pawmot",
       "base_species_key": "pawmot",
       "forme": "",
       "types": [
@@ -4944,6 +5595,9 @@
     },
     "pelipper": {
       "display_name": "Pelipper",
+      "source_name": "Pelipper",
+      "canonical_key": "pelipper",
+      "api_slug": "pelipper",
       "base_species_key": "pelipper",
       "forme": "",
       "types": [
@@ -4968,6 +5622,9 @@
     },
     "perrserker": {
       "display_name": "Perrserker",
+      "source_name": "Perrserker",
+      "canonical_key": "perrserker",
+      "api_slug": "perrserker",
       "base_species_key": "perrserker",
       "forme": "",
       "types": [
@@ -4991,6 +5648,9 @@
     },
     "persian": {
       "display_name": "Persian",
+      "source_name": "Persian",
+      "canonical_key": "persian",
+      "api_slug": "persian",
       "base_species_key": "persian",
       "forme": "",
       "types": [
@@ -5014,6 +5674,9 @@
     },
     "persianalola": {
       "display_name": "Persian Alola",
+      "source_name": "Persian-Alola",
+      "canonical_key": "persian-alola",
+      "api_slug": "persian-alola",
       "base_species_key": "persian",
       "forme": "Alola",
       "types": [
@@ -5037,6 +5700,9 @@
     },
     "pidgeot": {
       "display_name": "Pidgeot",
+      "source_name": "Pidgeot",
+      "canonical_key": "pidgeot",
+      "api_slug": "pidgeot",
       "base_species_key": "pidgeot",
       "forme": "",
       "types": [
@@ -5061,6 +5727,9 @@
     },
     "pidgeotmega": {
       "display_name": "Mega Pidgeot",
+      "source_name": "Pidgeot-Mega",
+      "canonical_key": "pidgeot",
+      "api_slug": "pidgeot",
       "base_species_key": "pidgeot",
       "forme": "Mega",
       "types": [
@@ -5083,6 +5752,9 @@
     },
     "pikachu": {
       "display_name": "Pikachu",
+      "source_name": "Pikachu",
+      "canonical_key": "pikachu",
+      "api_slug": "pikachu",
       "base_species_key": "pikachu",
       "forme": "",
       "types": [
@@ -5105,6 +5777,9 @@
     },
     "pincurchin": {
       "display_name": "Pincurchin",
+      "source_name": "Pincurchin",
+      "canonical_key": "pincurchin",
+      "api_slug": "pincurchin",
       "base_species_key": "pincurchin",
       "forme": "",
       "types": [
@@ -5127,6 +5802,9 @@
     },
     "pinsir": {
       "display_name": "Pinsir",
+      "source_name": "Pinsir",
+      "canonical_key": "pinsir",
+      "api_slug": "pinsir",
       "base_species_key": "pinsir",
       "forme": "",
       "types": [
@@ -5150,6 +5828,9 @@
     },
     "pinsirmega": {
       "display_name": "Mega Pinsir",
+      "source_name": "Pinsir-Mega",
+      "canonical_key": "pinsir",
+      "api_slug": "pinsir",
       "base_species_key": "pinsir",
       "forme": "Mega",
       "types": [
@@ -5172,6 +5853,9 @@
     },
     "politoed": {
       "display_name": "Politoed",
+      "source_name": "Politoed",
+      "canonical_key": "politoed",
+      "api_slug": "politoed",
       "base_species_key": "politoed",
       "forme": "",
       "types": [
@@ -5195,6 +5879,9 @@
     },
     "polteageist": {
       "display_name": "Polteageist",
+      "source_name": "Polteageist",
+      "canonical_key": "polteageist",
+      "api_slug": "polteageist",
       "base_species_key": "polteageist",
       "forme": "",
       "types": [
@@ -5217,6 +5904,9 @@
     },
     "primarina": {
       "display_name": "Primarina",
+      "source_name": "Primarina",
+      "canonical_key": "primarina",
+      "api_slug": "primarina",
       "base_species_key": "primarina",
       "forme": "",
       "types": [
@@ -5240,6 +5930,9 @@
     },
     "pyroar": {
       "display_name": "Pyroar",
+      "source_name": "Pyroar",
+      "canonical_key": "pyroar",
+      "api_slug": "pyroar",
       "base_species_key": "pyroar",
       "forme": "",
       "types": [
@@ -5264,6 +5957,9 @@
     },
     "pyroarmega": {
       "display_name": "Mega Pyroar",
+      "source_name": "Pyroar-Mega",
+      "canonical_key": "pyroar",
+      "api_slug": "pyroar",
       "base_species_key": "pyroar",
       "forme": "Mega",
       "types": [
@@ -5286,6 +5982,9 @@
     },
     "quaquaval": {
       "display_name": "Quaquaval",
+      "source_name": "Quaquaval",
+      "canonical_key": "quaquaval",
+      "api_slug": "quaquaval",
       "base_species_key": "quaquaval",
       "forme": "",
       "types": [
@@ -5309,6 +6008,9 @@
     },
     "qwilfish": {
       "display_name": "Qwilfish",
+      "source_name": "Qwilfish",
+      "canonical_key": "qwilfish",
+      "api_slug": "qwilfish",
       "base_species_key": "qwilfish",
       "forme": "",
       "types": [
@@ -5333,6 +6035,9 @@
     },
     "raichu": {
       "display_name": "Raichu",
+      "source_name": "Raichu",
+      "canonical_key": "raichu",
+      "api_slug": "raichu",
       "base_species_key": "raichu",
       "forme": "",
       "types": [
@@ -5355,6 +6060,9 @@
     },
     "raichualola": {
       "display_name": "Raichu Alola",
+      "source_name": "Raichu-Alola",
+      "canonical_key": "raichu-alola",
+      "api_slug": "raichu-alola",
       "base_species_key": "raichu",
       "forme": "Alola",
       "types": [
@@ -5377,6 +6085,9 @@
     },
     "raichumegax": {
       "display_name": "Mega Raichu X",
+      "source_name": "Raichu-Mega-X",
+      "canonical_key": "raichu-x",
+      "api_slug": "raichu",
       "base_species_key": "raichu",
       "forme": "Mega-X",
       "types": [
@@ -5398,6 +6109,9 @@
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
+      "source_name": "Raichu-Mega-Y",
+      "canonical_key": "raichu-y",
+      "api_slug": "raichu",
       "base_species_key": "raichu",
       "forme": "Mega-Y",
       "types": [
@@ -5419,6 +6133,9 @@
     },
     "rampardos": {
       "display_name": "Rampardos",
+      "source_name": "Rampardos",
+      "canonical_key": "rampardos",
+      "api_slug": "rampardos",
       "base_species_key": "rampardos",
       "forme": "",
       "types": [
@@ -5441,6 +6158,9 @@
     },
     "reuniclus": {
       "display_name": "Reuniclus",
+      "source_name": "Reuniclus",
+      "canonical_key": "reuniclus",
+      "api_slug": "reuniclus",
       "base_species_key": "reuniclus",
       "forme": "",
       "types": [
@@ -5464,6 +6184,9 @@
     },
     "rhyperior": {
       "display_name": "Rhyperior",
+      "source_name": "Rhyperior",
+      "canonical_key": "rhyperior",
+      "api_slug": "rhyperior",
       "base_species_key": "rhyperior",
       "forme": "",
       "types": [
@@ -5488,6 +6211,9 @@
     },
     "rillaboom": {
       "display_name": "Rillaboom",
+      "source_name": "Rillaboom",
+      "canonical_key": "rillaboom",
+      "api_slug": "rillaboom",
       "base_species_key": "rillaboom",
       "forme": "",
       "types": [
@@ -5510,6 +6236,9 @@
     },
     "roserade": {
       "display_name": "Roserade",
+      "source_name": "Roserade",
+      "canonical_key": "roserade",
+      "api_slug": "roserade",
       "base_species_key": "roserade",
       "forme": "",
       "types": [
@@ -5534,6 +6263,9 @@
     },
     "rotom": {
       "display_name": "Rotom",
+      "source_name": "Rotom",
+      "canonical_key": "rotom",
+      "api_slug": "rotom",
       "base_species_key": "rotom",
       "forme": "",
       "types": [
@@ -5556,6 +6288,9 @@
     },
     "rotomfan": {
       "display_name": "Rotom Fan",
+      "source_name": "Rotom-Fan",
+      "canonical_key": "rotom-fan",
+      "api_slug": "rotom-fan",
       "base_species_key": "rotom",
       "forme": "Fan",
       "types": [
@@ -5578,6 +6313,9 @@
     },
     "rotomfrost": {
       "display_name": "Rotom Frost",
+      "source_name": "Rotom-Frost",
+      "canonical_key": "rotom-frost",
+      "api_slug": "rotom-frost",
       "base_species_key": "rotom",
       "forme": "Frost",
       "types": [
@@ -5600,6 +6338,9 @@
     },
     "rotomheat": {
       "display_name": "Rotom Heat",
+      "source_name": "Rotom-Heat",
+      "canonical_key": "rotom-heat",
+      "api_slug": "rotom-heat",
       "base_species_key": "rotom",
       "forme": "Heat",
       "types": [
@@ -5622,6 +6363,9 @@
     },
     "rotommow": {
       "display_name": "Rotom Mow",
+      "source_name": "Rotom-Mow",
+      "canonical_key": "rotom-mow",
+      "api_slug": "rotom-mow",
       "base_species_key": "rotom",
       "forme": "Mow",
       "types": [
@@ -5644,6 +6388,9 @@
     },
     "rotomwash": {
       "display_name": "Rotom Wash",
+      "source_name": "Rotom-Wash",
+      "canonical_key": "rotom-wash",
+      "api_slug": "rotom-wash",
       "base_species_key": "rotom",
       "forme": "Wash",
       "types": [
@@ -5666,6 +6413,9 @@
     },
     "runerigus": {
       "display_name": "Runerigus",
+      "source_name": "Runerigus",
+      "canonical_key": "runerigus",
+      "api_slug": "runerigus",
       "base_species_key": "runerigus",
       "forme": "",
       "types": [
@@ -5688,6 +6438,9 @@
     },
     "sableye": {
       "display_name": "Sableye",
+      "source_name": "Sableye",
+      "canonical_key": "sableye",
+      "api_slug": "sableye",
       "base_species_key": "sableye",
       "forme": "",
       "types": [
@@ -5712,6 +6465,9 @@
     },
     "sableyemega": {
       "display_name": "Mega Sableye",
+      "source_name": "Sableye-Mega",
+      "canonical_key": "sableye",
+      "api_slug": "sableye",
       "base_species_key": "sableye",
       "forme": "Mega",
       "types": [
@@ -5734,6 +6490,9 @@
     },
     "salamence": {
       "display_name": "Salamence",
+      "source_name": "Salamence",
+      "canonical_key": "salamence",
+      "api_slug": "salamence",
       "base_species_key": "salamence",
       "forme": "",
       "types": [
@@ -5757,6 +6516,9 @@
     },
     "salamencemega": {
       "display_name": "Mega Salamence",
+      "source_name": "Salamence-Mega",
+      "canonical_key": "salamence",
+      "api_slug": "salamence",
       "base_species_key": "salamence",
       "forme": "Mega",
       "types": [
@@ -5779,6 +6541,9 @@
     },
     "salazzle": {
       "display_name": "Salazzle",
+      "source_name": "Salazzle",
+      "canonical_key": "salazzle",
+      "api_slug": "salazzle",
       "base_species_key": "salazzle",
       "forme": "",
       "types": [
@@ -5802,6 +6567,9 @@
     },
     "samurott": {
       "display_name": "Samurott",
+      "source_name": "Samurott",
+      "canonical_key": "samurott",
+      "api_slug": "samurott",
       "base_species_key": "samurott",
       "forme": "",
       "types": [
@@ -5824,6 +6592,9 @@
     },
     "samurotthisui": {
       "display_name": "Samurott Hisui",
+      "source_name": "Samurott-Hisui",
+      "canonical_key": "samurott-hisui",
+      "api_slug": "samurott-hisui",
       "base_species_key": "samurott",
       "forme": "Hisui",
       "types": [
@@ -5847,6 +6618,9 @@
     },
     "sandaconda": {
       "display_name": "Sandaconda",
+      "source_name": "Sandaconda",
+      "canonical_key": "sandaconda",
+      "api_slug": "sandaconda",
       "base_species_key": "sandaconda",
       "forme": "",
       "types": [
@@ -5870,6 +6644,9 @@
     },
     "sceptile": {
       "display_name": "Sceptile",
+      "source_name": "Sceptile",
+      "canonical_key": "sceptile",
+      "api_slug": "sceptile",
       "base_species_key": "sceptile",
       "forme": "",
       "types": [
@@ -5892,6 +6669,9 @@
     },
     "sceptilemega": {
       "display_name": "Mega Sceptile",
+      "source_name": "Sceptile-Mega",
+      "canonical_key": "sceptile",
+      "api_slug": "sceptile",
       "base_species_key": "sceptile",
       "forme": "Mega",
       "types": [
@@ -5914,6 +6694,9 @@
     },
     "scizor": {
       "display_name": "Scizor",
+      "source_name": "Scizor",
+      "canonical_key": "scizor",
+      "api_slug": "scizor",
       "base_species_key": "scizor",
       "forme": "",
       "types": [
@@ -5938,6 +6721,9 @@
     },
     "scizormega": {
       "display_name": "Mega Scizor",
+      "source_name": "Scizor-Mega",
+      "canonical_key": "scizor",
+      "api_slug": "scizor",
       "base_species_key": "scizor",
       "forme": "Mega",
       "types": [
@@ -5960,6 +6746,9 @@
     },
     "scolipede": {
       "display_name": "Scolipede",
+      "source_name": "Scolipede",
+      "canonical_key": "scolipede",
+      "api_slug": "scolipede",
       "base_species_key": "scolipede",
       "forme": "",
       "types": [
@@ -5984,6 +6773,9 @@
     },
     "scolipedemega": {
       "display_name": "Mega Scolipede",
+      "source_name": "Scolipede-Mega",
+      "canonical_key": "scolipede",
+      "api_slug": "scolipede",
       "base_species_key": "scolipede",
       "forme": "Mega",
       "types": [
@@ -6006,6 +6798,9 @@
     },
     "scovillain": {
       "display_name": "Scovillain",
+      "source_name": "Scovillain",
+      "canonical_key": "scovillain",
+      "api_slug": "scovillain",
       "base_species_key": "scovillain",
       "forme": "",
       "types": [
@@ -6030,6 +6825,9 @@
     },
     "scovillainmega": {
       "display_name": "Mega Scovillain",
+      "source_name": "Scovillain-Mega",
+      "canonical_key": "scovillain",
+      "api_slug": "scovillain",
       "base_species_key": "scovillain",
       "forme": "Mega",
       "types": [
@@ -6052,6 +6850,9 @@
     },
     "scrafty": {
       "display_name": "Scrafty",
+      "source_name": "Scrafty",
+      "canonical_key": "scrafty",
+      "api_slug": "scrafty",
       "base_species_key": "scrafty",
       "forme": "",
       "types": [
@@ -6076,6 +6877,9 @@
     },
     "scraftymega": {
       "display_name": "Mega Scrafty",
+      "source_name": "Scrafty-Mega",
+      "canonical_key": "scrafty",
+      "api_slug": "scrafty",
       "base_species_key": "scrafty",
       "forme": "Mega",
       "types": [
@@ -6098,6 +6902,9 @@
     },
     "serperior": {
       "display_name": "Serperior",
+      "source_name": "Serperior",
+      "canonical_key": "serperior",
+      "api_slug": "serperior",
       "base_species_key": "serperior",
       "forme": "",
       "types": [
@@ -6120,6 +6927,9 @@
     },
     "sharpedo": {
       "display_name": "Sharpedo",
+      "source_name": "Sharpedo",
+      "canonical_key": "sharpedo",
+      "api_slug": "sharpedo",
       "base_species_key": "sharpedo",
       "forme": "",
       "types": [
@@ -6143,6 +6953,9 @@
     },
     "sharpedomega": {
       "display_name": "Mega Sharpedo",
+      "source_name": "Sharpedo-Mega",
+      "canonical_key": "sharpedo",
+      "api_slug": "sharpedo",
       "base_species_key": "sharpedo",
       "forme": "Mega",
       "types": [
@@ -6165,6 +6978,9 @@
     },
     "simipour": {
       "display_name": "Simipour",
+      "source_name": "Simipour",
+      "canonical_key": "simipour",
+      "api_slug": "simipour",
       "base_species_key": "simipour",
       "forme": "",
       "types": [
@@ -6187,6 +7003,9 @@
     },
     "simisage": {
       "display_name": "Simisage",
+      "source_name": "Simisage",
+      "canonical_key": "simisage",
+      "api_slug": "simisage",
       "base_species_key": "simisage",
       "forme": "",
       "types": [
@@ -6209,6 +7028,9 @@
     },
     "simisear": {
       "display_name": "Simisear",
+      "source_name": "Simisear",
+      "canonical_key": "simisear",
+      "api_slug": "simisear",
       "base_species_key": "simisear",
       "forme": "",
       "types": [
@@ -6231,6 +7053,9 @@
     },
     "sinistcha": {
       "display_name": "Sinistcha",
+      "source_name": "Sinistcha",
+      "canonical_key": "sinistcha",
+      "api_slug": "sinistcha",
       "base_species_key": "sinistcha",
       "forme": "",
       "types": [
@@ -6253,7 +7078,10 @@
       "is_mega": false
     },
     "sirfetchd": {
-      "display_name": "Sirfetch\\U2019D",
+      "display_name": "Sirfetch\\u2019d",
+      "source_name": "Sirfetch\\u2019d",
+      "canonical_key": "sirfetch-u2019d",
+      "api_slug": "sirfetch-u2019d",
       "base_species_key": "sirfetchd",
       "forme": "",
       "types": [
@@ -6276,6 +7104,9 @@
     },
     "skarmory": {
       "display_name": "Skarmory",
+      "source_name": "Skarmory",
+      "canonical_key": "skarmory",
+      "api_slug": "skarmory",
       "base_species_key": "skarmory",
       "forme": "",
       "types": [
@@ -6300,6 +7131,9 @@
     },
     "skarmorymega": {
       "display_name": "Mega Skarmory",
+      "source_name": "Skarmory-Mega",
+      "canonical_key": "skarmory",
+      "api_slug": "skarmory",
       "base_species_key": "skarmory",
       "forme": "Mega",
       "types": [
@@ -6322,6 +7156,9 @@
     },
     "skeledirge": {
       "display_name": "Skeledirge",
+      "source_name": "Skeledirge",
+      "canonical_key": "skeledirge",
+      "api_slug": "skeledirge",
       "base_species_key": "skeledirge",
       "forme": "",
       "types": [
@@ -6345,6 +7182,9 @@
     },
     "slowbro": {
       "display_name": "Slowbro",
+      "source_name": "Slowbro",
+      "canonical_key": "slowbro",
+      "api_slug": "slowbro",
       "base_species_key": "slowbro",
       "forme": "",
       "types": [
@@ -6369,6 +7209,9 @@
     },
     "slowbrogalar": {
       "display_name": "Slowbro Galar",
+      "source_name": "Slowbro-Galar",
+      "canonical_key": "slowbro-galar",
+      "api_slug": "slowbro-galar",
       "base_species_key": "slowbro",
       "forme": "Galar",
       "types": [
@@ -6393,6 +7236,9 @@
     },
     "slowbromega": {
       "display_name": "Mega Slowbro",
+      "source_name": "Slowbro-Mega",
+      "canonical_key": "slowbro",
+      "api_slug": "slowbro",
       "base_species_key": "slowbro",
       "forme": "Mega",
       "types": [
@@ -6415,6 +7261,9 @@
     },
     "slowking": {
       "display_name": "Slowking",
+      "source_name": "Slowking",
+      "canonical_key": "slowking",
+      "api_slug": "slowking",
       "base_species_key": "slowking",
       "forme": "",
       "types": [
@@ -6439,6 +7288,9 @@
     },
     "slowkinggalar": {
       "display_name": "Slowking Galar",
+      "source_name": "Slowking-Galar",
+      "canonical_key": "slowking-galar",
+      "api_slug": "slowking-galar",
       "base_species_key": "slowking",
       "forme": "Galar",
       "types": [
@@ -6463,6 +7315,9 @@
     },
     "slurpuff": {
       "display_name": "Slurpuff",
+      "source_name": "Slurpuff",
+      "canonical_key": "slurpuff",
+      "api_slug": "slurpuff",
       "base_species_key": "slurpuff",
       "forme": "",
       "types": [
@@ -6485,6 +7340,9 @@
     },
     "sneasler": {
       "display_name": "Sneasler",
+      "source_name": "Sneasler",
+      "canonical_key": "sneasler",
+      "api_slug": "sneasler",
       "base_species_key": "sneasler",
       "forme": "",
       "types": [
@@ -6509,6 +7367,9 @@
     },
     "snorlax": {
       "display_name": "Snorlax",
+      "source_name": "Snorlax",
+      "canonical_key": "snorlax",
+      "api_slug": "snorlax",
       "base_species_key": "snorlax",
       "forme": "",
       "types": [
@@ -6532,6 +7393,9 @@
     },
     "spiritomb": {
       "display_name": "Spiritomb",
+      "source_name": "Spiritomb",
+      "canonical_key": "spiritomb",
+      "api_slug": "spiritomb",
       "base_species_key": "spiritomb",
       "forme": "",
       "types": [
@@ -6555,6 +7419,9 @@
     },
     "squawkabilly": {
       "display_name": "Squawkabilly",
+      "source_name": "Squawkabilly",
+      "canonical_key": "squawkabilly",
+      "api_slug": "squawkabilly",
       "base_species_key": "squawkabilly",
       "forme": "",
       "types": [
@@ -6579,6 +7446,9 @@
     },
     "staraptor": {
       "display_name": "Staraptor",
+      "source_name": "Staraptor",
+      "canonical_key": "staraptor",
+      "api_slug": "staraptor",
       "base_species_key": "staraptor",
       "forme": "",
       "types": [
@@ -6602,6 +7472,9 @@
     },
     "staraptormega": {
       "display_name": "Mega Staraptor",
+      "source_name": "Staraptor-Mega",
+      "canonical_key": "staraptor",
+      "api_slug": "staraptor",
       "base_species_key": "staraptor",
       "forme": "Mega",
       "types": [
@@ -6624,6 +7497,9 @@
     },
     "starmie": {
       "display_name": "Starmie",
+      "source_name": "Starmie",
+      "canonical_key": "starmie",
+      "api_slug": "starmie",
       "base_species_key": "starmie",
       "forme": "",
       "types": [
@@ -6648,6 +7524,9 @@
     },
     "starmiemega": {
       "display_name": "Mega Starmie",
+      "source_name": "Starmie-Mega",
+      "canonical_key": "starmie",
+      "api_slug": "starmie",
       "base_species_key": "starmie",
       "forme": "Mega",
       "types": [
@@ -6670,6 +7549,9 @@
     },
     "steelix": {
       "display_name": "Steelix",
+      "source_name": "Steelix",
+      "canonical_key": "steelix",
+      "api_slug": "steelix",
       "base_species_key": "steelix",
       "forme": "",
       "types": [
@@ -6694,6 +7576,9 @@
     },
     "steelixmega": {
       "display_name": "Mega Steelix",
+      "source_name": "Steelix-Mega",
+      "canonical_key": "steelix",
+      "api_slug": "steelix",
       "base_species_key": "steelix",
       "forme": "Mega",
       "types": [
@@ -6716,6 +7601,9 @@
     },
     "stunfisk": {
       "display_name": "Stunfisk",
+      "source_name": "Stunfisk",
+      "canonical_key": "stunfisk",
+      "api_slug": "stunfisk",
       "base_species_key": "stunfisk",
       "forme": "",
       "types": [
@@ -6740,6 +7628,9 @@
     },
     "stunfiskgalar": {
       "display_name": "Stunfisk Galar",
+      "source_name": "Stunfisk-Galar",
+      "canonical_key": "stunfisk-galar",
+      "api_slug": "stunfisk-galar",
       "base_species_key": "stunfisk",
       "forme": "Galar",
       "types": [
@@ -6762,6 +7653,9 @@
     },
     "swalot": {
       "display_name": "Swalot",
+      "source_name": "Swalot",
+      "canonical_key": "swalot",
+      "api_slug": "swalot",
       "base_species_key": "swalot",
       "forme": "",
       "types": [
@@ -6785,6 +7679,9 @@
     },
     "swampert": {
       "display_name": "Swampert",
+      "source_name": "Swampert",
+      "canonical_key": "swampert",
+      "api_slug": "swampert",
       "base_species_key": "swampert",
       "forme": "",
       "types": [
@@ -6808,6 +7705,9 @@
     },
     "swampertmega": {
       "display_name": "Mega Swampert",
+      "source_name": "Swampert-Mega",
+      "canonical_key": "swampert",
+      "api_slug": "swampert",
       "base_species_key": "swampert",
       "forme": "Mega",
       "types": [
@@ -6830,6 +7730,9 @@
     },
     "sylveon": {
       "display_name": "Sylveon",
+      "source_name": "Sylveon",
+      "canonical_key": "sylveon",
+      "api_slug": "sylveon",
       "base_species_key": "sylveon",
       "forme": "",
       "types": [
@@ -6852,6 +7755,9 @@
     },
     "talonflame": {
       "display_name": "Talonflame",
+      "source_name": "Talonflame",
+      "canonical_key": "talonflame",
+      "api_slug": "talonflame",
       "base_species_key": "talonflame",
       "forme": "",
       "types": [
@@ -6875,6 +7781,9 @@
     },
     "tauros": {
       "display_name": "Tauros",
+      "source_name": "Tauros",
+      "canonical_key": "tauros",
+      "api_slug": "tauros",
       "base_species_key": "tauros",
       "forme": "",
       "types": [
@@ -6898,6 +7807,9 @@
     },
     "taurospaldeaaqua": {
       "display_name": "Tauros Paldea Aqua",
+      "source_name": "Tauros-Paldea-Aqua",
+      "canonical_key": "tauros-paldea-aqua",
+      "api_slug": "tauros-paldea-aqua-breed",
       "base_species_key": "tauros",
       "forme": "Paldea-Aqua",
       "types": [
@@ -6922,6 +7834,9 @@
     },
     "taurospaldeablaze": {
       "display_name": "Tauros Paldea Blaze",
+      "source_name": "Tauros-Paldea-Blaze",
+      "canonical_key": "tauros-paldea-blaze",
+      "api_slug": "tauros-paldea-blaze-breed",
       "base_species_key": "tauros",
       "forme": "Paldea-Blaze",
       "types": [
@@ -6946,6 +7861,9 @@
     },
     "taurospaldeacombat": {
       "display_name": "Tauros Paldea Combat",
+      "source_name": "Tauros-Paldea-Combat",
+      "canonical_key": "tauros-paldea-combat",
+      "api_slug": "tauros-paldea-combat-breed",
       "base_species_key": "tauros",
       "forme": "Paldea-Combat",
       "types": [
@@ -6969,6 +7887,9 @@
     },
     "thievul": {
       "display_name": "Thievul",
+      "source_name": "Thievul",
+      "canonical_key": "thievul",
+      "api_slug": "thievul",
       "base_species_key": "thievul",
       "forme": "",
       "types": [
@@ -6992,6 +7913,9 @@
     },
     "tinkaton": {
       "display_name": "Tinkaton",
+      "source_name": "Tinkaton",
+      "canonical_key": "tinkaton",
+      "api_slug": "tinkaton",
       "base_species_key": "tinkaton",
       "forme": "",
       "types": [
@@ -7016,6 +7940,9 @@
     },
     "torkoal": {
       "display_name": "Torkoal",
+      "source_name": "Torkoal",
+      "canonical_key": "torkoal",
+      "api_slug": "torkoal",
       "base_species_key": "torkoal",
       "forme": "",
       "types": [
@@ -7039,6 +7966,9 @@
     },
     "torterra": {
       "display_name": "Torterra",
+      "source_name": "Torterra",
+      "canonical_key": "torterra",
+      "api_slug": "torterra",
       "base_species_key": "torterra",
       "forme": "",
       "types": [
@@ -7062,6 +7992,9 @@
     },
     "toucannon": {
       "display_name": "Toucannon",
+      "source_name": "Toucannon",
+      "canonical_key": "toucannon",
+      "api_slug": "toucannon",
       "base_species_key": "toucannon",
       "forme": "",
       "types": [
@@ -7086,6 +8019,9 @@
     },
     "toxapex": {
       "display_name": "Toxapex",
+      "source_name": "Toxapex",
+      "canonical_key": "toxapex",
+      "api_slug": "toxapex",
       "base_species_key": "toxapex",
       "forme": "",
       "types": [
@@ -7110,6 +8046,9 @@
     },
     "toxicroak": {
       "display_name": "Toxicroak",
+      "source_name": "Toxicroak",
+      "canonical_key": "toxicroak",
+      "api_slug": "toxicroak",
       "base_species_key": "toxicroak",
       "forme": "",
       "types": [
@@ -7134,6 +8073,9 @@
     },
     "toxtricity": {
       "display_name": "Toxtricity",
+      "source_name": "Toxtricity",
+      "canonical_key": "toxtricity",
+      "api_slug": "toxtricity",
       "base_species_key": "toxtricity",
       "forme": "",
       "types": [
@@ -7158,6 +8100,9 @@
     },
     "toxtricitylowkey": {
       "display_name": "Toxtricity Low Key",
+      "source_name": "Toxtricity-Low-Key",
+      "canonical_key": "toxtricity-low-key",
+      "api_slug": "toxtricity-low-key",
       "base_species_key": "toxtricity",
       "forme": "Low-Key",
       "types": [
@@ -7182,6 +8127,9 @@
     },
     "trevenant": {
       "display_name": "Trevenant",
+      "source_name": "Trevenant",
+      "canonical_key": "trevenant",
+      "api_slug": "trevenant",
       "base_species_key": "trevenant",
       "forme": "",
       "types": [
@@ -7206,6 +8154,9 @@
     },
     "tsareena": {
       "display_name": "Tsareena",
+      "source_name": "Tsareena",
+      "canonical_key": "tsareena",
+      "api_slug": "tsareena",
       "base_species_key": "tsareena",
       "forme": "",
       "types": [
@@ -7229,6 +8180,9 @@
     },
     "typhlosion": {
       "display_name": "Typhlosion",
+      "source_name": "Typhlosion",
+      "canonical_key": "typhlosion",
+      "api_slug": "typhlosion",
       "base_species_key": "typhlosion",
       "forme": "",
       "types": [
@@ -7251,6 +8205,9 @@
     },
     "typhlosionhisui": {
       "display_name": "Typhlosion Hisui",
+      "source_name": "Typhlosion-Hisui",
+      "canonical_key": "typhlosion-hisui",
+      "api_slug": "typhlosion-hisui",
       "base_species_key": "typhlosion",
       "forme": "Hisui",
       "types": [
@@ -7274,6 +8231,9 @@
     },
     "tyranitar": {
       "display_name": "Tyranitar",
+      "source_name": "Tyranitar",
+      "canonical_key": "tyranitar",
+      "api_slug": "tyranitar",
       "base_species_key": "tyranitar",
       "forme": "",
       "types": [
@@ -7297,6 +8257,9 @@
     },
     "tyranitarmega": {
       "display_name": "Mega Tyranitar",
+      "source_name": "Tyranitar-Mega",
+      "canonical_key": "tyranitar",
+      "api_slug": "tyranitar",
       "base_species_key": "tyranitar",
       "forme": "Mega",
       "types": [
@@ -7319,6 +8282,9 @@
     },
     "tyrantrum": {
       "display_name": "Tyrantrum",
+      "source_name": "Tyrantrum",
+      "canonical_key": "tyrantrum",
+      "api_slug": "tyrantrum",
       "base_species_key": "tyrantrum",
       "forme": "",
       "types": [
@@ -7342,6 +8308,9 @@
     },
     "umbreon": {
       "display_name": "Umbreon",
+      "source_name": "Umbreon",
+      "canonical_key": "umbreon",
+      "api_slug": "umbreon",
       "base_species_key": "umbreon",
       "forme": "",
       "types": [
@@ -7364,6 +8333,9 @@
     },
     "vanilluxe": {
       "display_name": "Vanilluxe",
+      "source_name": "Vanilluxe",
+      "canonical_key": "vanilluxe",
+      "api_slug": "vanilluxe",
       "base_species_key": "vanilluxe",
       "forme": "",
       "types": [
@@ -7387,6 +8359,9 @@
     },
     "vaporeon": {
       "display_name": "Vaporeon",
+      "source_name": "Vaporeon",
+      "canonical_key": "vaporeon",
+      "api_slug": "vaporeon",
       "base_species_key": "vaporeon",
       "forme": "",
       "types": [
@@ -7409,6 +8384,9 @@
     },
     "venusaur": {
       "display_name": "Venusaur",
+      "source_name": "Venusaur",
+      "canonical_key": "venusaur",
+      "api_slug": "venusaur",
       "base_species_key": "venusaur",
       "forme": "",
       "types": [
@@ -7432,6 +8410,9 @@
     },
     "venusaurmega": {
       "display_name": "Mega Venusaur",
+      "source_name": "Venusaur-Mega",
+      "canonical_key": "venusaur",
+      "api_slug": "venusaur",
       "base_species_key": "venusaur",
       "forme": "Mega",
       "types": [
@@ -7454,6 +8435,9 @@
     },
     "victreebel": {
       "display_name": "Victreebel",
+      "source_name": "Victreebel",
+      "canonical_key": "victreebel",
+      "api_slug": "victreebel",
       "base_species_key": "victreebel",
       "forme": "",
       "types": [
@@ -7477,6 +8461,9 @@
     },
     "victreebelmega": {
       "display_name": "Mega Victreebel",
+      "source_name": "Victreebel-Mega",
+      "canonical_key": "victreebel",
+      "api_slug": "victreebel",
       "base_species_key": "victreebel",
       "forme": "Mega",
       "types": [
@@ -7499,6 +8486,9 @@
     },
     "vileplume": {
       "display_name": "Vileplume",
+      "source_name": "Vileplume",
+      "canonical_key": "vileplume",
+      "api_slug": "vileplume",
       "base_species_key": "vileplume",
       "forme": "",
       "types": [
@@ -7522,6 +8512,9 @@
     },
     "vivillon": {
       "display_name": "Vivillon",
+      "source_name": "Vivillon",
+      "canonical_key": "vivillon",
+      "api_slug": "vivillon",
       "base_species_key": "vivillon",
       "forme": "",
       "types": [
@@ -7546,6 +8539,9 @@
     },
     "volcarona": {
       "display_name": "Volcarona",
+      "source_name": "Volcarona",
+      "canonical_key": "volcarona",
+      "api_slug": "volcarona",
       "base_species_key": "volcarona",
       "forme": "",
       "types": [
@@ -7569,6 +8565,9 @@
     },
     "watchog": {
       "display_name": "Watchog",
+      "source_name": "Watchog",
+      "canonical_key": "watchog",
+      "api_slug": "watchog",
       "base_species_key": "watchog",
       "forme": "",
       "types": [
@@ -7592,6 +8591,9 @@
     },
     "weavile": {
       "display_name": "Weavile",
+      "source_name": "Weavile",
+      "canonical_key": "weavile",
+      "api_slug": "weavile",
       "base_species_key": "weavile",
       "forme": "",
       "types": [
@@ -7615,6 +8617,9 @@
     },
     "whimsicott": {
       "display_name": "Whimsicott",
+      "source_name": "Whimsicott",
+      "canonical_key": "whimsicott",
+      "api_slug": "whimsicott",
       "base_species_key": "whimsicott",
       "forme": "",
       "types": [
@@ -7639,6 +8644,9 @@
     },
     "wigglytuff": {
       "display_name": "Wigglytuff",
+      "source_name": "Wigglytuff",
+      "canonical_key": "wigglytuff",
+      "api_slug": "wigglytuff",
       "base_species_key": "wigglytuff",
       "forme": "",
       "types": [
@@ -7663,6 +8671,9 @@
     },
     "wyrdeer": {
       "display_name": "Wyrdeer",
+      "source_name": "Wyrdeer",
+      "canonical_key": "wyrdeer",
+      "api_slug": "wyrdeer",
       "base_species_key": "wyrdeer",
       "forme": "",
       "types": [
@@ -7687,6 +8698,9 @@
     },
     "zoroark": {
       "display_name": "Zoroark",
+      "source_name": "Zoroark",
+      "canonical_key": "zoroark",
+      "api_slug": "zoroark",
       "base_species_key": "zoroark",
       "forme": "",
       "types": [
@@ -7708,6 +8722,9 @@
     },
     "zoroarkhisui": {
       "display_name": "Zoroark Hisui",
+      "source_name": "Zoroark-Hisui",
+      "canonical_key": "zoroark-hisui",
+      "api_slug": "zoroark-hisui",
       "base_species_key": "zoroark",
       "forme": "Hisui",
       "types": [
@@ -7732,6 +8749,9 @@
   "megas": {
     "abomasnowmega": {
       "display_name": "Mega Abomasnow",
+      "source_name": "Abomasnow-Mega",
+      "canonical_key": "abomasnow",
+      "api_slug": "abomasnow",
       "base_species_key": "abomasnow",
       "forme": "Mega",
       "types": [
@@ -7754,6 +8774,9 @@
     },
     "absolmega": {
       "display_name": "Mega Absol",
+      "source_name": "Absol-Mega",
+      "canonical_key": "absol",
+      "api_slug": "absol",
       "base_species_key": "absol",
       "forme": "Mega",
       "types": [
@@ -7775,6 +8798,9 @@
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
+      "source_name": "Absol-Mega-Z",
+      "canonical_key": "absol-z",
+      "api_slug": "absol",
       "base_species_key": "absol",
       "forme": "Mega-Z",
       "types": [
@@ -7797,6 +8823,9 @@
     },
     "aerodactylmega": {
       "display_name": "Mega Aerodactyl",
+      "source_name": "Aerodactyl-Mega",
+      "canonical_key": "aerodactyl",
+      "api_slug": "aerodactyl",
       "base_species_key": "aerodactyl",
       "forme": "Mega",
       "types": [
@@ -7819,6 +8848,9 @@
     },
     "aggronmega": {
       "display_name": "Mega Aggron",
+      "source_name": "Aggron-Mega",
+      "canonical_key": "aggron",
+      "api_slug": "aggron",
       "base_species_key": "aggron",
       "forme": "Mega",
       "types": [
@@ -7840,6 +8872,9 @@
     },
     "alakazammega": {
       "display_name": "Mega Alakazam",
+      "source_name": "Alakazam-Mega",
+      "canonical_key": "alakazam",
+      "api_slug": "alakazam",
       "base_species_key": "alakazam",
       "forme": "Mega",
       "types": [
@@ -7861,6 +8896,9 @@
     },
     "altariamega": {
       "display_name": "Mega Altaria",
+      "source_name": "Altaria-Mega",
+      "canonical_key": "altaria",
+      "api_slug": "altaria",
       "base_species_key": "altaria",
       "forme": "Mega",
       "types": [
@@ -7883,6 +8921,9 @@
     },
     "ampharosmega": {
       "display_name": "Mega Ampharos",
+      "source_name": "Ampharos-Mega",
+      "canonical_key": "ampharos",
+      "api_slug": "ampharos",
       "base_species_key": "ampharos",
       "forme": "Mega",
       "types": [
@@ -7905,6 +8946,9 @@
     },
     "audinomega": {
       "display_name": "Mega Audino",
+      "source_name": "Audino-Mega",
+      "canonical_key": "audino",
+      "api_slug": "audino",
       "base_species_key": "audino",
       "forme": "Mega",
       "types": [
@@ -7927,6 +8971,9 @@
     },
     "banettemega": {
       "display_name": "Mega Banette",
+      "source_name": "Banette-Mega",
+      "canonical_key": "banette",
+      "api_slug": "banette",
       "base_species_key": "banette",
       "forme": "Mega",
       "types": [
@@ -7948,6 +8995,9 @@
     },
     "barbaraclemega": {
       "display_name": "Mega Barbaracle",
+      "source_name": "Barbaracle-Mega",
+      "canonical_key": "barbaracle",
+      "api_slug": "barbaracle",
       "base_species_key": "barbaracle",
       "forme": "Mega",
       "types": [
@@ -7970,6 +9020,9 @@
     },
     "baxcaliburmega": {
       "display_name": "Mega Baxcalibur",
+      "source_name": "Baxcalibur-Mega",
+      "canonical_key": "baxcalibur",
+      "api_slug": "baxcalibur",
       "base_species_key": "baxcalibur",
       "forme": "Mega",
       "types": [
@@ -7992,6 +9045,9 @@
     },
     "beedrillmega": {
       "display_name": "Mega Beedrill",
+      "source_name": "Beedrill-Mega",
+      "canonical_key": "beedrill",
+      "api_slug": "beedrill",
       "base_species_key": "beedrill",
       "forme": "Mega",
       "types": [
@@ -8014,6 +9070,9 @@
     },
     "blastoisemega": {
       "display_name": "Mega Blastoise",
+      "source_name": "Blastoise-Mega",
+      "canonical_key": "blastoise",
+      "api_slug": "blastoise",
       "base_species_key": "blastoise",
       "forme": "Mega",
       "types": [
@@ -8035,6 +9094,9 @@
     },
     "blazikenmega": {
       "display_name": "Mega Blaziken",
+      "source_name": "Blaziken-Mega",
+      "canonical_key": "blaziken",
+      "api_slug": "blaziken",
       "base_species_key": "blaziken",
       "forme": "Mega",
       "types": [
@@ -8057,6 +9119,9 @@
     },
     "cameruptmega": {
       "display_name": "Mega Camerupt",
+      "source_name": "Camerupt-Mega",
+      "canonical_key": "camerupt",
+      "api_slug": "camerupt",
       "base_species_key": "camerupt",
       "forme": "Mega",
       "types": [
@@ -8079,6 +9144,9 @@
     },
     "chandeluremega": {
       "display_name": "Mega Chandelure",
+      "source_name": "Chandelure-Mega",
+      "canonical_key": "chandelure",
+      "api_slug": "chandelure",
       "base_species_key": "chandelure",
       "forme": "Mega",
       "types": [
@@ -8101,6 +9169,9 @@
     },
     "charizardmegax": {
       "display_name": "Mega Charizard X",
+      "source_name": "Charizard-Mega-X",
+      "canonical_key": "charizard-x",
+      "api_slug": "charizard",
       "base_species_key": "charizard",
       "forme": "Mega-X",
       "types": [
@@ -8123,6 +9194,9 @@
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
+      "source_name": "Charizard-Mega-Y",
+      "canonical_key": "charizard-y",
+      "api_slug": "charizard",
       "base_species_key": "charizard",
       "forme": "Mega-Y",
       "types": [
@@ -8145,6 +9219,9 @@
     },
     "chesnaughtmega": {
       "display_name": "Mega Chesnaught",
+      "source_name": "Chesnaught-Mega",
+      "canonical_key": "chesnaught",
+      "api_slug": "chesnaught",
       "base_species_key": "chesnaught",
       "forme": "Mega",
       "types": [
@@ -8167,6 +9244,9 @@
     },
     "chimechomega": {
       "display_name": "Mega Chimecho",
+      "source_name": "Chimecho-Mega",
+      "canonical_key": "chimecho",
+      "api_slug": "chimecho",
       "base_species_key": "chimecho",
       "forme": "Mega",
       "types": [
@@ -8189,6 +9269,9 @@
     },
     "clefablemega": {
       "display_name": "Mega Clefable",
+      "source_name": "Clefable-Mega",
+      "canonical_key": "clefable",
+      "api_slug": "clefable",
       "base_species_key": "clefable",
       "forme": "Mega",
       "types": [
@@ -8211,6 +9294,9 @@
     },
     "crabominablemega": {
       "display_name": "Mega Crabominable",
+      "source_name": "Crabominable-Mega",
+      "canonical_key": "crabominable",
+      "api_slug": "crabominable",
       "base_species_key": "crabominable",
       "forme": "Mega",
       "types": [
@@ -8233,6 +9319,9 @@
     },
     "delphoxmega": {
       "display_name": "Mega Delphox",
+      "source_name": "Delphox-Mega",
+      "canonical_key": "delphox",
+      "api_slug": "delphox",
       "base_species_key": "delphox",
       "forme": "Mega",
       "types": [
@@ -8255,6 +9344,9 @@
     },
     "dragalgemega": {
       "display_name": "Mega Dragalge",
+      "source_name": "Dragalge-Mega",
+      "canonical_key": "dragalge",
+      "api_slug": "dragalge",
       "base_species_key": "dragalge",
       "forme": "Mega",
       "types": [
@@ -8277,6 +9369,9 @@
     },
     "dragonitemega": {
       "display_name": "Mega Dragonite",
+      "source_name": "Dragonite-Mega",
+      "canonical_key": "dragonite",
+      "api_slug": "dragonite",
       "base_species_key": "dragonite",
       "forme": "Mega",
       "types": [
@@ -8299,6 +9394,9 @@
     },
     "drampamega": {
       "display_name": "Mega Drampa",
+      "source_name": "Drampa-Mega",
+      "canonical_key": "drampa",
+      "api_slug": "drampa",
       "base_species_key": "drampa",
       "forme": "Mega",
       "types": [
@@ -8321,6 +9419,9 @@
     },
     "eelektrossmega": {
       "display_name": "Mega Eelektross",
+      "source_name": "Eelektross-Mega",
+      "canonical_key": "eelektross",
+      "api_slug": "eelektross",
       "base_species_key": "eelektross",
       "forme": "Mega",
       "types": [
@@ -8342,6 +9443,9 @@
     },
     "emboarmega": {
       "display_name": "Mega Emboar",
+      "source_name": "Emboar-Mega",
+      "canonical_key": "emboar",
+      "api_slug": "emboar",
       "base_species_key": "emboar",
       "forme": "Mega",
       "types": [
@@ -8364,6 +9468,9 @@
     },
     "excadrillmega": {
       "display_name": "Mega Excadrill",
+      "source_name": "Excadrill-Mega",
+      "canonical_key": "excadrill",
+      "api_slug": "excadrill",
       "base_species_key": "excadrill",
       "forme": "Mega",
       "types": [
@@ -8386,6 +9493,9 @@
     },
     "falinksmega": {
       "display_name": "Mega Falinks",
+      "source_name": "Falinks-Mega",
+      "canonical_key": "falinks",
+      "api_slug": "falinks",
       "base_species_key": "falinks",
       "forme": "Mega",
       "types": [
@@ -8407,6 +9517,9 @@
     },
     "feraligatrmega": {
       "display_name": "Mega Feraligatr",
+      "source_name": "Feraligatr-Mega",
+      "canonical_key": "feraligatr",
+      "api_slug": "feraligatr",
       "base_species_key": "feraligatr",
       "forme": "Mega",
       "types": [
@@ -8429,6 +9542,9 @@
     },
     "froslassmega": {
       "display_name": "Mega Froslass",
+      "source_name": "Froslass-Mega",
+      "canonical_key": "froslass",
+      "api_slug": "froslass",
       "base_species_key": "froslass",
       "forme": "Mega",
       "types": [
@@ -8451,6 +9567,9 @@
     },
     "gallademega": {
       "display_name": "Mega Gallade",
+      "source_name": "Gallade-Mega",
+      "canonical_key": "gallade",
+      "api_slug": "gallade",
       "base_species_key": "gallade",
       "forme": "Mega",
       "types": [
@@ -8473,6 +9592,9 @@
     },
     "garchompmega": {
       "display_name": "Mega Garchomp",
+      "source_name": "Garchomp-Mega",
+      "canonical_key": "garchomp",
+      "api_slug": "garchomp",
       "base_species_key": "garchomp",
       "forme": "Mega",
       "types": [
@@ -8495,6 +9617,9 @@
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
+      "source_name": "Garchomp-Mega-Z",
+      "canonical_key": "garchomp-z",
+      "api_slug": "garchomp",
       "base_species_key": "garchomp",
       "forme": "Mega-Z",
       "types": [
@@ -8516,6 +9641,9 @@
     },
     "gardevoirmega": {
       "display_name": "Mega Gardevoir",
+      "source_name": "Gardevoir-Mega",
+      "canonical_key": "gardevoir",
+      "api_slug": "gardevoir",
       "base_species_key": "gardevoir",
       "forme": "Mega",
       "types": [
@@ -8538,6 +9666,9 @@
     },
     "gengarmega": {
       "display_name": "Mega Gengar",
+      "source_name": "Gengar-Mega",
+      "canonical_key": "gengar",
+      "api_slug": "gengar",
       "base_species_key": "gengar",
       "forme": "Mega",
       "types": [
@@ -8560,6 +9691,9 @@
     },
     "glaliemega": {
       "display_name": "Mega Glalie",
+      "source_name": "Glalie-Mega",
+      "canonical_key": "glalie",
+      "api_slug": "glalie",
       "base_species_key": "glalie",
       "forme": "Mega",
       "types": [
@@ -8581,6 +9715,9 @@
     },
     "glimmoramega": {
       "display_name": "Mega Glimmora",
+      "source_name": "Glimmora-Mega",
+      "canonical_key": "glimmora",
+      "api_slug": "glimmora",
       "base_species_key": "glimmora",
       "forme": "Mega",
       "types": [
@@ -8603,6 +9740,9 @@
     },
     "golisopodmega": {
       "display_name": "Mega Golisopod",
+      "source_name": "Golisopod-Mega",
+      "canonical_key": "golisopod",
+      "api_slug": "golisopod",
       "base_species_key": "golisopod",
       "forme": "Mega",
       "types": [
@@ -8625,6 +9765,9 @@
     },
     "golurkmega": {
       "display_name": "Mega Golurk",
+      "source_name": "Golurk-Mega",
+      "canonical_key": "golurk",
+      "api_slug": "golurk",
       "base_species_key": "golurk",
       "forme": "Mega",
       "types": [
@@ -8647,6 +9790,9 @@
     },
     "greninjamega": {
       "display_name": "Mega Greninja",
+      "source_name": "Greninja-Mega",
+      "canonical_key": "greninja",
+      "api_slug": "greninja",
       "base_species_key": "greninja",
       "forme": "Mega",
       "types": [
@@ -8669,6 +9815,9 @@
     },
     "gyaradosmega": {
       "display_name": "Mega Gyarados",
+      "source_name": "Gyarados-Mega",
+      "canonical_key": "gyarados",
+      "api_slug": "gyarados",
       "base_species_key": "gyarados",
       "forme": "Mega",
       "types": [
@@ -8691,6 +9840,9 @@
     },
     "hawluchamega": {
       "display_name": "Mega Hawlucha",
+      "source_name": "Hawlucha-Mega",
+      "canonical_key": "hawlucha",
+      "api_slug": "hawlucha",
       "base_species_key": "hawlucha",
       "forme": "Mega",
       "types": [
@@ -8713,6 +9865,9 @@
     },
     "heracrossmega": {
       "display_name": "Mega Heracross",
+      "source_name": "Heracross-Mega",
+      "canonical_key": "heracross",
+      "api_slug": "heracross",
       "base_species_key": "heracross",
       "forme": "Mega",
       "types": [
@@ -8735,6 +9890,9 @@
     },
     "houndoommega": {
       "display_name": "Mega Houndoom",
+      "source_name": "Houndoom-Mega",
+      "canonical_key": "houndoom",
+      "api_slug": "houndoom",
       "base_species_key": "houndoom",
       "forme": "Mega",
       "types": [
@@ -8757,6 +9915,9 @@
     },
     "kangaskhanmega": {
       "display_name": "Mega Kangaskhan",
+      "source_name": "Kangaskhan-Mega",
+      "canonical_key": "kangaskhan",
+      "api_slug": "kangaskhan",
       "base_species_key": "kangaskhan",
       "forme": "Mega",
       "types": [
@@ -8778,6 +9939,9 @@
     },
     "lopunnymega": {
       "display_name": "Mega Lopunny",
+      "source_name": "Lopunny-Mega",
+      "canonical_key": "lopunny",
+      "api_slug": "lopunny",
       "base_species_key": "lopunny",
       "forme": "Mega",
       "types": [
@@ -8800,6 +9964,9 @@
     },
     "lucariomega": {
       "display_name": "Mega Lucario",
+      "source_name": "Lucario-Mega",
+      "canonical_key": "lucario",
+      "api_slug": "lucario",
       "base_species_key": "lucario",
       "forme": "Mega",
       "types": [
@@ -8822,6 +9989,9 @@
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
+      "source_name": "Lucario-Mega-Z",
+      "canonical_key": "lucario-z",
+      "api_slug": "lucario",
       "base_species_key": "lucario",
       "forme": "Mega-Z",
       "types": [
@@ -8844,6 +10014,9 @@
     },
     "malamarmega": {
       "display_name": "Mega Malamar",
+      "source_name": "Malamar-Mega",
+      "canonical_key": "malamar",
+      "api_slug": "malamar",
       "base_species_key": "malamar",
       "forme": "Mega",
       "types": [
@@ -8866,6 +10039,9 @@
     },
     "manectricmega": {
       "display_name": "Mega Manectric",
+      "source_name": "Manectric-Mega",
+      "canonical_key": "manectric",
+      "api_slug": "manectric",
       "base_species_key": "manectric",
       "forme": "Mega",
       "types": [
@@ -8887,6 +10063,9 @@
     },
     "mawilemega": {
       "display_name": "Mega Mawile",
+      "source_name": "Mawile-Mega",
+      "canonical_key": "mawile",
+      "api_slug": "mawile",
       "base_species_key": "mawile",
       "forme": "Mega",
       "types": [
@@ -8909,6 +10088,9 @@
     },
     "medichammega": {
       "display_name": "Mega Medicham",
+      "source_name": "Medicham-Mega",
+      "canonical_key": "medicham",
+      "api_slug": "medicham",
       "base_species_key": "medicham",
       "forme": "Mega",
       "types": [
@@ -8931,6 +10113,9 @@
     },
     "meganiummega": {
       "display_name": "Mega Meganium",
+      "source_name": "Meganium-Mega",
+      "canonical_key": "meganium",
+      "api_slug": "meganium",
       "base_species_key": "meganium",
       "forme": "Mega",
       "types": [
@@ -8952,7 +10137,10 @@
       "is_mega": true
     },
     "meowsticfmega": {
-      "display_name": "Meowstic F Mega",
+      "display_name": "Mega Meowstic F",
+      "source_name": "Meowstic-F-Mega",
+      "canonical_key": "meowstic-f",
+      "api_slug": "meowstic",
       "base_species_key": "meowstic",
       "forme": "F-Mega",
       "types": [
@@ -8973,7 +10161,10 @@
       "is_mega": true
     },
     "meowsticmmega": {
-      "display_name": "Meowstic M Mega",
+      "display_name": "Mega Meowstic M",
+      "source_name": "Meowstic-M-Mega",
+      "canonical_key": "meowstic-m",
+      "api_slug": "meowstic",
       "base_species_key": "meowstic",
       "forme": "M-Mega",
       "types": [
@@ -8995,6 +10186,9 @@
     },
     "metagrossmega": {
       "display_name": "Mega Metagross",
+      "source_name": "Metagross-Mega",
+      "canonical_key": "metagross",
+      "api_slug": "metagross",
       "base_species_key": "metagross",
       "forme": "Mega",
       "types": [
@@ -9017,6 +10211,9 @@
     },
     "pidgeotmega": {
       "display_name": "Mega Pidgeot",
+      "source_name": "Pidgeot-Mega",
+      "canonical_key": "pidgeot",
+      "api_slug": "pidgeot",
       "base_species_key": "pidgeot",
       "forme": "Mega",
       "types": [
@@ -9039,6 +10236,9 @@
     },
     "pinsirmega": {
       "display_name": "Mega Pinsir",
+      "source_name": "Pinsir-Mega",
+      "canonical_key": "pinsir",
+      "api_slug": "pinsir",
       "base_species_key": "pinsir",
       "forme": "Mega",
       "types": [
@@ -9061,6 +10261,9 @@
     },
     "pyroarmega": {
       "display_name": "Mega Pyroar",
+      "source_name": "Pyroar-Mega",
+      "canonical_key": "pyroar",
+      "api_slug": "pyroar",
       "base_species_key": "pyroar",
       "forme": "Mega",
       "types": [
@@ -9083,6 +10286,9 @@
     },
     "raichumegax": {
       "display_name": "Mega Raichu X",
+      "source_name": "Raichu-Mega-X",
+      "canonical_key": "raichu-x",
+      "api_slug": "raichu",
       "base_species_key": "raichu",
       "forme": "Mega-X",
       "types": [
@@ -9104,6 +10310,9 @@
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
+      "source_name": "Raichu-Mega-Y",
+      "canonical_key": "raichu-y",
+      "api_slug": "raichu",
       "base_species_key": "raichu",
       "forme": "Mega-Y",
       "types": [
@@ -9125,6 +10334,9 @@
     },
     "sableyemega": {
       "display_name": "Mega Sableye",
+      "source_name": "Sableye-Mega",
+      "canonical_key": "sableye",
+      "api_slug": "sableye",
       "base_species_key": "sableye",
       "forme": "Mega",
       "types": [
@@ -9147,6 +10359,9 @@
     },
     "salamencemega": {
       "display_name": "Mega Salamence",
+      "source_name": "Salamence-Mega",
+      "canonical_key": "salamence",
+      "api_slug": "salamence",
       "base_species_key": "salamence",
       "forme": "Mega",
       "types": [
@@ -9169,6 +10384,9 @@
     },
     "sceptilemega": {
       "display_name": "Mega Sceptile",
+      "source_name": "Sceptile-Mega",
+      "canonical_key": "sceptile",
+      "api_slug": "sceptile",
       "base_species_key": "sceptile",
       "forme": "Mega",
       "types": [
@@ -9191,6 +10409,9 @@
     },
     "scizormega": {
       "display_name": "Mega Scizor",
+      "source_name": "Scizor-Mega",
+      "canonical_key": "scizor",
+      "api_slug": "scizor",
       "base_species_key": "scizor",
       "forme": "Mega",
       "types": [
@@ -9213,6 +10434,9 @@
     },
     "scolipedemega": {
       "display_name": "Mega Scolipede",
+      "source_name": "Scolipede-Mega",
+      "canonical_key": "scolipede",
+      "api_slug": "scolipede",
       "base_species_key": "scolipede",
       "forme": "Mega",
       "types": [
@@ -9235,6 +10459,9 @@
     },
     "scovillainmega": {
       "display_name": "Mega Scovillain",
+      "source_name": "Scovillain-Mega",
+      "canonical_key": "scovillain",
+      "api_slug": "scovillain",
       "base_species_key": "scovillain",
       "forme": "Mega",
       "types": [
@@ -9257,6 +10484,9 @@
     },
     "scraftymega": {
       "display_name": "Mega Scrafty",
+      "source_name": "Scrafty-Mega",
+      "canonical_key": "scrafty",
+      "api_slug": "scrafty",
       "base_species_key": "scrafty",
       "forme": "Mega",
       "types": [
@@ -9279,6 +10509,9 @@
     },
     "sharpedomega": {
       "display_name": "Mega Sharpedo",
+      "source_name": "Sharpedo-Mega",
+      "canonical_key": "sharpedo",
+      "api_slug": "sharpedo",
       "base_species_key": "sharpedo",
       "forme": "Mega",
       "types": [
@@ -9301,6 +10534,9 @@
     },
     "skarmorymega": {
       "display_name": "Mega Skarmory",
+      "source_name": "Skarmory-Mega",
+      "canonical_key": "skarmory",
+      "api_slug": "skarmory",
       "base_species_key": "skarmory",
       "forme": "Mega",
       "types": [
@@ -9323,6 +10559,9 @@
     },
     "slowbromega": {
       "display_name": "Mega Slowbro",
+      "source_name": "Slowbro-Mega",
+      "canonical_key": "slowbro",
+      "api_slug": "slowbro",
       "base_species_key": "slowbro",
       "forme": "Mega",
       "types": [
@@ -9345,6 +10584,9 @@
     },
     "staraptormega": {
       "display_name": "Mega Staraptor",
+      "source_name": "Staraptor-Mega",
+      "canonical_key": "staraptor",
+      "api_slug": "staraptor",
       "base_species_key": "staraptor",
       "forme": "Mega",
       "types": [
@@ -9367,6 +10609,9 @@
     },
     "starmiemega": {
       "display_name": "Mega Starmie",
+      "source_name": "Starmie-Mega",
+      "canonical_key": "starmie",
+      "api_slug": "starmie",
       "base_species_key": "starmie",
       "forme": "Mega",
       "types": [
@@ -9389,6 +10634,9 @@
     },
     "steelixmega": {
       "display_name": "Mega Steelix",
+      "source_name": "Steelix-Mega",
+      "canonical_key": "steelix",
+      "api_slug": "steelix",
       "base_species_key": "steelix",
       "forme": "Mega",
       "types": [
@@ -9411,6 +10659,9 @@
     },
     "swampertmega": {
       "display_name": "Mega Swampert",
+      "source_name": "Swampert-Mega",
+      "canonical_key": "swampert",
+      "api_slug": "swampert",
       "base_species_key": "swampert",
       "forme": "Mega",
       "types": [
@@ -9433,6 +10684,9 @@
     },
     "tyranitarmega": {
       "display_name": "Mega Tyranitar",
+      "source_name": "Tyranitar-Mega",
+      "canonical_key": "tyranitar",
+      "api_slug": "tyranitar",
       "base_species_key": "tyranitar",
       "forme": "Mega",
       "types": [
@@ -9455,6 +10709,9 @@
     },
     "venusaurmega": {
       "display_name": "Mega Venusaur",
+      "source_name": "Venusaur-Mega",
+      "canonical_key": "venusaur",
+      "api_slug": "venusaur",
       "base_species_key": "venusaur",
       "forme": "Mega",
       "types": [
@@ -9477,6 +10734,9 @@
     },
     "victreebelmega": {
       "display_name": "Mega Victreebel",
+      "source_name": "Victreebel-Mega",
+      "canonical_key": "victreebel",
+      "api_slug": "victreebel",
       "base_species_key": "victreebel",
       "forme": "Mega",
       "types": [
@@ -9527,7 +10787,7 @@
     "Banette",
     "Barbaracle",
     "Basculegion",
-    "Basculegion F",
+    "Basculegion Female",
     "Bastiodon",
     "Baxcalibur",
     "Beartic",
@@ -9567,7 +10827,7 @@
     "Espeon",
     "Excadrill",
     "Falinks",
-    "Farfetch\\U2019D",
+    "Farfetch\\u2019d",
     "Farigiraf",
     "Feraligatr",
     "Flapple",
@@ -9617,7 +10877,7 @@
     "Kingambit",
     "Kleavor",
     "Klefki",
-    "Kommo O",
+    "Kommo-o",
     "Krookodile",
     "Leafeon",
     "Liepard",
@@ -9702,7 +10962,7 @@
     "Simisage",
     "Simisear",
     "Sinistcha",
-    "Sirfetch\\U2019D",
+    "Sirfetch\\u2019d",
     "Skarmory",
     "Skeledirge",
     "Slowbro",
