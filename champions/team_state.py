@@ -120,8 +120,10 @@ def _base_species_for_mega(mega_species: str) -> str:
     value = str(mega_species or "").strip()
     if value.lower().startswith("mega "):
         value = value[5:].strip()
-    if value.endswith((" X", " Y")):
-        value = value[:-2].rstrip()
+    for suffix in (" X", " Y", " Z"):
+        if value.endswith(suffix):
+            value = value[:-2].rstrip()
+            break
     return value
 
 
