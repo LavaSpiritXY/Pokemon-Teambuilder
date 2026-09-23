@@ -12,6 +12,12 @@ on:
       - "tests/test_tournament_move_history.py"
       - "champions/tournament_data.py"
       - "champions/tournament_move_history.py"
+      - "champions/constants.py"
+      - "champions/item_data.py"
+      - "champions/limitless_data.py"
+      - "champions/team_state.py"
+      - "test_champions_auto_sync.py"
+      - "test_champions_history_data.py"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
