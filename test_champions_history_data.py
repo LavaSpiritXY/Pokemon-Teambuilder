@@ -161,8 +161,9 @@ def test_regulation_metrics_do_not_leak_across_regulations(tmp_path):
 def test_existing_tournament_api_returns_normalized_metrics():
     metrics = calculate_tournament_metrics("Garchomp")
     partners = get_tournament_partners("Garchomp")
+    active_regulation = history_data.load_champions_history().get("active_regulation")
 
     assert isinstance(metrics, dict)
     assert 0.0 <= metrics["tournament_score"] <= 1.0
-    assert metrics["current_regulation"] == "M-B"
+    assert metrics["current_regulation"] == active_regulation
     assert isinstance(partners, list)
