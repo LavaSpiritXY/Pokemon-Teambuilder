@@ -128,4 +128,27 @@ jobs:
             exit 0
           fi
           git commit -m "Sync tournament move history"
-          git push origin HEAD:main
+
+          # main may have advanced while the long tournament sync was running.
+          # Rebase the generated history commit onto the latest main before pushing.
+          # Retry a few times in case another writer updates main between fetch and push.
+          for attempt in 1 2 3; do
+            echo "Synchronizing with origin/main before push (attempt $attempt)..."
+            git fetch origin main
+
+            if ! git rebase origin/main; then
+              echo "Rebase failed. Aborting so no history is overwritten."
+              git rebase --abort || true
+              exit 1
+            fi
+
+            if git push origin HEAD:main; then
+              echo "Champions history sync pushed successfully."
+              exit 0
+            fi
+
+            echo "Push was rejected because main advanced; retrying..."
+          done
+
+          echo "Failed to push Champions history after 3 attempts."
+          exit 1
