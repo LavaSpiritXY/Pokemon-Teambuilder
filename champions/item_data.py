@@ -5,9 +5,9 @@ legacy generic-Pokémon list. That list contains items which are not legal in
 Champions. This module provides the Champions-specific source of truth used
 by the UI and team-state code.
 
-The non-Mega pool is based on the current Champions M-C legal-item catalogue;
-Mega Stones are derived from the project's own Champions Mega roster so the
-item list stays aligned with the Pokémon/forms the app actually supports.
+The non-Mega pool is generated from the current Champions item catalogue.
+Mega Stones are derived from the generated Champions registry so the item list
+stays aligned with the Pokémon/forms the app actually supports.
 """
 
 from __future__ import annotations
