@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
-from champions.constants import CUSTOM_MEGAS_DATA
+from champions.registry import get_mega_forms
 from champions.species_keys import canonical_species_key
 from champions.history_data import history_revision
 from champions.meta_utils import detect_archetypes
@@ -71,7 +71,7 @@ def _candidate_shortlist(active_names: Sequence[str], limit: int = 48) -> List[s
 
     # Make supported Champions Megas eligible even when history stores their
     # tournament statistics against the base species key.
-    for mega_name in CUSTOM_MEGAS_DATA:
+    for mega_name in (entry["display_name"] for entry in get_mega_forms().values()):
         if _family_key(mega_name) in active_families or canonical_species_key(mega_name) in active_keys:
             continue
         record = _meta_record(records, mega_name)
