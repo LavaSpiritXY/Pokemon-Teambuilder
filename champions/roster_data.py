@@ -3,10 +3,8 @@ import re
 import requests
 import streamlit as strlit
 
-from champions.constants import (
-    CUSTOM_MEGAS_DATA,
-    SPECIES_DISPLAY_OVERRIDES,
-)
+from champions.constants import SPECIES_DISPLAY_OVERRIDES
+from champions.registry import load_registry
 def fetch_champions_learnsets():
     url = "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts"
     try:
@@ -315,26 +313,13 @@ def display_name_for_species_key(species_key):
     )
 
 def fetch_pokemon_roster():
-    roster = list(CUSTOM_MEGAS_DATA.keys())
+    """Return the generated Champions base-species roster.
 
-    for species_key in sorted(
-        set(fetch_champions_pokedex_entries())
-        | set(fetch_champions_learnsets().keys())
-    ):
-        roster.append(display_name_for_species_key(species_key))
-
-    # Mega forms are not independently selectable in the species dropdown.
-    # The base species is the stable selector; the matching Mega Stone drives
-    # the Mega form stored in the slot state.
-    base_only_roster = {
-        item for item in roster
-        if not str(item).startswith("Mega ")
-    }
-
-    return ["-- Choose a Pokémon --"] + sorted(
-        base_only_roster,
-        key=str.lower,
-    )
+    Mega forms are intentionally excluded from the species selector. The
+    matching Mega Stone controls promotion to a Mega form in team state.
+    """
+    registry = load_registry()
+    return ["-- Choose a Pokémon --"] + list(registry["base_roster"])
 
 def get_clean_api_name(mon_name):
     """
