@@ -98,9 +98,6 @@ def validate_registry(payload: Dict[str, Any]) -> None:
 
         required = (
             "display_name",
-            "source_name",
-            "api_slug",
-            "canonical_key",
             "base_species_key",
             "types",
             "base_stats",
@@ -117,6 +114,13 @@ def validate_registry(payload: Dict[str, Any]) -> None:
 
         if not isinstance(entry["abilities"], list) or not entry["abilities"]:
             raise ValueError(f"Registry species {species_key!r} has no abilities.")
+
+        for optional in ("source_name", "api_slug", "canonical_key"):
+            value = entry.get(optional)
+            if value is not None and (not isinstance(value, str) or not value.strip()):
+                raise ValueError(
+                    f"Registry species {species_key!r} has invalid {optional}."
+                )
 
         stats = entry["base_stats"]
         if not isinstance(stats, dict):
