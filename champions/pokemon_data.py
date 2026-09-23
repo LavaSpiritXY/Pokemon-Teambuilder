@@ -4,7 +4,7 @@ import streamlit as strlit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 
-from champions.constants import CUSTOM_MEGAS_DATA
+from champions.registry import get_species_by_display_name
 from champions.move_data import display_name_for_move, get_champions_species_key
 from champions.roster_data import get_clean_api_name, get_base_api_name, display_name_for_species_key
 
@@ -65,19 +65,24 @@ def _fetch_pokemon_details_uncached(mon_name):
     sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{clean_api_name}.png"
     box_sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{clean_api_name}.png"
 
-    custom_data = CUSTOM_MEGAS_DATA.get(mon_name, {})
+    registry_data = get_species_by_display_name(mon_name)
+    registry_stats = registry_data.get("base_stats", {})
     stats = {
-        "hp": custom_data.get("hp", 80),
-        "attack": custom_data.get("atk", 100),
-        "defense": custom_data.get("def", 100),
-        "special-attack": custom_data.get("spa", 100),
-        "special-defense": custom_data.get("spd", 100),
-        "speed": custom_data.get("spd_stat", 100),
+        "hp": registry_stats.get("hp", 80),
+        "attack": registry_stats.get("atk", 100),
+        "defense": registry_stats.get("def", 100),
+        "special-attack": registry_stats.get("spa", 100),
+        "special-defense": registry_stats.get("spd", 100),
+        "speed": registry_stats.get("spe", 100),
     }
-    custom_ability = custom_data.get("ability", "Standard")
+    custom_ability = (
+        registry_data.get("abilities", ["Standard"])[0]
+        if registry_data.get("abilities")
+        else "Standard"
+    )
     champion_moves = list(get_champion_moves_for(mon_name))
 
-    types = ["Normal"]
+    types = list(registry_data.get("types") or ["Normal"])
     abilities = [custom_ability] if custom_ability else ["Standard"]
     moves = champion_moves if champion_moves else ["Tackle", "Protect", "Rest", "Substitute"]
 
@@ -93,7 +98,7 @@ def _fetch_pokemon_details_uncached(mon_name):
             sprite_url = data.get("sprites", {}).get("other", {}).get("official-artwork", {}).get("front_default") or sprite_url
             box_sprite_url = data.get("sprites", {}).get("front_default") or box_sprite_url
             types = [t["type"]["name"].title() for t in data.get("types", [])]
-            if not custom_data:
+            if not registry_data:
                 api_stats = {
                     entry["stat"]["name"]: entry["base_stat"]
                     for entry in data.get("stats", [])
@@ -101,8 +106,10 @@ def _fetch_pokemon_details_uncached(mon_name):
                 if api_stats:
                     stats = api_stats
             api_abilities = [a["ability"]["name"].replace("-", " ").title() for a in data.get("abilities", [])]
-            if custom_ability and custom_ability != "Standard":
-                abilities = [custom_ability] + [ab for ab in api_abilities if ab != custom_ability]
+            if registry_data.get("abilities"):
+                abilities = list(registry_data["abilities"])
+            elif api_abilities:
+                abilities = api_abilities
             elif api_abilities:
                 abilities = api_abilities
             if not champion_moves:
