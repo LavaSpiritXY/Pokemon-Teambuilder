@@ -7,17 +7,20 @@ on:
       - ".github/workflows/sync-champions-history.yml"
       - "tools/migrate_champions_history_schema.py"
       - "tools/enrich_tournament_moves.py"
+      - "tools/sync_champions_registry.py"
       - "tests/test_history_schema_migration.py"
       - "tests/test_tournament_data.py"
       - "tests/test_tournament_move_history.py"
       - "champions/tournament_data.py"
       - "champions/tournament_move_history.py"
       - "champions/constants.py"
+      - "champions/registry.py"
       - "champions/item_data.py"
       - "champions/limitless_data.py"
       - "champions/team_state.py"
       - "test_champions_auto_sync.py"
       - "test_champions_history_data.py"
+      - "tests/test_champions_registry.py"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -51,6 +54,11 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install pytest
 
+      - name: Sync generated Champions registry
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python tools/sync_champions_registry.py
+
       - name: Migrate Champions history schema
         run: python tools/migrate_champions_history_schema.py
 
@@ -68,6 +76,11 @@ jobs:
             --page-size 100 \
             --batch-size 25 \
             --delay 1.5
+
+      - name: Refresh registry regulation metadata
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python tools/sync_champions_registry.py --refresh-regulation-only
 
       - name: Rebuild tournament move history from cached decklists
         env:
@@ -93,7 +106,8 @@ jobs:
             tests/test_type_chart.py \
             tests/test_champions_end_to_end.py \
             tests/test_item_data.py \
-            tests/test_item_selector_wiring.py -v
+            tests/test_item_selector_wiring.py \
+            tests/test_champions_registry.py -v
 
       - name: Validate generated data and compile modules
         env:
@@ -101,6 +115,7 @@ jobs:
         run: |
           python -m json.tool champions_meta_history.json > /dev/null
           python -m json.tool champions_event_ids.json > /dev/null
+          python -m json.tool champions_registry.json > /dev/null
           python -m py_compile \
             champions/limitless_data.py \
             champions/historical_ingestion.py \
@@ -110,11 +125,13 @@ jobs:
             champions/tournament_data.py \
             champions/tournament_move_history.py \
             champions/constants.py \
+            champions/registry.py \
             champions/item_data.py \
             champions/team_state.py \
             champions_meta.py \
             champions_integration.py \
             tools/sync_champions_history.py \
+            tools/sync_champions_registry.py \
             tools/enrich_tournament_moves.py \
             tools/migrate_champions_history_schema.py
 
@@ -122,12 +139,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add champions_event_ids.json champions_meta_history.json
+          git add champions_event_ids.json champions_meta_history.json champions_registry.json
           if git diff --cached --quiet; then
             echo "No Champions history changes detected."
             exit 0
           fi
-          git commit -m "Sync tournament move history"
+          git commit -m "Sync Champions registry and tournament history"
 
           # main may have advanced while the long tournament sync was running.
           # Rebase the generated history commit onto the latest main before pushing.
