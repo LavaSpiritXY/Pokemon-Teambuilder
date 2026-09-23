@@ -14,8 +14,15 @@ from __future__ import annotations
 
 from functools import lru_cache
 from typing import Dict, List
+import re
 
-from champions.registry import get_mega_forms, get_standard_items
+from champions.registry import (
+    get_mega_forms,
+    get_species,
+    get_species_by_display_name,
+    get_standard_items,
+    load_registry,
+)
 
 
 
@@ -43,57 +50,81 @@ def get_champions_held_items(include_mega_stones: bool = True) -> List[str]:
 
 
 
-# Items that are meaningfully associated with one species/form.  These are
-# surfaced separately in the UI, but remain legal only when appropriate.
-POKEMON_SPECIFIC_ITEMS = {
-    "Pikachu": ("Light Ball",),
-}
+@lru_cache(maxsize=1)
+def get_pokemon_specific_items() -> Dict[str, tuple[str, ...]]:
+    """Build species/form-specific item choices from generated itemUser metadata."""
+    registry = load_registry()
+    result: Dict[str, set[str]] = {}
+
+    for entry in registry.get("items", {}).values():
+        if not entry.get("legal") or entry.get("is_mega_stone"):
+            continue
+
+        item_name = str(entry.get("display_name") or "").strip()
+        if not item_name:
+            continue
+
+        for user in entry.get("item_users", []) or []:
+            user_key = str(user).strip().casefold()
+            if not user_key:
+                continue
+
+            # Resolve exact generated forms first.
+            matched = (
+                get_species_by_display_name(user_key)
+                or get_species(user_key)
+            )
+
+            if matched:
+                targets = [matched]
+            else:
+                # Showdown itemUser can mention a form that is outside the
+                # Champions roster. Keep the item available to the matching
+                # base species without maintaining another form table.
+                base_name = user_key.split("-", 1)[0]
+                matched = get_species(base_name)
+                targets = [matched] if matched else []
+
+            for species in targets:
+                display = str(
+                    species.get("display_name")
+                    or species.get("source_name")
+                    or ""
+                ).strip()
+                if display:
+                    result.setdefault(display, set()).add(item_name)
+
+    return {
+        key: tuple(sorted(values, key=str.casefold))
+        for key, values in result.items()
+    }
 
 
-def _base_species_for_mega(species: str) -> str:
-    value = str(species or "").strip()
-    if value.startswith("Mega "):
-        value = value[5:]
-        # Mega Raichu X/Y and Mega Charizard X/Y share their base species.
-        if value.endswith((" X", " Y", " Z")):
-            value = value.rsplit(" ", 1)[0]
-    return value
+POKEMON_SPECIFIC_ITEMS = get_pokemon_specific_items()
 
 
-def get_contextual_item_groups(species: str):
-    """Return (mega_items, species_items, standard_items) for one species."""
-    species = str(species or "").strip()
-    base = _base_species_for_mega(species)
 
-    mega_items = []
-    for mega_name, stone in get_mega_stone_map().items():
-        if _base_species_for_mega(mega_name).casefold() == base.casefold():
-            mega_items.append(stone)
-
-    species_items = list(POKEMON_SPECIFIC_ITEMS.get(base, ()))
-    mega_items = sorted(set(mega_items), key=str.casefold)
-    species_items = sorted(set(species_items), key=str.casefold)
-    special = set(mega_items) | set(species_items)
-    standard_items = [
-        item for item in CHAMPIONS_STANDARD_HELD_ITEMS
-        if item not in special
-    ]
-    return mega_items, species_items, standard_items
-
-
-_ITEM_ALIASES = {
-    "kings rock": "King's Rock",
-    "never melt ice": "Never-Melt Ice",
-    "icy rock": "Icy Rock",
-}
+@lru_cache(maxsize=1)
+def _item_display_lookup() -> Dict[str, str]:
+    """Map tolerant item-name keys to the generated canonical display name."""
+    lookup: Dict[str, str] = {}
+    for entry in load_registry().get("items", {}).values():
+        name = str(entry.get("display_name") or "").strip()
+        if entry.get("legal") and name:
+            key = re.sub(r"[^a-z0-9]+", "", name.casefold())
+            lookup.setdefault(key, name)
+    return lookup
 
 
 def normalize_item_name(item_name: str) -> str:
-    """Normalise harmless whitespace/casing differences without inventing data."""
+    """Normalise user-entered item names against generated item metadata."""
     value = " ".join(str(item_name or "").strip().split())
     if not value:
         return ""
-    return _ITEM_ALIASES.get(value.casefold(), value)
+
+    key = re.sub(r"[^a-z0-9]+", "", value.casefold())
+    return _item_display_lookup().get(key, value)
+
 
 
 @lru_cache(maxsize=2)
