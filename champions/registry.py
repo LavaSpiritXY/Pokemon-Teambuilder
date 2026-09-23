@@ -113,6 +113,13 @@ def get_species(species_key: str, registry: Optional[Dict[str, Any]] = None) -> 
     return data["species"].get(key, {})
 
 
+def get_current_regulation(registry: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Return the current regulation recorded in the generated registry."""
+    data = registry or load_registry()
+    value = str(data.get("current_regulation") or "").strip().upper()
+    return value or None
+
+
 def get_species_by_display_name(
     display_name: str,
     registry: Optional[Dict[str, Any]] = None,
@@ -145,6 +152,7 @@ __all__ = [
     "load_registry",
     "validate_registry",
     "get_species",
+    "get_current_regulation",
     "get_species_by_display_name",
     "get_mega_forms",
     "get_base_roster",
