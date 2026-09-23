@@ -1,8 +1,6 @@
 from typing import Dict
 
 
-CURRENT_REGULATION = "M-C"
-
 
 TYPE_COLORS = {
     "Normal": "#A8A77A", "Fire": "#EE8130", "Water": "#6390F0", "Electric": "#F7D02C",
