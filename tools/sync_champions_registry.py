@@ -25,6 +25,14 @@ CHAMPIONS_LEARNSETS_URL = (
     "https://raw.githubusercontent.com/smogon/pokemon-showdown/"
     "master/data/mods/champions/learnsets.ts"
 )
+CHAMPIONS_ITEMS_URL = (
+    "https://raw.githubusercontent.com/smogon/pokemon-showdown/"
+    "master/data/mods/champions/items.ts"
+)
+ITEMS_URL = (
+    "https://raw.githubusercontent.com/smogon/pokemon-showdown/"
+    "master/data/items.ts"
+)
 
 REQUEST_TIMEOUT_SECONDS = 30
 REGULATION_RE = re.compile(r"^M-[A-Z0-9]+$")
@@ -142,6 +150,58 @@ def _parse_top_level_entries(source: str) -> Dict[str, str]:
     return entries
 
 
+
+def _learnset_move_ids(block: str) -> List[str]:
+    """Return the move IDs from one Champions learnset block."""
+    match = re.search(
+        r"""\blearnset\s*:\s*\{(.*)\}\s*,?\s*\}\s*,?\s*$""",
+        block,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return []
+
+    moves = []
+    for move_id in re.findall(
+        r"""^\s*([a-z0-9]+)\s*:\s*\[""",
+        match.group(1),
+        flags=re.MULTILINE,
+    ):
+        if move_id not in moves:
+            moves.append(move_id)
+
+    return sorted(moves)
+
+
+def _nonstandard_value(block: str) -> tuple[Optional[str], bool]:
+    """Return (value, found) for an item's isNonstandard field."""
+    match = re.search(
+        r"""\bisNonstandard\s*:\s*(null|"([^"]*)"|'([^']*)')""",
+        block,
+    )
+    if not match:
+        return None, False
+    if match.group(1) == "null":
+        return None, True
+    return (match.group(2) or match.group(3) or "").strip(), True
+
+
+def _object_string_map(block: str, field: str) -> Dict[str, str]:
+    """Parse simple string-to-string objects such as megaStone."""
+    match = re.search(
+        rf"""\b{re.escape(field)}\s*:\s*\{{([^{{}}]*)\}}""",
+        block,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return {}
+
+    values = re.findall(
+        r'''["']([^"']+)["']\s*:\s*["']([^"']+)["']''',
+        match.group(1),
+    )
+    return {key: value for key, value in values}
+
 def _display_name(
     source_name: str,
     species_id: str,
@@ -214,9 +274,14 @@ def _history_metadata() -> tuple[Optional[str], List[str]]:
 def build_registry() -> Dict[str, Any]:
     pokedex_source = _fetch_text(POKEDEX_URL)
     learnsets_source = _fetch_text(CHAMPIONS_LEARNSETS_URL)
+    champions_items_source = _fetch_text(CHAMPIONS_ITEMS_URL)
+    items_source = _fetch_text(ITEMS_URL)
 
     pokedex_blocks = _parse_top_level_entries(pokedex_source)
-    champions_species = set(_parse_top_level_entries(learnsets_source))
+    learnset_blocks = _parse_top_level_entries(learnsets_source)
+    champions_species = set(learnset_blocks)
+    champions_item_blocks = _parse_top_level_entries(champions_items_source)
+    item_blocks = _parse_top_level_entries(items_source)
 
     if not pokedex_blocks:
         raise ValueError("No Pokedex entries were parsed from upstream.")
@@ -309,6 +374,56 @@ def build_registry() -> Dict[str, Any]:
         key=str.casefold,
     )
 
+    learnsets = {
+        species_id: _learnset_move_ids(block)
+        for species_id, block in learnset_blocks.items()
+    }
+    missing_learnsets = [species_id for species_id, moves in learnsets.items() if not moves]
+    if missing_learnsets:
+        raise ValueError(
+            "Champions learnset entries with no moves: "
+            f"{', '.join(sorted(missing_learnsets)[:20])}"
+        )
+
+    items = {}
+    legal_standard_items = []
+    legal_mega_stones = []
+
+    for item_id in sorted(set(item_blocks) | set(champions_item_blocks)):
+        main_block = item_blocks.get(item_id, "")
+        mod_block = champions_item_blocks.get(item_id, "")
+
+        name = (
+            _quoted_value(mod_block, "name")
+            or _quoted_value(main_block, "name")
+            or " ".join(part.title() for part in item_id.replace("-", " ").split())
+        )
+
+        main_nonstandard, main_found = _nonstandard_value(main_block)
+        mod_nonstandard, mod_found = _nonstandard_value(mod_block)
+        effective_nonstandard = mod_nonstandard if mod_found else (
+            main_nonstandard if main_found else None
+        )
+
+        mega_stone_map = _object_string_map(main_block, "megaStone")
+        mega_stone_map.update(_object_string_map(mod_block, "megaStone"))
+        is_mega_stone = bool(mega_stone_map)
+        legal = effective_nonstandard is None
+
+        items[item_id] = {
+            "display_name": name,
+            "legal": legal,
+            "is_mega_stone": is_mega_stone,
+            "mega_stone_map": mega_stone_map,
+            "is_nonstandard": effective_nonstandard,
+        }
+
+        if legal:
+            if is_mega_stone:
+                legal_mega_stones.append(name)
+            else:
+                legal_standard_items.append(name)
+
     current_regulation, detected_regulations = _history_metadata()
 
     return {
@@ -317,6 +432,8 @@ def build_registry() -> Dict[str, Any]:
         "sources": {
             "pokedex": POKEDEX_URL,
             "champions_learnsets": CHAMPIONS_LEARNSETS_URL,
+            "champions_items": CHAMPIONS_ITEMS_URL,
+            "items": ITEMS_URL,
         },
         "current_regulation": current_regulation,
         "detected_regulations": detected_regulations,
@@ -325,6 +442,13 @@ def build_registry() -> Dict[str, Any]:
         "mega_stones": mega_stones,
         "base_roster": base_roster,
         "champions_species_keys": sorted(champions_species),
+        "learnsets": dict(sorted(learnsets.items())),
+        "items": dict(sorted(items.items())),
+        "standard_items": sorted(set(legal_standard_items), key=str.casefold),
+        "mega_stones": sorted(
+            set(mega_stones) | set(legal_mega_stones),
+            key=str.casefold,
+        ),
     }
 
 
