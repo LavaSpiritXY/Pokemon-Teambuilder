@@ -146,7 +146,8 @@ def _base_species_for_mega(species: str) -> str:
     if value.startswith("Mega "):
         value = value[5:]
         # Mega Raichu X/Y and Mega Charizard X/Y share their base species.
-        value = value.rsplit(" ", 1)[0] if value.endswith((" X", " Y")) else value
+        if value.endswith((" X", " Y", " Z")):
+            value = value.rsplit(" ", 1)[0]
     return value
 
 
