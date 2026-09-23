@@ -64,7 +64,7 @@ class TournamentDataTests(unittest.TestCase):
 
     def test_partners_are_counted_without_self_pairs(self):
         import_champions_tournament({
-            "regulation": CURRENT_REGULATION,
+            "regulation": get_current_regulation(),
             "players": [{
                 "team": ["Whimsicott", "Farigiraf", "Whimsicott"],
                 "placing": 4,
