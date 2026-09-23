@@ -15,7 +15,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Dict, List
 
-from champions.constants import CUSTOM_MEGAS_DATA
+from champions.registry import load_registry
 
 
 CHAMPIONS_STANDARD_HELD_ITEMS = (
@@ -107,23 +107,15 @@ _MEGA_STONE_OVERRIDES = {
 }
 
 
-def _mega_stone_for_species(species: str) -> str:
-    override = _MEGA_STONE_OVERRIDES.get(species)
-    if override:
-        return override
-    base = species.removeprefix("Mega ").replace(" ", "")
-    return f"{base}ite"
-
-
 @lru_cache(maxsize=1)
 def get_mega_stone_map() -> Dict[str, str]:
-    """Return Mega Pokémon -> legal Champions Mega Stone mapping."""
+    """Return Mega display name -> legal Champions Mega Stone from registry."""
+    registry = load_registry()
     return {
-        species: _mega_stone_for_species(species)
-        for species in CUSTOM_MEGAS_DATA
-        if str(species).startswith("Mega ")
+        entry["display_name"]: entry["required_item"]
+        for entry in registry["megas"].values()
+        if entry.get("display_name") and entry.get("required_item")
     }
-
 
 @lru_cache(maxsize=2)
 def get_champions_held_items(include_mega_stones: bool = True) -> List[str]:
