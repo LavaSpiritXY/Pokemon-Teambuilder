@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from champions.constants import CURRENT_REGULATION
+from champions.registry import get_current_regulation
 from champions.history_data import load_champions_history
 from champions.tournament_data import (
     CHAMPIONS_META_DB,
@@ -21,7 +21,7 @@ class TournamentDataTests(unittest.TestCase):
     def test_missing_match_record_keeps_win_rate_unknown(self):
         history = load_champions_history()
         active_regulation = str(
-            history.get("active_regulation") or CURRENT_REGULATION
+            history.get("active_regulation") or get_current_regulation()
         ).strip().upper()
         import_champions_tournament({
             "regulation": active_regulation,
@@ -37,7 +37,7 @@ class TournamentDataTests(unittest.TestCase):
 
     def test_explicit_match_record_is_preserved(self):
         import_champions_tournament({
-            "regulation": CURRENT_REGULATION,
+            "regulation": get_current_regulation(),
             "players": [{
                 "team": ["Whimsicott", "Farigiraf"],
                 "placing": 9,
