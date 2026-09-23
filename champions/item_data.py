@@ -104,6 +104,47 @@ POKEMON_SPECIFIC_ITEMS = get_pokemon_specific_items()
 
 
 
+def _base_species_for_mega(species: str) -> str:
+    """Return the base species name for a base or Mega display name."""
+    value = str(species or "").strip()
+    if value.casefold().startswith("mega "):
+        value = value[5:].strip()
+        parts = value.rsplit(" ", 1)
+        if len(parts) == 2 and parts[1].casefold() in {"x", "y", "z"}:
+            value = parts[0]
+    return value
+
+
+def get_contextual_item_groups(species: str):
+    """Return (mega_items, species_items, standard_items) for one species."""
+    species = str(species or "").strip()
+    base = _base_species_for_mega(species)
+
+    mega_items = []
+    for mega_name, stone in get_mega_stone_map().items():
+        mega_base = _base_species_for_mega(mega_name)
+        if mega_base.casefold() == base.casefold():
+            mega_items.append(stone)
+
+    specific_lookup = {
+        str(name).casefold(): tuple(items)
+        for name, items in POKEMON_SPECIFIC_ITEMS.items()
+    }
+
+    species_items = list(specific_lookup.get(base.casefold(), ()))
+
+    mega_items = sorted(set(mega_items), key=str.casefold)
+    species_items = sorted(set(species_items), key=str.casefold)
+    special = set(mega_items) | set(species_items)
+    standard_items = [
+        item
+        for item in CHAMPIONS_STANDARD_HELD_ITEMS
+        if item not in special
+    ]
+    return mega_items, species_items, standard_items
+
+
+
 @lru_cache(maxsize=1)
 def _item_display_lookup() -> Dict[str, str]:
     """Map tolerant item-name keys to the generated canonical display name."""
