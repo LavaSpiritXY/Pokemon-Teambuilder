@@ -5,6 +5,7 @@ from champions.regulation import (
     get_active_regulation_from_history,
     select_active_champions_regulation,
 )
+from champions.limitless_data import CHAMPIONS_REGULATIONS
 from tools.sync_champions_history import (
     detect_champions_regulation,
     load_existing_event_ids,
@@ -13,6 +14,7 @@ from tools.sync_champions_history import (
 
 
 def test_detects_current_and_future_regulations():
+    assert "M-C" in CHAMPIONS_REGULATIONS
     assert detect_champions_regulation({"format": "M-A"}) == "M-A"
     assert detect_champions_regulation({"format": "M-B"}) == "M-B"
     assert detect_champions_regulation({"format": "M-C"}) == "M-C"
