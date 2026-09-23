@@ -15,57 +15,31 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Dict, List
 
-from champions.registry import load_registry
-
-
-_LEGACY_CHAMPIONS_STANDARD_HELD_ITEMS = (
-    "Aspear Berry", "Babiri Berry", "Big Root", "Black Belt", "Black Glasses",
-    "Bright Powder", "Charcoal", "Charti Berry", "Cheri Berry", "Chesto Berry",
-    "Chilan Berry", "Choice Scarf", "Chople Berry", "Coba Berry", "Colbur Berry",
-    "Damp Rock", "Dragon Fang", "Expert Belt", "Air Balloon", "Fairy Feather", "Focus Band",
-    "Focus Sash", "Hard Stone", "Haban Berry", "Heat Rock", "Icy Rock", "Iron Ball",
-    "King's Rock", "Kasib Berry", "Leek", "Kebia Berry", "Leftovers", "Leppa Berry", "Life Orb",
-    "Light Ball", "Light Clay", "Lum Berry", "Magnet", "Mental Herb", "Metal Coat",
-    "Metronome", "Miracle Seed", "Muscle Band", "Mystic Water", "Never-Melt Ice",
-    "Occa Berry", "Oran Berry", "Eject Button", "Normal Gem", "Terrain Extender", "Passho Berry", "Payapa Berry", "Pecha Berry",
-    "Persim Berry", "Poison Barb", "Quick Claw", "Rawst Berry", "Rindo Berry",
-    "Roseli Berry", "Scope Lens", "Sharp Beak", "Shed Shell", "Shell Bell",
-    "Shuca Berry", "Silk Scarf", "Silver Powder", "Sitrus Berry", "Smooth Rock",
-    "Soft Sand", "Spell Tag", "Tanga Berry", "Twisted Spoon", "Wacan Berry",
-    "White Herb", "Wide Lens", "Wise Glasses", "Yache Berry", "Zoom Lens",
-)
+from champions.registry import get_mega_forms, get_standard_items
 
 
 
 @lru_cache(maxsize=1)
 def get_mega_stone_map() -> Dict[str, str]:
     """Return Mega display name -> legal Champions Mega Stone from registry."""
-    registry = load_registry()
     return {
         entry["display_name"]: entry["required_item"]
-        for entry in registry["megas"].values()
+        for entry in get_mega_forms().values()
         if entry.get("display_name") and entry.get("required_item")
     }
 
-@lru_cache(maxsize=1)
-def _get_standard_items() -> tuple[str, ...]:
-    """Return the generated legal non-Mega item pool, with migration fallback."""
-    generated = load_registry().get("standard_items") or []
-    if generated:
-        return tuple(sorted(set(generated), key=str.casefold))
-    return tuple(_LEGACY_CHAMPIONS_STANDARD_HELD_ITEMS)
+CHAMPIONS_STANDARD_HELD_ITEMS = tuple(
+    sorted(set(get_standard_items()), key=str.casefold)
+)
 
 
 @lru_cache(maxsize=2)
 def get_champions_held_items(include_mega_stones: bool = True) -> List[str]:
     """Return sorted held-item selector options legal in Champions."""
-    items = set(_get_standard_items())
+    items = set(CHAMPIONS_STANDARD_HELD_ITEMS)
     if include_mega_stones:
         items.update(get_mega_stone_map().values())
     return sorted(items, key=str.casefold)
-
-
-CHAMPIONS_STANDARD_HELD_ITEMS = _get_standard_items()
 
 
 
