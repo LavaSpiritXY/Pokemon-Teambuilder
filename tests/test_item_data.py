@@ -39,6 +39,20 @@ def test_item_normalisation_handles_common_variants():
     assert normalize_item_name("") == ""
 
 
+
+
+def test_species_specific_items_are_generated_from_item_users():
+    from champions.item_data import get_contextual_item_groups
+
+    mega_items, species_items, _standard = get_contextual_item_groups("Pikachu")
+    assert "Light Ball" in species_items
+    assert mega_items == []
+
+
+def test_item_normalisation_comes_from_generated_catalogue():
+    assert normalize_item_name("  kings   rock ") == "King's Rock"
+    assert normalize_item_name("NEVER MElT ICE") == "Never-Melt Ice"
+
 def test_m_c_mega_forms_and_stones_are_registered():
     expected = {
         "Mega Absol Z": "Absolite Z",
