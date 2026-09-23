@@ -84,6 +84,11 @@ def validate_registry(payload: Dict[str, Any]) -> None:
             raise ValueError(f"Registry item {item_key!r} has invalid Mega Stone flag.")
         if not isinstance(entry.get("mega_stone_map"), dict):
             raise ValueError(f"Registry item {item_key!r} has invalid Mega Stone mapping.")
+        item_users = entry.get("item_users", [])
+        if not isinstance(item_users, list) or any(
+            not isinstance(user, str) or not user.strip() for user in item_users
+        ):
+            raise ValueError(f"Registry item {item_key!r} has invalid item users.")
 
     for field in ("standard_items", "mega_stones"):
         values = payload.get(field, [])
