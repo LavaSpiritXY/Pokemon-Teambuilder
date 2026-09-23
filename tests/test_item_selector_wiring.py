@@ -18,3 +18,6 @@ def test_mega_x_y_forms_match_their_base_species():
     assert _base_species_for_mega("Mega Raichu X") == "Raichu"
     assert _base_species_for_mega("Mega Raichu Y") == "Raichu"
     assert _base_species_for_mega("Mega Tyranitar") == "Tyranitar"
+    assert _base_species_for_mega("Mega Absol Z") == "Absol"
+    assert _base_species_for_mega("Mega Garchomp Z") == "Garchomp"
+    assert _base_species_for_mega("Mega Lucario Z") == "Lucario"
