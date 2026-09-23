@@ -37,3 +37,17 @@ def test_item_normalisation_handles_common_variants():
     assert normalize_item_name("  King's   Rock ") == "King's Rock"
     assert normalize_item_name("never melt ice") == "Never-Melt Ice"
     assert normalize_item_name("") == ""
+
+
+def test_m_c_mega_forms_and_stones_are_registered():
+    expected = {
+        "Mega Absol Z": "Absolite Z",
+        "Mega Salamence": "Salamencite",
+        "Mega Garchomp Z": "Garchompite Z",
+        "Mega Lucario Z": "Lucarionite Z",
+        "Mega Golisopod": "Golisopite",
+        "Mega Baxcalibur": "Baxcalibrite",
+    }
+    for species, stone in expected.items():
+        assert MEGA_STONE_MAP[species] == stone
+        assert is_champions_item(stone)
