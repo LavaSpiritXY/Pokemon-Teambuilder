@@ -111,3 +111,18 @@ def test_mega_display_name_normalisation():
         "Absol",
         "Mega-Z",
     ) == "Mega Absol Z"
+
+
+def test_legacy_mega_view_comes_from_generated_registry():
+    from champions.constants import CUSTOM_MEGAS_DATA
+
+    for name in (
+        "Mega Absol Z",
+        "Mega Salamence",
+        "Mega Garchomp Z",
+        "Mega Lucario Z",
+        "Mega Golisopod",
+        "Mega Baxcalibur",
+    ):
+        assert name in CUSTOM_MEGAS_DATA
+        assert CUSTOM_MEGAS_DATA[name]["ability"]
