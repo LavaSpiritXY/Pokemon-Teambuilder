@@ -1,81 +1,42 @@
+from champions.registry import (
+    get_species,
+    get_species_key_by_display_name,
+)
+
+
 def canonical_species_key(name):
     """
-    Converts a Pokémon name into ONE stable internal key.
+    Convert a Pokémon/form name into the stable Champions history key.
 
-    Important:
-    - Keeps meaningful form information.
-    - Does NOT squash words together.
-    - Does NOT try to guess a PokeAPI ID.
-    - Does NOT remove form names.
+    The generated registry owns form naming and canonical keys; this function
+    only provides a generic fallback for an unseen key before the next sync.
     """
     if not name:
         return ""
 
-    text = str(name).strip().lower()
+    text = str(name).strip()
+    if not text:
+        return ""
 
-    text = text.replace("’", "'")
-    text = text.replace("_", "-")
-    text = " ".join(text.split())
-    text = text.replace(" - ", "-")
-    text = text.replace(" -", "-")
-    text = text.replace("- ", "-")
+    direct = get_species(text.casefold())
+    if direct.get("canonical_key"):
+        return str(direct["canonical_key"])
 
-    aliases = {
-        "basculegion male": "Basculegion",
-        "basculegion female": "Basculegion Female",
-        "basculegion-male": "Basculegion",
-        "basculegion-female": "Basculegion Female",
-        "rotom wash": "rotom-wash",
-        "rotom heat": "rotom-heat",
-        "rotom frost": "rotom-frost",
-        "rotom fan": "rotom-fan",
-        "rotom mow": "rotom-mow",
-        "lycanroc midday": "lycanroc-midday",
-        "lycanroc midnight": "lycanroc-midnight",
-        "lycanroc dusk": "lycanroc-dusk",
-        "slowbro galar": "slowbro-galar",
-        "slowking galar": "slowking-galar",
-        "mr mime galar": "mr-mime-galar",
-        "braviary hisui": "braviary-hisui",
-        "decidueye hisui": "decidueye-hisui",
-        "electrode hisui": "electrode-hisui",
-        "goodra hisui": "goodra-hisui",
-        "lilligant hisui": "lilligant-hisui",
-        "qwilfish hisui": "qwilfish-hisui",
-        "samurott hisui": "samurott-hisui",
-        "sliggoo hisui": "sliggoo-hisui",
-        "typhlosion hisui": "typhlosion-hisui",
-        "voltorb hisui": "voltorb-hisui",
-        "zoroark hisui": "zoroark-hisui",
-        "avalugg hisui": "avalugg-hisui",
-        "arcanine hisui": "arcanine-hisui",
-        "decidueye hisuian": "decidueye-hisui",
-        "lilligant hisuian": "lilligant-hisui",
-        "zoroark hisuian": "zoroark-hisui",
-        "raichu alola": "raichu-alola",
-        "rattata alola": "rattata-alola",
-        "raticate alola": "raticate-alola",
-        "sandshrew alola": "sandshrew-alola",
-        "sandslash alola": "sandslash-alola",
-        "vulpix alola": "vulpix-alola",
-        "ninetales alola": "ninetales-alola",
-        "diglett alola": "diglett-alola",
-        "dugtrio alola": "dugtrio-alola",
-        "meowth alola": "meowth-alola",
-        "persian alola": "persian-alola",
-        "geodude alola": "geodude-alola",
-        "graveler alola": "graveler-alola",
-        "golem alola": "golem-alola",
-        "grimer alola": "grimer-alola",
-        "muk alola": "muk-alola",
-        "wooper paldea": "wooper-paldea",
-    }
+    generated = get_species_key_by_display_name(text)
+    if generated:
+        return generated
 
-    if text == "taurospaldeacombat" or text == "taurospaldeacombatbreed":
-        text = "tauros-paldea-combat-breed"
-    elif text == "taurospaldeablaze":
-        text = "tauros-paldea-blaze"
-    elif text == "taurospaldeaaqua":
-        text = "tauros-paldea-aqua"
+    lowered = text.casefold().replace("’", "").replace("'", "")
+    lowered = lowered.replace("_", "-")
+    lowered = lowered.replace("♀", "f").replace("♂", "m")
+    lowered = lowered.replace(".", "")
+    lowered = " ".join(lowered.split())
 
-    return aliases.get(text, text)
+    if lowered.startswith("mega "):
+        lowered = lowered[5:].strip()
+        parts = lowered.split()
+        if parts and parts[-1] in {"x", "y", "z"}:
+            return f"{'-'.join(parts[:-1])}-{parts[-1]}"
+        return "-".join(parts)
+
+    return "-".join(lowered.split())
