@@ -1,5 +1,7 @@
 from champions.registry import REGISTRY_SCHEMA_VERSION, validate_registry
 from tools.sync_champions_registry import (
+    _api_slug,
+    _canonical_key,
     _display_name,
     _learnset_move_ids,
     _nonstandard_value,
@@ -113,10 +115,36 @@ export const Pokedex = {
 def test_mega_display_name_normalisation():
     assert _display_name(
         "Absol-Mega-Z",
-        "absolmegaz",
         "Absol",
         "Mega-Z",
+        True,
     ) == "Mega Absol Z"
+
+    assert _display_name(
+        "Arcanine-Hisui",
+        "Arcanine",
+        "Hisui",
+        False,
+    ) == "Arcanine Hisui"
+
+    assert _display_name(
+        "Indeedee-F",
+        "Indeedee",
+        "F",
+        False,
+    ) == "Indeedee Female"
+
+    assert _display_name(
+        "Futuremon-Zeta",
+        "Futuremon",
+        "Zeta",
+        False,
+    ) == "Futuremon Zeta"
+
+    assert _canonical_key("Mega Charizard Y", "charizard") == "charizard-y"
+    assert _canonical_key("Tauros Paldea Aqua", "tauros") == "tauros-paldea-aqua"
+    assert _api_slug("Arcanine-Hisui", "arcaninehisui", "Arcanine", "Hisui", False) == "arcanine-hisui"
+    assert _api_slug("Basculegion-F", "basculegion", "Basculegion", "F", False) == "basculegion-female"
 
 
 def test_legacy_mega_view_comes_from_generated_registry():
