@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import re
+import time
 from typing import Any, Dict, List, Optional
 
 import requests
@@ -159,21 +160,48 @@ def get_http_session() -> requests.Session:
 
 
 def fetch_json(url: str, *, timeout: int = REQUEST_TIMEOUT_SECONDS) -> Any:
-    """Fetch JSON from a verified Limitless API URL."""
+    """Fetch JSON from Limitless with retry/backoff for transient rate limits."""
 
     if not isinstance(url, str) or not url.strip():
         raise ValueError("A non-empty URL is required.")
 
-    response = get_http_session().get(url.strip(), timeout=timeout)
-    response.raise_for_status()
+    last_error = None
+    for attempt in range(4):
+        try:
+            response = get_http_session().get(url.strip(), timeout=timeout)
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt >= 3:
+                raise
+            time.sleep(2 ** attempt)
+            continue
 
-    try:
-        return response.json()
-    except ValueError as exc:
-        raise ValueError(
-            "Expected JSON from Limitless, got "
-            f"{response.headers.get('content-type', 'unknown')}"
-        ) from exc
+        if response.status_code == 429 or 500 <= response.status_code < 600:
+            if attempt >= 3:
+                response.raise_for_status()
+
+            retry_after = response.headers.get("Retry-After", "")
+            try:
+                delay = max(1.0, float(retry_after))
+            except (TypeError, ValueError):
+                delay = float(2 ** attempt)
+
+            time.sleep(min(delay, 30.0))
+            continue
+
+        response.raise_for_status()
+
+        try:
+            return response.json()
+        except ValueError as exc:
+            raise ValueError(
+                "Expected JSON from Limitless, got "
+                f"{response.headers.get('content-type', 'unknown')}"
+            ) from exc
+
+    if last_error:
+        raise last_error
+    raise RuntimeError("Limitless request exhausted retry attempts.")
 
 
 def fetch_text(url: str, *, timeout: int = REQUEST_TIMEOUT_SECONDS) -> str:
