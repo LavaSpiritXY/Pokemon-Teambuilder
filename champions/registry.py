@@ -8,6 +8,7 @@ without making network requests.
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -16,6 +17,7 @@ REGISTRY_PATH = Path(__file__).resolve().parents[1] / "champions_registry.json"
 REGISTRY_SCHEMA_VERSION = 1
 
 
+@lru_cache(maxsize=2)
 def load_registry(path: Path = REGISTRY_PATH) -> Dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(
@@ -111,6 +113,22 @@ def get_species(species_key: str, registry: Optional[Dict[str, Any]] = None) -> 
     return data["species"].get(key, {})
 
 
+def get_species_by_display_name(
+    display_name: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Return a canonical species/form record by its UI display name."""
+    data = registry or load_registry()
+    target = str(display_name or "").strip().casefold()
+    if not target:
+        return {}
+
+    for entry in data["species"].values():
+        if str(entry.get("display_name", "")).strip().casefold() == target:
+            return dict(entry)
+
+    return {}
+
 def get_mega_forms(registry: Optional[Dict[str, Any]] = None) -> Dict[str, Dict[str, Any]]:
     data = registry or load_registry()
     return dict(data["megas"])
@@ -127,6 +145,7 @@ __all__ = [
     "load_registry",
     "validate_registry",
     "get_species",
+    "get_species_by_display_name",
     "get_mega_forms",
     "get_base_roster",
 ]
