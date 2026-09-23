@@ -51,3 +51,18 @@ def test_m_c_mega_forms_and_stones_are_registered():
     for species, stone in expected.items():
         assert MEGA_STONE_MAP[species] == stone
         assert is_champions_item(stone)
+
+
+def test_generated_item_catalogue_adds_legal_items_without_manual_entries():
+    for item in (
+        "Binding Band",
+        "Electric Seed",
+        "Grassy Seed",
+        "Misty Seed",
+        "Psychic Seed",
+        "Red Card",
+        "Rocky Helmet",
+    ):
+        assert is_champions_item(item)
+
+    assert not is_champions_item("Choice Band")
