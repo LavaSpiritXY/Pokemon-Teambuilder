@@ -2,8 +2,8 @@ from typing import Any, Dict
 
 import streamlit as strlit
 
-from champions.constants import CUSTOM_MEGAS_DATA
 from champions.item_data import MEGA_STONE_MAP
+from champions.registry import get_species_by_display_name
 
 from champions.pokemon_data import fetch_pokemon_details
 from champions.smogon_data import get_smogon_stats_for
@@ -46,12 +46,11 @@ def on_species_change(slot_idx):
     if new_species == "-- Choose a Pokémon --":
         return
 
-    ability = CUSTOM_MEGAS_DATA.get(
-        new_species,
-        {},
-    ).get(
-        "ability",
-        "Standard",
+    registry_data = get_species_by_display_name(new_species)
+    ability = (
+        registry_data.get("abilities", ["Standard"])[0]
+        if registry_data.get("is_mega") and registry_data.get("abilities")
+        else "Standard"
     )
 
     item = MEGA_STONE_MAP.get(
@@ -160,7 +159,12 @@ def on_item_change(slot_idx):
     # Matching Mega Stone: promote from the base or switch between Mega forms.
     if target_mega and current_base.casefold() == mega_base(target_mega).casefold():
         current_slot["name"] = target_mega
-        current_slot["ability"] = CUSTOM_MEGAS_DATA.get(target_mega, {}).get("ability", "Standard")
+        mega_data = get_species_by_display_name(target_mega)
+        current_slot["ability"] = (
+            mega_data.get("abilities", ["Standard"])[0]
+            if mega_data.get("abilities")
+            else "Standard"
+        )
         current_slot["item"] = selected_item
         strlit.session_state[f"species_select_{slot_idx}"] = current_base
         return
