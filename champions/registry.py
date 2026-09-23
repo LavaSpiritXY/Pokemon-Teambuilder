@@ -96,7 +96,15 @@ def validate_registry(payload: Dict[str, Any]) -> None:
         if not isinstance(entry, dict):
             raise ValueError(f"Registry entry {species_key!r} must be an object.")
 
-        required = ("display_name", "base_species_key", "types", "base_stats", "abilities")
+        required = (
+            "display_name",
+            "source_name",
+            "api_slug",
+            "base_species_key",
+            "types",
+            "base_stats",
+            "abilities",
+        )
         missing = [field for field in required if field not in entry]
         if missing:
             raise ValueError(
@@ -174,6 +182,23 @@ def get_current_regulation(registry: Optional[Dict[str, Any]] = None) -> Optiona
     return value or None
 
 
+def get_species_key_by_display_name(
+    display_name: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Return the canonical Showdown species key for a UI display name."""
+    data = registry or load_registry()
+    target = str(display_name or "").strip().casefold()
+    if not target:
+        return ""
+
+    for species_key, entry in data["species"].items():
+        if str(entry.get("display_name", "")).strip().casefold() == target:
+            return species_key
+
+    return ""
+
+
 def get_species_by_display_name(
     display_name: str,
     registry: Optional[Dict[str, Any]] = None,
@@ -211,6 +236,7 @@ __all__ = [
     "get_standard_items",
     "get_mega_stones",
     "get_species_by_display_name",
+    "get_species_key_by_display_name",
     "get_mega_forms",
     "get_base_roster",
 ]
