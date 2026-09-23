@@ -127,7 +127,11 @@ TYPE_CHART_DATA: Dict[str, Dict[str, float]] = {
     "Dragon": {"Dragon": 2.0, "Steel": 0.5, "Fairy": 0.0},
     "Dark": {"Fighting": 0.5, "Psychic": 2.0, "Ghost": 2.0, "Dark": 0.5, "Fairy": 0.5},
     "Steel": {"Fire": 0.5, "Water": 0.5, "Electric": 0.5, "Ice": 2.0, "Rock": 2.0, "Steel": 0.5, "Fairy": 2.0},
-    "Fairy": {"Fire": 0.5, "Fighting": 2.0, "Poison": 0.5}
+    "Fairy": {"Fire": 0.5, "Fighting": 2.0, "Poison": 0.5, "Dragon": 2.0, "Dark": 2.0, "Steel": 0.5}
+}
+
+
+CUSTOM_MEGAS_DATA = {
     entry["display_name"]: {
         "ability": (entry.get("abilities") or ["Standard"])[0],
         "hp": entry["base_stats"]["hp"],
@@ -139,10 +143,6 @@ TYPE_CHART_DATA: Dict[str, Dict[str, float]] = {
     }
     for entry in load_registry()["megas"].values()
     if entry.get("display_name")
-}
-
-
-7, "spa": 105, "spd": 101, "spd_stat": 87}
 }
 
 BASE_HELD_ITEMS = [
