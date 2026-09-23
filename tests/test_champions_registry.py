@@ -1,5 +1,11 @@
 from champions.registry import REGISTRY_SCHEMA_VERSION, validate_registry
-from tools.sync_champions_registry import _display_name, _parse_top_level_entries
+from tools.sync_champions_registry import (
+    _display_name,
+    _learnset_move_ids,
+    _nonstandard_value,
+    _object_string_map,
+    _parse_top_level_entries,
+)
 
 
 def _sample_registry():
@@ -126,3 +132,27 @@ def test_legacy_mega_view_comes_from_generated_registry():
     ):
         assert name in CUSTOM_MEGAS_DATA
         assert CUSTOM_MEGAS_DATA[name]["ability"]
+
+
+def test_learnset_parser_extracts_move_ids():
+    block = '''charizard: {
+        learnset: {
+            protect: ["9M"],
+            thunderpunch: ["9M"],
+            weatherball: ["9M"],
+        },
+    },'''
+    assert _learnset_move_ids(block) == ["protect", "thunderpunch", "weatherball"]
+
+
+def test_item_nonstandard_parser_distinguishes_null():
+    assert _nonstandard_value('isNonstandard: null,') == (None, True)
+    assert _nonstandard_value('isNonstandard: "Past",') == ("Past", True)
+    assert _nonstandard_value('inherit: true,') == (None, False)
+
+
+def test_mega_stone_parser_extracts_target():
+    block = 'megaStone: { "Absol": "Absol-Mega-Z" },'
+    assert _object_string_map(block, "megaStone") == {
+        "Absol": "Absol-Mega-Z"
+    }
