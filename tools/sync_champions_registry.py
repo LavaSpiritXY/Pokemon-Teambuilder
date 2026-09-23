@@ -204,42 +204,68 @@ def _object_string_map(block: str, field: str) -> Dict[str, str]:
 
 def _display_name(
     source_name: str,
+    base_species: Optional[str],
+    forme: Optional[str],
+    is_mega: bool,
+) -> str:
+    """Derive a UI name from Showdown's canonical name/baseSpecies/forme."""
+    source = str(source_name or "").strip()
+    base = str(base_species or "").strip()
+    form = str(forme or "").strip()
+
+    if not form:
+        return source
+
+    # Mega forms are displayed consistently as "Mega Species X/Y/Z".
+    if is_mega:
+        if form.casefold().startswith("mega"):
+            suffix = re.sub(r"^mega[- ]*", "", form, flags=re.IGNORECASE)
+            return f"Mega {base}" + (f" {suffix.upper()}" if suffix else "")
+        if form.casefold().endswith("-mega"):
+            prefix = re.sub(r"-mega$", "", form, flags=re.IGNORECASE)
+            return f"Mega {base}" + (
+                f" {prefix.title()}" if prefix else ""
+            )
+
+    if form.upper() == "F":
+        return f"{base} Female"
+    if form.upper() == "M":
+        return f"{base} Male"
+
+    readable_form = form.replace("-", " ").replace("_", " ")
+    return f"{base} {' '.join(part.title() for part in readable_form.split())}".strip()
+
+
+def _api_slug(
+    source_name: str,
     species_id: str,
     base_species: Optional[str],
     forme: Optional[str],
+    is_mega: bool,
 ) -> str:
-    raw = str(source_name or "").strip() or species_id
+    """Derive the closest PokeAPI slug without a hand-maintained form table."""
+    import unicodedata
 
-    if forme and forme.casefold().startswith("mega"):
-        base = str(base_species or raw).strip()
-        suffix = ""
-        match = re.search(r"""mega[- ]*([xyz])$""", forme, flags=re.IGNORECASE)
-        if match:
-            suffix = f" {match.group(1).upper()}"
-        return f"Mega {base}{suffix}"
+    source = str(source_name or "").strip() or str(species_id or "").strip()
+    base = str(base_species or "").strip()
+    form = str(forme or "").strip()
 
-    pretty = raw.replace("-", " ").replace("_", " ")
-    special = {
-        "Mr Mime": "Mr. Mime",
-        "Mime Jr": "Mime Jr.",
-        "Farfetchd": "Farfetch'd",
-        "Sirfetchd": "Sirfetch'd",
-        "Ho Oh": "Ho-Oh",
-        "Flabebe": "Flabébé",
-        "Type Null": "Type: Null",
-    }
+    if is_mega:
+        # PokeAPI generally exposes the base species rather than Champions-only
+        # Mega forms, so use the base when the Mega slug is not a real species.
+        source = base or source
 
-    if pretty.casefold().endswith(" f"):
-        prefix = pretty.rsplit(" ", 1)[0]
-        if prefix.casefold() in {"indeedee", "meowstic", "oinkologne"}:
-            return f"{prefix} Female"
+    if form.upper() in {"F", "M"} and base:
+        source = f"{base}-{ 'female' if form.upper() == 'F' else 'male' }"
 
-    if pretty.casefold().endswith(" m"):
-        prefix = pretty.rsplit(" ", 1)[0]
-        if prefix.casefold() in {"indeedee", "meowstic", "oinkologne"}:
-            return f"{prefix} Male"
+    if base.casefold() == "tauros" and form.casefold().startswith("paldea-"):
+        source = f"{base}-{form}-breed"
 
-    return special.get(pretty, " ".join(part.title() for part in pretty.split()))
+    normalized = unicodedata.normalize("NFKD", source)
+    normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    normalized = normalized.replace("’", "").replace("'", "").replace(":", "")
+    normalized = re.sub(r"[^A-Za-z0-9]+", "-", normalized)
+    return normalized.strip("-").casefold()
 
 
 def _history_metadata() -> tuple[Optional[str], List[str]]:
@@ -328,12 +354,21 @@ def build_registry() -> Dict[str, Any]:
                 f"Missing ability data for Champions species {species_id!r}."
             )
 
+        source_name = _quoted_value(block, "name") or species_id
         parsed[species_id] = {
             "display_name": _display_name(
-                _quoted_value(block, "name") or species_id,
+                source_name,
+                base_species,
+                forme,
+                is_mega,
+            ),
+            "source_name": source_name,
+            "api_slug": _api_slug(
+                source_name,
                 species_id,
                 base_species,
                 forme,
+                is_mega,
             ),
             "base_species_key": base_species_key,
             "forme": forme or "",
