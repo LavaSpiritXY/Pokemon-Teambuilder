@@ -55,6 +55,41 @@ def validate_registry(payload: Dict[str, Any]) -> None:
     if not isinstance(base_roster, list):
         raise ValueError("Registry must contain a 'base_roster' list.")
 
+    learnsets = payload.get("learnsets")
+    if not isinstance(learnsets, dict) or not learnsets:
+        raise ValueError("Registry must contain non-empty 'learnsets' data.")
+
+    items = payload.get("items")
+    if not isinstance(items, dict) or not items:
+        raise ValueError("Registry must contain non-empty 'items' data.")
+
+    for species_key, moves in learnsets.items():
+        if not isinstance(species_key, str) or not species_key:
+            raise ValueError("Every learnset key must be a non-empty string.")
+        if not isinstance(moves, list) or not moves:
+            raise ValueError(f"Registry learnset {species_key!r} has no moves.")
+        if any(not isinstance(move, str) or not move for move in moves):
+            raise ValueError(f"Registry learnset {species_key!r} contains an invalid move.")
+
+    for item_key, entry in items.items():
+        if not isinstance(item_key, str) or not item_key:
+            raise ValueError("Every registry item key must be a non-empty string.")
+        if not isinstance(entry, dict):
+            raise ValueError(f"Registry item {item_key!r} must be an object.")
+        if not isinstance(entry.get("display_name"), str) or not entry["display_name"]:
+            raise ValueError(f"Registry item {item_key!r} has no display name.")
+        if not isinstance(entry.get("legal"), bool):
+            raise ValueError(f"Registry item {item_key!r} has invalid legality.")
+        if not isinstance(entry.get("is_mega_stone"), bool):
+            raise ValueError(f"Registry item {item_key!r} has invalid Mega Stone flag.")
+        if not isinstance(entry.get("mega_stone_map"), dict):
+            raise ValueError(f"Registry item {item_key!r} has invalid Mega Stone mapping.")
+
+    for field in ("standard_items", "mega_stones"):
+        values = payload.get(field)
+        if not isinstance(values, list):
+            raise ValueError(f"Registry must contain '{field}' as a list.")
+
     for species_key, entry in species.items():
         if not isinstance(species_key, str) or not species_key:
             raise ValueError("Every registry species key must be a non-empty string.")
@@ -113,6 +148,25 @@ def get_species(species_key: str, registry: Optional[Dict[str, Any]] = None) -> 
     return data["species"].get(key, {})
 
 
+def get_learnset(
+    species_key: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> list[str]:
+    data = registry or load_registry()
+    key = str(species_key or "").strip().casefold()
+    return list(data["learnsets"].get(key, []))
+
+
+def get_standard_items(registry: Optional[Dict[str, Any]] = None) -> list[str]:
+    data = registry or load_registry()
+    return list(data["standard_items"])
+
+
+def get_mega_stones(registry: Optional[Dict[str, Any]] = None) -> list[str]:
+    data = registry or load_registry()
+    return list(data["mega_stones"])
+
+
 def get_current_regulation(registry: Optional[Dict[str, Any]] = None) -> Optional[str]:
     """Return the current regulation recorded in the generated registry."""
     data = registry or load_registry()
@@ -153,6 +207,9 @@ __all__ = [
     "validate_registry",
     "get_species",
     "get_current_regulation",
+    "get_learnset",
+    "get_standard_items",
+    "get_mega_stones",
     "get_species_by_display_name",
     "get_mega_forms",
     "get_base_roster",
