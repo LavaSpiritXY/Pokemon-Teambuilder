@@ -439,7 +439,6 @@ def build_registry() -> Dict[str, Any]:
         "detected_regulations": detected_regulations,
         "species": dict(sorted(parsed.items())),
         "megas": dict(sorted(megas.items())),
-        "mega_stones": mega_stones,
         "base_roster": base_roster,
         "champions_species_keys": sorted(champions_species),
         "learnsets": dict(sorted(learnsets.items())),
