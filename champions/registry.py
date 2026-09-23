@@ -1,0 +1,132 @@
+"""Canonical generated data registry for Pokemon Champions.
+
+The generated JSON is produced by tools/sync_champions_registry.py from
+Pokemon Showdown canonical data. Application modules can import this file
+without making network requests.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+
+REGISTRY_PATH = Path(__file__).resolve().parents[1] / "champions_registry.json"
+REGISTRY_SCHEMA_VERSION = 1
+
+
+def load_registry(path: Path = REGISTRY_PATH) -> Dict[str, Any]:
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Champions registry not found at {path}. "
+            "Run tools/sync_champions_registry.py first."
+        )
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Champions registry must contain a JSON object.")
+
+    validate_registry(payload)
+    return payload
+
+
+def validate_registry(payload: Dict[str, Any]) -> None:
+    if not isinstance(payload, dict):
+        raise ValueError("Registry payload must be a dictionary.")
+
+    if payload.get("schema_version") != REGISTRY_SCHEMA_VERSION:
+        raise ValueError(
+            f"Unsupported Champions registry schema: "
+            f"{payload.get('schema_version')!r}"
+        )
+
+    species = payload.get("species")
+    if not isinstance(species, dict) or not species:
+        raise ValueError("Registry must contain a non-empty 'species' mapping.")
+
+    megas = payload.get("megas")
+    if not isinstance(megas, dict):
+        raise ValueError("Registry must contain a 'megas' mapping.")
+
+    base_roster = payload.get("base_roster")
+    if not isinstance(base_roster, list):
+        raise ValueError("Registry must contain a 'base_roster' list.")
+
+    for species_key, entry in species.items():
+        if not isinstance(species_key, str) or not species_key:
+            raise ValueError("Every registry species key must be a non-empty string.")
+        if not isinstance(entry, dict):
+            raise ValueError(f"Registry entry {species_key!r} must be an object.")
+
+        required = ("display_name", "base_species_key", "types", "base_stats", "abilities")
+        missing = [field for field in required if field not in entry]
+        if missing:
+            raise ValueError(
+                f"Registry species {species_key!r} is missing: {', '.join(missing)}"
+            )
+
+        if not isinstance(entry["types"], list) or not entry["types"]:
+            raise ValueError(f"Registry species {species_key!r} has no types.")
+
+        if not isinstance(entry["abilities"], list) or not entry["abilities"]:
+            raise ValueError(f"Registry species {species_key!r} has no abilities.")
+
+        stats = entry["base_stats"]
+        if not isinstance(stats, dict):
+            raise ValueError(f"Registry species {species_key!r} has invalid base stats.")
+
+        missing_stats = [
+            stat for stat in ("hp", "atk", "def", "spa", "spd", "spe")
+            if stat not in stats
+        ]
+        if missing_stats:
+            raise ValueError(
+                f"Registry species {species_key!r} is missing stats: "
+                f"{', '.join(missing_stats)}"
+            )
+
+    for mega_key, mega in megas.items():
+        if mega_key not in species:
+            raise ValueError(f"Mega {mega_key!r} is missing from species registry.")
+        if not isinstance(mega, dict):
+            raise ValueError(f"Mega registry entry {mega_key!r} must be an object.")
+        if not mega.get("base_species_key"):
+            raise ValueError(f"Mega {mega_key!r} has no base species.")
+        if not mega.get("required_item"):
+            raise ValueError(f"Mega {mega_key!r} has no required item/stone.")
+
+    current_regulation = payload.get("current_regulation")
+    if current_regulation is not None:
+        value = str(current_regulation).strip().upper()
+        if not value.startswith("M-"):
+            raise ValueError(
+                f"Invalid current regulation in registry: {current_regulation!r}"
+            )
+
+
+def get_species(species_key: str, registry: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    data = registry or load_registry()
+    key = str(species_key or "").strip().casefold()
+    return data["species"].get(key, {})
+
+
+def get_mega_forms(registry: Optional[Dict[str, Any]] = None) -> Dict[str, Dict[str, Any]]:
+    data = registry or load_registry()
+    return dict(data["megas"])
+
+
+def get_base_roster(registry: Optional[Dict[str, Any]] = None) -> list[str]:
+    data = registry or load_registry()
+    return list(data["base_roster"])
+
+
+__all__ = [
+    "REGISTRY_PATH",
+    "REGISTRY_SCHEMA_VERSION",
+    "load_registry",
+    "validate_registry",
+    "get_species",
+    "get_mega_forms",
+    "get_base_roster",
+]
