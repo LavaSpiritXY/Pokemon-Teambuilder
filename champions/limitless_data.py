@@ -33,6 +33,7 @@ LIMITLESS_TOURNAMENTS_URL = f"{LIMITLESS_BASE_URL}/tournaments"
 CHAMPIONS_REGULATIONS = {
     "M-A",
     "M-B",
+    "M-C",
 }
 
 REQUEST_HEADERS = {
