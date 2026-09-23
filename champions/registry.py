@@ -100,6 +100,7 @@ def validate_registry(payload: Dict[str, Any]) -> None:
             "display_name",
             "source_name",
             "api_slug",
+            "canonical_key",
             "base_species_key",
             "types",
             "base_stats",
@@ -182,19 +183,36 @@ def get_current_regulation(registry: Optional[Dict[str, Any]] = None) -> Optiona
     return value or None
 
 
+def get_species_by_canonical_key(
+    canonical_key: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Return a species/form record by the app's stable canonical key."""
+    data = registry or load_registry()
+    target = str(canonical_key or "").strip().casefold()
+    if not target:
+        return {}
+
+    for entry in data["species"].values():
+        if str(entry.get("canonical_key", "")).strip().casefold() == target:
+            return dict(entry)
+
+    return {}
+
+
 def get_species_key_by_display_name(
     display_name: str,
     registry: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Return the canonical Showdown species key for a UI display name."""
+    """Return the stable canonical key for a UI display name."""
     data = registry or load_registry()
     target = str(display_name or "").strip().casefold()
     if not target:
         return ""
 
-    for species_key, entry in data["species"].items():
+    for entry in data["species"].values():
         if str(entry.get("display_name", "")).strip().casefold() == target:
-            return species_key
+            return str(entry.get("canonical_key") or "")
 
     return ""
 
@@ -237,6 +255,7 @@ __all__ = [
     "get_mega_stones",
     "get_species_by_display_name",
     "get_species_key_by_display_name",
+    "get_species_by_canonical_key",
     "get_mega_forms",
     "get_base_roster",
 ]
