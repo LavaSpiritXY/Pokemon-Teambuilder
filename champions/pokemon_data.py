@@ -22,8 +22,16 @@ def _get_cached_champions_learnsets():
         if _LEARNSETS_MEMORY_CACHE is not None:
             return _LEARNSETS_MEMORY_CACHE
 
-    from champions.roster_data import fetch_champions_learnsets
-    learnsets = fetch_champions_learnsets() or {}
+    from champions.registry import load_registry
+    registry = load_registry()
+    learnsets = registry.get("learnsets") or {}
+
+    # Transitional fallback for an older checked-in registry. Once the
+    # automatic sync has committed the expanded registry, no network request
+    # is needed here.
+    if not learnsets:
+        from champions.roster_data import fetch_champions_learnsets
+        learnsets = fetch_champions_learnsets() or {}
 
     with _LEARNSETS_CACHE_LOCK:
         if _LEARNSETS_MEMORY_CACHE is None:
