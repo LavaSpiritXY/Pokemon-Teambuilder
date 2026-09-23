@@ -1,7 +1,7 @@
 from typing import Dict
 
 
-CURRENT_REGULATION = "M-B"
+CURRENT_REGULATION = "M-C"
 
 
 TYPE_COLORS = {
@@ -173,7 +173,13 @@ CUSTOM_MEGAS_DATA = {
     "Mega Barbaracle": {"ability": "Tough Claws", "hp": 72, "atk": 140, "def": 130, "spa": 64, "spd": 106, "spd_stat": 88},
     "Mega Dragalge": {"ability": "Regenerator", "hp": 65, "atk": 85, "def": 105, "spa": 132, "spd": 163, "spd_stat": 44},
     "Mega Hawlucha": {"ability": "No Guard", "hp": 78, "atk": 137, "def": 100, "spa": 74, "spd": 93, "spd_stat": 118},
-    "Mega Glimmora": {"ability": "Adaptability", "hp": 83, "atk": 90, "def": 105, "spa": 150, "spd": 96, "spd_stat": 101}
+    "Mega Glimmora": {"ability": "Adaptability", "hp": 83, "atk": 90, "def": 105, "spa": 150, "spd": 96, "spd_stat": 101},
+    "Mega Absol Z": {"ability": "Sharpness", "hp": 65, "atk": 154, "def": 60, "spa": 75, "spd": 60, "spd_stat": 151},
+    "Mega Salamence": {"ability": "Aerilate", "hp": 95, "atk": 145, "def": 130, "spa": 120, "spd": 90, "spd_stat": 120},
+    "Mega Garchomp Z": {"ability": "Levitate", "hp": 108, "atk": 130, "def": 85, "spa": 141, "spd": 85, "spd_stat": 151},
+    "Mega Lucario Z": {"ability": "Aura Guard", "hp": 70, "atk": 100, "def": 70, "spa": 164, "spd": 70, "spd_stat": 151},
+    "Mega Golisopod": {"ability": "Tough Claws", "hp": 75, "atk": 150, "def": 175, "spa": 70, "spd": 120, "spd_stat": 40},
+    "Mega Baxcalibur": {"ability": "Thermal Exchange", "hp": 115, "atk": 175, "def": 117, "spa": 105, "spd": 101, "spd_stat": 87}
 }
 
 BASE_HELD_ITEMS = [
