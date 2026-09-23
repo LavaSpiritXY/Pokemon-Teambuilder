@@ -142,8 +142,10 @@ def on_item_change(slot_idx):
         value = str(name or "").strip()
         if value.lower().startswith("mega "):
             value = value[5:].strip()
-        if value.endswith(" X") or value.endswith(" Y"):
-            value = value[:-2].strip()
+        for suffix in (" X", " Y", " Z"):
+            if value.endswith(suffix):
+                value = value[:-2].strip()
+                break
         return value
 
     current_slot = ensure_slot_structure(slot_idx)
