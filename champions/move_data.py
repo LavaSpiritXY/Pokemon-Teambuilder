@@ -56,118 +56,43 @@ def fetch_move_type(move_name):
     return "Normal"
 
 def get_champions_species_key(mon_name):
-    """
-    Convert a displayed Pokémon name into the exact
-    Champions/Showdown species key.
-
-    IMPORTANT:
-    Forms are deliberately preserved.
-    """
-
+    """Return the generated registry's canonical Champions key."""
     if not mon_name:
         return ""
 
     name = str(mon_name).strip()
+    if not name:
+        return ""
 
-    SPECIES_KEYS = {
+    from champions.registry import get_species_key_by_display_name, get_species
 
-        # =====================================================
-        # TAUROS
-        # =====================================================
+    direct = get_species(name.casefold())
+    if direct.get("canonical_key"):
+        return str(direct["canonical_key"])
 
-        "Tauros Paldea Combat Breed": "tauros-paldea-combat-breed",
-        "Tauros Paldea Blaze Breed": "tauros-paldea-blaze-breed",
-        "Tauros Paldea Aqua Breed": "tauros-paldea-aqua-breed",
-
-        # =====================================================
-        # BASCULEGION
-        # =====================================================
-
-        "Basculegion": "basculegion-male",
-        "Basculegion Female": "basculegion-female",
-
-        # =====================================================
-        # FLOETTE
-        # =====================================================
-
-        "Floette Eternal": "floetteeternal",
-
-        # =====================================================
-        # INDEEDEE
-        # =====================================================
-
-        "Indeedee Male": "indeedeem",
-        "Indeedee Female": "indeedeef",
-
-        # =====================================================
-        # MEOWSTIC
-        # =====================================================
-
-        "Meowstic Male": "meowsticm",
-        "Meowstic Female": "meowsticf",
-
-        # =====================================================
-        # OINKOLOGNE
-        # =====================================================
-
-        "Oinkologne Male": "oinkolognem",
-        "Oinkologne Female": "oinkolognef",
-
-        # =====================================================
-        # LYCANROC
-        # =====================================================
-
-        "Lycanroc Midday": "lycanrocmidday",
-        "Lycanroc Midnight": "lycanrocmidnight",
-        "Lycanroc Dusk": "lycanrocdusk",
-
-        # =====================================================
-        # HISUI
-        # =====================================================
-
-        "Growlithe Hisui": "growlithehisui",
-        "Arcanine Hisui": "arcaninehisui",
-        "Voltorb Hisui": "voltorbhisui",
-        "Electrode Hisui": "electrodehisui",
-        "Qwilfish Hisui": "qwilfishhisui",
-        "Sneasel Hisui": "sneaselhisui",
-        "Samurott Hisui": "samurotthisui",
-        "Lilligant Hisui": "lilliganthisui",
-        "Zorua Hisui": "zoruahisui",
-        "Zoroark Hisui": "zoroarkhisui",
-        "Braviary Hisui": "braviaryhisui",
-        "Sliggoo Hisui": "sliggoohisui",
-        "Goodra Hisui": "goodrahisui",
-        "Avalugg Hisui": "avalugghisui",
-        "Decidueye Hisui": "decidueyehisui",
-        "Typhlosion Hisui": "typhlosionhisui",
-    }
-
-    if name in SPECIES_KEYS:
-        return SPECIES_KEYS[name]
-
-    # =====================================================
-    # NORMAL SPECIES
-    # =====================================================
+    generated = get_species_key_by_display_name(name)
+    if generated:
+        return generated
 
     clean = (
-        name
-        .lower()
+        name.lower()
         .replace("’", "")
         .replace("'", "")
         .replace(".", "")
         .replace("♀", "f")
         .replace("♂", "m")
+        .replace("_", "-")
     )
+    clean = " ".join(clean.split())
 
-    # Preserve the form separator rather than deleting it.
-    clean = clean.replace(" ", "-")
+    if clean.startswith("mega "):
+        clean = clean[5:].strip()
+        parts = clean.split()
+        if parts and parts[-1] in {"x", "y", "z"}:
+            return f"{'-'.join(parts[:-1])}-{parts[-1]}"
+        return "-".join(parts)
 
-    # Remove Mega prefix only for Mega lookup compatibility.
-    if clean.startswith("mega-"):
-        clean = clean[5:]
-
-    return clean
+    return "-".join(clean.split())
 
 def display_name_for_move(move_id):
     if not move_id:
