@@ -91,7 +91,9 @@ jobs:
             tests/test_meta_analytics.py \
             tests/test_meta_viability.py \
             tests/test_type_chart.py \
-            tests/test_champions_end_to_end.py -v
+            tests/test_champions_end_to_end.py \
+            tests/test_item_data.py \
+            tests/test_item_selector_wiring.py -v
 
       - name: Validate generated data and compile modules
         env:
@@ -107,6 +109,9 @@ jobs:
             champions/regulation.py \
             champions/tournament_data.py \
             champions/tournament_move_history.py \
+            champions/constants.py \
+            champions/item_data.py \
+            champions/team_state.py \
             champions_meta.py \
             champions_integration.py \
             tools/sync_champions_history.py \
