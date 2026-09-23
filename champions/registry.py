@@ -55,13 +55,13 @@ def validate_registry(payload: Dict[str, Any]) -> None:
     if not isinstance(base_roster, list):
         raise ValueError("Registry must contain a 'base_roster' list.")
 
-    learnsets = payload.get("learnsets")
-    if not isinstance(learnsets, dict) or not learnsets:
-        raise ValueError("Registry must contain non-empty 'learnsets' data.")
+    learnsets = payload.get("learnsets", {})
+    if not isinstance(learnsets, dict):
+        raise ValueError("Registry 'learnsets' data must be a mapping.")
 
-    items = payload.get("items")
-    if not isinstance(items, dict) or not items:
-        raise ValueError("Registry must contain non-empty 'items' data.")
+    items = payload.get("items", {})
+    if not isinstance(items, dict):
+        raise ValueError("Registry 'items' data must be a mapping.")
 
     for species_key, moves in learnsets.items():
         if not isinstance(species_key, str) or not species_key:
@@ -86,9 +86,9 @@ def validate_registry(payload: Dict[str, Any]) -> None:
             raise ValueError(f"Registry item {item_key!r} has invalid Mega Stone mapping.")
 
     for field in ("standard_items", "mega_stones"):
-        values = payload.get(field)
+        values = payload.get(field, [])
         if not isinstance(values, list):
-            raise ValueError(f"Registry must contain '{field}' as a list.")
+            raise ValueError(f"Registry '{field}' data must be a list.")
 
     for species_key, entry in species.items():
         if not isinstance(species_key, str) or not species_key:
@@ -154,17 +154,17 @@ def get_learnset(
 ) -> list[str]:
     data = registry or load_registry()
     key = str(species_key or "").strip().casefold()
-    return list(data["learnsets"].get(key, []))
+    return list(data.get("learnsets", {}).get(key, []))
 
 
 def get_standard_items(registry: Optional[Dict[str, Any]] = None) -> list[str]:
     data = registry or load_registry()
-    return list(data["standard_items"])
+    return list(data.get("standard_items", []))
 
 
 def get_mega_stones(registry: Optional[Dict[str, Any]] = None) -> list[str]:
     data = registry or load_registry()
-    return list(data["mega_stones"])
+    return list(data.get("mega_stones", []))
 
 
 def get_current_regulation(registry: Optional[Dict[str, Any]] = None) -> Optional[str]:
