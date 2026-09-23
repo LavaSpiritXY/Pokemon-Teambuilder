@@ -173,6 +173,21 @@ def _learnset_move_ids(block: str) -> List[str]:
     return sorted(moves)
 
 
+def _item_user_values(block: str) -> List[str]:
+    """Parse Showdown's itemUser list when an item is species/form-specific."""
+    match = re.search(
+        r"""\bitemUser\s*:\s*\[(.*?)\]""",
+        block,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return []
+    return sorted(
+        set(re.findall(r'''["']([^"']+)["']''', match.group(1))),
+        key=str.casefold,
+    )
+
+
 def _nonstandard_value(block: str) -> tuple[Optional[str], bool]:
     """Return (value, found) for an item's isNonstandard field."""
     match = re.search(
@@ -483,6 +498,7 @@ def build_registry() -> Dict[str, Any]:
         mega_stone_map = _object_string_map(main_block, "megaStone")
         mega_stone_map.update(_object_string_map(mod_block, "megaStone"))
         is_mega_stone = bool(mega_stone_map)
+        item_users = _item_user_values(mod_block) or _item_user_values(main_block)
         legal = effective_nonstandard is None
 
         items[item_id] = {
@@ -490,6 +506,7 @@ def build_registry() -> Dict[str, Any]:
             "legal": legal,
             "is_mega_stone": is_mega_stone,
             "mega_stone_map": mega_stone_map,
+            "item_users": item_users,
             "is_nonstandard": effective_nonstandard,
         }
 
