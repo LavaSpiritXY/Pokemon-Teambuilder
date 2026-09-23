@@ -5,7 +5,7 @@ legacy generic-Pokémon list. That list contains items which are not legal in
 Champions. This module provides the Champions-specific source of truth used
 by the UI and team-state code.
 
-The non-Mega pool is based on the current Champions M-B legal-item catalogue;
+The non-Mega pool is based on the current Champions M-C legal-item catalogue;
 Mega Stones are derived from the project's own Champions Mega roster so the
 item list stays aligned with the Pokémon/forms the app actually supports.
 """
@@ -22,12 +22,12 @@ CHAMPIONS_STANDARD_HELD_ITEMS = (
     "Aspear Berry", "Babiri Berry", "Big Root", "Black Belt", "Black Glasses",
     "Bright Powder", "Charcoal", "Charti Berry", "Cheri Berry", "Chesto Berry",
     "Chilan Berry", "Choice Scarf", "Chople Berry", "Coba Berry", "Colbur Berry",
-    "Damp Rock", "Dragon Fang", "Expert Belt", "Fairy Feather", "Focus Band",
+    "Damp Rock", "Dragon Fang", "Expert Belt", "Air Balloon", "Fairy Feather", "Focus Band",
     "Focus Sash", "Hard Stone", "Haban Berry", "Heat Rock", "Icy Rock", "Iron Ball",
-    "King's Rock", "Kasib Berry", "Kebia Berry", "Leftovers", "Leppa Berry", "Life Orb",
+    "King's Rock", "Kasib Berry", "Leek", "Kebia Berry", "Leftovers", "Leppa Berry", "Life Orb",
     "Light Ball", "Light Clay", "Lum Berry", "Magnet", "Mental Herb", "Metal Coat",
     "Metronome", "Miracle Seed", "Muscle Band", "Mystic Water", "Never-Melt Ice",
-    "Occa Berry", "Oran Berry", "Passho Berry", "Payapa Berry", "Pecha Berry",
+    "Occa Berry", "Oran Berry", "Eject Button", "Normal Gem", "Terrain Extender", "Passho Berry", "Payapa Berry", "Pecha Berry",
     "Persim Berry", "Poison Barb", "Quick Claw", "Rawst Berry", "Rindo Berry",
     "Roseli Berry", "Scope Lens", "Sharp Beak", "Shed Shell", "Shell Bell",
     "Shuca Berry", "Silk Scarf", "Silver Powder", "Sitrus Berry", "Smooth Rock",
@@ -98,6 +98,12 @@ _MEGA_STONE_OVERRIDES = {
     "Mega Dragalge": "Dragalgite",
     "Mega Hawlucha": "Hawluchanite",
     "Mega Glimmora": "Glimmoranite",
+    "Mega Absol Z": "Absolite Z",
+    "Mega Salamence": "Salamencite",
+    "Mega Garchomp Z": "Garchompite Z",
+    "Mega Lucario Z": "Lucarionite Z",
+    "Mega Golisopod": "Golisopite",
+    "Mega Baxcalibur": "Baxcalibrite",
 }
 
 
