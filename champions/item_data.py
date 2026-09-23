@@ -18,7 +18,7 @@ from typing import Dict, List
 from champions.registry import load_registry
 
 
-CHAMPIONS_STANDARD_HELD_ITEMS = (
+_LEGACY_CHAMPIONS_STANDARD_HELD_ITEMS = (
     "Aspear Berry", "Babiri Berry", "Big Root", "Black Belt", "Black Glasses",
     "Bright Powder", "Charcoal", "Charti Berry", "Cheri Berry", "Chesto Berry",
     "Chilan Berry", "Choice Scarf", "Chople Berry", "Coba Berry", "Colbur Berry",
@@ -36,76 +36,6 @@ CHAMPIONS_STANDARD_HELD_ITEMS = (
 )
 
 
-# Mega Stone names are not safely derivable by simply removing "Mega" and
-# appending "ite". Keep explicit mappings for the canonical stones and the
-# project's Champions-specific Mega forms. This prevents malformed selector
-# entries such as ``CharizardYite`` or ``Blastoisite``.
-_MEGA_STONE_OVERRIDES = {
-    "Mega Venusaur": "Venusaurite",
-    "Mega Abomasnow": "Abomasite",
-    "Mega Charizard X": "Charizardite X",
-    "Mega Charizard Y": "Charizardite Y",
-    "Mega Blastoise": "Blastoisinite",
-    "Mega Beedrill": "Beedrillite",
-    "Mega Pidgeot": "Pidgeotite",
-    "Mega Raichu X": "Raichunite X",
-    "Mega Raichu Y": "Raichunite Y",
-    "Mega Clefable": "Clefablite",
-    "Mega Alakazam": "Alakazite",
-    "Mega Victreebel": "Victreebelite",
-    "Mega Slowbro": "Slowbronite",
-    "Mega Gengar": "Gengarite",
-    "Mega Kangaskhan": "Kangaskhanite",
-    "Mega Starmie": "Starminite",
-    "Mega Pinsir": "Pinsirite",
-    "Mega Gyarados": "Gyaradosite",
-    "Mega Aerodactyl": "Aerodactylite",
-    "Mega Dragonite": "Dragoninite",
-    "Mega Tyranitar": "Tyranitarite",
-    "Mega Sceptile": "Sceptilite",
-    "Mega Blaziken": "Blazikenite",
-    "Mega Swampert": "Swampertite",
-    "Mega Gardevoir": "Gardevoirite",
-    "Mega Sableye": "Sablenite",
-    "Mega Mawile": "Mawilite",
-    "Mega Aggron": "Aggronite",
-    "Mega Medicham": "Medichamite",
-    "Mega Manectric": "Manectite",
-    "Mega Sharpedo": "Sharpedonite",
-    "Mega Camerupt": "Cameruptite",
-    "Mega Altaria": "Altarianite",
-    "Mega Banette": "Banettite",
-    "Mega Absol": "Absolite",
-    "Mega Glalie": "Glalitite",
-    "Mega Metagross": "Metagrossite",
-    "Mega Staraptor": "Staraptorite",
-    "Mega Lopunny": "Lopunnite",
-    "Mega Garchomp": "Garchompite",
-    "Mega Lucario": "Lucarionite",
-    "Mega Gallade": "Galladite",
-    "Mega Emboar": "Emboarite",
-    "Mega Excadrill": "Excadrite",
-    "Mega Audino": "Audinoite",
-    "Mega Scrafty": "Scraftinite",
-    "Mega Chandelure": "Chandelurite",
-    "Mega Golurk": "Golurkite",
-    "Mega Greninja": "Greninjite",
-    "Mega Floette": "Floettite",
-    "Mega Meowstic Male": "Meowsticite",
-    "Mega Meowstic Female": "Meowsticite",
-    "Mega Malamar": "Malamarite",
-    "Mega Barbaracle": "Barbaracite",
-    "Mega Dragalge": "Dragalgite",
-    "Mega Hawlucha": "Hawluchanite",
-    "Mega Glimmora": "Glimmoranite",
-    "Mega Absol Z": "Absolite Z",
-    "Mega Salamence": "Salamencite",
-    "Mega Garchomp Z": "Garchompite Z",
-    "Mega Lucario Z": "Lucarionite Z",
-    "Mega Golisopod": "Golisopite",
-    "Mega Baxcalibur": "Baxcalibrite",
-}
-
 
 @lru_cache(maxsize=1)
 def get_mega_stone_map() -> Dict[str, str]:
@@ -117,13 +47,26 @@ def get_mega_stone_map() -> Dict[str, str]:
         if entry.get("display_name") and entry.get("required_item")
     }
 
+@lru_cache(maxsize=1)
+def _get_standard_items() -> tuple[str, ...]:
+    """Return the generated legal non-Mega item pool, with migration fallback."""
+    generated = load_registry().get("standard_items") or []
+    if generated:
+        return tuple(sorted(set(generated), key=str.casefold))
+    return tuple(_LEGACY_CHAMPIONS_STANDARD_HELD_ITEMS)
+
+
 @lru_cache(maxsize=2)
 def get_champions_held_items(include_mega_stones: bool = True) -> List[str]:
     """Return sorted held-item selector options legal in Champions."""
-    items = set(CHAMPIONS_STANDARD_HELD_ITEMS)
+    items = set(_get_standard_items())
     if include_mega_stones:
         items.update(get_mega_stone_map().values())
     return sorted(items, key=str.casefold)
+
+
+CHAMPIONS_STANDARD_HELD_ITEMS = _get_standard_items()
+
 
 
 # Items that are meaningfully associated with one species/form.  These are
