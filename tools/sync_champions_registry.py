@@ -268,6 +268,42 @@ def _api_slug(
     return normalized.strip("-").casefold()
 
 
+def _canonical_key(
+    display_name: str,
+    base_species_key: str,
+) -> str:
+    """Generate the stable history key used by the application."""
+    import unicodedata
+
+    text = str(display_name or "").strip()
+    if not text:
+        return str(base_species_key or "").strip().casefold()
+
+    if text.casefold().startswith("mega "):
+        text = text[5:].strip()
+        parts = text.split()
+        if parts and parts[-1].upper() in {"X", "Y", "Z"}:
+            base = " ".join(parts[:-1])
+            return f"{_canonical_key(base, base_species_key)}-{parts[-1].lower()}"
+        return _canonical_key(text, base_species_key)
+
+    normalized = unicodedata.normalize("NFKD", text)
+    normalized = "".join(
+        ch for ch in normalized if not unicodedata.combining(ch)
+    )
+    normalized = (
+        normalized
+        .replace("’", "")
+        .replace("'", "")
+        .replace("♀", "f")
+        .replace("♂", "m")
+        .replace(":", "")
+    )
+    normalized = re.sub(r"[^A-Za-z0-9]+", "-", normalized)
+    normalized = normalized.strip("-").casefold()
+    return normalized or str(base_species_key or "").strip().casefold()
+
+
 def _history_metadata() -> tuple[Optional[str], List[str]]:
     if not HISTORY_PATH.exists():
         return None, []
@@ -363,6 +399,10 @@ def build_registry() -> Dict[str, Any]:
                 is_mega,
             ),
             "source_name": source_name,
+            "canonical_key": _canonical_key(
+                _display_name(source_name, base_species, forme, is_mega),
+                base_species_key,
+            ),
             "api_slug": _api_slug(
                 source_name,
                 species_id,
