@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Sequence
 
-from champions.constants import CUSTOM_MEGAS_DATA
+from champions.registry import get_species_family_key
 from champions.species_keys import canonical_species_key
 from champions.roster_data import display_name_for_species_key
 from champions.tournament_data import get_tournament_partners
@@ -15,10 +15,8 @@ from champions.team_recommendations import recommend_team_additions as _legacy_r
 
 
 def _family(name: str) -> str:
-    text = str(name or "").strip()
-    if text.lower().startswith("mega "):
-        text = text[5:].strip()
-    return canonical_species_key(text)
+    family = get_species_family_key(name)
+    return family or canonical_species_key(str(name or "").strip())
 
 
 def _is_mega(name: str) -> bool:
