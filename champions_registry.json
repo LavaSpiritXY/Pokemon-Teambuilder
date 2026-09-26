@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-26T10:51:28.789656+00:00",
+  "generated_at": "2026-09-26T11:27:07.399212+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
@@ -21,6 +21,7 @@
       "api_slug": "abomasnow",
       "sprite_id": "abomasnow",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/abomasnow.png",
+      "champions_sprite_url": null,
       "base_species_key": "abomasnow",
       "forme": "",
       "types": [
@@ -50,6 +51,7 @@
       "api_slug": "abomasnow",
       "sprite_id": "abomasnowmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/abomasnowmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png",
       "base_species_key": "abomasnow",
       "forme": "Mega",
       "types": [
@@ -69,8 +71,7 @@
       ],
       "required_item": "Abomasite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png"
+      "is_mega": true
     },
     "absol": {
       "display_name": "Absol",
@@ -79,6 +80,7 @@
       "api_slug": "absol",
       "sprite_id": "absol",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/absol.png",
+      "champions_sprite_url": null,
       "base_species_key": "absol",
       "forme": "",
       "types": [
@@ -108,6 +110,7 @@
       "api_slug": "absol",
       "sprite_id": "absolmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/absolmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png",
       "base_species_key": "absol",
       "forme": "Mega",
       "types": [
@@ -126,8 +129,7 @@
       ],
       "required_item": "Absolite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png"
+      "is_mega": true
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
@@ -136,6 +138,7 @@
       "api_slug": "absol",
       "sprite_id": "absolmegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/absolmegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png",
       "base_species_key": "absol",
       "forme": "Mega-Z",
       "types": [
@@ -155,8 +158,7 @@
       ],
       "required_item": "Absolite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png"
+      "is_mega": true
     },
     "aegislash": {
       "display_name": "Aegislash",
@@ -165,6 +167,7 @@
       "api_slug": "aegislash",
       "sprite_id": "aegislash",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aegislash.png",
+      "champions_sprite_url": null,
       "base_species_key": "aegislash",
       "forme": "",
       "types": [
@@ -193,6 +196,7 @@
       "api_slug": "aerodactyl",
       "sprite_id": "aerodactyl",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aerodactyl.png",
+      "champions_sprite_url": null,
       "base_species_key": "aerodactyl",
       "forme": "",
       "types": [
@@ -223,6 +227,7 @@
       "api_slug": "aerodactyl",
       "sprite_id": "aerodactylmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aerodactylmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png",
       "base_species_key": "aerodactyl",
       "forme": "Mega",
       "types": [
@@ -242,8 +247,7 @@
       ],
       "required_item": "Aerodactylite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png"
+      "is_mega": true
     },
     "aggron": {
       "display_name": "Aggron",
@@ -252,6 +256,7 @@
       "api_slug": "aggron",
       "sprite_id": "aggron",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aggron.png",
+      "champions_sprite_url": null,
       "base_species_key": "aggron",
       "forme": "",
       "types": [
@@ -282,6 +287,7 @@
       "api_slug": "aggron",
       "sprite_id": "aggronmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aggronmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png",
       "base_species_key": "aggron",
       "forme": "Mega",
       "types": [
@@ -300,8 +306,7 @@
       ],
       "required_item": "Aggronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png"
+      "is_mega": true
     },
     "alakazam": {
       "display_name": "Alakazam",
@@ -310,6 +315,7 @@
       "api_slug": "alakazam",
       "sprite_id": "alakazam",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/alakazam.png",
+      "champions_sprite_url": null,
       "base_species_key": "alakazam",
       "forme": "",
       "types": [
@@ -339,6 +345,7 @@
       "api_slug": "alakazam",
       "sprite_id": "alakazammega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/alakazammega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png",
       "base_species_key": "alakazam",
       "forme": "Mega",
       "types": [
@@ -357,8 +364,7 @@
       ],
       "required_item": "Alakazite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png"
+      "is_mega": true
     },
     "alcremie": {
       "display_name": "Alcremie",
@@ -367,6 +373,7 @@
       "api_slug": "alcremie",
       "sprite_id": "alcremie",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/alcremie.png",
+      "champions_sprite_url": null,
       "base_species_key": "alcremie",
       "forme": "",
       "types": [
@@ -395,6 +402,7 @@
       "api_slug": "altaria",
       "sprite_id": "altaria",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/altaria.png",
+      "champions_sprite_url": null,
       "base_species_key": "altaria",
       "forme": "",
       "types": [
@@ -424,6 +432,7 @@
       "api_slug": "altaria",
       "sprite_id": "altariamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/altariamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png",
       "base_species_key": "altaria",
       "forme": "Mega",
       "types": [
@@ -443,8 +452,7 @@
       ],
       "required_item": "Altarianite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png"
+      "is_mega": true
     },
     "ampharos": {
       "display_name": "Ampharos",
@@ -453,6 +461,7 @@
       "api_slug": "ampharos",
       "sprite_id": "ampharos",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ampharos.png",
+      "champions_sprite_url": null,
       "base_species_key": "ampharos",
       "forme": "",
       "types": [
@@ -481,6 +490,7 @@
       "api_slug": "ampharos",
       "sprite_id": "ampharosmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ampharosmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png",
       "base_species_key": "ampharos",
       "forme": "Mega",
       "types": [
@@ -500,8 +510,7 @@
       ],
       "required_item": "Ampharosite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png"
+      "is_mega": true
     },
     "annihilape": {
       "display_name": "Annihilape",
@@ -510,6 +519,7 @@
       "api_slug": "annihilape",
       "sprite_id": "annihilape",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/annihilape.png",
+      "champions_sprite_url": null,
       "base_species_key": "annihilape",
       "forme": "",
       "types": [
@@ -540,6 +550,7 @@
       "api_slug": "appletun",
       "sprite_id": "appletun",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/appletun.png",
+      "champions_sprite_url": null,
       "base_species_key": "appletun",
       "forme": "",
       "types": [
@@ -570,6 +581,7 @@
       "api_slug": "araquanid",
       "sprite_id": "araquanid",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/araquanid.png",
+      "champions_sprite_url": null,
       "base_species_key": "araquanid",
       "forme": "",
       "types": [
@@ -599,6 +611,7 @@
       "api_slug": "arbok",
       "sprite_id": "arbok",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/arbok.png",
+      "champions_sprite_url": null,
       "base_species_key": "arbok",
       "forme": "",
       "types": [
@@ -628,6 +641,7 @@
       "api_slug": "arboliva",
       "sprite_id": "arboliva",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/arboliva.png",
+      "champions_sprite_url": null,
       "base_species_key": "arboliva",
       "forme": "",
       "types": [
@@ -657,6 +671,7 @@
       "api_slug": "arcanine",
       "sprite_id": "arcanine",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/arcanine.png",
+      "champions_sprite_url": null,
       "base_species_key": "arcanine",
       "forme": "",
       "types": [
@@ -686,6 +701,7 @@
       "api_slug": "arcanine-hisui",
       "sprite_id": "arcaninehisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/arcaninehisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "arcanine",
       "forme": "Hisui",
       "types": [
@@ -716,6 +732,7 @@
       "api_slug": "archaludon",
       "sprite_id": "archaludon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/archaludon.png",
+      "champions_sprite_url": null,
       "base_species_key": "archaludon",
       "forme": "",
       "types": [
@@ -746,6 +763,7 @@
       "api_slug": "ariados",
       "sprite_id": "ariados",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ariados.png",
+      "champions_sprite_url": null,
       "base_species_key": "ariados",
       "forme": "",
       "types": [
@@ -776,6 +794,7 @@
       "api_slug": "armarouge",
       "sprite_id": "armarouge",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/armarouge.png",
+      "champions_sprite_url": null,
       "base_species_key": "armarouge",
       "forme": "",
       "types": [
@@ -805,6 +824,7 @@
       "api_slug": "aromatisse",
       "sprite_id": "aromatisse",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aromatisse.png",
+      "champions_sprite_url": null,
       "base_species_key": "aromatisse",
       "forme": "",
       "types": [
@@ -833,6 +853,7 @@
       "api_slug": "audino",
       "sprite_id": "audino",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/audino.png",
+      "champions_sprite_url": null,
       "base_species_key": "audino",
       "forme": "",
       "types": [
@@ -862,6 +883,7 @@
       "api_slug": "audino",
       "sprite_id": "audinomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/audinomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png",
       "base_species_key": "audino",
       "forme": "Mega",
       "types": [
@@ -881,8 +903,7 @@
       ],
       "required_item": "Audinite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png"
+      "is_mega": true
     },
     "aurorus": {
       "display_name": "Aurorus",
@@ -891,6 +912,7 @@
       "api_slug": "aurorus",
       "sprite_id": "aurorus",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aurorus.png",
+      "champions_sprite_url": null,
       "base_species_key": "aurorus",
       "forme": "",
       "types": [
@@ -920,6 +942,7 @@
       "api_slug": "avalugg",
       "sprite_id": "avalugg",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/avalugg.png",
+      "champions_sprite_url": null,
       "base_species_key": "avalugg",
       "forme": "",
       "types": [
@@ -949,6 +972,7 @@
       "api_slug": "avalugg-hisui",
       "sprite_id": "avalugghisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/avalugghisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "avalugg",
       "forme": "Hisui",
       "types": [
@@ -979,6 +1003,7 @@
       "api_slug": "azumarill",
       "sprite_id": "azumarill",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/azumarill.png",
+      "champions_sprite_url": null,
       "base_species_key": "azumarill",
       "forme": "",
       "types": [
@@ -1009,6 +1034,7 @@
       "api_slug": "banette",
       "sprite_id": "banette",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/banette.png",
+      "champions_sprite_url": null,
       "base_species_key": "banette",
       "forme": "",
       "types": [
@@ -1038,6 +1064,7 @@
       "api_slug": "banette",
       "sprite_id": "banettemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/banettemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png",
       "base_species_key": "banette",
       "forme": "Mega",
       "types": [
@@ -1056,8 +1083,7 @@
       ],
       "required_item": "Banettite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png"
+      "is_mega": true
     },
     "barbaracle": {
       "display_name": "Barbaracle",
@@ -1066,6 +1092,7 @@
       "api_slug": "barbaracle",
       "sprite_id": "barbaracle",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/barbaracle.png",
+      "champions_sprite_url": null,
       "base_species_key": "barbaracle",
       "forme": "",
       "types": [
@@ -1096,6 +1123,7 @@
       "api_slug": "barbaracle",
       "sprite_id": "barbaraclemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/barbaraclemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png",
       "base_species_key": "barbaracle",
       "forme": "Mega",
       "types": [
@@ -1115,8 +1143,7 @@
       ],
       "required_item": "Barbaracite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png"
+      "is_mega": true
     },
     "basculegion": {
       "display_name": "Basculegion",
@@ -1125,6 +1152,7 @@
       "api_slug": "basculegion",
       "sprite_id": "basculegion",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/basculegion.png",
+      "champions_sprite_url": null,
       "base_species_key": "basculegion",
       "forme": "",
       "types": [
@@ -1155,6 +1183,7 @@
       "api_slug": "basculegion-female",
       "sprite_id": "basculegionf",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/basculegionf.png",
+      "champions_sprite_url": null,
       "base_species_key": "basculegion",
       "forme": "F",
       "types": [
@@ -1185,6 +1214,7 @@
       "api_slug": "bastiodon",
       "sprite_id": "bastiodon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/bastiodon.png",
+      "champions_sprite_url": null,
       "base_species_key": "bastiodon",
       "forme": "",
       "types": [
@@ -1214,6 +1244,7 @@
       "api_slug": "baxcalibur",
       "sprite_id": "baxcalibur",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/baxcalibur.png",
+      "champions_sprite_url": null,
       "base_species_key": "baxcalibur",
       "forme": "",
       "types": [
@@ -1243,6 +1274,7 @@
       "api_slug": "baxcalibur",
       "sprite_id": "baxcaliburmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/baxcaliburmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png",
       "base_species_key": "baxcalibur",
       "forme": "Mega",
       "types": [
@@ -1262,8 +1294,7 @@
       ],
       "required_item": "Baxcalibrite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png"
+      "is_mega": true
     },
     "beartic": {
       "display_name": "Beartic",
@@ -1272,6 +1303,7 @@
       "api_slug": "beartic",
       "sprite_id": "beartic",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/beartic.png",
+      "champions_sprite_url": null,
       "base_species_key": "beartic",
       "forme": "",
       "types": [
@@ -1301,6 +1333,7 @@
       "api_slug": "beedrill",
       "sprite_id": "beedrill",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/beedrill.png",
+      "champions_sprite_url": null,
       "base_species_key": "beedrill",
       "forme": "",
       "types": [
@@ -1330,6 +1363,7 @@
       "api_slug": "beedrill",
       "sprite_id": "beedrillmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/beedrillmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png",
       "base_species_key": "beedrill",
       "forme": "Mega",
       "types": [
@@ -1349,8 +1383,7 @@
       ],
       "required_item": "Beedrillite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png"
+      "is_mega": true
     },
     "bellibolt": {
       "display_name": "Bellibolt",
@@ -1359,6 +1392,7 @@
       "api_slug": "bellibolt",
       "sprite_id": "bellibolt",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/bellibolt.png",
+      "champions_sprite_url": null,
       "base_species_key": "bellibolt",
       "forme": "",
       "types": [
@@ -1388,6 +1422,7 @@
       "api_slug": "blastoise",
       "sprite_id": "blastoise",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blastoise.png",
+      "champions_sprite_url": null,
       "base_species_key": "blastoise",
       "forme": "",
       "types": [
@@ -1416,6 +1451,7 @@
       "api_slug": "blastoise",
       "sprite_id": "blastoisemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blastoisemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png",
       "base_species_key": "blastoise",
       "forme": "Mega",
       "types": [
@@ -1434,8 +1470,7 @@
       ],
       "required_item": "Blastoisinite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png"
+      "is_mega": true
     },
     "blaziken": {
       "display_name": "Blaziken",
@@ -1444,6 +1479,7 @@
       "api_slug": "blaziken",
       "sprite_id": "blaziken",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blaziken.png",
+      "champions_sprite_url": null,
       "base_species_key": "blaziken",
       "forme": "",
       "types": [
@@ -1473,6 +1509,7 @@
       "api_slug": "blaziken",
       "sprite_id": "blazikenmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blazikenmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png",
       "base_species_key": "blaziken",
       "forme": "Mega",
       "types": [
@@ -1492,8 +1529,7 @@
       ],
       "required_item": "Blazikenite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png"
+      "is_mega": true
     },
     "camerupt": {
       "display_name": "Camerupt",
@@ -1502,6 +1538,7 @@
       "api_slug": "camerupt",
       "sprite_id": "camerupt",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/camerupt.png",
+      "champions_sprite_url": null,
       "base_species_key": "camerupt",
       "forme": "",
       "types": [
@@ -1532,6 +1569,7 @@
       "api_slug": "camerupt",
       "sprite_id": "cameruptmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/cameruptmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png",
       "base_species_key": "camerupt",
       "forme": "Mega",
       "types": [
@@ -1551,8 +1589,7 @@
       ],
       "required_item": "Cameruptite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png"
+      "is_mega": true
     },
     "castform": {
       "display_name": "Castform",
@@ -1561,6 +1598,7 @@
       "api_slug": "castform",
       "sprite_id": "castform",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/castform.png",
+      "champions_sprite_url": null,
       "base_species_key": "castform",
       "forme": "",
       "types": [
@@ -1588,6 +1626,7 @@
       "api_slug": "ceruledge",
       "sprite_id": "ceruledge",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ceruledge.png",
+      "champions_sprite_url": null,
       "base_species_key": "ceruledge",
       "forme": "",
       "types": [
@@ -1617,6 +1656,7 @@
       "api_slug": "chandelure",
       "sprite_id": "chandelure",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chandelure.png",
+      "champions_sprite_url": null,
       "base_species_key": "chandelure",
       "forme": "",
       "types": [
@@ -1647,6 +1687,7 @@
       "api_slug": "chandelure",
       "sprite_id": "chandeluremega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chandeluremega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png",
       "base_species_key": "chandelure",
       "forme": "Mega",
       "types": [
@@ -1666,8 +1707,7 @@
       ],
       "required_item": "Chandelurite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png"
+      "is_mega": true
     },
     "charizard": {
       "display_name": "Charizard",
@@ -1676,6 +1716,7 @@
       "api_slug": "charizard",
       "sprite_id": "charizard",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/charizard.png",
+      "champions_sprite_url": null,
       "base_species_key": "charizard",
       "forme": "",
       "types": [
@@ -1705,6 +1746,7 @@
       "api_slug": "charizard",
       "sprite_id": "charizardmegax",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/charizardmegax.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png",
       "base_species_key": "charizard",
       "forme": "Mega-X",
       "types": [
@@ -1724,8 +1766,7 @@
       ],
       "required_item": "Charizardite X",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png"
+      "is_mega": true
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
@@ -1734,6 +1775,7 @@
       "api_slug": "charizard",
       "sprite_id": "charizardmegay",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/charizardmegay.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png",
       "base_species_key": "charizard",
       "forme": "Mega-Y",
       "types": [
@@ -1753,8 +1795,7 @@
       ],
       "required_item": "Charizardite Y",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png"
+      "is_mega": true
     },
     "chesnaught": {
       "display_name": "Chesnaught",
@@ -1763,6 +1804,7 @@
       "api_slug": "chesnaught",
       "sprite_id": "chesnaught",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chesnaught.png",
+      "champions_sprite_url": null,
       "base_species_key": "chesnaught",
       "forme": "",
       "types": [
@@ -1792,6 +1834,7 @@
       "api_slug": "chesnaught",
       "sprite_id": "chesnaughtmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chesnaughtmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png",
       "base_species_key": "chesnaught",
       "forme": "Mega",
       "types": [
@@ -1811,8 +1854,7 @@
       ],
       "required_item": "Chesnaughtite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png"
+      "is_mega": true
     },
     "chimecho": {
       "display_name": "Chimecho",
@@ -1821,6 +1863,7 @@
       "api_slug": "chimecho",
       "sprite_id": "chimecho",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chimecho.png",
+      "champions_sprite_url": null,
       "base_species_key": "chimecho",
       "forme": "",
       "types": [
@@ -1848,6 +1891,7 @@
       "api_slug": "chimecho",
       "sprite_id": "chimechomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chimechomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png",
       "base_species_key": "chimecho",
       "forme": "Mega",
       "types": [
@@ -1867,8 +1911,7 @@
       ],
       "required_item": "Chimechite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png"
+      "is_mega": true
     },
     "cinderace": {
       "display_name": "Cinderace",
@@ -1877,6 +1920,7 @@
       "api_slug": "cinderace",
       "sprite_id": "cinderace",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/cinderace.png",
+      "champions_sprite_url": null,
       "base_species_key": "cinderace",
       "forme": "",
       "types": [
@@ -1905,6 +1949,7 @@
       "api_slug": "clawitzer",
       "sprite_id": "clawitzer",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/clawitzer.png",
+      "champions_sprite_url": null,
       "base_species_key": "clawitzer",
       "forme": "",
       "types": [
@@ -1932,6 +1977,7 @@
       "api_slug": "clefable",
       "sprite_id": "clefable",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/clefable.png",
+      "champions_sprite_url": null,
       "base_species_key": "clefable",
       "forme": "",
       "types": [
@@ -1961,6 +2007,7 @@
       "api_slug": "clefable",
       "sprite_id": "clefablemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/clefablemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png",
       "base_species_key": "clefable",
       "forme": "Mega",
       "types": [
@@ -1980,8 +2027,7 @@
       ],
       "required_item": "Clefablite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png"
+      "is_mega": true
     },
     "cofagrigus": {
       "display_name": "Cofagrigus",
@@ -1990,6 +2036,7 @@
       "api_slug": "cofagrigus",
       "sprite_id": "cofagrigus",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/cofagrigus.png",
+      "champions_sprite_url": null,
       "base_species_key": "cofagrigus",
       "forme": "",
       "types": [
@@ -2017,6 +2064,7 @@
       "api_slug": "conkeldurr",
       "sprite_id": "conkeldurr",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/conkeldurr.png",
+      "champions_sprite_url": null,
       "base_species_key": "conkeldurr",
       "forme": "",
       "types": [
@@ -2046,6 +2094,7 @@
       "api_slug": "corviknight",
       "sprite_id": "corviknight",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/corviknight.png",
+      "champions_sprite_url": null,
       "base_species_key": "corviknight",
       "forme": "",
       "types": [
@@ -2076,6 +2125,7 @@
       "api_slug": "crabominable",
       "sprite_id": "crabominable",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/crabominable.png",
+      "champions_sprite_url": null,
       "base_species_key": "crabominable",
       "forme": "",
       "types": [
@@ -2106,6 +2156,7 @@
       "api_slug": "crabominable",
       "sprite_id": "crabominablemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/crabominablemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png",
       "base_species_key": "crabominable",
       "forme": "Mega",
       "types": [
@@ -2125,8 +2176,7 @@
       ],
       "required_item": "Crabominite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png"
+      "is_mega": true
     },
     "decidueye": {
       "display_name": "Decidueye",
@@ -2135,6 +2185,7 @@
       "api_slug": "decidueye",
       "sprite_id": "decidueye",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/decidueye.png",
+      "champions_sprite_url": null,
       "base_species_key": "decidueye",
       "forme": "",
       "types": [
@@ -2164,6 +2215,7 @@
       "api_slug": "decidueye-hisui",
       "sprite_id": "decidueyehisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/decidueyehisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "decidueye",
       "forme": "Hisui",
       "types": [
@@ -2193,6 +2245,7 @@
       "api_slug": "dedenne",
       "sprite_id": "dedenne",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dedenne.png",
+      "champions_sprite_url": null,
       "base_species_key": "dedenne",
       "forme": "",
       "types": [
@@ -2223,6 +2276,7 @@
       "api_slug": "delphox",
       "sprite_id": "delphox",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/delphox.png",
+      "champions_sprite_url": null,
       "base_species_key": "delphox",
       "forme": "",
       "types": [
@@ -2252,6 +2306,7 @@
       "api_slug": "delphox",
       "sprite_id": "delphoxmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/delphoxmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png",
       "base_species_key": "delphox",
       "forme": "Mega",
       "types": [
@@ -2271,8 +2326,7 @@
       ],
       "required_item": "Delphoxite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png"
+      "is_mega": true
     },
     "diggersby": {
       "display_name": "Diggersby",
@@ -2281,6 +2335,7 @@
       "api_slug": "diggersby",
       "sprite_id": "diggersby",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/diggersby.png",
+      "champions_sprite_url": null,
       "base_species_key": "diggersby",
       "forme": "",
       "types": [
@@ -2311,6 +2366,7 @@
       "api_slug": "ditto",
       "sprite_id": "ditto",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ditto.png",
+      "champions_sprite_url": null,
       "base_species_key": "ditto",
       "forme": "",
       "types": [
@@ -2339,6 +2395,7 @@
       "api_slug": "dragalge",
       "sprite_id": "dragalge",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragalge.png",
+      "champions_sprite_url": null,
       "base_species_key": "dragalge",
       "forme": "",
       "types": [
@@ -2369,6 +2426,7 @@
       "api_slug": "dragalge",
       "sprite_id": "dragalgemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragalgemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png",
       "base_species_key": "dragalge",
       "forme": "Mega",
       "types": [
@@ -2388,8 +2446,7 @@
       ],
       "required_item": "Dragalgite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png"
+      "is_mega": true
     },
     "dragapult": {
       "display_name": "Dragapult",
@@ -2398,6 +2455,7 @@
       "api_slug": "dragapult",
       "sprite_id": "dragapult",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragapult.png",
+      "champions_sprite_url": null,
       "base_species_key": "dragapult",
       "forme": "",
       "types": [
@@ -2428,6 +2486,7 @@
       "api_slug": "dragonite",
       "sprite_id": "dragonite",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragonite.png",
+      "champions_sprite_url": null,
       "base_species_key": "dragonite",
       "forme": "",
       "types": [
@@ -2457,6 +2516,7 @@
       "api_slug": "dragonite",
       "sprite_id": "dragonitemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragonitemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png",
       "base_species_key": "dragonite",
       "forme": "Mega",
       "types": [
@@ -2476,8 +2536,7 @@
       ],
       "required_item": "Dragoninite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png"
+      "is_mega": true
     },
     "drampa": {
       "display_name": "Drampa",
@@ -2486,6 +2545,7 @@
       "api_slug": "drampa",
       "sprite_id": "drampa",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/drampa.png",
+      "champions_sprite_url": null,
       "base_species_key": "drampa",
       "forme": "",
       "types": [
@@ -2516,6 +2576,7 @@
       "api_slug": "drampa",
       "sprite_id": "drampamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/drampamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png",
       "base_species_key": "drampa",
       "forme": "Mega",
       "types": [
@@ -2535,8 +2596,7 @@
       ],
       "required_item": "Drampanite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png"
+      "is_mega": true
     },
     "eelektross": {
       "display_name": "Eelektross",
@@ -2545,6 +2605,7 @@
       "api_slug": "eelektross",
       "sprite_id": "eelektross",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/eelektross.png",
+      "champions_sprite_url": null,
       "base_species_key": "eelektross",
       "forme": "",
       "types": [
@@ -2572,6 +2633,7 @@
       "api_slug": "eelektross",
       "sprite_id": "eelektrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/eelektrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png",
       "base_species_key": "eelektross",
       "forme": "Mega",
       "types": [
@@ -2590,8 +2652,7 @@
       ],
       "required_item": "Eelektrossite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png"
+      "is_mega": true
     },
     "emboar": {
       "display_name": "Emboar",
@@ -2600,6 +2661,7 @@
       "api_slug": "emboar",
       "sprite_id": "emboar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/emboar.png",
+      "champions_sprite_url": null,
       "base_species_key": "emboar",
       "forme": "",
       "types": [
@@ -2629,6 +2691,7 @@
       "api_slug": "emboar",
       "sprite_id": "emboarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/emboarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png",
       "base_species_key": "emboar",
       "forme": "Mega",
       "types": [
@@ -2648,8 +2711,7 @@
       ],
       "required_item": "Emboarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png"
+      "is_mega": true
     },
     "emolga": {
       "display_name": "Emolga",
@@ -2658,6 +2720,7 @@
       "api_slug": "emolga",
       "sprite_id": "emolga",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/emolga.png",
+      "champions_sprite_url": null,
       "base_species_key": "emolga",
       "forme": "",
       "types": [
@@ -2687,6 +2750,7 @@
       "api_slug": "empoleon",
       "sprite_id": "empoleon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/empoleon.png",
+      "champions_sprite_url": null,
       "base_species_key": "empoleon",
       "forme": "",
       "types": [
@@ -2716,6 +2780,7 @@
       "api_slug": "espathra",
       "sprite_id": "espathra",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/espathra.png",
+      "champions_sprite_url": null,
       "base_species_key": "espathra",
       "forme": "",
       "types": [
@@ -2745,6 +2810,7 @@
       "api_slug": "espeon",
       "sprite_id": "espeon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/espeon.png",
+      "champions_sprite_url": null,
       "base_species_key": "espeon",
       "forme": "",
       "types": [
@@ -2773,6 +2839,7 @@
       "api_slug": "excadrill",
       "sprite_id": "excadrill",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/excadrill.png",
+      "champions_sprite_url": null,
       "base_species_key": "excadrill",
       "forme": "",
       "types": [
@@ -2803,6 +2870,7 @@
       "api_slug": "excadrill",
       "sprite_id": "excadrillmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/excadrillmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png",
       "base_species_key": "excadrill",
       "forme": "Mega",
       "types": [
@@ -2822,8 +2890,7 @@
       ],
       "required_item": "Excadrite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png"
+      "is_mega": true
     },
     "falinks": {
       "display_name": "Falinks",
@@ -2832,6 +2899,7 @@
       "api_slug": "falinks",
       "sprite_id": "falinks",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/falinks.png",
+      "champions_sprite_url": null,
       "base_species_key": "falinks",
       "forme": "",
       "types": [
@@ -2860,6 +2928,7 @@
       "api_slug": "falinks",
       "sprite_id": "falinksmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/falinksmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png",
       "base_species_key": "falinks",
       "forme": "Mega",
       "types": [
@@ -2878,8 +2947,7 @@
       ],
       "required_item": "Falinksite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png"
+      "is_mega": true
     },
     "farfetchd": {
       "display_name": "Farfetch'd",
@@ -2888,6 +2956,7 @@
       "api_slug": "farfetchd",
       "sprite_id": "farfetchd",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/farfetchd.png",
+      "champions_sprite_url": null,
       "base_species_key": "farfetchd",
       "forme": "",
       "types": [
@@ -2918,6 +2987,7 @@
       "api_slug": "farigiraf",
       "sprite_id": "farigiraf",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/farigiraf.png",
+      "champions_sprite_url": null,
       "base_species_key": "farigiraf",
       "forme": "",
       "types": [
@@ -2948,6 +3018,7 @@
       "api_slug": "feraligatr",
       "sprite_id": "feraligatr",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/feraligatr.png",
+      "champions_sprite_url": null,
       "base_species_key": "feraligatr",
       "forme": "",
       "types": [
@@ -2976,6 +3047,7 @@
       "api_slug": "feraligatr",
       "sprite_id": "feraligatrmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/feraligatrmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png",
       "base_species_key": "feraligatr",
       "forme": "Mega",
       "types": [
@@ -2995,8 +3067,7 @@
       ],
       "required_item": "Feraligite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png"
+      "is_mega": true
     },
     "flapple": {
       "display_name": "Flapple",
@@ -3005,6 +3076,7 @@
       "api_slug": "flapple",
       "sprite_id": "flapple",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/flapple.png",
+      "champions_sprite_url": null,
       "base_species_key": "flapple",
       "forme": "",
       "types": [
@@ -3035,6 +3107,7 @@
       "api_slug": "flareon",
       "sprite_id": "flareon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/flareon.png",
+      "champions_sprite_url": null,
       "base_species_key": "flareon",
       "forme": "",
       "types": [
@@ -3063,6 +3136,7 @@
       "api_slug": "floette-eternal",
       "sprite_id": "floetteeternal",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/floetteeternal.png",
+      "champions_sprite_url": null,
       "base_species_key": "floette",
       "forme": "Eternal",
       "types": [
@@ -3091,6 +3165,7 @@
       "api_slug": "florges",
       "sprite_id": "florges",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/florges.png",
+      "champions_sprite_url": null,
       "base_species_key": "florges",
       "forme": "",
       "types": [
@@ -3119,6 +3194,7 @@
       "api_slug": "forretress",
       "sprite_id": "forretress",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/forretress.png",
+      "champions_sprite_url": null,
       "base_species_key": "forretress",
       "forme": "",
       "types": [
@@ -3148,6 +3224,7 @@
       "api_slug": "froslass",
       "sprite_id": "froslass",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/froslass.png",
+      "champions_sprite_url": null,
       "base_species_key": "froslass",
       "forme": "",
       "types": [
@@ -3177,6 +3254,7 @@
       "api_slug": "froslass",
       "sprite_id": "froslassmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/froslassmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png",
       "base_species_key": "froslass",
       "forme": "Mega",
       "types": [
@@ -3196,8 +3274,7 @@
       ],
       "required_item": "Froslassite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png"
+      "is_mega": true
     },
     "furfrou": {
       "display_name": "Furfrou",
@@ -3206,6 +3283,7 @@
       "api_slug": "furfrou",
       "sprite_id": "furfrou",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/furfrou.png",
+      "champions_sprite_url": null,
       "base_species_key": "furfrou",
       "forme": "",
       "types": [
@@ -3233,6 +3311,7 @@
       "api_slug": "gallade",
       "sprite_id": "gallade",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gallade.png",
+      "champions_sprite_url": null,
       "base_species_key": "gallade",
       "forme": "",
       "types": [
@@ -3263,6 +3342,7 @@
       "api_slug": "gallade",
       "sprite_id": "gallademega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gallademega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png",
       "base_species_key": "gallade",
       "forme": "Mega",
       "types": [
@@ -3282,8 +3362,7 @@
       ],
       "required_item": "Galladite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png"
+      "is_mega": true
     },
     "garbodor": {
       "display_name": "Garbodor",
@@ -3292,6 +3371,7 @@
       "api_slug": "garbodor",
       "sprite_id": "garbodor",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garbodor.png",
+      "champions_sprite_url": null,
       "base_species_key": "garbodor",
       "forme": "",
       "types": [
@@ -3321,6 +3401,7 @@
       "api_slug": "garchomp",
       "sprite_id": "garchomp",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garchomp.png",
+      "champions_sprite_url": null,
       "base_species_key": "garchomp",
       "forme": "",
       "types": [
@@ -3350,6 +3431,7 @@
       "api_slug": "garchomp",
       "sprite_id": "garchompmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garchompmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png",
       "base_species_key": "garchomp",
       "forme": "Mega",
       "types": [
@@ -3369,8 +3451,7 @@
       ],
       "required_item": "Garchompite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png"
+      "is_mega": true
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
@@ -3379,6 +3460,7 @@
       "api_slug": "garchomp",
       "sprite_id": "garchompmegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garchompmegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png",
       "base_species_key": "garchomp",
       "forme": "Mega-Z",
       "types": [
@@ -3397,8 +3479,7 @@
       ],
       "required_item": "Garchompite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png"
+      "is_mega": true
     },
     "gardevoir": {
       "display_name": "Gardevoir",
@@ -3407,6 +3488,7 @@
       "api_slug": "gardevoir",
       "sprite_id": "gardevoir",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gardevoir.png",
+      "champions_sprite_url": null,
       "base_species_key": "gardevoir",
       "forme": "",
       "types": [
@@ -3437,6 +3519,7 @@
       "api_slug": "gardevoir",
       "sprite_id": "gardevoirmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gardevoirmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png",
       "base_species_key": "gardevoir",
       "forme": "Mega",
       "types": [
@@ -3456,8 +3539,7 @@
       ],
       "required_item": "Gardevoirite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png"
+      "is_mega": true
     },
     "garganacl": {
       "display_name": "Garganacl",
@@ -3466,6 +3548,7 @@
       "api_slug": "garganacl",
       "sprite_id": "garganacl",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garganacl.png",
+      "champions_sprite_url": null,
       "base_species_key": "garganacl",
       "forme": "",
       "types": [
@@ -3495,6 +3578,7 @@
       "api_slug": "gengar",
       "sprite_id": "gengar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gengar.png",
+      "champions_sprite_url": null,
       "base_species_key": "gengar",
       "forme": "",
       "types": [
@@ -3523,6 +3607,7 @@
       "api_slug": "gengar",
       "sprite_id": "gengarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gengarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png",
       "base_species_key": "gengar",
       "forme": "Mega",
       "types": [
@@ -3542,8 +3627,7 @@
       ],
       "required_item": "Gengarite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png"
+      "is_mega": true
     },
     "gholdengo": {
       "display_name": "Gholdengo",
@@ -3552,6 +3636,7 @@
       "api_slug": "gholdengo",
       "sprite_id": "gholdengo",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gholdengo.png",
+      "champions_sprite_url": null,
       "base_species_key": "gholdengo",
       "forme": "",
       "types": [
@@ -3580,6 +3665,7 @@
       "api_slug": "glaceon",
       "sprite_id": "glaceon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glaceon.png",
+      "champions_sprite_url": null,
       "base_species_key": "glaceon",
       "forme": "",
       "types": [
@@ -3608,6 +3694,7 @@
       "api_slug": "glalie",
       "sprite_id": "glalie",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glalie.png",
+      "champions_sprite_url": null,
       "base_species_key": "glalie",
       "forme": "",
       "types": [
@@ -3637,6 +3724,7 @@
       "api_slug": "glalie",
       "sprite_id": "glaliemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glaliemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png",
       "base_species_key": "glalie",
       "forme": "Mega",
       "types": [
@@ -3655,8 +3743,7 @@
       ],
       "required_item": "Glalitite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png"
+      "is_mega": true
     },
     "glimmora": {
       "display_name": "Glimmora",
@@ -3665,6 +3752,7 @@
       "api_slug": "glimmora",
       "sprite_id": "glimmora",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glimmora.png",
+      "champions_sprite_url": null,
       "base_species_key": "glimmora",
       "forme": "",
       "types": [
@@ -3694,6 +3782,7 @@
       "api_slug": "glimmora",
       "sprite_id": "glimmoramega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glimmoramega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png",
       "base_species_key": "glimmora",
       "forme": "Mega",
       "types": [
@@ -3713,8 +3802,7 @@
       ],
       "required_item": "Glimmoranite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png"
+      "is_mega": true
     },
     "gliscor": {
       "display_name": "Gliscor",
@@ -3723,6 +3811,7 @@
       "api_slug": "gliscor",
       "sprite_id": "gliscor",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gliscor.png",
+      "champions_sprite_url": null,
       "base_species_key": "gliscor",
       "forme": "",
       "types": [
@@ -3753,6 +3842,7 @@
       "api_slug": "gogoat",
       "sprite_id": "gogoat",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gogoat.png",
+      "champions_sprite_url": null,
       "base_species_key": "gogoat",
       "forme": "",
       "types": [
@@ -3781,6 +3871,7 @@
       "api_slug": "golisopod",
       "sprite_id": "golisopod",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golisopod.png",
+      "champions_sprite_url": null,
       "base_species_key": "golisopod",
       "forme": "",
       "types": [
@@ -3809,6 +3900,7 @@
       "api_slug": "golisopod",
       "sprite_id": "golisopodmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golisopodmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png",
       "base_species_key": "golisopod",
       "forme": "Mega",
       "types": [
@@ -3828,8 +3920,7 @@
       ],
       "required_item": "Golisopite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png"
+      "is_mega": true
     },
     "golurk": {
       "display_name": "Golurk",
@@ -3838,6 +3929,7 @@
       "api_slug": "golurk",
       "sprite_id": "golurk",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golurk.png",
+      "champions_sprite_url": null,
       "base_species_key": "golurk",
       "forme": "",
       "types": [
@@ -3868,6 +3960,7 @@
       "api_slug": "golurk",
       "sprite_id": "golurkmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golurkmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png",
       "base_species_key": "golurk",
       "forme": "Mega",
       "types": [
@@ -3887,8 +3980,7 @@
       ],
       "required_item": "Golurkite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png"
+      "is_mega": true
     },
     "goodra": {
       "display_name": "Goodra",
@@ -3897,6 +3989,7 @@
       "api_slug": "goodra",
       "sprite_id": "goodra",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/goodra.png",
+      "champions_sprite_url": null,
       "base_species_key": "goodra",
       "forme": "",
       "types": [
@@ -3926,6 +4019,7 @@
       "api_slug": "goodra-hisui",
       "sprite_id": "goodrahisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/goodrahisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "goodra",
       "forme": "Hisui",
       "types": [
@@ -3956,6 +4050,7 @@
       "api_slug": "gourgeist",
       "sprite_id": "gourgeist",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gourgeist.png",
+      "champions_sprite_url": null,
       "base_species_key": "gourgeist",
       "forme": "",
       "types": [
@@ -3986,6 +4081,7 @@
       "api_slug": "grapploct",
       "sprite_id": "grapploct",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/grapploct.png",
+      "champions_sprite_url": null,
       "base_species_key": "grapploct",
       "forme": "",
       "types": [
@@ -4014,6 +4110,7 @@
       "api_slug": "greninja",
       "sprite_id": "greninja",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/greninja.png",
+      "champions_sprite_url": null,
       "base_species_key": "greninja",
       "forme": "",
       "types": [
@@ -4044,6 +4141,7 @@
       "api_slug": "greninja",
       "sprite_id": "greninjamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/greninjamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png",
       "base_species_key": "greninja",
       "forme": "Mega",
       "types": [
@@ -4063,8 +4161,7 @@
       ],
       "required_item": "Greninjite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png"
+      "is_mega": true
     },
     "grimmsnarl": {
       "display_name": "Grimmsnarl",
@@ -4073,6 +4170,7 @@
       "api_slug": "grimmsnarl",
       "sprite_id": "grimmsnarl",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/grimmsnarl.png",
+      "champions_sprite_url": null,
       "base_species_key": "grimmsnarl",
       "forme": "",
       "types": [
@@ -4103,6 +4201,7 @@
       "api_slug": "gyarados",
       "sprite_id": "gyarados",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gyarados.png",
+      "champions_sprite_url": null,
       "base_species_key": "gyarados",
       "forme": "",
       "types": [
@@ -4132,6 +4231,7 @@
       "api_slug": "gyarados",
       "sprite_id": "gyaradosmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gyaradosmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png",
       "base_species_key": "gyarados",
       "forme": "Mega",
       "types": [
@@ -4151,8 +4251,7 @@
       ],
       "required_item": "Gyaradosite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png"
+      "is_mega": true
     },
     "hatterene": {
       "display_name": "Hatterene",
@@ -4161,6 +4260,7 @@
       "api_slug": "hatterene",
       "sprite_id": "hatterene",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hatterene.png",
+      "champions_sprite_url": null,
       "base_species_key": "hatterene",
       "forme": "",
       "types": [
@@ -4191,6 +4291,7 @@
       "api_slug": "hawlucha",
       "sprite_id": "hawlucha",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hawlucha.png",
+      "champions_sprite_url": null,
       "base_species_key": "hawlucha",
       "forme": "",
       "types": [
@@ -4221,6 +4322,7 @@
       "api_slug": "hawlucha",
       "sprite_id": "hawluchamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hawluchamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png",
       "base_species_key": "hawlucha",
       "forme": "Mega",
       "types": [
@@ -4240,8 +4342,7 @@
       ],
       "required_item": "Hawluchanite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png"
+      "is_mega": true
     },
     "heliolisk": {
       "display_name": "Heliolisk",
@@ -4250,6 +4351,7 @@
       "api_slug": "heliolisk",
       "sprite_id": "heliolisk",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/heliolisk.png",
+      "champions_sprite_url": null,
       "base_species_key": "heliolisk",
       "forme": "",
       "types": [
@@ -4280,6 +4382,7 @@
       "api_slug": "heracross",
       "sprite_id": "heracross",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/heracross.png",
+      "champions_sprite_url": null,
       "base_species_key": "heracross",
       "forme": "",
       "types": [
@@ -4310,6 +4413,7 @@
       "api_slug": "heracross",
       "sprite_id": "heracrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/heracrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png",
       "base_species_key": "heracross",
       "forme": "Mega",
       "types": [
@@ -4329,8 +4433,7 @@
       ],
       "required_item": "Heracronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png"
+      "is_mega": true
     },
     "hippowdon": {
       "display_name": "Hippowdon",
@@ -4339,6 +4442,7 @@
       "api_slug": "hippowdon",
       "sprite_id": "hippowdon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hippowdon.png",
+      "champions_sprite_url": null,
       "base_species_key": "hippowdon",
       "forme": "",
       "types": [
@@ -4367,6 +4471,7 @@
       "api_slug": "houndoom",
       "sprite_id": "houndoom",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/houndoom.png",
+      "champions_sprite_url": null,
       "base_species_key": "houndoom",
       "forme": "",
       "types": [
@@ -4397,6 +4502,7 @@
       "api_slug": "houndoom",
       "sprite_id": "houndoommega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/houndoommega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png",
       "base_species_key": "houndoom",
       "forme": "Mega",
       "types": [
@@ -4416,8 +4522,7 @@
       ],
       "required_item": "Houndoominite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png"
+      "is_mega": true
     },
     "houndstone": {
       "display_name": "Houndstone",
@@ -4426,6 +4531,7 @@
       "api_slug": "houndstone",
       "sprite_id": "houndstone",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/houndstone.png",
+      "champions_sprite_url": null,
       "base_species_key": "houndstone",
       "forme": "",
       "types": [
@@ -4454,6 +4560,7 @@
       "api_slug": "hydrapple",
       "sprite_id": "hydrapple",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hydrapple.png",
+      "champions_sprite_url": null,
       "base_species_key": "hydrapple",
       "forme": "",
       "types": [
@@ -4484,6 +4591,7 @@
       "api_slug": "hydreigon",
       "sprite_id": "hydreigon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hydreigon.png",
+      "champions_sprite_url": null,
       "base_species_key": "hydreigon",
       "forme": "",
       "types": [
@@ -4512,6 +4620,7 @@
       "api_slug": "incineroar",
       "sprite_id": "incineroar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/incineroar.png",
+      "champions_sprite_url": null,
       "base_species_key": "incineroar",
       "forme": "",
       "types": [
@@ -4541,6 +4650,7 @@
       "api_slug": "indeedee",
       "sprite_id": "indeedee",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/indeedee.png",
+      "champions_sprite_url": null,
       "base_species_key": "indeedee",
       "forme": "",
       "types": [
@@ -4571,6 +4681,7 @@
       "api_slug": "indeedee-female",
       "sprite_id": "indeedeef",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/indeedeef.png",
+      "champions_sprite_url": null,
       "base_species_key": "indeedee",
       "forme": "F",
       "types": [
@@ -4601,6 +4712,7 @@
       "api_slug": "infernape",
       "sprite_id": "infernape",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/infernape.png",
+      "champions_sprite_url": null,
       "base_species_key": "infernape",
       "forme": "",
       "types": [
@@ -4630,6 +4742,7 @@
       "api_slug": "inteleon",
       "sprite_id": "inteleon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/inteleon.png",
+      "champions_sprite_url": null,
       "base_species_key": "inteleon",
       "forme": "",
       "types": [
@@ -4658,6 +4771,7 @@
       "api_slug": "jolteon",
       "sprite_id": "jolteon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/jolteon.png",
+      "champions_sprite_url": null,
       "base_species_key": "jolteon",
       "forme": "",
       "types": [
@@ -4686,6 +4800,7 @@
       "api_slug": "kangaskhan",
       "sprite_id": "kangaskhan",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kangaskhan.png",
+      "champions_sprite_url": null,
       "base_species_key": "kangaskhan",
       "forme": "",
       "types": [
@@ -4715,6 +4830,7 @@
       "api_slug": "kangaskhan",
       "sprite_id": "kangaskhanmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kangaskhanmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png",
       "base_species_key": "kangaskhan",
       "forme": "Mega",
       "types": [
@@ -4733,8 +4849,7 @@
       ],
       "required_item": "Kangaskhanite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png"
+      "is_mega": true
     },
     "kingambit": {
       "display_name": "Kingambit",
@@ -4743,6 +4858,7 @@
       "api_slug": "kingambit",
       "sprite_id": "kingambit",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kingambit.png",
+      "champions_sprite_url": null,
       "base_species_key": "kingambit",
       "forme": "",
       "types": [
@@ -4773,6 +4889,7 @@
       "api_slug": "kleavor",
       "sprite_id": "kleavor",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kleavor.png",
+      "champions_sprite_url": null,
       "base_species_key": "kleavor",
       "forme": "",
       "types": [
@@ -4803,6 +4920,7 @@
       "api_slug": "klefki",
       "sprite_id": "klefki",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/klefki.png",
+      "champions_sprite_url": null,
       "base_species_key": "klefki",
       "forme": "",
       "types": [
@@ -4832,6 +4950,7 @@
       "api_slug": "kommo-o",
       "sprite_id": "kommoo",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kommoo.png",
+      "champions_sprite_url": null,
       "base_species_key": "kommoo",
       "forme": "",
       "types": [
@@ -4862,6 +4981,7 @@
       "api_slug": "krookodile",
       "sprite_id": "krookodile",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/krookodile.png",
+      "champions_sprite_url": null,
       "base_species_key": "krookodile",
       "forme": "",
       "types": [
@@ -4892,6 +5012,7 @@
       "api_slug": "leafeon",
       "sprite_id": "leafeon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/leafeon.png",
+      "champions_sprite_url": null,
       "base_species_key": "leafeon",
       "forme": "",
       "types": [
@@ -4920,6 +5041,7 @@
       "api_slug": "liepard",
       "sprite_id": "liepard",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/liepard.png",
+      "champions_sprite_url": null,
       "base_species_key": "liepard",
       "forme": "",
       "types": [
@@ -4949,6 +5071,7 @@
       "api_slug": "lopunny",
       "sprite_id": "lopunny",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lopunny.png",
+      "champions_sprite_url": null,
       "base_species_key": "lopunny",
       "forme": "",
       "types": [
@@ -4978,6 +5101,7 @@
       "api_slug": "lopunny",
       "sprite_id": "lopunnymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lopunnymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png",
       "base_species_key": "lopunny",
       "forme": "Mega",
       "types": [
@@ -4997,8 +5121,7 @@
       ],
       "required_item": "Lopunnite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png"
+      "is_mega": true
     },
     "lucario": {
       "display_name": "Lucario",
@@ -5007,6 +5130,7 @@
       "api_slug": "lucario",
       "sprite_id": "lucario",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lucario.png",
+      "champions_sprite_url": null,
       "base_species_key": "lucario",
       "forme": "",
       "types": [
@@ -5037,6 +5161,7 @@
       "api_slug": "lucario",
       "sprite_id": "lucariomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lucariomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png",
       "base_species_key": "lucario",
       "forme": "Mega",
       "types": [
@@ -5056,8 +5181,7 @@
       ],
       "required_item": "Lucarionite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png"
+      "is_mega": true
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
@@ -5066,6 +5190,7 @@
       "api_slug": "lucario",
       "sprite_id": "lucariomegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lucariomegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png",
       "base_species_key": "lucario",
       "forme": "Mega-Z",
       "types": [
@@ -5085,8 +5210,7 @@
       ],
       "required_item": "Lucarionite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png"
+      "is_mega": true
     },
     "luxray": {
       "display_name": "Luxray",
@@ -5095,6 +5219,7 @@
       "api_slug": "luxray",
       "sprite_id": "luxray",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/luxray.png",
+      "champions_sprite_url": null,
       "base_species_key": "luxray",
       "forme": "",
       "types": [
@@ -5124,6 +5249,7 @@
       "api_slug": "lycanroc",
       "sprite_id": "lycanroc",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lycanroc.png",
+      "champions_sprite_url": null,
       "base_species_key": "lycanroc",
       "forme": "",
       "types": [
@@ -5153,6 +5279,7 @@
       "api_slug": "lycanroc-dusk",
       "sprite_id": "lycanrocdusk",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lycanrocdusk.png",
+      "champions_sprite_url": null,
       "base_species_key": "lycanroc",
       "forme": "Dusk",
       "types": [
@@ -5180,6 +5307,7 @@
       "api_slug": "lycanroc-midnight",
       "sprite_id": "lycanrocmidnight",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lycanrocmidnight.png",
+      "champions_sprite_url": null,
       "base_species_key": "lycanroc",
       "forme": "Midnight",
       "types": [
@@ -5209,6 +5337,7 @@
       "api_slug": "mabosstiff",
       "sprite_id": "mabosstiff",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mabosstiff.png",
+      "champions_sprite_url": null,
       "base_species_key": "mabosstiff",
       "forme": "",
       "types": [
@@ -5238,6 +5367,7 @@
       "api_slug": "machamp",
       "sprite_id": "machamp",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/machamp.png",
+      "champions_sprite_url": null,
       "base_species_key": "machamp",
       "forme": "",
       "types": [
@@ -5267,6 +5397,7 @@
       "api_slug": "malamar",
       "sprite_id": "malamar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/malamar.png",
+      "champions_sprite_url": null,
       "base_species_key": "malamar",
       "forme": "",
       "types": [
@@ -5297,6 +5428,7 @@
       "api_slug": "malamar",
       "sprite_id": "malamarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/malamarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png",
       "base_species_key": "malamar",
       "forme": "Mega",
       "types": [
@@ -5316,8 +5448,7 @@
       ],
       "required_item": "Malamarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png"
+      "is_mega": true
     },
     "mamoswine": {
       "display_name": "Mamoswine",
@@ -5326,6 +5457,7 @@
       "api_slug": "mamoswine",
       "sprite_id": "mamoswine",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mamoswine.png",
+      "champions_sprite_url": null,
       "base_species_key": "mamoswine",
       "forme": "",
       "types": [
@@ -5356,6 +5488,7 @@
       "api_slug": "manectric",
       "sprite_id": "manectric",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/manectric.png",
+      "champions_sprite_url": null,
       "base_species_key": "manectric",
       "forme": "",
       "types": [
@@ -5385,6 +5518,7 @@
       "api_slug": "manectric",
       "sprite_id": "manectricmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/manectricmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png",
       "base_species_key": "manectric",
       "forme": "Mega",
       "types": [
@@ -5403,8 +5537,7 @@
       ],
       "required_item": "Manectite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png"
+      "is_mega": true
     },
     "maushold": {
       "display_name": "Maushold",
@@ -5413,6 +5546,7 @@
       "api_slug": "maushold",
       "sprite_id": "maushold",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/maushold.png",
+      "champions_sprite_url": null,
       "base_species_key": "maushold",
       "forme": "",
       "types": [
@@ -5442,6 +5576,7 @@
       "api_slug": "mawile",
       "sprite_id": "mawile",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mawile.png",
+      "champions_sprite_url": null,
       "base_species_key": "mawile",
       "forme": "",
       "types": [
@@ -5472,6 +5607,7 @@
       "api_slug": "mawile",
       "sprite_id": "mawilemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mawilemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png",
       "base_species_key": "mawile",
       "forme": "Mega",
       "types": [
@@ -5491,8 +5627,7 @@
       ],
       "required_item": "Mawilite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png"
+      "is_mega": true
     },
     "medicham": {
       "display_name": "Medicham",
@@ -5501,6 +5636,7 @@
       "api_slug": "medicham",
       "sprite_id": "medicham",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/medicham.png",
+      "champions_sprite_url": null,
       "base_species_key": "medicham",
       "forme": "",
       "types": [
@@ -5530,6 +5666,7 @@
       "api_slug": "medicham",
       "sprite_id": "medichammega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/medichammega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png",
       "base_species_key": "medicham",
       "forme": "Mega",
       "types": [
@@ -5549,8 +5686,7 @@
       ],
       "required_item": "Medichamite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png"
+      "is_mega": true
     },
     "meganium": {
       "display_name": "Meganium",
@@ -5559,6 +5695,7 @@
       "api_slug": "meganium",
       "sprite_id": "meganium",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meganium.png",
+      "champions_sprite_url": null,
       "base_species_key": "meganium",
       "forme": "",
       "types": [
@@ -5587,6 +5724,7 @@
       "api_slug": "meganium",
       "sprite_id": "meganiummega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meganiummega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png",
       "base_species_key": "meganium",
       "forme": "Mega",
       "types": [
@@ -5606,8 +5744,7 @@
       ],
       "required_item": "Meganiumite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png"
+      "is_mega": true
     },
     "meowscarada": {
       "display_name": "Meowscarada",
@@ -5616,6 +5753,7 @@
       "api_slug": "meowscarada",
       "sprite_id": "meowscarada",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowscarada.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowscarada",
       "forme": "",
       "types": [
@@ -5645,6 +5783,7 @@
       "api_slug": "meowstic",
       "sprite_id": "meowstic",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowstic.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "",
       "types": [
@@ -5674,6 +5813,7 @@
       "api_slug": "meowstic-female",
       "sprite_id": "meowsticf",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowsticf.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "F",
       "types": [
@@ -5703,6 +5843,7 @@
       "api_slug": "meowstic",
       "sprite_id": "meowsticfmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowsticfmega.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "F-Mega",
       "types": [
@@ -5730,6 +5871,7 @@
       "api_slug": "meowstic",
       "sprite_id": "meowsticmmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowsticmmega.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "M-Mega",
       "types": [
@@ -5757,6 +5899,7 @@
       "api_slug": "metagross",
       "sprite_id": "metagross",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/metagross.png",
+      "champions_sprite_url": null,
       "base_species_key": "metagross",
       "forme": "",
       "types": [
@@ -5786,6 +5929,7 @@
       "api_slug": "metagross",
       "sprite_id": "metagrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/metagrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png",
       "base_species_key": "metagross",
       "forme": "Mega",
       "types": [
@@ -5805,8 +5949,7 @@
       ],
       "required_item": "Metagrossite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png"
+      "is_mega": true
     },
     "milotic": {
       "display_name": "Milotic",
@@ -5815,6 +5958,7 @@
       "api_slug": "milotic",
       "sprite_id": "milotic",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/milotic.png",
+      "champions_sprite_url": null,
       "base_species_key": "milotic",
       "forme": "",
       "types": [
@@ -5844,6 +5988,7 @@
       "api_slug": "mimikyu",
       "sprite_id": "mimikyu",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mimikyu.png",
+      "champions_sprite_url": null,
       "base_species_key": "mimikyu",
       "forme": "",
       "types": [
@@ -5872,6 +6017,7 @@
       "api_slug": "morpeko",
       "sprite_id": "morpeko",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/morpeko.png",
+      "champions_sprite_url": null,
       "base_species_key": "morpeko",
       "forme": "",
       "types": [
@@ -5900,6 +6046,7 @@
       "api_slug": "mr-mime",
       "sprite_id": "mrmime",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mrmime.png",
+      "champions_sprite_url": null,
       "base_species_key": "mrmime",
       "forme": "",
       "types": [
@@ -5930,6 +6077,7 @@
       "api_slug": "mr-rime",
       "sprite_id": "mrrime",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mrrime.png",
+      "champions_sprite_url": null,
       "base_species_key": "mrrime",
       "forme": "",
       "types": [
@@ -5960,6 +6108,7 @@
       "api_slug": "mudsdale",
       "sprite_id": "mudsdale",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mudsdale.png",
+      "champions_sprite_url": null,
       "base_species_key": "mudsdale",
       "forme": "",
       "types": [
@@ -5989,6 +6138,7 @@
       "api_slug": "musharna",
       "sprite_id": "musharna",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/musharna.png",
+      "champions_sprite_url": null,
       "base_species_key": "musharna",
       "forme": "",
       "types": [
@@ -6018,6 +6168,7 @@
       "api_slug": "ninetales",
       "sprite_id": "ninetales",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ninetales.png",
+      "champions_sprite_url": null,
       "base_species_key": "ninetales",
       "forme": "",
       "types": [
@@ -6046,6 +6197,7 @@
       "api_slug": "ninetales-alola",
       "sprite_id": "ninetalesalola",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ninetalesalola.png",
+      "champions_sprite_url": null,
       "base_species_key": "ninetales",
       "forme": "Alola",
       "types": [
@@ -6075,6 +6227,7 @@
       "api_slug": "noivern",
       "sprite_id": "noivern",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/noivern.png",
+      "champions_sprite_url": null,
       "base_species_key": "noivern",
       "forme": "",
       "types": [
@@ -6105,6 +6258,7 @@
       "api_slug": "oranguru",
       "sprite_id": "oranguru",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/oranguru.png",
+      "champions_sprite_url": null,
       "base_species_key": "oranguru",
       "forme": "",
       "types": [
@@ -6135,6 +6289,7 @@
       "api_slug": "orthworm",
       "sprite_id": "orthworm",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/orthworm.png",
+      "champions_sprite_url": null,
       "base_species_key": "orthworm",
       "forme": "",
       "types": [
@@ -6163,6 +6318,7 @@
       "api_slug": "overqwil",
       "sprite_id": "overqwil",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/overqwil.png",
+      "champions_sprite_url": null,
       "base_species_key": "overqwil",
       "forme": "",
       "types": [
@@ -6193,6 +6349,7 @@
       "api_slug": "palafin",
       "sprite_id": "palafin",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/palafin.png",
+      "champions_sprite_url": null,
       "base_species_key": "palafin",
       "forme": "",
       "types": [
@@ -6220,6 +6377,7 @@
       "api_slug": "pangoro",
       "sprite_id": "pangoro",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pangoro.png",
+      "champions_sprite_url": null,
       "base_species_key": "pangoro",
       "forme": "",
       "types": [
@@ -6250,6 +6408,7 @@
       "api_slug": "passimian",
       "sprite_id": "passimian",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/passimian.png",
+      "champions_sprite_url": null,
       "base_species_key": "passimian",
       "forme": "",
       "types": [
@@ -6278,6 +6437,7 @@
       "api_slug": "pawmot",
       "sprite_id": "pawmot",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pawmot.png",
+      "champions_sprite_url": null,
       "base_species_key": "pawmot",
       "forme": "",
       "types": [
@@ -6308,6 +6468,7 @@
       "api_slug": "pelipper",
       "sprite_id": "pelipper",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pelipper.png",
+      "champions_sprite_url": null,
       "base_species_key": "pelipper",
       "forme": "",
       "types": [
@@ -6338,6 +6499,7 @@
       "api_slug": "perrserker",
       "sprite_id": "perrserker",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/perrserker.png",
+      "champions_sprite_url": null,
       "base_species_key": "perrserker",
       "forme": "",
       "types": [
@@ -6367,6 +6529,7 @@
       "api_slug": "persian",
       "sprite_id": "persian",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/persian.png",
+      "champions_sprite_url": null,
       "base_species_key": "persian",
       "forme": "",
       "types": [
@@ -6396,6 +6559,7 @@
       "api_slug": "persian-alola",
       "sprite_id": "persianalola",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/persianalola.png",
+      "champions_sprite_url": null,
       "base_species_key": "persian",
       "forme": "Alola",
       "types": [
@@ -6425,6 +6589,7 @@
       "api_slug": "pidgeot",
       "sprite_id": "pidgeot",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pidgeot.png",
+      "champions_sprite_url": null,
       "base_species_key": "pidgeot",
       "forme": "",
       "types": [
@@ -6455,6 +6620,7 @@
       "api_slug": "pidgeot",
       "sprite_id": "pidgeotmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pidgeotmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png",
       "base_species_key": "pidgeot",
       "forme": "Mega",
       "types": [
@@ -6474,8 +6640,7 @@
       ],
       "required_item": "Pidgeotite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png"
+      "is_mega": true
     },
     "pikachu": {
       "display_name": "Pikachu",
@@ -6484,6 +6649,7 @@
       "api_slug": "pikachu",
       "sprite_id": "pikachu",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pikachu.png",
+      "champions_sprite_url": null,
       "base_species_key": "pikachu",
       "forme": "",
       "types": [
@@ -6512,6 +6678,7 @@
       "api_slug": "pincurchin",
       "sprite_id": "pincurchin",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pincurchin.png",
+      "champions_sprite_url": null,
       "base_species_key": "pincurchin",
       "forme": "",
       "types": [
@@ -6540,6 +6707,7 @@
       "api_slug": "pinsir",
       "sprite_id": "pinsir",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pinsir.png",
+      "champions_sprite_url": null,
       "base_species_key": "pinsir",
       "forme": "",
       "types": [
@@ -6569,6 +6737,7 @@
       "api_slug": "pinsir",
       "sprite_id": "pinsirmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pinsirmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png",
       "base_species_key": "pinsir",
       "forme": "Mega",
       "types": [
@@ -6588,8 +6757,7 @@
       ],
       "required_item": "Pinsirite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png"
+      "is_mega": true
     },
     "politoed": {
       "display_name": "Politoed",
@@ -6598,6 +6766,7 @@
       "api_slug": "politoed",
       "sprite_id": "politoed",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/politoed.png",
+      "champions_sprite_url": null,
       "base_species_key": "politoed",
       "forme": "",
       "types": [
@@ -6627,6 +6796,7 @@
       "api_slug": "polteageist",
       "sprite_id": "polteageist",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/polteageist.png",
+      "champions_sprite_url": null,
       "base_species_key": "polteageist",
       "forme": "",
       "types": [
@@ -6655,6 +6825,7 @@
       "api_slug": "primarina",
       "sprite_id": "primarina",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/primarina.png",
+      "champions_sprite_url": null,
       "base_species_key": "primarina",
       "forme": "",
       "types": [
@@ -6684,6 +6855,7 @@
       "api_slug": "pyroar",
       "sprite_id": "pyroar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pyroar.png",
+      "champions_sprite_url": null,
       "base_species_key": "pyroar",
       "forme": "",
       "types": [
@@ -6714,6 +6886,7 @@
       "api_slug": "pyroar",
       "sprite_id": "pyroarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pyroarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png",
       "base_species_key": "pyroar",
       "forme": "Mega",
       "types": [
@@ -6733,8 +6906,7 @@
       ],
       "required_item": "Pyroarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png"
+      "is_mega": true
     },
     "quaquaval": {
       "display_name": "Quaquaval",
@@ -6743,6 +6915,7 @@
       "api_slug": "quaquaval",
       "sprite_id": "quaquaval",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/quaquaval.png",
+      "champions_sprite_url": null,
       "base_species_key": "quaquaval",
       "forme": "",
       "types": [
@@ -6772,6 +6945,7 @@
       "api_slug": "qwilfish",
       "sprite_id": "qwilfish",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/qwilfish.png",
+      "champions_sprite_url": null,
       "base_species_key": "qwilfish",
       "forme": "",
       "types": [
@@ -6802,6 +6976,7 @@
       "api_slug": "raichu",
       "sprite_id": "raichu",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichu.png",
+      "champions_sprite_url": null,
       "base_species_key": "raichu",
       "forme": "",
       "types": [
@@ -6830,6 +7005,7 @@
       "api_slug": "raichu-alola",
       "sprite_id": "raichualola",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichualola.png",
+      "champions_sprite_url": null,
       "base_species_key": "raichu",
       "forme": "Alola",
       "types": [
@@ -6858,6 +7034,7 @@
       "api_slug": "raichu",
       "sprite_id": "raichumegax",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichumegax.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png",
       "base_species_key": "raichu",
       "forme": "Mega-X",
       "types": [
@@ -6876,8 +7053,7 @@
       ],
       "required_item": "Raichunite X",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png"
+      "is_mega": true
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
@@ -6886,6 +7062,7 @@
       "api_slug": "raichu",
       "sprite_id": "raichumegay",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichumegay.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png",
       "base_species_key": "raichu",
       "forme": "Mega-Y",
       "types": [
@@ -6904,8 +7081,7 @@
       ],
       "required_item": "Raichunite Y",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png"
+      "is_mega": true
     },
     "rampardos": {
       "display_name": "Rampardos",
@@ -6914,6 +7090,7 @@
       "api_slug": "rampardos",
       "sprite_id": "rampardos",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rampardos.png",
+      "champions_sprite_url": null,
       "base_species_key": "rampardos",
       "forme": "",
       "types": [
@@ -6942,6 +7119,7 @@
       "api_slug": "reuniclus",
       "sprite_id": "reuniclus",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/reuniclus.png",
+      "champions_sprite_url": null,
       "base_species_key": "reuniclus",
       "forme": "",
       "types": [
@@ -6971,6 +7149,7 @@
       "api_slug": "rhyperior",
       "sprite_id": "rhyperior",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rhyperior.png",
+      "champions_sprite_url": null,
       "base_species_key": "rhyperior",
       "forme": "",
       "types": [
@@ -7001,6 +7180,7 @@
       "api_slug": "rillaboom",
       "sprite_id": "rillaboom",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rillaboom.png",
+      "champions_sprite_url": null,
       "base_species_key": "rillaboom",
       "forme": "",
       "types": [
@@ -7029,6 +7209,7 @@
       "api_slug": "roserade",
       "sprite_id": "roserade",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/roserade.png",
+      "champions_sprite_url": null,
       "base_species_key": "roserade",
       "forme": "",
       "types": [
@@ -7059,6 +7240,7 @@
       "api_slug": "rotom",
       "sprite_id": "rotom",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotom.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "",
       "types": [
@@ -7087,6 +7269,7 @@
       "api_slug": "rotom-fan",
       "sprite_id": "rotomfan",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotomfan.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "Fan",
       "types": [
@@ -7115,6 +7298,7 @@
       "api_slug": "rotom-frost",
       "sprite_id": "rotomfrost",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotomfrost.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "Frost",
       "types": [
@@ -7143,6 +7327,7 @@
       "api_slug": "rotom-heat",
       "sprite_id": "rotomheat",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotomheat.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "Heat",
       "types": [
@@ -7171,6 +7356,7 @@
       "api_slug": "rotom-mow",
       "sprite_id": "rotommow",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotommow.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "Mow",
       "types": [
@@ -7199,6 +7385,7 @@
       "api_slug": "rotom-wash",
       "sprite_id": "rotomwash",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/rotomwash.png",
+      "champions_sprite_url": null,
       "base_species_key": "rotom",
       "forme": "Wash",
       "types": [
@@ -7227,6 +7414,7 @@
       "api_slug": "runerigus",
       "sprite_id": "runerigus",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/runerigus.png",
+      "champions_sprite_url": null,
       "base_species_key": "runerigus",
       "forme": "",
       "types": [
@@ -7255,6 +7443,7 @@
       "api_slug": "sableye",
       "sprite_id": "sableye",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sableye.png",
+      "champions_sprite_url": null,
       "base_species_key": "sableye",
       "forme": "",
       "types": [
@@ -7285,6 +7474,7 @@
       "api_slug": "sableye",
       "sprite_id": "sableyemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sableyemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png",
       "base_species_key": "sableye",
       "forme": "Mega",
       "types": [
@@ -7304,8 +7494,7 @@
       ],
       "required_item": "Sablenite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png"
+      "is_mega": true
     },
     "salamence": {
       "display_name": "Salamence",
@@ -7314,6 +7503,7 @@
       "api_slug": "salamence",
       "sprite_id": "salamence",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/salamence.png",
+      "champions_sprite_url": null,
       "base_species_key": "salamence",
       "forme": "",
       "types": [
@@ -7343,6 +7533,7 @@
       "api_slug": "salamence",
       "sprite_id": "salamencemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/salamencemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png",
       "base_species_key": "salamence",
       "forme": "Mega",
       "types": [
@@ -7362,8 +7553,7 @@
       ],
       "required_item": "Salamencite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png"
+      "is_mega": true
     },
     "salazzle": {
       "display_name": "Salazzle",
@@ -7372,6 +7562,7 @@
       "api_slug": "salazzle",
       "sprite_id": "salazzle",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/salazzle.png",
+      "champions_sprite_url": null,
       "base_species_key": "salazzle",
       "forme": "",
       "types": [
@@ -7401,6 +7592,7 @@
       "api_slug": "samurott",
       "sprite_id": "samurott",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/samurott.png",
+      "champions_sprite_url": null,
       "base_species_key": "samurott",
       "forme": "",
       "types": [
@@ -7429,6 +7621,7 @@
       "api_slug": "samurott-hisui",
       "sprite_id": "samurotthisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/samurotthisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "samurott",
       "forme": "Hisui",
       "types": [
@@ -7458,6 +7651,7 @@
       "api_slug": "sandaconda",
       "sprite_id": "sandaconda",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sandaconda.png",
+      "champions_sprite_url": null,
       "base_species_key": "sandaconda",
       "forme": "",
       "types": [
@@ -7487,6 +7681,7 @@
       "api_slug": "sceptile",
       "sprite_id": "sceptile",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sceptile.png",
+      "champions_sprite_url": null,
       "base_species_key": "sceptile",
       "forme": "",
       "types": [
@@ -7515,6 +7710,7 @@
       "api_slug": "sceptile",
       "sprite_id": "sceptilemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sceptilemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png",
       "base_species_key": "sceptile",
       "forme": "Mega",
       "types": [
@@ -7534,8 +7730,7 @@
       ],
       "required_item": "Sceptilite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png"
+      "is_mega": true
     },
     "scizor": {
       "display_name": "Scizor",
@@ -7544,6 +7739,7 @@
       "api_slug": "scizor",
       "sprite_id": "scizor",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scizor.png",
+      "champions_sprite_url": null,
       "base_species_key": "scizor",
       "forme": "",
       "types": [
@@ -7574,6 +7770,7 @@
       "api_slug": "scizor",
       "sprite_id": "scizormega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scizormega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png",
       "base_species_key": "scizor",
       "forme": "Mega",
       "types": [
@@ -7593,8 +7790,7 @@
       ],
       "required_item": "Scizorite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png"
+      "is_mega": true
     },
     "scolipede": {
       "display_name": "Scolipede",
@@ -7603,6 +7799,7 @@
       "api_slug": "scolipede",
       "sprite_id": "scolipede",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scolipede.png",
+      "champions_sprite_url": null,
       "base_species_key": "scolipede",
       "forme": "",
       "types": [
@@ -7633,6 +7830,7 @@
       "api_slug": "scolipede",
       "sprite_id": "scolipedemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scolipedemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png",
       "base_species_key": "scolipede",
       "forme": "Mega",
       "types": [
@@ -7652,8 +7850,7 @@
       ],
       "required_item": "Scolipite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png"
+      "is_mega": true
     },
     "scovillain": {
       "display_name": "Scovillain",
@@ -7662,6 +7859,7 @@
       "api_slug": "scovillain",
       "sprite_id": "scovillain",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scovillain.png",
+      "champions_sprite_url": null,
       "base_species_key": "scovillain",
       "forme": "",
       "types": [
@@ -7692,6 +7890,7 @@
       "api_slug": "scovillain",
       "sprite_id": "scovillainmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scovillainmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png",
       "base_species_key": "scovillain",
       "forme": "Mega",
       "types": [
@@ -7711,8 +7910,7 @@
       ],
       "required_item": "Scovillainite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png"
+      "is_mega": true
     },
     "scrafty": {
       "display_name": "Scrafty",
@@ -7721,6 +7919,7 @@
       "api_slug": "scrafty",
       "sprite_id": "scrafty",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scrafty.png",
+      "champions_sprite_url": null,
       "base_species_key": "scrafty",
       "forme": "",
       "types": [
@@ -7751,6 +7950,7 @@
       "api_slug": "scrafty",
       "sprite_id": "scraftymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scraftymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png",
       "base_species_key": "scrafty",
       "forme": "Mega",
       "types": [
@@ -7770,8 +7970,7 @@
       ],
       "required_item": "Scraftinite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png"
+      "is_mega": true
     },
     "serperior": {
       "display_name": "Serperior",
@@ -7780,6 +7979,7 @@
       "api_slug": "serperior",
       "sprite_id": "serperior",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/serperior.png",
+      "champions_sprite_url": null,
       "base_species_key": "serperior",
       "forme": "",
       "types": [
@@ -7808,6 +8008,7 @@
       "api_slug": "sharpedo",
       "sprite_id": "sharpedo",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sharpedo.png",
+      "champions_sprite_url": null,
       "base_species_key": "sharpedo",
       "forme": "",
       "types": [
@@ -7837,6 +8038,7 @@
       "api_slug": "sharpedo",
       "sprite_id": "sharpedomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sharpedomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png",
       "base_species_key": "sharpedo",
       "forme": "Mega",
       "types": [
@@ -7856,8 +8058,7 @@
       ],
       "required_item": "Sharpedonite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png"
+      "is_mega": true
     },
     "simipour": {
       "display_name": "Simipour",
@@ -7866,6 +8067,7 @@
       "api_slug": "simipour",
       "sprite_id": "simipour",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/simipour.png",
+      "champions_sprite_url": null,
       "base_species_key": "simipour",
       "forme": "",
       "types": [
@@ -7894,6 +8096,7 @@
       "api_slug": "simisage",
       "sprite_id": "simisage",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/simisage.png",
+      "champions_sprite_url": null,
       "base_species_key": "simisage",
       "forme": "",
       "types": [
@@ -7922,6 +8125,7 @@
       "api_slug": "simisear",
       "sprite_id": "simisear",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/simisear.png",
+      "champions_sprite_url": null,
       "base_species_key": "simisear",
       "forme": "",
       "types": [
@@ -7950,6 +8154,7 @@
       "api_slug": "sinistcha",
       "sprite_id": "sinistcha",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sinistcha.png",
+      "champions_sprite_url": null,
       "base_species_key": "sinistcha",
       "forme": "",
       "types": [
@@ -7979,6 +8184,7 @@
       "api_slug": "sirfetchd",
       "sprite_id": "sirfetchd",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sirfetchd.png",
+      "champions_sprite_url": null,
       "base_species_key": "sirfetchd",
       "forme": "",
       "types": [
@@ -8007,6 +8213,7 @@
       "api_slug": "skarmory",
       "sprite_id": "skarmory",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/skarmory.png",
+      "champions_sprite_url": null,
       "base_species_key": "skarmory",
       "forme": "",
       "types": [
@@ -8037,6 +8244,7 @@
       "api_slug": "skarmory",
       "sprite_id": "skarmorymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/skarmorymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png",
       "base_species_key": "skarmory",
       "forme": "Mega",
       "types": [
@@ -8056,8 +8264,7 @@
       ],
       "required_item": "Skarmorite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png"
+      "is_mega": true
     },
     "skeledirge": {
       "display_name": "Skeledirge",
@@ -8066,6 +8273,7 @@
       "api_slug": "skeledirge",
       "sprite_id": "skeledirge",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/skeledirge.png",
+      "champions_sprite_url": null,
       "base_species_key": "skeledirge",
       "forme": "",
       "types": [
@@ -8095,6 +8303,7 @@
       "api_slug": "slowbro",
       "sprite_id": "slowbro",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowbro.png",
+      "champions_sprite_url": null,
       "base_species_key": "slowbro",
       "forme": "",
       "types": [
@@ -8125,6 +8334,7 @@
       "api_slug": "slowbro-galar",
       "sprite_id": "slowbrogalar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowbrogalar.png",
+      "champions_sprite_url": null,
       "base_species_key": "slowbro",
       "forme": "Galar",
       "types": [
@@ -8155,6 +8365,7 @@
       "api_slug": "slowbro",
       "sprite_id": "slowbromega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowbromega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png",
       "base_species_key": "slowbro",
       "forme": "Mega",
       "types": [
@@ -8174,8 +8385,7 @@
       ],
       "required_item": "Slowbronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png"
+      "is_mega": true
     },
     "slowking": {
       "display_name": "Slowking",
@@ -8184,6 +8394,7 @@
       "api_slug": "slowking",
       "sprite_id": "slowking",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowking.png",
+      "champions_sprite_url": null,
       "base_species_key": "slowking",
       "forme": "",
       "types": [
@@ -8214,6 +8425,7 @@
       "api_slug": "slowking-galar",
       "sprite_id": "slowkinggalar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowkinggalar.png",
+      "champions_sprite_url": null,
       "base_species_key": "slowking",
       "forme": "Galar",
       "types": [
@@ -8244,6 +8456,7 @@
       "api_slug": "slurpuff",
       "sprite_id": "slurpuff",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slurpuff.png",
+      "champions_sprite_url": null,
       "base_species_key": "slurpuff",
       "forme": "",
       "types": [
@@ -8272,6 +8485,7 @@
       "api_slug": "sneasler",
       "sprite_id": "sneasler",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sneasler.png",
+      "champions_sprite_url": null,
       "base_species_key": "sneasler",
       "forme": "",
       "types": [
@@ -8302,6 +8516,7 @@
       "api_slug": "snorlax",
       "sprite_id": "snorlax",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/snorlax.png",
+      "champions_sprite_url": null,
       "base_species_key": "snorlax",
       "forme": "",
       "types": [
@@ -8331,6 +8546,7 @@
       "api_slug": "spiritomb",
       "sprite_id": "spiritomb",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/spiritomb.png",
+      "champions_sprite_url": null,
       "base_species_key": "spiritomb",
       "forme": "",
       "types": [
@@ -8360,6 +8576,7 @@
       "api_slug": "squawkabilly",
       "sprite_id": "squawkabilly",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/squawkabilly.png",
+      "champions_sprite_url": null,
       "base_species_key": "squawkabilly",
       "forme": "",
       "types": [
@@ -8390,6 +8607,7 @@
       "api_slug": "staraptor",
       "sprite_id": "staraptor",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/staraptor.png",
+      "champions_sprite_url": null,
       "base_species_key": "staraptor",
       "forme": "",
       "types": [
@@ -8419,6 +8637,7 @@
       "api_slug": "staraptor",
       "sprite_id": "staraptormega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/staraptormega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png",
       "base_species_key": "staraptor",
       "forme": "Mega",
       "types": [
@@ -8438,8 +8657,7 @@
       ],
       "required_item": "Staraptite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png"
+      "is_mega": true
     },
     "starmie": {
       "display_name": "Starmie",
@@ -8448,6 +8666,7 @@
       "api_slug": "starmie",
       "sprite_id": "starmie",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/starmie.png",
+      "champions_sprite_url": null,
       "base_species_key": "starmie",
       "forme": "",
       "types": [
@@ -8478,6 +8697,7 @@
       "api_slug": "starmie",
       "sprite_id": "starmiemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/starmiemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png",
       "base_species_key": "starmie",
       "forme": "Mega",
       "types": [
@@ -8497,8 +8717,7 @@
       ],
       "required_item": "Starminite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png"
+      "is_mega": true
     },
     "steelix": {
       "display_name": "Steelix",
@@ -8507,6 +8726,7 @@
       "api_slug": "steelix",
       "sprite_id": "steelix",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/steelix.png",
+      "champions_sprite_url": null,
       "base_species_key": "steelix",
       "forme": "",
       "types": [
@@ -8537,6 +8757,7 @@
       "api_slug": "steelix",
       "sprite_id": "steelixmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/steelixmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png",
       "base_species_key": "steelix",
       "forme": "Mega",
       "types": [
@@ -8556,8 +8777,7 @@
       ],
       "required_item": "Steelixite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png"
+      "is_mega": true
     },
     "stunfisk": {
       "display_name": "Stunfisk",
@@ -8566,6 +8786,7 @@
       "api_slug": "stunfisk",
       "sprite_id": "stunfisk",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/stunfisk.png",
+      "champions_sprite_url": null,
       "base_species_key": "stunfisk",
       "forme": "",
       "types": [
@@ -8596,6 +8817,7 @@
       "api_slug": "stunfisk-galar",
       "sprite_id": "stunfiskgalar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/stunfiskgalar.png",
+      "champions_sprite_url": null,
       "base_species_key": "stunfisk",
       "forme": "Galar",
       "types": [
@@ -8624,6 +8846,7 @@
       "api_slug": "swalot",
       "sprite_id": "swalot",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/swalot.png",
+      "champions_sprite_url": null,
       "base_species_key": "swalot",
       "forme": "",
       "types": [
@@ -8653,6 +8876,7 @@
       "api_slug": "swampert",
       "sprite_id": "swampert",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/swampert.png",
+      "champions_sprite_url": null,
       "base_species_key": "swampert",
       "forme": "",
       "types": [
@@ -8682,6 +8906,7 @@
       "api_slug": "swampert",
       "sprite_id": "swampertmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/swampertmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png",
       "base_species_key": "swampert",
       "forme": "Mega",
       "types": [
@@ -8701,8 +8926,7 @@
       ],
       "required_item": "Swampertite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png"
+      "is_mega": true
     },
     "sylveon": {
       "display_name": "Sylveon",
@@ -8711,6 +8935,7 @@
       "api_slug": "sylveon",
       "sprite_id": "sylveon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sylveon.png",
+      "champions_sprite_url": null,
       "base_species_key": "sylveon",
       "forme": "",
       "types": [
@@ -8739,6 +8964,7 @@
       "api_slug": "talonflame",
       "sprite_id": "talonflame",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/talonflame.png",
+      "champions_sprite_url": null,
       "base_species_key": "talonflame",
       "forme": "",
       "types": [
@@ -8768,6 +8994,7 @@
       "api_slug": "tauros",
       "sprite_id": "tauros",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tauros.png",
+      "champions_sprite_url": null,
       "base_species_key": "tauros",
       "forme": "",
       "types": [
@@ -8797,6 +9024,7 @@
       "api_slug": "tauros-paldea-aqua-breed",
       "sprite_id": "taurospaldeaaqua",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeaaqua.png",
+      "champions_sprite_url": null,
       "base_species_key": "tauros",
       "forme": "Paldea-Aqua",
       "types": [
@@ -8827,6 +9055,7 @@
       "api_slug": "tauros-paldea-blaze-breed",
       "sprite_id": "taurospaldeablaze",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeablaze.png",
+      "champions_sprite_url": null,
       "base_species_key": "tauros",
       "forme": "Paldea-Blaze",
       "types": [
@@ -8857,6 +9086,7 @@
       "api_slug": "tauros-paldea-combat-breed",
       "sprite_id": "taurospaldeacombat",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeacombat.png",
+      "champions_sprite_url": null,
       "base_species_key": "tauros",
       "forme": "Paldea-Combat",
       "types": [
@@ -8886,6 +9116,7 @@
       "api_slug": "thievul",
       "sprite_id": "thievul",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/thievul.png",
+      "champions_sprite_url": null,
       "base_species_key": "thievul",
       "forme": "",
       "types": [
@@ -8915,6 +9146,7 @@
       "api_slug": "tinkaton",
       "sprite_id": "tinkaton",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tinkaton.png",
+      "champions_sprite_url": null,
       "base_species_key": "tinkaton",
       "forme": "",
       "types": [
@@ -8945,6 +9177,7 @@
       "api_slug": "torkoal",
       "sprite_id": "torkoal",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/torkoal.png",
+      "champions_sprite_url": null,
       "base_species_key": "torkoal",
       "forme": "",
       "types": [
@@ -8974,6 +9207,7 @@
       "api_slug": "torterra",
       "sprite_id": "torterra",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/torterra.png",
+      "champions_sprite_url": null,
       "base_species_key": "torterra",
       "forme": "",
       "types": [
@@ -9003,6 +9237,7 @@
       "api_slug": "toucannon",
       "sprite_id": "toucannon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/toucannon.png",
+      "champions_sprite_url": null,
       "base_species_key": "toucannon",
       "forme": "",
       "types": [
@@ -9033,6 +9268,7 @@
       "api_slug": "toxapex",
       "sprite_id": "toxapex",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/toxapex.png",
+      "champions_sprite_url": null,
       "base_species_key": "toxapex",
       "forme": "",
       "types": [
@@ -9063,6 +9299,7 @@
       "api_slug": "toxicroak",
       "sprite_id": "toxicroak",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/toxicroak.png",
+      "champions_sprite_url": null,
       "base_species_key": "toxicroak",
       "forme": "",
       "types": [
@@ -9093,6 +9330,7 @@
       "api_slug": "toxtricity",
       "sprite_id": "toxtricity",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/toxtricity.png",
+      "champions_sprite_url": null,
       "base_species_key": "toxtricity",
       "forme": "",
       "types": [
@@ -9123,6 +9361,7 @@
       "api_slug": "toxtricity-low-key",
       "sprite_id": "toxtricitylowkey",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/toxtricitylowkey.png",
+      "champions_sprite_url": null,
       "base_species_key": "toxtricity",
       "forme": "Low-Key",
       "types": [
@@ -9153,6 +9392,7 @@
       "api_slug": "trevenant",
       "sprite_id": "trevenant",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/trevenant.png",
+      "champions_sprite_url": null,
       "base_species_key": "trevenant",
       "forme": "",
       "types": [
@@ -9183,6 +9423,7 @@
       "api_slug": "tsareena",
       "sprite_id": "tsareena",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tsareena.png",
+      "champions_sprite_url": null,
       "base_species_key": "tsareena",
       "forme": "",
       "types": [
@@ -9212,6 +9453,7 @@
       "api_slug": "typhlosion",
       "sprite_id": "typhlosion",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/typhlosion.png",
+      "champions_sprite_url": null,
       "base_species_key": "typhlosion",
       "forme": "",
       "types": [
@@ -9240,6 +9482,7 @@
       "api_slug": "typhlosion-hisui",
       "sprite_id": "typhlosionhisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/typhlosionhisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "typhlosion",
       "forme": "Hisui",
       "types": [
@@ -9269,6 +9512,7 @@
       "api_slug": "tyranitar",
       "sprite_id": "tyranitar",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tyranitar.png",
+      "champions_sprite_url": null,
       "base_species_key": "tyranitar",
       "forme": "",
       "types": [
@@ -9298,6 +9542,7 @@
       "api_slug": "tyranitar",
       "sprite_id": "tyranitarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tyranitarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png",
       "base_species_key": "tyranitar",
       "forme": "Mega",
       "types": [
@@ -9317,8 +9562,7 @@
       ],
       "required_item": "Tyranitarite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png"
+      "is_mega": true
     },
     "tyrantrum": {
       "display_name": "Tyrantrum",
@@ -9327,6 +9571,7 @@
       "api_slug": "tyrantrum",
       "sprite_id": "tyrantrum",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tyrantrum.png",
+      "champions_sprite_url": null,
       "base_species_key": "tyrantrum",
       "forme": "",
       "types": [
@@ -9356,6 +9601,7 @@
       "api_slug": "umbreon",
       "sprite_id": "umbreon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/umbreon.png",
+      "champions_sprite_url": null,
       "base_species_key": "umbreon",
       "forme": "",
       "types": [
@@ -9384,6 +9630,7 @@
       "api_slug": "vanilluxe",
       "sprite_id": "vanilluxe",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/vanilluxe.png",
+      "champions_sprite_url": null,
       "base_species_key": "vanilluxe",
       "forme": "",
       "types": [
@@ -9413,6 +9660,7 @@
       "api_slug": "vaporeon",
       "sprite_id": "vaporeon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/vaporeon.png",
+      "champions_sprite_url": null,
       "base_species_key": "vaporeon",
       "forme": "",
       "types": [
@@ -9441,6 +9689,7 @@
       "api_slug": "venusaur",
       "sprite_id": "venusaur",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/venusaur.png",
+      "champions_sprite_url": null,
       "base_species_key": "venusaur",
       "forme": "",
       "types": [
@@ -9470,6 +9719,7 @@
       "api_slug": "venusaur",
       "sprite_id": "venusaurmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/venusaurmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png",
       "base_species_key": "venusaur",
       "forme": "Mega",
       "types": [
@@ -9489,8 +9739,7 @@
       ],
       "required_item": "Venusaurite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png"
+      "is_mega": true
     },
     "victreebel": {
       "display_name": "Victreebel",
@@ -9499,6 +9748,7 @@
       "api_slug": "victreebel",
       "sprite_id": "victreebel",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/victreebel.png",
+      "champions_sprite_url": null,
       "base_species_key": "victreebel",
       "forme": "",
       "types": [
@@ -9528,6 +9778,7 @@
       "api_slug": "victreebel",
       "sprite_id": "victreebelmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/victreebelmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png",
       "base_species_key": "victreebel",
       "forme": "Mega",
       "types": [
@@ -9547,8 +9798,7 @@
       ],
       "required_item": "Victreebelite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png"
+      "is_mega": true
     },
     "vileplume": {
       "display_name": "Vileplume",
@@ -9557,6 +9807,7 @@
       "api_slug": "vileplume",
       "sprite_id": "vileplume",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/vileplume.png",
+      "champions_sprite_url": null,
       "base_species_key": "vileplume",
       "forme": "",
       "types": [
@@ -9586,6 +9837,7 @@
       "api_slug": "vivillon",
       "sprite_id": "vivillon",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/vivillon.png",
+      "champions_sprite_url": null,
       "base_species_key": "vivillon",
       "forme": "",
       "types": [
@@ -9616,6 +9868,7 @@
       "api_slug": "volcarona",
       "sprite_id": "volcarona",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/volcarona.png",
+      "champions_sprite_url": null,
       "base_species_key": "volcarona",
       "forme": "",
       "types": [
@@ -9645,6 +9898,7 @@
       "api_slug": "watchog",
       "sprite_id": "watchog",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/watchog.png",
+      "champions_sprite_url": null,
       "base_species_key": "watchog",
       "forme": "",
       "types": [
@@ -9674,6 +9928,7 @@
       "api_slug": "weavile",
       "sprite_id": "weavile",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/weavile.png",
+      "champions_sprite_url": null,
       "base_species_key": "weavile",
       "forme": "",
       "types": [
@@ -9703,6 +9958,7 @@
       "api_slug": "whimsicott",
       "sprite_id": "whimsicott",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/whimsicott.png",
+      "champions_sprite_url": null,
       "base_species_key": "whimsicott",
       "forme": "",
       "types": [
@@ -9733,6 +9989,7 @@
       "api_slug": "wigglytuff",
       "sprite_id": "wigglytuff",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/wigglytuff.png",
+      "champions_sprite_url": null,
       "base_species_key": "wigglytuff",
       "forme": "",
       "types": [
@@ -9763,6 +10020,7 @@
       "api_slug": "wyrdeer",
       "sprite_id": "wyrdeer",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/wyrdeer.png",
+      "champions_sprite_url": null,
       "base_species_key": "wyrdeer",
       "forme": "",
       "types": [
@@ -9793,6 +10051,7 @@
       "api_slug": "zoroark",
       "sprite_id": "zoroark",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/zoroark.png",
+      "champions_sprite_url": null,
       "base_species_key": "zoroark",
       "forme": "",
       "types": [
@@ -9820,6 +10079,7 @@
       "api_slug": "zoroark-hisui",
       "sprite_id": "zoroarkhisui",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/zoroarkhisui.png",
+      "champions_sprite_url": null,
       "base_species_key": "zoroark",
       "forme": "Hisui",
       "types": [
@@ -9850,6 +10110,7 @@
       "api_slug": "abomasnow",
       "sprite_id": "abomasnowmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/abomasnowmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png",
       "base_species_key": "abomasnow",
       "forme": "Mega",
       "types": [
@@ -9869,8 +10130,7 @@
       ],
       "required_item": "Abomasite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png"
+      "is_mega": true
     },
     "absolmega": {
       "display_name": "Mega Absol",
@@ -9879,6 +10139,7 @@
       "api_slug": "absol",
       "sprite_id": "absolmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/absolmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png",
       "base_species_key": "absol",
       "forme": "Mega",
       "types": [
@@ -9897,8 +10158,7 @@
       ],
       "required_item": "Absolite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png"
+      "is_mega": true
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
@@ -9907,6 +10167,7 @@
       "api_slug": "absol",
       "sprite_id": "absolmegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/absolmegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png",
       "base_species_key": "absol",
       "forme": "Mega-Z",
       "types": [
@@ -9926,8 +10187,7 @@
       ],
       "required_item": "Absolite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png"
+      "is_mega": true
     },
     "aerodactylmega": {
       "display_name": "Mega Aerodactyl",
@@ -9936,6 +10196,7 @@
       "api_slug": "aerodactyl",
       "sprite_id": "aerodactylmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aerodactylmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png",
       "base_species_key": "aerodactyl",
       "forme": "Mega",
       "types": [
@@ -9955,8 +10216,7 @@
       ],
       "required_item": "Aerodactylite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png"
+      "is_mega": true
     },
     "aggronmega": {
       "display_name": "Mega Aggron",
@@ -9965,6 +10225,7 @@
       "api_slug": "aggron",
       "sprite_id": "aggronmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/aggronmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png",
       "base_species_key": "aggron",
       "forme": "Mega",
       "types": [
@@ -9983,8 +10244,7 @@
       ],
       "required_item": "Aggronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png"
+      "is_mega": true
     },
     "alakazammega": {
       "display_name": "Mega Alakazam",
@@ -9993,6 +10253,7 @@
       "api_slug": "alakazam",
       "sprite_id": "alakazammega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/alakazammega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png",
       "base_species_key": "alakazam",
       "forme": "Mega",
       "types": [
@@ -10011,8 +10272,7 @@
       ],
       "required_item": "Alakazite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png"
+      "is_mega": true
     },
     "altariamega": {
       "display_name": "Mega Altaria",
@@ -10021,6 +10281,7 @@
       "api_slug": "altaria",
       "sprite_id": "altariamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/altariamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png",
       "base_species_key": "altaria",
       "forme": "Mega",
       "types": [
@@ -10040,8 +10301,7 @@
       ],
       "required_item": "Altarianite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png"
+      "is_mega": true
     },
     "ampharosmega": {
       "display_name": "Mega Ampharos",
@@ -10050,6 +10310,7 @@
       "api_slug": "ampharos",
       "sprite_id": "ampharosmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/ampharosmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png",
       "base_species_key": "ampharos",
       "forme": "Mega",
       "types": [
@@ -10069,8 +10330,7 @@
       ],
       "required_item": "Ampharosite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png"
+      "is_mega": true
     },
     "audinomega": {
       "display_name": "Mega Audino",
@@ -10079,6 +10339,7 @@
       "api_slug": "audino",
       "sprite_id": "audinomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/audinomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png",
       "base_species_key": "audino",
       "forme": "Mega",
       "types": [
@@ -10098,8 +10359,7 @@
       ],
       "required_item": "Audinite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png"
+      "is_mega": true
     },
     "banettemega": {
       "display_name": "Mega Banette",
@@ -10108,6 +10368,7 @@
       "api_slug": "banette",
       "sprite_id": "banettemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/banettemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png",
       "base_species_key": "banette",
       "forme": "Mega",
       "types": [
@@ -10126,8 +10387,7 @@
       ],
       "required_item": "Banettite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png"
+      "is_mega": true
     },
     "barbaraclemega": {
       "display_name": "Mega Barbaracle",
@@ -10136,6 +10396,7 @@
       "api_slug": "barbaracle",
       "sprite_id": "barbaraclemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/barbaraclemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png",
       "base_species_key": "barbaracle",
       "forme": "Mega",
       "types": [
@@ -10155,8 +10416,7 @@
       ],
       "required_item": "Barbaracite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png"
+      "is_mega": true
     },
     "baxcaliburmega": {
       "display_name": "Mega Baxcalibur",
@@ -10165,6 +10425,7 @@
       "api_slug": "baxcalibur",
       "sprite_id": "baxcaliburmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/baxcaliburmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png",
       "base_species_key": "baxcalibur",
       "forme": "Mega",
       "types": [
@@ -10184,8 +10445,7 @@
       ],
       "required_item": "Baxcalibrite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png"
+      "is_mega": true
     },
     "beedrillmega": {
       "display_name": "Mega Beedrill",
@@ -10194,6 +10454,7 @@
       "api_slug": "beedrill",
       "sprite_id": "beedrillmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/beedrillmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png",
       "base_species_key": "beedrill",
       "forme": "Mega",
       "types": [
@@ -10213,8 +10474,7 @@
       ],
       "required_item": "Beedrillite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png"
+      "is_mega": true
     },
     "blastoisemega": {
       "display_name": "Mega Blastoise",
@@ -10223,6 +10483,7 @@
       "api_slug": "blastoise",
       "sprite_id": "blastoisemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blastoisemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png",
       "base_species_key": "blastoise",
       "forme": "Mega",
       "types": [
@@ -10241,8 +10502,7 @@
       ],
       "required_item": "Blastoisinite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png"
+      "is_mega": true
     },
     "blazikenmega": {
       "display_name": "Mega Blaziken",
@@ -10251,6 +10511,7 @@
       "api_slug": "blaziken",
       "sprite_id": "blazikenmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/blazikenmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png",
       "base_species_key": "blaziken",
       "forme": "Mega",
       "types": [
@@ -10270,8 +10531,7 @@
       ],
       "required_item": "Blazikenite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png"
+      "is_mega": true
     },
     "cameruptmega": {
       "display_name": "Mega Camerupt",
@@ -10280,6 +10540,7 @@
       "api_slug": "camerupt",
       "sprite_id": "cameruptmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/cameruptmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png",
       "base_species_key": "camerupt",
       "forme": "Mega",
       "types": [
@@ -10299,8 +10560,7 @@
       ],
       "required_item": "Cameruptite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png"
+      "is_mega": true
     },
     "chandeluremega": {
       "display_name": "Mega Chandelure",
@@ -10309,6 +10569,7 @@
       "api_slug": "chandelure",
       "sprite_id": "chandeluremega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chandeluremega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png",
       "base_species_key": "chandelure",
       "forme": "Mega",
       "types": [
@@ -10328,8 +10589,7 @@
       ],
       "required_item": "Chandelurite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png"
+      "is_mega": true
     },
     "charizardmegax": {
       "display_name": "Mega Charizard X",
@@ -10338,6 +10598,7 @@
       "api_slug": "charizard",
       "sprite_id": "charizardmegax",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/charizardmegax.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png",
       "base_species_key": "charizard",
       "forme": "Mega-X",
       "types": [
@@ -10357,8 +10618,7 @@
       ],
       "required_item": "Charizardite X",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png"
+      "is_mega": true
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
@@ -10367,6 +10627,7 @@
       "api_slug": "charizard",
       "sprite_id": "charizardmegay",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/charizardmegay.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png",
       "base_species_key": "charizard",
       "forme": "Mega-Y",
       "types": [
@@ -10386,8 +10647,7 @@
       ],
       "required_item": "Charizardite Y",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png"
+      "is_mega": true
     },
     "chesnaughtmega": {
       "display_name": "Mega Chesnaught",
@@ -10396,6 +10656,7 @@
       "api_slug": "chesnaught",
       "sprite_id": "chesnaughtmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chesnaughtmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png",
       "base_species_key": "chesnaught",
       "forme": "Mega",
       "types": [
@@ -10415,8 +10676,7 @@
       ],
       "required_item": "Chesnaughtite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png"
+      "is_mega": true
     },
     "chimechomega": {
       "display_name": "Mega Chimecho",
@@ -10425,6 +10685,7 @@
       "api_slug": "chimecho",
       "sprite_id": "chimechomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/chimechomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png",
       "base_species_key": "chimecho",
       "forme": "Mega",
       "types": [
@@ -10444,8 +10705,7 @@
       ],
       "required_item": "Chimechite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png"
+      "is_mega": true
     },
     "clefablemega": {
       "display_name": "Mega Clefable",
@@ -10454,6 +10714,7 @@
       "api_slug": "clefable",
       "sprite_id": "clefablemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/clefablemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png",
       "base_species_key": "clefable",
       "forme": "Mega",
       "types": [
@@ -10473,8 +10734,7 @@
       ],
       "required_item": "Clefablite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png"
+      "is_mega": true
     },
     "crabominablemega": {
       "display_name": "Mega Crabominable",
@@ -10483,6 +10743,7 @@
       "api_slug": "crabominable",
       "sprite_id": "crabominablemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/crabominablemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png",
       "base_species_key": "crabominable",
       "forme": "Mega",
       "types": [
@@ -10502,8 +10763,7 @@
       ],
       "required_item": "Crabominite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png"
+      "is_mega": true
     },
     "delphoxmega": {
       "display_name": "Mega Delphox",
@@ -10512,6 +10772,7 @@
       "api_slug": "delphox",
       "sprite_id": "delphoxmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/delphoxmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png",
       "base_species_key": "delphox",
       "forme": "Mega",
       "types": [
@@ -10531,8 +10792,7 @@
       ],
       "required_item": "Delphoxite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png"
+      "is_mega": true
     },
     "dragalgemega": {
       "display_name": "Mega Dragalge",
@@ -10541,6 +10801,7 @@
       "api_slug": "dragalge",
       "sprite_id": "dragalgemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragalgemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png",
       "base_species_key": "dragalge",
       "forme": "Mega",
       "types": [
@@ -10560,8 +10821,7 @@
       ],
       "required_item": "Dragalgite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png"
+      "is_mega": true
     },
     "dragonitemega": {
       "display_name": "Mega Dragonite",
@@ -10570,6 +10830,7 @@
       "api_slug": "dragonite",
       "sprite_id": "dragonitemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/dragonitemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png",
       "base_species_key": "dragonite",
       "forme": "Mega",
       "types": [
@@ -10589,8 +10850,7 @@
       ],
       "required_item": "Dragoninite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png"
+      "is_mega": true
     },
     "drampamega": {
       "display_name": "Mega Drampa",
@@ -10599,6 +10859,7 @@
       "api_slug": "drampa",
       "sprite_id": "drampamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/drampamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png",
       "base_species_key": "drampa",
       "forme": "Mega",
       "types": [
@@ -10618,8 +10879,7 @@
       ],
       "required_item": "Drampanite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png"
+      "is_mega": true
     },
     "eelektrossmega": {
       "display_name": "Mega Eelektross",
@@ -10628,6 +10888,7 @@
       "api_slug": "eelektross",
       "sprite_id": "eelektrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/eelektrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png",
       "base_species_key": "eelektross",
       "forme": "Mega",
       "types": [
@@ -10646,8 +10907,7 @@
       ],
       "required_item": "Eelektrossite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png"
+      "is_mega": true
     },
     "emboarmega": {
       "display_name": "Mega Emboar",
@@ -10656,6 +10916,7 @@
       "api_slug": "emboar",
       "sprite_id": "emboarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/emboarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png",
       "base_species_key": "emboar",
       "forme": "Mega",
       "types": [
@@ -10675,8 +10936,7 @@
       ],
       "required_item": "Emboarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png"
+      "is_mega": true
     },
     "excadrillmega": {
       "display_name": "Mega Excadrill",
@@ -10685,6 +10945,7 @@
       "api_slug": "excadrill",
       "sprite_id": "excadrillmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/excadrillmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png",
       "base_species_key": "excadrill",
       "forme": "Mega",
       "types": [
@@ -10704,8 +10965,7 @@
       ],
       "required_item": "Excadrite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png"
+      "is_mega": true
     },
     "falinksmega": {
       "display_name": "Mega Falinks",
@@ -10714,6 +10974,7 @@
       "api_slug": "falinks",
       "sprite_id": "falinksmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/falinksmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png",
       "base_species_key": "falinks",
       "forme": "Mega",
       "types": [
@@ -10732,8 +10993,7 @@
       ],
       "required_item": "Falinksite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png"
+      "is_mega": true
     },
     "feraligatrmega": {
       "display_name": "Mega Feraligatr",
@@ -10742,6 +11002,7 @@
       "api_slug": "feraligatr",
       "sprite_id": "feraligatrmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/feraligatrmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png",
       "base_species_key": "feraligatr",
       "forme": "Mega",
       "types": [
@@ -10761,8 +11022,7 @@
       ],
       "required_item": "Feraligite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png"
+      "is_mega": true
     },
     "froslassmega": {
       "display_name": "Mega Froslass",
@@ -10771,6 +11031,7 @@
       "api_slug": "froslass",
       "sprite_id": "froslassmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/froslassmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png",
       "base_species_key": "froslass",
       "forme": "Mega",
       "types": [
@@ -10790,8 +11051,7 @@
       ],
       "required_item": "Froslassite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png"
+      "is_mega": true
     },
     "gallademega": {
       "display_name": "Mega Gallade",
@@ -10800,6 +11060,7 @@
       "api_slug": "gallade",
       "sprite_id": "gallademega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gallademega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png",
       "base_species_key": "gallade",
       "forme": "Mega",
       "types": [
@@ -10819,8 +11080,7 @@
       ],
       "required_item": "Galladite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png"
+      "is_mega": true
     },
     "garchompmega": {
       "display_name": "Mega Garchomp",
@@ -10829,6 +11089,7 @@
       "api_slug": "garchomp",
       "sprite_id": "garchompmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garchompmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png",
       "base_species_key": "garchomp",
       "forme": "Mega",
       "types": [
@@ -10848,8 +11109,7 @@
       ],
       "required_item": "Garchompite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png"
+      "is_mega": true
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
@@ -10858,6 +11118,7 @@
       "api_slug": "garchomp",
       "sprite_id": "garchompmegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/garchompmegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png",
       "base_species_key": "garchomp",
       "forme": "Mega-Z",
       "types": [
@@ -10876,8 +11137,7 @@
       ],
       "required_item": "Garchompite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png"
+      "is_mega": true
     },
     "gardevoirmega": {
       "display_name": "Mega Gardevoir",
@@ -10886,6 +11146,7 @@
       "api_slug": "gardevoir",
       "sprite_id": "gardevoirmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gardevoirmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png",
       "base_species_key": "gardevoir",
       "forme": "Mega",
       "types": [
@@ -10905,8 +11166,7 @@
       ],
       "required_item": "Gardevoirite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png"
+      "is_mega": true
     },
     "gengarmega": {
       "display_name": "Mega Gengar",
@@ -10915,6 +11175,7 @@
       "api_slug": "gengar",
       "sprite_id": "gengarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gengarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png",
       "base_species_key": "gengar",
       "forme": "Mega",
       "types": [
@@ -10934,8 +11195,7 @@
       ],
       "required_item": "Gengarite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png"
+      "is_mega": true
     },
     "glaliemega": {
       "display_name": "Mega Glalie",
@@ -10944,6 +11204,7 @@
       "api_slug": "glalie",
       "sprite_id": "glaliemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glaliemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png",
       "base_species_key": "glalie",
       "forme": "Mega",
       "types": [
@@ -10962,8 +11223,7 @@
       ],
       "required_item": "Glalitite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png"
+      "is_mega": true
     },
     "glimmoramega": {
       "display_name": "Mega Glimmora",
@@ -10972,6 +11232,7 @@
       "api_slug": "glimmora",
       "sprite_id": "glimmoramega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/glimmoramega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png",
       "base_species_key": "glimmora",
       "forme": "Mega",
       "types": [
@@ -10991,8 +11252,7 @@
       ],
       "required_item": "Glimmoranite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png"
+      "is_mega": true
     },
     "golisopodmega": {
       "display_name": "Mega Golisopod",
@@ -11001,6 +11261,7 @@
       "api_slug": "golisopod",
       "sprite_id": "golisopodmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golisopodmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png",
       "base_species_key": "golisopod",
       "forme": "Mega",
       "types": [
@@ -11020,8 +11281,7 @@
       ],
       "required_item": "Golisopite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png"
+      "is_mega": true
     },
     "golurkmega": {
       "display_name": "Mega Golurk",
@@ -11030,6 +11290,7 @@
       "api_slug": "golurk",
       "sprite_id": "golurkmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/golurkmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png",
       "base_species_key": "golurk",
       "forme": "Mega",
       "types": [
@@ -11049,8 +11310,7 @@
       ],
       "required_item": "Golurkite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png"
+      "is_mega": true
     },
     "greninjamega": {
       "display_name": "Mega Greninja",
@@ -11059,6 +11319,7 @@
       "api_slug": "greninja",
       "sprite_id": "greninjamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/greninjamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png",
       "base_species_key": "greninja",
       "forme": "Mega",
       "types": [
@@ -11078,8 +11339,7 @@
       ],
       "required_item": "Greninjite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png"
+      "is_mega": true
     },
     "gyaradosmega": {
       "display_name": "Mega Gyarados",
@@ -11088,6 +11348,7 @@
       "api_slug": "gyarados",
       "sprite_id": "gyaradosmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/gyaradosmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png",
       "base_species_key": "gyarados",
       "forme": "Mega",
       "types": [
@@ -11107,8 +11368,7 @@
       ],
       "required_item": "Gyaradosite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png"
+      "is_mega": true
     },
     "hawluchamega": {
       "display_name": "Mega Hawlucha",
@@ -11117,6 +11377,7 @@
       "api_slug": "hawlucha",
       "sprite_id": "hawluchamega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/hawluchamega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png",
       "base_species_key": "hawlucha",
       "forme": "Mega",
       "types": [
@@ -11136,8 +11397,7 @@
       ],
       "required_item": "Hawluchanite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png"
+      "is_mega": true
     },
     "heracrossmega": {
       "display_name": "Mega Heracross",
@@ -11146,6 +11406,7 @@
       "api_slug": "heracross",
       "sprite_id": "heracrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/heracrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png",
       "base_species_key": "heracross",
       "forme": "Mega",
       "types": [
@@ -11165,8 +11426,7 @@
       ],
       "required_item": "Heracronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png"
+      "is_mega": true
     },
     "houndoommega": {
       "display_name": "Mega Houndoom",
@@ -11175,6 +11435,7 @@
       "api_slug": "houndoom",
       "sprite_id": "houndoommega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/houndoommega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png",
       "base_species_key": "houndoom",
       "forme": "Mega",
       "types": [
@@ -11194,8 +11455,7 @@
       ],
       "required_item": "Houndoominite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png"
+      "is_mega": true
     },
     "kangaskhanmega": {
       "display_name": "Mega Kangaskhan",
@@ -11204,6 +11464,7 @@
       "api_slug": "kangaskhan",
       "sprite_id": "kangaskhanmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/kangaskhanmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png",
       "base_species_key": "kangaskhan",
       "forme": "Mega",
       "types": [
@@ -11222,8 +11483,7 @@
       ],
       "required_item": "Kangaskhanite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png"
+      "is_mega": true
     },
     "lopunnymega": {
       "display_name": "Mega Lopunny",
@@ -11232,6 +11492,7 @@
       "api_slug": "lopunny",
       "sprite_id": "lopunnymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lopunnymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png",
       "base_species_key": "lopunny",
       "forme": "Mega",
       "types": [
@@ -11251,8 +11512,7 @@
       ],
       "required_item": "Lopunnite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png"
+      "is_mega": true
     },
     "lucariomega": {
       "display_name": "Mega Lucario",
@@ -11261,6 +11521,7 @@
       "api_slug": "lucario",
       "sprite_id": "lucariomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lucariomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png",
       "base_species_key": "lucario",
       "forme": "Mega",
       "types": [
@@ -11280,8 +11541,7 @@
       ],
       "required_item": "Lucarionite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png"
+      "is_mega": true
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
@@ -11290,6 +11550,7 @@
       "api_slug": "lucario",
       "sprite_id": "lucariomegaz",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/lucariomegaz.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png",
       "base_species_key": "lucario",
       "forme": "Mega-Z",
       "types": [
@@ -11309,8 +11570,7 @@
       ],
       "required_item": "Lucarionite Z",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png"
+      "is_mega": true
     },
     "malamarmega": {
       "display_name": "Mega Malamar",
@@ -11319,6 +11579,7 @@
       "api_slug": "malamar",
       "sprite_id": "malamarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/malamarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png",
       "base_species_key": "malamar",
       "forme": "Mega",
       "types": [
@@ -11338,8 +11599,7 @@
       ],
       "required_item": "Malamarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png"
+      "is_mega": true
     },
     "manectricmega": {
       "display_name": "Mega Manectric",
@@ -11348,6 +11608,7 @@
       "api_slug": "manectric",
       "sprite_id": "manectricmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/manectricmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png",
       "base_species_key": "manectric",
       "forme": "Mega",
       "types": [
@@ -11366,8 +11627,7 @@
       ],
       "required_item": "Manectite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png"
+      "is_mega": true
     },
     "mawilemega": {
       "display_name": "Mega Mawile",
@@ -11376,6 +11636,7 @@
       "api_slug": "mawile",
       "sprite_id": "mawilemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/mawilemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png",
       "base_species_key": "mawile",
       "forme": "Mega",
       "types": [
@@ -11395,8 +11656,7 @@
       ],
       "required_item": "Mawilite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png"
+      "is_mega": true
     },
     "medichammega": {
       "display_name": "Mega Medicham",
@@ -11405,6 +11665,7 @@
       "api_slug": "medicham",
       "sprite_id": "medichammega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/medichammega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png",
       "base_species_key": "medicham",
       "forme": "Mega",
       "types": [
@@ -11424,8 +11685,7 @@
       ],
       "required_item": "Medichamite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png"
+      "is_mega": true
     },
     "meganiummega": {
       "display_name": "Mega Meganium",
@@ -11434,6 +11694,7 @@
       "api_slug": "meganium",
       "sprite_id": "meganiummega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meganiummega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png",
       "base_species_key": "meganium",
       "forme": "Mega",
       "types": [
@@ -11453,8 +11714,7 @@
       ],
       "required_item": "Meganiumite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png"
+      "is_mega": true
     },
     "meowsticfmega": {
       "display_name": "Mega Meowstic F",
@@ -11463,6 +11723,7 @@
       "api_slug": "meowstic",
       "sprite_id": "meowsticfmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowsticfmega.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "F-Mega",
       "types": [
@@ -11490,6 +11751,7 @@
       "api_slug": "meowstic",
       "sprite_id": "meowsticmmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/meowsticmmega.png",
+      "champions_sprite_url": null,
       "base_species_key": "meowstic",
       "forme": "M-Mega",
       "types": [
@@ -11517,6 +11779,7 @@
       "api_slug": "metagross",
       "sprite_id": "metagrossmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/metagrossmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png",
       "base_species_key": "metagross",
       "forme": "Mega",
       "types": [
@@ -11536,8 +11799,7 @@
       ],
       "required_item": "Metagrossite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png"
+      "is_mega": true
     },
     "pidgeotmega": {
       "display_name": "Mega Pidgeot",
@@ -11546,6 +11808,7 @@
       "api_slug": "pidgeot",
       "sprite_id": "pidgeotmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pidgeotmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png",
       "base_species_key": "pidgeot",
       "forme": "Mega",
       "types": [
@@ -11565,8 +11828,7 @@
       ],
       "required_item": "Pidgeotite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png"
+      "is_mega": true
     },
     "pinsirmega": {
       "display_name": "Mega Pinsir",
@@ -11575,6 +11837,7 @@
       "api_slug": "pinsir",
       "sprite_id": "pinsirmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pinsirmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png",
       "base_species_key": "pinsir",
       "forme": "Mega",
       "types": [
@@ -11594,8 +11857,7 @@
       ],
       "required_item": "Pinsirite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png"
+      "is_mega": true
     },
     "pyroarmega": {
       "display_name": "Mega Pyroar",
@@ -11604,6 +11866,7 @@
       "api_slug": "pyroar",
       "sprite_id": "pyroarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/pyroarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png",
       "base_species_key": "pyroar",
       "forme": "Mega",
       "types": [
@@ -11623,8 +11886,7 @@
       ],
       "required_item": "Pyroarite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png"
+      "is_mega": true
     },
     "raichumegax": {
       "display_name": "Mega Raichu X",
@@ -11633,6 +11895,7 @@
       "api_slug": "raichu",
       "sprite_id": "raichumegax",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichumegax.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png",
       "base_species_key": "raichu",
       "forme": "Mega-X",
       "types": [
@@ -11651,8 +11914,7 @@
       ],
       "required_item": "Raichunite X",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png"
+      "is_mega": true
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
@@ -11661,6 +11923,7 @@
       "api_slug": "raichu",
       "sprite_id": "raichumegay",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/raichumegay.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png",
       "base_species_key": "raichu",
       "forme": "Mega-Y",
       "types": [
@@ -11679,8 +11942,7 @@
       ],
       "required_item": "Raichunite Y",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png"
+      "is_mega": true
     },
     "sableyemega": {
       "display_name": "Mega Sableye",
@@ -11689,6 +11951,7 @@
       "api_slug": "sableye",
       "sprite_id": "sableyemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sableyemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png",
       "base_species_key": "sableye",
       "forme": "Mega",
       "types": [
@@ -11708,8 +11971,7 @@
       ],
       "required_item": "Sablenite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png"
+      "is_mega": true
     },
     "salamencemega": {
       "display_name": "Mega Salamence",
@@ -11718,6 +11980,7 @@
       "api_slug": "salamence",
       "sprite_id": "salamencemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/salamencemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png",
       "base_species_key": "salamence",
       "forme": "Mega",
       "types": [
@@ -11737,8 +12000,7 @@
       ],
       "required_item": "Salamencite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png"
+      "is_mega": true
     },
     "sceptilemega": {
       "display_name": "Mega Sceptile",
@@ -11747,6 +12009,7 @@
       "api_slug": "sceptile",
       "sprite_id": "sceptilemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sceptilemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png",
       "base_species_key": "sceptile",
       "forme": "Mega",
       "types": [
@@ -11766,8 +12029,7 @@
       ],
       "required_item": "Sceptilite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png"
+      "is_mega": true
     },
     "scizormega": {
       "display_name": "Mega Scizor",
@@ -11776,6 +12038,7 @@
       "api_slug": "scizor",
       "sprite_id": "scizormega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scizormega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png",
       "base_species_key": "scizor",
       "forme": "Mega",
       "types": [
@@ -11795,8 +12058,7 @@
       ],
       "required_item": "Scizorite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png"
+      "is_mega": true
     },
     "scolipedemega": {
       "display_name": "Mega Scolipede",
@@ -11805,6 +12067,7 @@
       "api_slug": "scolipede",
       "sprite_id": "scolipedemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scolipedemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png",
       "base_species_key": "scolipede",
       "forme": "Mega",
       "types": [
@@ -11824,8 +12087,7 @@
       ],
       "required_item": "Scolipite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png"
+      "is_mega": true
     },
     "scovillainmega": {
       "display_name": "Mega Scovillain",
@@ -11834,6 +12096,7 @@
       "api_slug": "scovillain",
       "sprite_id": "scovillainmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scovillainmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png",
       "base_species_key": "scovillain",
       "forme": "Mega",
       "types": [
@@ -11853,8 +12116,7 @@
       ],
       "required_item": "Scovillainite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png"
+      "is_mega": true
     },
     "scraftymega": {
       "display_name": "Mega Scrafty",
@@ -11863,6 +12125,7 @@
       "api_slug": "scrafty",
       "sprite_id": "scraftymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/scraftymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png",
       "base_species_key": "scrafty",
       "forme": "Mega",
       "types": [
@@ -11882,8 +12145,7 @@
       ],
       "required_item": "Scraftinite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png"
+      "is_mega": true
     },
     "sharpedomega": {
       "display_name": "Mega Sharpedo",
@@ -11892,6 +12154,7 @@
       "api_slug": "sharpedo",
       "sprite_id": "sharpedomega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sharpedomega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png",
       "base_species_key": "sharpedo",
       "forme": "Mega",
       "types": [
@@ -11911,8 +12174,7 @@
       ],
       "required_item": "Sharpedonite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png"
+      "is_mega": true
     },
     "skarmorymega": {
       "display_name": "Mega Skarmory",
@@ -11921,6 +12183,7 @@
       "api_slug": "skarmory",
       "sprite_id": "skarmorymega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/skarmorymega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png",
       "base_species_key": "skarmory",
       "forme": "Mega",
       "types": [
@@ -11940,8 +12203,7 @@
       ],
       "required_item": "Skarmorite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png"
+      "is_mega": true
     },
     "slowbromega": {
       "display_name": "Mega Slowbro",
@@ -11950,6 +12212,7 @@
       "api_slug": "slowbro",
       "sprite_id": "slowbromega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/slowbromega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png",
       "base_species_key": "slowbro",
       "forme": "Mega",
       "types": [
@@ -11969,8 +12232,7 @@
       ],
       "required_item": "Slowbronite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png"
+      "is_mega": true
     },
     "staraptormega": {
       "display_name": "Mega Staraptor",
@@ -11979,6 +12241,7 @@
       "api_slug": "staraptor",
       "sprite_id": "staraptormega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/staraptormega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png",
       "base_species_key": "staraptor",
       "forme": "Mega",
       "types": [
@@ -11998,8 +12261,7 @@
       ],
       "required_item": "Staraptite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png"
+      "is_mega": true
     },
     "starmiemega": {
       "display_name": "Mega Starmie",
@@ -12008,6 +12270,7 @@
       "api_slug": "starmie",
       "sprite_id": "starmiemega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/starmiemega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png",
       "base_species_key": "starmie",
       "forme": "Mega",
       "types": [
@@ -12027,8 +12290,7 @@
       ],
       "required_item": "Starminite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png"
+      "is_mega": true
     },
     "steelixmega": {
       "display_name": "Mega Steelix",
@@ -12037,6 +12299,7 @@
       "api_slug": "steelix",
       "sprite_id": "steelixmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/steelixmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png",
       "base_species_key": "steelix",
       "forme": "Mega",
       "types": [
@@ -12056,8 +12319,7 @@
       ],
       "required_item": "Steelixite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png"
+      "is_mega": true
     },
     "swampertmega": {
       "display_name": "Mega Swampert",
@@ -12066,6 +12328,7 @@
       "api_slug": "swampert",
       "sprite_id": "swampertmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/swampertmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png",
       "base_species_key": "swampert",
       "forme": "Mega",
       "types": [
@@ -12085,8 +12348,7 @@
       ],
       "required_item": "Swampertite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png"
+      "is_mega": true
     },
     "tyranitarmega": {
       "display_name": "Mega Tyranitar",
@@ -12095,6 +12357,7 @@
       "api_slug": "tyranitar",
       "sprite_id": "tyranitarmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/tyranitarmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png",
       "base_species_key": "tyranitar",
       "forme": "Mega",
       "types": [
@@ -12114,8 +12377,7 @@
       ],
       "required_item": "Tyranitarite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png"
+      "is_mega": true
     },
     "venusaurmega": {
       "display_name": "Mega Venusaur",
@@ -12124,6 +12386,7 @@
       "api_slug": "venusaur",
       "sprite_id": "venusaurmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/venusaurmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png",
       "base_species_key": "venusaur",
       "forme": "Mega",
       "types": [
@@ -12143,8 +12406,7 @@
       ],
       "required_item": "Venusaurite",
       "generation": null,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png"
+      "is_mega": true
     },
     "victreebelmega": {
       "display_name": "Mega Victreebel",
@@ -12153,6 +12415,7 @@
       "api_slug": "victreebel",
       "sprite_id": "victreebelmega",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/victreebelmega.png",
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png",
       "base_species_key": "victreebel",
       "forme": "Mega",
       "types": [
@@ -12172,8 +12435,7 @@
       ],
       "required_item": "Victreebelite",
       "generation": 9,
-      "is_mega": true,
-      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png"
+      "is_mega": true
     }
   },
   "base_roster": [
