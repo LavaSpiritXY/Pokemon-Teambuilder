@@ -2884,8 +2884,8 @@
     "farfetchd": {
       "display_name": "Farfetch’d",
       "source_name": "Farfetch’d",
-      "canonical_key": "farfetch-u2019d",
-      "api_slug": "farfetch-u2019d",
+      "canonical_key": "farfetchd",
+      "api_slug": "farfetchd",
       "sprite_id": "farfetchd",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/farfetchd.png",
       "base_species_key": "farfetchd",
@@ -7975,8 +7975,8 @@
     "sirfetchd": {
       "display_name": "Sirfetch’d",
       "source_name": "Sirfetch’d",
-      "canonical_key": "sirfetch-u2019d",
-      "api_slug": "sirfetch-u2019d",
+      "canonical_key": "sirfetchd",
+      "api_slug": "sirfetchd",
       "sprite_id": "sirfetchd",
       "showdown_sprite_url": "https://play.pokemonshowdown.com/sprites/dex/sirfetchd.png",
       "base_species_key": "sirfetchd",
