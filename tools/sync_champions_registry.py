@@ -54,6 +54,30 @@ def _to_id(value: Any) -> str:
     return re.sub(r"[^a-z0-9]", "", str(value or "").casefold())
 
 
+def _decode_js_string(value: Any) -> str:
+    """Decode JavaScript string escapes used in Showdown source data."""
+    text = str(value or "")
+    text = re.sub(
+        r"\\u([0-9a-fA-F]{4})",
+        lambda match: chr(int(match.group(1), 16)),
+        text,
+    )
+    text = re.sub(
+        r"\\x([0-9a-fA-F]{2})",
+        lambda match: chr(int(match.group(1), 16)),
+        text,
+    )
+    return (
+        text
+        .replace("\\'", "'")
+        .replace('\\"', '"')
+        .replace("\\n", "\n")
+        .replace("\\r", "\r")
+        .replace("\\t", "\t")
+        .replace("\\\\", "\\")
+    )
+
+
 def _quoted_value(block: str, field: str) -> Optional[str]:
     match = re.search(
         rf"""\b{re.escape(field)}\s*:\s*(?:"([^"]*)"|'([^']*)')""",
@@ -61,7 +85,9 @@ def _quoted_value(block: str, field: str) -> Optional[str]:
     )
     if not match:
         return None
-    return (match.group(1) or match.group(2) or "").strip()
+    return _decode_js_string(
+        match.group(1) or match.group(2) or ""
+    ).strip()
 
 
 def _quoted_list(block: str, field: str) -> List[str]:
@@ -75,7 +101,7 @@ def _quoted_list(block: str, field: str) -> List[str]:
 
     values = re.findall(r'''(?:"([^"]*)"|'([^']*)')''', match.group(1))
     return [
-        (first or second).strip()
+        _decode_js_string(first or second).strip()
         for first, second in values
         if (first or second).strip()
     ]
@@ -120,7 +146,7 @@ def _ability_names(block: str) -> List[str]:
     values = re.findall(r'''(?:"([^"]*)"|'([^']*)')''', match.group(1))
     output: List[str] = []
     for first, second in values:
-        value = (first or second).strip()
+        value = _decode_js_string(first or second).strip()
         if value and value not in output:
             output.append(value)
     return output
@@ -192,7 +218,11 @@ def _item_user_values(block: str) -> List[str]:
     if not match:
         return []
     return sorted(
-        set(re.findall(r'''["']([^"']+)["']''', match.group(1))),
+        {
+            _decode_js_string(value).strip()
+            for value in re.findall(r'''["']([^"']+)["']''', match.group(1))
+            if _decode_js_string(value).strip()
+        },
         key=str.casefold,
     )
 
@@ -224,7 +254,11 @@ def _object_string_map(block: str, field: str) -> Dict[str, str]:
         r'''["']([^"']+)["']\s*:\s*["']([^"']+)["']''',
         match.group(1),
     )
-    return {key: value for key, value in values}
+    return {
+        _decode_js_string(key).strip(): _decode_js_string(value).strip()
+        for key, value in values
+    }
+
 
 def _display_name(
     source_name: str,
@@ -326,6 +360,52 @@ def _canonical_key(
     normalized = re.sub(r"[^A-Za-z0-9]+", "-", normalized)
     normalized = normalized.strip("-").casefold()
     return normalized or str(base_species_key or "").strip().casefold()
+
+
+def _apply_derived_display_names(parsed: Dict[str, Dict[str, Any]]) -> None:
+    """Derive complementary form labels from generated Showdown relationships."""
+    low_key_bases = {
+        str(entry.get("base_species_key") or "").strip().casefold()
+        for entry in parsed.values()
+        if str(entry.get("forme") or "").strip().casefold() == "low-key"
+    }
+
+    for base_key in low_key_bases:
+        base = parsed.get(base_key)
+        if not base or base.get("is_mega") or base.get("forme"):
+            continue
+
+        display_name = str(base.get("display_name") or "").strip()
+        if not display_name or display_name.casefold().endswith(" high key"):
+            continue
+
+        base["display_name"] = f"{display_name} High Key"
+
+
+def _champions_sprite_url(
+    base_species_key: str,
+    forme: Optional[str],
+    is_mega: bool,
+) -> str:
+    """Build the Smogon Champions sprite URL for straightforward Mega forms."""
+    if not is_mega:
+        return ""
+
+    base = str(base_species_key or "").strip().casefold()
+    form = str(forme or "").strip().casefold()
+    if not base:
+        return ""
+
+    suffix = ""
+    if form in {"mega-x", "mega-y", "mega-z"}:
+        suffix = f"_{form.rsplit('-', 1)[-1]}"
+    elif form != "mega":
+        return ""
+
+    return (
+        "https://raw.githubusercontent.com/smogon/sprites/master/"
+        f"src/champions/s{base}-omega{suffix}.png"
+    )
 
 
 def _history_metadata() -> tuple[Optional[str], List[str]]:
@@ -441,6 +521,11 @@ def build_registry() -> Dict[str, Any]:
                 if species_id
                 else ""
             ),
+            "champions_sprite_url": _champions_sprite_url(
+                base_species_key,
+                forme,
+                is_mega,
+            ),
             "base_species_key": base_species_key,
             "forme": forme or "",
             "types": types,
@@ -453,6 +538,8 @@ def build_registry() -> Dict[str, Any]:
             "generation": generation,
             "is_mega": is_mega,
         }
+
+    _apply_derived_display_names(parsed)
 
     if not parsed:
         raise ValueError("No Champions species survived registry filtering.")
