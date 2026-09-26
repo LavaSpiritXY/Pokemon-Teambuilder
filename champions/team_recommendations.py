@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
-from champions.registry import get_mega_forms
+from champions.registry import get_mega_forms, get_species_family_key
 from champions.species_keys import canonical_species_key
 from champions.history_data import history_revision
 from champions.meta_utils import detect_archetypes
@@ -15,11 +15,11 @@ from champions.team_analyzer import TeamAnalyzer
 
 
 def _family_key(name: str) -> str:
-    """Return the base species family while preserving meaningful non-Mega forms."""
-    text = str(name or "").strip()
-    if text.lower().startswith("mega "):
-        text = text[5:].strip()
-    return canonical_species_key(text)
+    """Return the generated team-family key."""
+    family = get_species_family_key(name)
+    if family:
+        return family
+    return canonical_species_key(str(name or "").strip())
 
 
 def _meta_record(records: Mapping[str, Any], name: str) -> Dict[str, Any]:
