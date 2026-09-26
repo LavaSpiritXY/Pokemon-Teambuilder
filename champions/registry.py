@@ -221,16 +221,8 @@ def get_species_key_by_display_name(
     registry: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Return the stable canonical key for a UI display name."""
-    data = registry or load_registry()
-    target = str(display_name or "").strip().casefold()
-    if not target:
-        return ""
-
-    for entry in data["species"].values():
-        if str(entry.get("display_name", "")).strip().casefold() == target:
-            return str(entry.get("canonical_key") or "")
-
-    return ""
+    entry = get_species_by_display_name(display_name, registry)
+    return str(entry.get("canonical_key") or "")
 
 
 def get_species_by_display_name(
@@ -243,8 +235,19 @@ def get_species_by_display_name(
     if not target:
         return {}
 
+    # Exact UI display names are the primary source of truth.
     for entry in data["species"].values():
         if str(entry.get("display_name", "")).strip().casefold() == target:
+            return dict(entry)
+
+    # Some Showdown species use an implicit default form whose source name
+    # differs from the UI label derived by the registry. Toxtricity is the
+    # important example: Showdown's source name is "Toxtricity", while the
+    # app deliberately displays that default form as "Toxtricity High Key".
+    # Resolve the source-name alias without creating another hand-maintained
+    # form table.
+    for entry in data["species"].values():
+        if str(entry.get("source_name", "")).strip().casefold() == target:
             return dict(entry)
 
     return {}
