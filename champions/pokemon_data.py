@@ -62,10 +62,25 @@ def _tournament_moves_for(mon_name):
 
 def _fetch_pokemon_details_uncached(mon_name):
     clean_api_name = get_clean_api_name(mon_name)
-    sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{clean_api_name}.png"
-    box_sprite_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{clean_api_name}.png"
 
     registry_data = get_species_by_display_name(mon_name)
+    use_showdown_sprite = bool(
+        registry_data.get("is_mega")
+        and int(registry_data.get("generation") or 0) >= 9
+        and registry_data.get("showdown_sprite_url")
+    )
+
+    sprite_url = (
+        registry_data.get("showdown_sprite_url")
+        if use_showdown_sprite
+        else f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{clean_api_name}.png"
+    )
+    box_sprite_url = (
+        registry_data.get("showdown_sprite_url")
+        if use_showdown_sprite
+        else f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{clean_api_name}.png"
+    )
+
     registry_stats = registry_data.get("base_stats", {})
     stats = {
         "hp": registry_stats.get("hp", 80),
@@ -95,8 +110,16 @@ def _fetch_pokemon_details_uncached(mon_name):
             )
         if res.status_code == 200:
             data = res.json()
-            sprite_url = data.get("sprites", {}).get("other", {}).get("official-artwork", {}).get("front_default") or sprite_url
-            box_sprite_url = data.get("sprites", {}).get("front_default") or box_sprite_url
+
+            if not use_showdown_sprite:
+                sprite_url = (
+                    data.get("sprites", {})
+                    .get("other", {})
+                    .get("official-artwork", {})
+                    .get("front_default")
+                    or sprite_url
+                )
+                box_sprite_url = data.get("sprites", {}).get("front_default") or box_sprite_url
             if not registry_data:
                 types = [t["type"]["name"].title() for t in data.get("types", [])]
                 api_stats = {
