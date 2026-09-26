@@ -4,7 +4,10 @@ import streamlit as strlit
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 
-from champions.registry import get_species_by_display_name
+from champions.registry import (
+    get_species_by_canonical_key,
+    get_species_by_display_name,
+)
 from champions.move_data import display_name_for_move, get_champions_species_key
 from champions.roster_data import get_clean_api_name, get_base_api_name, display_name_for_species_key
 
@@ -64,6 +67,13 @@ def _fetch_pokemon_details_uncached(mon_name):
     clean_api_name = get_clean_api_name(mon_name)
 
     registry_data = get_species_by_display_name(mon_name)
+    if not registry_data:
+        # Be tolerant of a slot name that arrives in canonical/history form
+        # instead of the exact generated UI display label.
+        canonical_key = get_champions_species_key(mon_name)
+        if canonical_key:
+            registry_data = get_species_by_canonical_key(canonical_key)
+
     sprite_id = str(registry_data.get("sprite_id") or "").strip().casefold()
     use_showdown_sprite = bool(
         registry_data.get("is_mega")
