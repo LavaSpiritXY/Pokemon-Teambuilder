@@ -81,6 +81,15 @@ def _quoted_list(block: str, field: str) -> List[str]:
     ]
 
 
+def _integer_value(block: str, field: str) -> Optional[int]:
+    """Parse a simple integer field such as Showdown's gen metadata."""
+    match = re.search(
+        rf"""\b{re.escape(field)}\s*:\s*(-?\d+)\b""",
+        block,
+    )
+    return int(match.group(1)) if match else None
+
+
 def _numeric_object(block: str, field: str) -> Dict[str, int]:
     match = re.search(
         rf"""\b{re.escape(field)}\s*:\s*\{{([^{{}}]*)\}}""",
@@ -406,6 +415,7 @@ def build_registry() -> Dict[str, Any]:
             )
 
         source_name = _quoted_value(block, "name") or species_id
+        generation = _integer_value(block, "gen")
         parsed[species_id] = {
             "display_name": _display_name(
                 source_name,
@@ -425,6 +435,12 @@ def build_registry() -> Dict[str, Any]:
                 forme,
                 is_mega,
             ),
+            "sprite_id": species_id,
+            "showdown_sprite_url": (
+                f"https://play.pokemonshowdown.com/sprites/dex/{species_id}.png"
+                if species_id
+                else ""
+            ),
             "base_species_key": base_species_key,
             "forme": forme or "",
             "types": types,
@@ -434,6 +450,7 @@ def build_registry() -> Dict[str, Any]:
             },
             "abilities": abilities,
             "required_item": _quoted_value(block, "requiredItem"),
+            "generation": generation,
             "is_mega": is_mega,
         }
 
