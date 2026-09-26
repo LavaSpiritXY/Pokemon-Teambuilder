@@ -1,4 +1,9 @@
-from champions.registry import REGISTRY_SCHEMA_VERSION, validate_registry
+from champions.registry import (
+    REGISTRY_SCHEMA_VERSION,
+    get_base_species_for_name,
+    get_species_family_key,
+    validate_registry,
+)
 from tools.sync_champions_registry import (
     _api_slug,
     _canonical_key,
@@ -111,6 +116,15 @@ export const Pokedex = {
     assert "baseStats" in parsed["charizard"]
     assert "abilities" in parsed["charizard"]
 
+
+
+
+def test_generated_mega_family_resolution():
+    assert get_base_species_for_name("Mega Charizard Y")["display_name"] == "Charizard"
+    assert get_base_species_for_name("Mega Absol Z")["display_name"] == "Absol"
+    assert get_base_species_for_name("Mega Meowstic F")["display_name"] == "Meowstic"
+    assert get_species_family_key("Mega Charizard Y") == "charizard"
+    assert get_species_family_key("Arcanine Hisui") == "arcanine-hisui"
 
 def test_mega_display_name_normalisation():
     assert _display_name(
