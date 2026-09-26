@@ -2,6 +2,7 @@ from champions.registry import (
     REGISTRY_SCHEMA_VERSION,
     get_base_species_for_name,
     get_species_family_key,
+    load_registry,
     validate_registry,
 )
 from tools.sync_champions_registry import (
@@ -118,6 +119,29 @@ export const Pokedex = {
 
 
 
+
+
+
+def test_modern_mega_sprite_metadata_is_generated():
+    registry = load_registry()
+    for name in (
+        "Mega Absol Z",
+        "Mega Garchomp Z",
+        "Mega Lucario Z",
+        "Mega Golisopod",
+        "Mega Salamence",
+        "Mega Baxcalibur",
+    ):
+        entry = next(
+            value
+            for value in registry["species"].values()
+            if value.get("display_name") == name
+        )
+        assert entry["sprite_id"]
+        assert entry["showdown_sprite_url"].endswith(
+            f"/{entry['sprite_id']}.png"
+        )
+        assert entry["generation"] == 9
 
 def test_generated_mega_family_resolution():
     assert get_base_species_for_name("Mega Charizard Y")["display_name"] == "Charizard"
