@@ -74,14 +74,28 @@ def _fetch_pokemon_details_uncached(mon_name):
         )
     )
 
+    champions_sprite_url = str(
+        registry_data.get("champions_sprite_url") or ""
+    ).strip()
+    preferred_registry_sprite = (
+        champions_sprite_url
+        if champions_sprite_url
+        else (
+            registry_data.get("showdown_sprite_url")
+            if use_showdown_sprite
+            else ""
+        )
+    )
+    use_registry_sprite = bool(preferred_registry_sprite)
+
     sprite_url = (
-        registry_data.get("showdown_sprite_url")
-        if use_showdown_sprite
+        preferred_registry_sprite
+        if use_registry_sprite
         else f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{clean_api_name}.png"
     )
     box_sprite_url = (
-        registry_data.get("showdown_sprite_url")
-        if use_showdown_sprite
+        preferred_registry_sprite
+        if use_registry_sprite
         else f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{clean_api_name}.png"
     )
 
@@ -115,7 +129,7 @@ def _fetch_pokemon_details_uncached(mon_name):
         if res.status_code == 200:
             data = res.json()
 
-            if not use_showdown_sprite:
+            if not use_registry_sprite:
                 sprite_url = (
                     data.get("sprites", {})
                     .get("other", {})
