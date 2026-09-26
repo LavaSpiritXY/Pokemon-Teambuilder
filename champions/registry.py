@@ -242,6 +242,47 @@ def get_species_by_display_name(
 
     return {}
 
+def get_base_species_for_name(
+    name: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Resolve a species/form name to its generated base-species record."""
+    data = registry or load_registry()
+    entry = get_species_by_display_name(str(name or "").strip(), data)
+    if not entry:
+        entry = get_species_by_canonical_key(str(name or "").strip(), data)
+    if not entry:
+        return {}
+
+    base_key = str(entry.get("base_species_key") or "").strip().casefold()
+    if not base_key:
+        return dict(entry)
+
+    base = data["species"].get(base_key)
+    return dict(base) if isinstance(base, dict) else {}
+
+
+def get_mega_forms_for_base(
+    name: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Dict[str, Any]]:
+    """Return every generated Mega form belonging to the same base species."""
+    data = registry or load_registry()
+    base = get_base_species_for_name(name, data)
+    base_key = str(base.get("base_species_key") or "").strip().casefold()
+    if not base_key:
+        base_key = str(base.get("canonical_key") or "").strip().casefold()
+
+    if not base_key:
+        return {}
+
+    return {
+        key: dict(entry)
+        for key, entry in data["megas"].items()
+        if str(entry.get("base_species_key") or "").strip().casefold() == base_key
+    }
+
+
 def get_mega_forms(registry: Optional[Dict[str, Any]] = None) -> Dict[str, Dict[str, Any]]:
     data = registry or load_registry()
     return dict(data["megas"])
@@ -265,6 +306,8 @@ __all__ = [
     "get_species_by_display_name",
     "get_species_key_by_display_name",
     "get_species_by_canonical_key",
+    "get_base_species_for_name",
+    "get_mega_forms_for_base",
     "get_mega_forms",
     "get_base_roster",
 ]
