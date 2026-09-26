@@ -64,10 +64,14 @@ def _fetch_pokemon_details_uncached(mon_name):
     clean_api_name = get_clean_api_name(mon_name)
 
     registry_data = get_species_by_display_name(mon_name)
+    sprite_id = str(registry_data.get("sprite_id") or "").strip().casefold()
     use_showdown_sprite = bool(
         registry_data.get("is_mega")
-        and int(registry_data.get("generation") or 0) >= 9
         and registry_data.get("showdown_sprite_url")
+        and (
+            int(registry_data.get("generation") or 0) >= 9
+            or sprite_id.endswith("megaz")
+        )
     )
 
     sprite_url = (
