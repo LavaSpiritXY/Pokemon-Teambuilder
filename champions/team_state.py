@@ -3,7 +3,7 @@ from typing import Any, Dict
 import streamlit as strlit
 
 from champions.item_data import MEGA_STONE_MAP
-from champions.registry import get_species_by_display_name
+from champions.registry import get_base_species_for_name, get_species_by_display_name
 
 from champions.pokemon_data import fetch_pokemon_details
 from champions.smogon_data import get_smogon_stats_for
@@ -111,19 +111,9 @@ def on_species_change(slot_idx):
 
 
 def _base_species_for_mega(mega_species: str) -> str:
-    """Return the base species for a supported Mega form.
-
-    Mega variants such as Charizard X/Y and Raichu X/Y share the same base
-    species even though their full Mega display names include the variant.
-    """
-    value = str(mega_species or "").strip()
-    if value.lower().startswith("mega "):
-        value = value[5:].strip()
-    for suffix in (" X", " Y", " Z"):
-        if value.endswith(suffix):
-            value = value[:-2].rstrip()
-            break
-    return value
+    """Return the generated base-species display name for a Mega form."""
+    entry = get_base_species_for_name(mega_species)
+    return str(entry.get("display_name") or mega_species or "").strip()
 
 
 def on_item_change(slot_idx):
@@ -137,19 +127,10 @@ def on_item_change(slot_idx):
     if not selected_item:
         return
 
-    def mega_base(name):
-        value = str(name or "").strip()
-        if value.lower().startswith("mega "):
-            value = value[5:].strip()
-        for suffix in (" X", " Y", " Z"):
-            if value.endswith(suffix):
-                value = value[:-2].strip()
-                break
-        return value
 
     current_slot = ensure_slot_structure(slot_idx)
     current_species = str(current_slot.get("name") or "")
-    current_base = mega_base(current_species)
+    current_base = _base_species_for_mega(current_species)
 
     target_mega = next(
         (species for species, stone in MEGA_STONE_MAP.items() if stone == selected_item),
@@ -157,7 +138,7 @@ def on_item_change(slot_idx):
     )
 
     # Matching Mega Stone: promote from the base or switch between Mega forms.
-    if target_mega and current_base.casefold() == mega_base(target_mega).casefold():
+    if target_mega and current_base.casefold() == _base_species_for_mega(target_mega).casefold():
         current_slot["name"] = target_mega
         mega_data = get_species_by_display_name(target_mega)
         current_slot["ability"] = (
