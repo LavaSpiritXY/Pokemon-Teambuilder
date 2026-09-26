@@ -2882,7 +2882,7 @@
       "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png"
     },
     "farfetchd": {
-      "display_name": "Farfetch’d",
+      "display_name": "Farfetch'd",
       "source_name": "Farfetch’d",
       "canonical_key": "farfetchd",
       "api_slug": "farfetchd",
@@ -7973,7 +7973,7 @@
       "is_mega": false
     },
     "sirfetchd": {
-      "display_name": "Sirfetch’d",
+      "display_name": "Sirfetch'd",
       "source_name": "Sirfetch’d",
       "canonical_key": "sirfetchd",
       "api_slug": "sirfetchd",
@@ -12245,7 +12245,7 @@
     "Espeon",
     "Excadrill",
     "Falinks",
-    "Farfetch’d",
+    "Farfetch'd",
     "Farigiraf",
     "Feraligatr",
     "Flapple",
@@ -12380,7 +12380,7 @@
     "Simisage",
     "Simisear",
     "Sinistcha",
-    "Sirfetch’d",
+    "Sirfetch'd",
     "Skarmory",
     "Skeledirge",
     "Slowbro",
