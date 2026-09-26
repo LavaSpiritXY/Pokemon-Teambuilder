@@ -126,6 +126,7 @@ def validate_registry(payload: Dict[str, Any]) -> None:
             "canonical_key",
             "sprite_id",
             "showdown_sprite_url",
+            "champions_sprite_url",
         ):
             value = entry.get(optional)
             if value is not None and (not isinstance(value, str) or not value.strip()):
