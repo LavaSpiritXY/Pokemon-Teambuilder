@@ -8,6 +8,9 @@ from champions.registry import (
 from tools.sync_champions_registry import (
     _api_slug,
     _canonical_key,
+    _decode_js_string,
+    _apply_derived_display_names,
+    _champions_sprite_url,
     _display_name,
     _learnset_move_ids,
     _nonstandard_value,
@@ -141,6 +144,7 @@ def test_modern_mega_sprite_metadata_is_generated():
         assert entry["showdown_sprite_url"].endswith(
             f"/{entry['sprite_id']}.png"
         )
+        assert entry["champions_sprite_url"].endswith(".png")
         if name.endswith(" Z"):
             assert entry["generation"] == 9
 
@@ -150,6 +154,40 @@ def test_generated_mega_family_resolution():
     assert get_base_species_for_name("Mega Meowstic F")["display_name"] == "Meowstic"
     assert get_species_family_key("Mega Charizard Y") == "charizard"
     assert get_species_family_key("Arcanine Hisui") == "arcanine-hisui"
+
+def test_showdown_js_unicode_escapes_are_decoded():
+    assert _decode_js_string(r"Farfetch\u2019d") == "Farfetch’d"
+    assert _api_slug("Farfetch’d", "farfetchd", "Farfetch’d", "", False) == "farfetchd"
+    assert _api_slug("Sirfetch’d", "sirfetchd", "Sirfetch’d", "", False) == "sirfetchd"
+
+
+def test_low_key_relationship_derives_high_key_label():
+    parsed = {
+        "toxtricity": {
+            "display_name": "Toxtricity",
+            "base_species_key": "toxtricity",
+            "forme": "",
+            "is_mega": False,
+        },
+        "toxtricitylowkey": {
+            "display_name": "Toxtricity Low Key",
+            "base_species_key": "toxtricity",
+            "forme": "Low-Key",
+            "is_mega": False,
+        },
+    }
+    _apply_derived_display_names(parsed)
+    assert parsed["toxtricity"]["display_name"] == "Toxtricity High Key"
+
+
+def test_champions_sprite_url_uses_champions_artwork_naming():
+    assert _champions_sprite_url("absol", "Mega-Z", True).endswith("/sabsol-omega_z.png")
+    assert _champions_sprite_url("garchomp", "Mega-Z", True).endswith("/sgarchomp-omega_z.png")
+    assert _champions_sprite_url("lucario", "Mega-Z", True).endswith("/slucario-omega_z.png")
+    assert _champions_sprite_url("golisopod", "Mega", True).endswith("/sgolisopod-omega.png")
+    assert _champions_sprite_url("charizard", "Mega-X", True).endswith("/scharizard-omega_x.png")
+    assert _champions_sprite_url("meowstic", "Mega-F", True) == ""
+
 
 def test_mega_display_name_normalisation():
     assert _display_name(
