@@ -4,7 +4,7 @@ from champions_meta import ChampionsMetaStore, _candidate_keys
 def test_mega_form_candidates_include_canonical_species_key():
     candidates = _candidate_keys("Mega Charizard Y")
     assert candidates[0] == "mega charizard y"
-    assert "charizard-y" in candidates
+    assert "charizard y" in candidates
     assert "charizard" in candidates
 
 
@@ -24,3 +24,18 @@ def test_mega_form_prefers_exact_canonical_record(tmp_path):
     assert record is not None
     assert record["display_name"] == "Mega Charizard Y"
     assert record["move_sample_size"] == 42
+
+
+
+def test_regional_and_new_form_candidates_use_registry_metadata():
+    hisui = _candidate_keys("Arcanine Hisui")
+    assert hisui[0] == "arcanine hisui"
+    assert "arcanine" in hisui
+
+    alola = _candidate_keys("Persian Alola")
+    assert alola[0] == "persian alola"
+    assert "persian" in alola
+
+    mega_form = _candidate_keys("Mega Meowstic F")
+    assert mega_form[0] == "mega meowstic f"
+    assert "meowstic" in mega_form
