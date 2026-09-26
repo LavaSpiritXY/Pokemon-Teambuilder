@@ -17,6 +17,7 @@ from typing import Dict, List
 import re
 
 from champions.registry import (
+    get_base_species_for_name,
     get_mega_forms,
     get_species,
     get_species_by_display_name,
@@ -105,14 +106,9 @@ POKEMON_SPECIFIC_ITEMS = get_pokemon_specific_items()
 
 
 def _base_species_for_mega(species: str) -> str:
-    """Return the base species name for a base or Mega display name."""
-    value = str(species or "").strip()
-    if value.casefold().startswith("mega "):
-        value = value[5:].strip()
-        parts = value.rsplit(" ", 1)
-        if len(parts) == 2 and parts[1].casefold() in {"x", "y", "z"}:
-            value = parts[0]
-    return value
+    """Return the generated base-species display name for a Mega form."""
+    entry = get_base_species_for_name(species)
+    return str(entry.get("display_name") or species or "").strip()
 
 
 def get_contextual_item_groups(species: str):
