@@ -69,7 +69,8 @@
       ],
       "required_item": "Abomasite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png"
     },
     "absol": {
       "display_name": "Absol",
@@ -125,7 +126,8 @@
       ],
       "required_item": "Absolite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png"
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
@@ -153,7 +155,8 @@
       ],
       "required_item": "Absolite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png"
     },
     "aegislash": {
       "display_name": "Aegislash",
@@ -239,7 +242,8 @@
       ],
       "required_item": "Aerodactylite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png"
     },
     "aggron": {
       "display_name": "Aggron",
@@ -296,7 +300,8 @@
       ],
       "required_item": "Aggronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png"
     },
     "alakazam": {
       "display_name": "Alakazam",
@@ -352,7 +357,8 @@
       ],
       "required_item": "Alakazite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png"
     },
     "alcremie": {
       "display_name": "Alcremie",
@@ -437,7 +443,8 @@
       ],
       "required_item": "Altarianite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png"
     },
     "ampharos": {
       "display_name": "Ampharos",
@@ -493,7 +500,8 @@
       ],
       "required_item": "Ampharosite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png"
     },
     "annihilape": {
       "display_name": "Annihilape",
@@ -873,7 +881,8 @@
       ],
       "required_item": "Audinite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png"
     },
     "aurorus": {
       "display_name": "Aurorus",
@@ -1047,7 +1056,8 @@
       ],
       "required_item": "Banettite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png"
     },
     "barbaracle": {
       "display_name": "Barbaracle",
@@ -1105,7 +1115,8 @@
       ],
       "required_item": "Barbaracite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png"
     },
     "basculegion": {
       "display_name": "Basculegion",
@@ -1251,7 +1262,8 @@
       ],
       "required_item": "Baxcalibrite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png"
     },
     "beartic": {
       "display_name": "Beartic",
@@ -1337,7 +1349,8 @@
       ],
       "required_item": "Beedrillite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png"
     },
     "bellibolt": {
       "display_name": "Bellibolt",
@@ -1421,7 +1434,8 @@
       ],
       "required_item": "Blastoisinite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png"
     },
     "blaziken": {
       "display_name": "Blaziken",
@@ -1478,7 +1492,8 @@
       ],
       "required_item": "Blazikenite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png"
     },
     "camerupt": {
       "display_name": "Camerupt",
@@ -1536,7 +1551,8 @@
       ],
       "required_item": "Cameruptite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png"
     },
     "castform": {
       "display_name": "Castform",
@@ -1650,7 +1666,8 @@
       ],
       "required_item": "Chandelurite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png"
     },
     "charizard": {
       "display_name": "Charizard",
@@ -1707,7 +1724,8 @@
       ],
       "required_item": "Charizardite X",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png"
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
@@ -1735,7 +1753,8 @@
       ],
       "required_item": "Charizardite Y",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png"
     },
     "chesnaught": {
       "display_name": "Chesnaught",
@@ -1792,7 +1811,8 @@
       ],
       "required_item": "Chesnaughtite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png"
     },
     "chimecho": {
       "display_name": "Chimecho",
@@ -1847,7 +1867,8 @@
       ],
       "required_item": "Chimechite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png"
     },
     "cinderace": {
       "display_name": "Cinderace",
@@ -1959,7 +1980,8 @@
       ],
       "required_item": "Clefablite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png"
     },
     "cofagrigus": {
       "display_name": "Cofagrigus",
@@ -2103,7 +2125,8 @@
       ],
       "required_item": "Crabominite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png"
     },
     "decidueye": {
       "display_name": "Decidueye",
@@ -2248,7 +2271,8 @@
       ],
       "required_item": "Delphoxite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png"
     },
     "diggersby": {
       "display_name": "Diggersby",
@@ -2364,7 +2388,8 @@
       ],
       "required_item": "Dragalgite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png"
     },
     "dragapult": {
       "display_name": "Dragapult",
@@ -2451,7 +2476,8 @@
       ],
       "required_item": "Dragoninite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png"
     },
     "drampa": {
       "display_name": "Drampa",
@@ -2509,7 +2535,8 @@
       ],
       "required_item": "Drampanite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png"
     },
     "eelektross": {
       "display_name": "Eelektross",
@@ -2563,7 +2590,8 @@
       ],
       "required_item": "Eelektrossite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png"
     },
     "emboar": {
       "display_name": "Emboar",
@@ -2620,7 +2648,8 @@
       ],
       "required_item": "Emboarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png"
     },
     "emolga": {
       "display_name": "Emolga",
@@ -2793,7 +2822,8 @@
       ],
       "required_item": "Excadrite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png"
     },
     "falinks": {
       "display_name": "Falinks",
@@ -2848,11 +2878,12 @@
       ],
       "required_item": "Falinksite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png"
     },
     "farfetchd": {
-      "display_name": "Farfetch\\u2019d",
-      "source_name": "Farfetch\\u2019d",
+      "display_name": "Farfetch’d",
+      "source_name": "Farfetch’d",
       "canonical_key": "farfetch-u2019d",
       "api_slug": "farfetch-u2019d",
       "sprite_id": "farfetchd",
@@ -2964,7 +2995,8 @@
       ],
       "required_item": "Feraligite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png"
     },
     "flapple": {
       "display_name": "Flapple",
@@ -3164,7 +3196,8 @@
       ],
       "required_item": "Froslassite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png"
     },
     "furfrou": {
       "display_name": "Furfrou",
@@ -3249,7 +3282,8 @@
       ],
       "required_item": "Galladite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png"
     },
     "garbodor": {
       "display_name": "Garbodor",
@@ -3335,7 +3369,8 @@
       ],
       "required_item": "Garchompite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png"
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
@@ -3362,7 +3397,8 @@
       ],
       "required_item": "Garchompite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png"
     },
     "gardevoir": {
       "display_name": "Gardevoir",
@@ -3420,7 +3456,8 @@
       ],
       "required_item": "Gardevoirite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png"
     },
     "garganacl": {
       "display_name": "Garganacl",
@@ -3505,7 +3542,8 @@
       ],
       "required_item": "Gengarite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png"
     },
     "gholdengo": {
       "display_name": "Gholdengo",
@@ -3617,7 +3655,8 @@
       ],
       "required_item": "Glalitite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png"
     },
     "glimmora": {
       "display_name": "Glimmora",
@@ -3674,7 +3713,8 @@
       ],
       "required_item": "Glimmoranite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png"
     },
     "gliscor": {
       "display_name": "Gliscor",
@@ -3788,7 +3828,8 @@
       ],
       "required_item": "Golisopite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png"
     },
     "golurk": {
       "display_name": "Golurk",
@@ -3846,7 +3887,8 @@
       ],
       "required_item": "Golurkite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png"
     },
     "goodra": {
       "display_name": "Goodra",
@@ -4021,7 +4063,8 @@
       ],
       "required_item": "Greninjite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png"
     },
     "grimmsnarl": {
       "display_name": "Grimmsnarl",
@@ -4108,7 +4151,8 @@
       ],
       "required_item": "Gyaradosite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png"
     },
     "hatterene": {
       "display_name": "Hatterene",
@@ -4196,7 +4240,8 @@
       ],
       "required_item": "Hawluchanite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png"
     },
     "heliolisk": {
       "display_name": "Heliolisk",
@@ -4284,7 +4329,8 @@
       ],
       "required_item": "Heracronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png"
     },
     "hippowdon": {
       "display_name": "Hippowdon",
@@ -4370,7 +4416,8 @@
       ],
       "required_item": "Houndoominite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png"
     },
     "houndstone": {
       "display_name": "Houndstone",
@@ -4686,7 +4733,8 @@
       ],
       "required_item": "Kangaskhanite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png"
     },
     "kingambit": {
       "display_name": "Kingambit",
@@ -4949,7 +4997,8 @@
       ],
       "required_item": "Lopunnite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png"
     },
     "lucario": {
       "display_name": "Lucario",
@@ -5007,7 +5056,8 @@
       ],
       "required_item": "Lucarionite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png"
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
@@ -5035,7 +5085,8 @@
       ],
       "required_item": "Lucarionite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png"
     },
     "luxray": {
       "display_name": "Luxray",
@@ -5265,7 +5316,8 @@
       ],
       "required_item": "Malamarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png"
     },
     "mamoswine": {
       "display_name": "Mamoswine",
@@ -5351,7 +5403,8 @@
       ],
       "required_item": "Manectite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png"
     },
     "maushold": {
       "display_name": "Maushold",
@@ -5438,7 +5491,8 @@
       ],
       "required_item": "Mawilite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png"
     },
     "medicham": {
       "display_name": "Medicham",
@@ -5495,7 +5549,8 @@
       ],
       "required_item": "Medichamite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png"
     },
     "meganium": {
       "display_name": "Meganium",
@@ -5551,7 +5606,8 @@
       ],
       "required_item": "Meganiumite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png"
     },
     "meowscarada": {
       "display_name": "Meowscarada",
@@ -5749,7 +5805,8 @@
       ],
       "required_item": "Metagrossite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png"
     },
     "milotic": {
       "display_name": "Milotic",
@@ -6417,7 +6474,8 @@
       ],
       "required_item": "Pidgeotite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png"
     },
     "pikachu": {
       "display_name": "Pikachu",
@@ -6530,7 +6588,8 @@
       ],
       "required_item": "Pinsirite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png"
     },
     "politoed": {
       "display_name": "Politoed",
@@ -6674,7 +6733,8 @@
       ],
       "required_item": "Pyroarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png"
     },
     "quaquaval": {
       "display_name": "Quaquaval",
@@ -6816,7 +6876,8 @@
       ],
       "required_item": "Raichunite X",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png"
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
@@ -6843,7 +6904,8 @@
       ],
       "required_item": "Raichunite Y",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png"
     },
     "rampardos": {
       "display_name": "Rampardos",
@@ -7242,7 +7304,8 @@
       ],
       "required_item": "Sablenite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png"
     },
     "salamence": {
       "display_name": "Salamence",
@@ -7299,7 +7362,8 @@
       ],
       "required_item": "Salamencite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png"
     },
     "salazzle": {
       "display_name": "Salazzle",
@@ -7470,7 +7534,8 @@
       ],
       "required_item": "Sceptilite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png"
     },
     "scizor": {
       "display_name": "Scizor",
@@ -7528,7 +7593,8 @@
       ],
       "required_item": "Scizorite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png"
     },
     "scolipede": {
       "display_name": "Scolipede",
@@ -7586,7 +7652,8 @@
       ],
       "required_item": "Scolipite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png"
     },
     "scovillain": {
       "display_name": "Scovillain",
@@ -7644,7 +7711,8 @@
       ],
       "required_item": "Scovillainite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png"
     },
     "scrafty": {
       "display_name": "Scrafty",
@@ -7702,7 +7770,8 @@
       ],
       "required_item": "Scraftinite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png"
     },
     "serperior": {
       "display_name": "Serperior",
@@ -7787,7 +7856,8 @@
       ],
       "required_item": "Sharpedonite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png"
     },
     "simipour": {
       "display_name": "Simipour",
@@ -7903,8 +7973,8 @@
       "is_mega": false
     },
     "sirfetchd": {
-      "display_name": "Sirfetch\\u2019d",
-      "source_name": "Sirfetch\\u2019d",
+      "display_name": "Sirfetch’d",
+      "source_name": "Sirfetch’d",
       "canonical_key": "sirfetch-u2019d",
       "api_slug": "sirfetch-u2019d",
       "sprite_id": "sirfetchd",
@@ -7986,7 +8056,8 @@
       ],
       "required_item": "Skarmorite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png"
     },
     "skeledirge": {
       "display_name": "Skeledirge",
@@ -8103,7 +8174,8 @@
       ],
       "required_item": "Slowbronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png"
     },
     "slowking": {
       "display_name": "Slowking",
@@ -8366,7 +8438,8 @@
       ],
       "required_item": "Staraptite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png"
     },
     "starmie": {
       "display_name": "Starmie",
@@ -8424,7 +8497,8 @@
       ],
       "required_item": "Starminite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png"
     },
     "steelix": {
       "display_name": "Steelix",
@@ -8482,7 +8556,8 @@
       ],
       "required_item": "Steelixite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png"
     },
     "stunfisk": {
       "display_name": "Stunfisk",
@@ -8626,7 +8701,8 @@
       ],
       "required_item": "Swampertite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png"
     },
     "sylveon": {
       "display_name": "Sylveon",
@@ -9011,7 +9087,7 @@
       "is_mega": false
     },
     "toxtricity": {
-      "display_name": "Toxtricity",
+      "display_name": "Toxtricity High Key",
       "source_name": "Toxtricity",
       "canonical_key": "toxtricity",
       "api_slug": "toxtricity",
@@ -9241,7 +9317,8 @@
       ],
       "required_item": "Tyranitarite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png"
     },
     "tyrantrum": {
       "display_name": "Tyrantrum",
@@ -9412,7 +9489,8 @@
       ],
       "required_item": "Venusaurite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png"
     },
     "victreebel": {
       "display_name": "Victreebel",
@@ -9469,7 +9547,8 @@
       ],
       "required_item": "Victreebelite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png"
     },
     "vileplume": {
       "display_name": "Vileplume",
@@ -9790,7 +9869,8 @@
       ],
       "required_item": "Abomasite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabomasnow-omega.png"
     },
     "absolmega": {
       "display_name": "Mega Absol",
@@ -9817,7 +9897,8 @@
       ],
       "required_item": "Absolite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega.png"
     },
     "absolmegaz": {
       "display_name": "Mega Absol Z",
@@ -9845,7 +9926,8 @@
       ],
       "required_item": "Absolite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sabsol-omega_z.png"
     },
     "aerodactylmega": {
       "display_name": "Mega Aerodactyl",
@@ -9873,7 +9955,8 @@
       ],
       "required_item": "Aerodactylite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saerodactyl-omega.png"
     },
     "aggronmega": {
       "display_name": "Mega Aggron",
@@ -9900,7 +9983,8 @@
       ],
       "required_item": "Aggronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saggron-omega.png"
     },
     "alakazammega": {
       "display_name": "Mega Alakazam",
@@ -9927,7 +10011,8 @@
       ],
       "required_item": "Alakazite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/salakazam-omega.png"
     },
     "altariamega": {
       "display_name": "Mega Altaria",
@@ -9955,7 +10040,8 @@
       ],
       "required_item": "Altarianite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saltaria-omega.png"
     },
     "ampharosmega": {
       "display_name": "Mega Ampharos",
@@ -9983,7 +10069,8 @@
       ],
       "required_item": "Ampharosite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sampharos-omega.png"
     },
     "audinomega": {
       "display_name": "Mega Audino",
@@ -10011,7 +10098,8 @@
       ],
       "required_item": "Audinite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/saudino-omega.png"
     },
     "banettemega": {
       "display_name": "Mega Banette",
@@ -10038,7 +10126,8 @@
       ],
       "required_item": "Banettite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbanette-omega.png"
     },
     "barbaraclemega": {
       "display_name": "Mega Barbaracle",
@@ -10066,7 +10155,8 @@
       ],
       "required_item": "Barbaracite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbarbaracle-omega.png"
     },
     "baxcaliburmega": {
       "display_name": "Mega Baxcalibur",
@@ -10094,7 +10184,8 @@
       ],
       "required_item": "Baxcalibrite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbaxcalibur-omega.png"
     },
     "beedrillmega": {
       "display_name": "Mega Beedrill",
@@ -10122,7 +10213,8 @@
       ],
       "required_item": "Beedrillite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sbeedrill-omega.png"
     },
     "blastoisemega": {
       "display_name": "Mega Blastoise",
@@ -10149,7 +10241,8 @@
       ],
       "required_item": "Blastoisinite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblastoise-omega.png"
     },
     "blazikenmega": {
       "display_name": "Mega Blaziken",
@@ -10177,7 +10270,8 @@
       ],
       "required_item": "Blazikenite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sblaziken-omega.png"
     },
     "cameruptmega": {
       "display_name": "Mega Camerupt",
@@ -10205,7 +10299,8 @@
       ],
       "required_item": "Cameruptite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scamerupt-omega.png"
     },
     "chandeluremega": {
       "display_name": "Mega Chandelure",
@@ -10233,7 +10328,8 @@
       ],
       "required_item": "Chandelurite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schandelure-omega.png"
     },
     "charizardmegax": {
       "display_name": "Mega Charizard X",
@@ -10261,7 +10357,8 @@
       ],
       "required_item": "Charizardite X",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_x.png"
     },
     "charizardmegay": {
       "display_name": "Mega Charizard Y",
@@ -10289,7 +10386,8 @@
       ],
       "required_item": "Charizardite Y",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scharizard-omega_y.png"
     },
     "chesnaughtmega": {
       "display_name": "Mega Chesnaught",
@@ -10317,7 +10415,8 @@
       ],
       "required_item": "Chesnaughtite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schesnaught-omega.png"
     },
     "chimechomega": {
       "display_name": "Mega Chimecho",
@@ -10345,7 +10444,8 @@
       ],
       "required_item": "Chimechite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/schimecho-omega.png"
     },
     "clefablemega": {
       "display_name": "Mega Clefable",
@@ -10373,7 +10473,8 @@
       ],
       "required_item": "Clefablite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sclefable-omega.png"
     },
     "crabominablemega": {
       "display_name": "Mega Crabominable",
@@ -10401,7 +10502,8 @@
       ],
       "required_item": "Crabominite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/scrabominable-omega.png"
     },
     "delphoxmega": {
       "display_name": "Mega Delphox",
@@ -10429,7 +10531,8 @@
       ],
       "required_item": "Delphoxite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdelphox-omega.png"
     },
     "dragalgemega": {
       "display_name": "Mega Dragalge",
@@ -10457,7 +10560,8 @@
       ],
       "required_item": "Dragalgite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragalge-omega.png"
     },
     "dragonitemega": {
       "display_name": "Mega Dragonite",
@@ -10485,7 +10589,8 @@
       ],
       "required_item": "Dragoninite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdragonite-omega.png"
     },
     "drampamega": {
       "display_name": "Mega Drampa",
@@ -10513,7 +10618,8 @@
       ],
       "required_item": "Drampanite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sdrampa-omega.png"
     },
     "eelektrossmega": {
       "display_name": "Mega Eelektross",
@@ -10540,7 +10646,8 @@
       ],
       "required_item": "Eelektrossite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/seelektross-omega.png"
     },
     "emboarmega": {
       "display_name": "Mega Emboar",
@@ -10568,7 +10675,8 @@
       ],
       "required_item": "Emboarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/semboar-omega.png"
     },
     "excadrillmega": {
       "display_name": "Mega Excadrill",
@@ -10596,7 +10704,8 @@
       ],
       "required_item": "Excadrite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sexcadrill-omega.png"
     },
     "falinksmega": {
       "display_name": "Mega Falinks",
@@ -10623,7 +10732,8 @@
       ],
       "required_item": "Falinksite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfalinks-omega.png"
     },
     "feraligatrmega": {
       "display_name": "Mega Feraligatr",
@@ -10651,7 +10761,8 @@
       ],
       "required_item": "Feraligite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sferaligatr-omega.png"
     },
     "froslassmega": {
       "display_name": "Mega Froslass",
@@ -10679,7 +10790,8 @@
       ],
       "required_item": "Froslassite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sfroslass-omega.png"
     },
     "gallademega": {
       "display_name": "Mega Gallade",
@@ -10707,7 +10819,8 @@
       ],
       "required_item": "Galladite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgallade-omega.png"
     },
     "garchompmega": {
       "display_name": "Mega Garchomp",
@@ -10735,7 +10848,8 @@
       ],
       "required_item": "Garchompite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega.png"
     },
     "garchompmegaz": {
       "display_name": "Mega Garchomp Z",
@@ -10762,7 +10876,8 @@
       ],
       "required_item": "Garchompite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgarchomp-omega_z.png"
     },
     "gardevoirmega": {
       "display_name": "Mega Gardevoir",
@@ -10790,7 +10905,8 @@
       ],
       "required_item": "Gardevoirite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgardevoir-omega.png"
     },
     "gengarmega": {
       "display_name": "Mega Gengar",
@@ -10818,7 +10934,8 @@
       ],
       "required_item": "Gengarite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgengar-omega.png"
     },
     "glaliemega": {
       "display_name": "Mega Glalie",
@@ -10845,7 +10962,8 @@
       ],
       "required_item": "Glalitite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglalie-omega.png"
     },
     "glimmoramega": {
       "display_name": "Mega Glimmora",
@@ -10873,7 +10991,8 @@
       ],
       "required_item": "Glimmoranite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sglimmora-omega.png"
     },
     "golisopodmega": {
       "display_name": "Mega Golisopod",
@@ -10901,7 +11020,8 @@
       ],
       "required_item": "Golisopite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolisopod-omega.png"
     },
     "golurkmega": {
       "display_name": "Mega Golurk",
@@ -10929,7 +11049,8 @@
       ],
       "required_item": "Golurkite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgolurk-omega.png"
     },
     "greninjamega": {
       "display_name": "Mega Greninja",
@@ -10957,7 +11078,8 @@
       ],
       "required_item": "Greninjite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgreninja-omega.png"
     },
     "gyaradosmega": {
       "display_name": "Mega Gyarados",
@@ -10985,7 +11107,8 @@
       ],
       "required_item": "Gyaradosite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sgyarados-omega.png"
     },
     "hawluchamega": {
       "display_name": "Mega Hawlucha",
@@ -11013,7 +11136,8 @@
       ],
       "required_item": "Hawluchanite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shawlucha-omega.png"
     },
     "heracrossmega": {
       "display_name": "Mega Heracross",
@@ -11041,7 +11165,8 @@
       ],
       "required_item": "Heracronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sheracross-omega.png"
     },
     "houndoommega": {
       "display_name": "Mega Houndoom",
@@ -11069,7 +11194,8 @@
       ],
       "required_item": "Houndoominite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/shoundoom-omega.png"
     },
     "kangaskhanmega": {
       "display_name": "Mega Kangaskhan",
@@ -11096,7 +11222,8 @@
       ],
       "required_item": "Kangaskhanite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/skangaskhan-omega.png"
     },
     "lopunnymega": {
       "display_name": "Mega Lopunny",
@@ -11124,7 +11251,8 @@
       ],
       "required_item": "Lopunnite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slopunny-omega.png"
     },
     "lucariomega": {
       "display_name": "Mega Lucario",
@@ -11152,7 +11280,8 @@
       ],
       "required_item": "Lucarionite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega.png"
     },
     "lucariomegaz": {
       "display_name": "Mega Lucario Z",
@@ -11180,7 +11309,8 @@
       ],
       "required_item": "Lucarionite Z",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/slucario-omega_z.png"
     },
     "malamarmega": {
       "display_name": "Mega Malamar",
@@ -11208,7 +11338,8 @@
       ],
       "required_item": "Malamarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smalamar-omega.png"
     },
     "manectricmega": {
       "display_name": "Mega Manectric",
@@ -11235,7 +11366,8 @@
       ],
       "required_item": "Manectite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smanectric-omega.png"
     },
     "mawilemega": {
       "display_name": "Mega Mawile",
@@ -11263,7 +11395,8 @@
       ],
       "required_item": "Mawilite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smawile-omega.png"
     },
     "medichammega": {
       "display_name": "Mega Medicham",
@@ -11291,7 +11424,8 @@
       ],
       "required_item": "Medichamite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smedicham-omega.png"
     },
     "meganiummega": {
       "display_name": "Mega Meganium",
@@ -11319,7 +11453,8 @@
       ],
       "required_item": "Meganiumite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smeganium-omega.png"
     },
     "meowsticfmega": {
       "display_name": "Mega Meowstic F",
@@ -11401,7 +11536,8 @@
       ],
       "required_item": "Metagrossite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/smetagross-omega.png"
     },
     "pidgeotmega": {
       "display_name": "Mega Pidgeot",
@@ -11429,7 +11565,8 @@
       ],
       "required_item": "Pidgeotite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spidgeot-omega.png"
     },
     "pinsirmega": {
       "display_name": "Mega Pinsir",
@@ -11457,7 +11594,8 @@
       ],
       "required_item": "Pinsirite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spinsir-omega.png"
     },
     "pyroarmega": {
       "display_name": "Mega Pyroar",
@@ -11485,7 +11623,8 @@
       ],
       "required_item": "Pyroarite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/spyroar-omega.png"
     },
     "raichumegax": {
       "display_name": "Mega Raichu X",
@@ -11512,7 +11651,8 @@
       ],
       "required_item": "Raichunite X",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_x.png"
     },
     "raichumegay": {
       "display_name": "Mega Raichu Y",
@@ -11539,7 +11679,8 @@
       ],
       "required_item": "Raichunite Y",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sraichu-omega_y.png"
     },
     "sableyemega": {
       "display_name": "Mega Sableye",
@@ -11567,7 +11708,8 @@
       ],
       "required_item": "Sablenite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssableye-omega.png"
     },
     "salamencemega": {
       "display_name": "Mega Salamence",
@@ -11595,7 +11737,8 @@
       ],
       "required_item": "Salamencite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssalamence-omega.png"
     },
     "sceptilemega": {
       "display_name": "Mega Sceptile",
@@ -11623,7 +11766,8 @@
       ],
       "required_item": "Sceptilite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssceptile-omega.png"
     },
     "scizormega": {
       "display_name": "Mega Scizor",
@@ -11651,7 +11795,8 @@
       ],
       "required_item": "Scizorite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscizor-omega.png"
     },
     "scolipedemega": {
       "display_name": "Mega Scolipede",
@@ -11679,7 +11824,8 @@
       ],
       "required_item": "Scolipite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscolipede-omega.png"
     },
     "scovillainmega": {
       "display_name": "Mega Scovillain",
@@ -11707,7 +11853,8 @@
       ],
       "required_item": "Scovillainite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscovillain-omega.png"
     },
     "scraftymega": {
       "display_name": "Mega Scrafty",
@@ -11735,7 +11882,8 @@
       ],
       "required_item": "Scraftinite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sscrafty-omega.png"
     },
     "sharpedomega": {
       "display_name": "Mega Sharpedo",
@@ -11763,7 +11911,8 @@
       ],
       "required_item": "Sharpedonite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssharpedo-omega.png"
     },
     "skarmorymega": {
       "display_name": "Mega Skarmory",
@@ -11791,7 +11940,8 @@
       ],
       "required_item": "Skarmorite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sskarmory-omega.png"
     },
     "slowbromega": {
       "display_name": "Mega Slowbro",
@@ -11819,7 +11969,8 @@
       ],
       "required_item": "Slowbronite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sslowbro-omega.png"
     },
     "staraptormega": {
       "display_name": "Mega Staraptor",
@@ -11847,7 +11998,8 @@
       ],
       "required_item": "Staraptite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstaraptor-omega.png"
     },
     "starmiemega": {
       "display_name": "Mega Starmie",
@@ -11875,7 +12027,8 @@
       ],
       "required_item": "Starminite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sstarmie-omega.png"
     },
     "steelixmega": {
       "display_name": "Mega Steelix",
@@ -11903,7 +12056,8 @@
       ],
       "required_item": "Steelixite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/ssteelix-omega.png"
     },
     "swampertmega": {
       "display_name": "Mega Swampert",
@@ -11931,7 +12085,8 @@
       ],
       "required_item": "Swampertite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/sswampert-omega.png"
     },
     "tyranitarmega": {
       "display_name": "Mega Tyranitar",
@@ -11959,7 +12114,8 @@
       ],
       "required_item": "Tyranitarite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/styranitar-omega.png"
     },
     "venusaurmega": {
       "display_name": "Mega Venusaur",
@@ -11987,7 +12143,8 @@
       ],
       "required_item": "Venusaurite",
       "generation": null,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svenusaur-omega.png"
     },
     "victreebelmega": {
       "display_name": "Mega Victreebel",
@@ -12015,7 +12172,8 @@
       ],
       "required_item": "Victreebelite",
       "generation": 9,
-      "is_mega": true
+      "is_mega": true,
+      "champions_sprite_url": "https://raw.githubusercontent.com/smogon/sprites/master/src/champions/svictreebel-omega.png"
     }
   },
   "base_roster": [
@@ -12087,7 +12245,7 @@
     "Espeon",
     "Excadrill",
     "Falinks",
-    "Farfetch\\u2019d",
+    "Farfetch’d",
     "Farigiraf",
     "Feraligatr",
     "Flapple",
@@ -12222,7 +12380,7 @@
     "Simisage",
     "Simisear",
     "Sinistcha",
-    "Sirfetch\\u2019d",
+    "Sirfetch’d",
     "Skarmory",
     "Skeledirge",
     "Slowbro",
@@ -12254,7 +12412,7 @@
     "Toucannon",
     "Toxapex",
     "Toxicroak",
-    "Toxtricity",
+    "Toxtricity High Key",
     "Toxtricity Low Key",
     "Trevenant",
     "Tsareena",
@@ -30986,9 +31144,9 @@
       "is_mega_stone": false,
       "mega_stone_map": {},
       "item_users": [
-        "Farfetch\\u2019d",
-        "Farfetch\\u2019d-Galar",
-        "Sirfetch\\u2019d"
+        "Farfetch’d",
+        "Farfetch’d-Galar",
+        "Sirfetch’d"
       ],
       "is_nonstandard": null
     },
@@ -32773,7 +32931,7 @@
       "is_mega_stone": false,
       "mega_stone_map": {},
       "item_users": [
-        "Farfetch\\u2019d"
+        "Farfetch’d"
       ],
       "is_nonstandard": "Past"
     },
