@@ -1,16 +1,12 @@
 from champions.registry import (
     get_species,
-    get_species_key_by_display_name,
+    get_species_by_canonical_key,
+    get_species_by_display_name,
 )
 
 
 def canonical_species_key(name):
-    """
-    Convert a Pokémon/form name into the stable Champions history key.
-
-    The generated registry owns form naming and canonical keys; this function
-    only provides a generic fallback for an unseen key before the next sync.
-    """
+    """Return the generated Champions canonical key for a species/form."""
     if not name:
         return ""
 
@@ -22,21 +18,24 @@ def canonical_species_key(name):
     if direct.get("canonical_key"):
         return str(direct["canonical_key"])
 
-    generated = get_species_key_by_display_name(text)
+    generated = get_species_by_canonical_key(text)
+    if generated.get("canonical_key"):
+        return str(generated["canonical_key"])
+
+    generated = get_species_by_display_name(text)
     if generated:
-        return generated
+        return str(generated.get("canonical_key") or "")
 
-    lowered = text.casefold().replace("’", "").replace("'", "")
-    lowered = lowered.replace("_", "-")
-    lowered = lowered.replace("♀", "f").replace("♂", "m")
-    lowered = lowered.replace(".", "")
-    lowered = " ".join(lowered.split())
-
-    if lowered.startswith("mega "):
-        lowered = lowered[5:].strip()
-        parts = lowered.split()
-        if parts and parts[-1] in {"x", "y", "z"}:
-            return f"{'-'.join(parts[:-1])}-{parts[-1]}"
-        return "-".join(parts)
-
+    # Deterministic compatibility fallback for historical keys that predate
+    # the generated registry. This intentionally contains no form-specific
+    # rules, so new forms never require another alias branch.
+    lowered = (
+        text.casefold()
+        .replace("’", "")
+        .replace("'", "")
+        .replace("♀", "f")
+        .replace("♂", "m")
+        .replace("_", "-")
+        .replace(".", "")
+    )
     return "-".join(lowered.split())
