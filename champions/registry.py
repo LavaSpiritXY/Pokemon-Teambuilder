@@ -283,6 +283,26 @@ def get_mega_forms_for_base(
     }
 
 
+def get_species_family_key(
+    name: str,
+    registry: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Return the stable team-family key, collapsing only Mega forms to their base."""
+    data = registry or load_registry()
+    entry = get_species_by_display_name(str(name or "").strip(), data)
+    if not entry:
+        entry = get_species_by_canonical_key(str(name or "").strip(), data)
+
+    if not entry:
+        return ""
+
+    if entry.get("is_mega"):
+        base = get_base_species_for_name(str(name or "").strip(), data)
+        return str(base.get("canonical_key") or "").strip().casefold()
+
+    return str(entry.get("canonical_key") or "").strip().casefold()
+
+
 def get_mega_forms(registry: Optional[Dict[str, Any]] = None) -> Dict[str, Dict[str, Any]]:
     data = registry or load_registry()
     return dict(data["megas"])
@@ -308,6 +328,7 @@ __all__ = [
     "get_species_by_canonical_key",
     "get_base_species_for_name",
     "get_mega_forms_for_base",
+    "get_species_family_key",
     "get_mega_forms",
     "get_base_roster",
 ]
