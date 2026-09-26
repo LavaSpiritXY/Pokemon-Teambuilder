@@ -522,10 +522,13 @@ def build_registry() -> Dict[str, Any]:
                 if species_id
                 else ""
             ),
-            "champions_sprite_url": _champions_sprite_url(
-                base_species_key,
-                forme,
-                is_mega,
+            "champions_sprite_url": (
+                _champions_sprite_url(
+                    base_species_key,
+                    forme,
+                    is_mega,
+                )
+                or None
             ),
             "base_species_key": base_species_key,
             "forme": forme or "",
