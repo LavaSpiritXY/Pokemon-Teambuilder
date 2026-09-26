@@ -46,6 +46,7 @@ from champions.team_io import export_slot_to_showdown, export_team_to_showdown, 
 from champions.team_analyzer_ui import render_team_analyzer_main
 
 from champions.team_state import ensure_slot_structure, on_species_change, on_item_change
+from champions.registry import get_base_species_for_name
 
 
 # ==========================================
@@ -310,10 +311,9 @@ for i in range(6):
         strlit.subheader(f"Slot {i+1}: {slot_name if slot_name != '-- Choose a Pokémon --' else '(Empty Slot)'}")
         
         selector_name = slot_name
-        if selector_name.startswith("Mega "):
-            selector_name = selector_name[5:].strip()
-            if selector_name.endswith(" X") or selector_name.endswith(" Y"):
-                selector_name = selector_name[:-2].strip()
+        if str(selector_name).strip().lower().startswith("mega "):
+            base_entry = get_base_species_for_name(selector_name)
+            selector_name = base_entry.get("display_name") or selector_name
         try:
             default_index = CHAMPIONS_ALL_FORMS.index(selector_name)
         except ValueError:
