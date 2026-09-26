@@ -270,6 +270,7 @@ def _display_name(
     source = str(source_name or "").strip()
     base = str(base_species or "").strip()
     form = str(forme or "").strip()
+    display_base = base.replace("’", "'")
 
     if not form:
         return source.replace("’", "'")
@@ -278,20 +279,20 @@ def _display_name(
     if is_mega:
         if form.casefold().startswith("mega"):
             suffix = re.sub(r"^mega[- ]*", "", form, flags=re.IGNORECASE)
-            return f"Mega {base.replace("’", "'")}" + (f" {suffix.upper()}" if suffix else "")
+            return f"Mega {display_base}" + (f" {suffix.upper()}" if suffix else "")
         if form.casefold().endswith("-mega"):
             prefix = re.sub(r"-mega$", "", form, flags=re.IGNORECASE)
-            return f"Mega {base.replace("’", "'")}" + (
+            return f"Mega {display_base}" + (
                 f" {prefix.title()}" if prefix else ""
             )
 
     if form.upper() == "F":
-        return f"{base.replace("’", "'")} Female"
+        return f"{display_base} Female"
     if form.upper() == "M":
-        return f"{base.replace("’", "'")} Male"
+        return f"{display_base} Male"
 
     readable_form = form.replace("-", " ").replace("_", " ")
-    return f"{base.replace("’", "'")} {' '.join(part.title() for part in readable_form.split())}".strip()
+    return f"{display_base} {' '.join(part.title() for part in readable_form.split())}".strip()
 
 
 def _api_slug(
