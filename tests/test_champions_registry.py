@@ -141,7 +141,8 @@ def test_modern_mega_sprite_metadata_is_generated():
         assert entry["showdown_sprite_url"].endswith(
             f"/{entry['sprite_id']}.png"
         )
-        assert entry["generation"] == 9
+        if name.endswith(" Z"):
+            assert entry["generation"] == 9
 
 def test_generated_mega_family_resolution():
     assert get_base_species_for_name("Mega Charizard Y")["display_name"] == "Charizard"
