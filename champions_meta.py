@@ -12,6 +12,12 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from champions.registry import (
+    get_base_species_for_name,
+    get_species_by_display_name,
+    get_species_by_canonical_key,
+)
+
 DEFAULT_META_PATH = Path("champions_meta_history.json")
 
 
@@ -23,65 +29,43 @@ def _normalise_name(name: str) -> str:
 
 
 def _candidate_keys(name: str) -> List[str]:
-    """Generate exact-first lookup aliases for display/form names."""
+    """Generate exact-first lookup candidates from the generated registry."""
     key = _normalise_name(name)
     if not key:
         return []
-    candidates = [key]
+
+    candidates: List[str] = []
 
     def add(value: str) -> None:
-        value = _normalise_name(value)
-        if value and value not in candidates:
-            candidates.append(value)
+        normalised = _normalise_name(value)
+        if normalised and normalised not in candidates:
+            candidates.append(normalised)
 
-    # Mega display forms. Preserve the exact form first, then progressively
-    # fall back to the canonical Champions species key and base species.
+    add(name)
+
+    entry = get_species_by_display_name(str(name or "").strip())
+    if not entry:
+        entry = get_species_by_canonical_key(str(name or "").strip())
+
+    if entry:
+        add(entry.get("canonical_key", ""))
+        add(entry.get("display_name", ""))
+        add(entry.get("source_name", ""))
+
+        # Exact form first; then safely fall back to the generated base
+        # species for Mega/regional forms when exact historical evidence is absent.
+        base = get_base_species_for_name(str(name or "").strip())
+        if base:
+            add(base.get("canonical_key", ""))
+            add(base.get("display_name", ""))
+            add(base.get("source_name", ""))
+
+    # Preserve a small generic Mega spelling fallback for historical records
+    # created before the generated registry existed.
     if key.startswith("mega "):
-        remainder = key[5:].strip()
-        add(remainder)
-        match = re.match(r"^(.+?)\s+([xy])$", remainder)
-        if match:
-            base, variant = match.groups()
-            # champions.move_data.get_champions_species_key preserves the
-            # canonical form separator used by history (for example,
-            # "Mega Charizard Y" -> "charizard-y").
-            add(f"{base}-{variant}")
-            add(base)
-    if key.endswith(" mega"):
-        add(key[:-5].strip())
-    for suffix in (" mega x", " mega y"):
-        if key.endswith(suffix):
-            base = key[:-len(suffix)].strip()
-            variant = suffix[-1]
-            add(f"{base}-{variant}")
-            add(base)
-            if base.endswith(" mega"):
-                add(base[:-5].strip())
+        add(key[5:].strip())
 
-    # Regional display prefixes.
-    for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
-        if key.startswith(prefix):
-            base = key[len(prefix):].strip()
-            add(base)
-            # Paldean/other regional display names can also be represented as
-            # a species + form suffix in the tournament dataset.
-            for suffix in (" combat breed", " blaze breed", " aqua breed"):
-                if base.endswith(suffix):
-                    add(base[:-len(suffix)].strip())
-
-    # Form suffixes. Keep the exact form first; these are fallbacks only.
-    for suffix in (" combat breed", " blaze breed", " aqua breed"):
-        if key.endswith(suffix):
-            base = key[:-len(suffix)].strip()
-            add(base)
-            for prefix in ("alolan ", "galarian ", "hisuian ", "paldean "):
-                if base.startswith(prefix):
-                    add(base[len(prefix):].strip())
-
-    if key == "eternal flower floette":
-        add("floette")
-
-    return list(dict.fromkeys(candidates))
+    return candidates
 
 
 class ChampionsMetaStore:
