@@ -157,6 +157,8 @@ def test_generated_mega_family_resolution():
 
 def test_showdown_js_unicode_escapes_are_decoded():
     assert _decode_js_string(r"Farfetch\u2019d") == "Farfetch’d"
+    assert _display_name("Farfetch’d", None, None, False) == "Farfetch'd"
+    assert _display_name("Sirfetch’d", None, None, False) == "Sirfetch'd"
     assert _api_slug("Farfetch’d", "farfetchd", "Farfetch’d", "", False) == "farfetchd"
     assert _api_slug("Sirfetch’d", "sirfetchd", "Sirfetch’d", "", False) == "sirfetchd"
 
@@ -165,12 +167,14 @@ def test_low_key_relationship_derives_high_key_label():
     parsed = {
         "toxtricity": {
             "display_name": "Toxtricity",
+            "source_name": "Toxtricity",
             "base_species_key": "toxtricity",
             "forme": "",
             "is_mega": False,
         },
         "toxtricitylowkey": {
             "display_name": "Toxtricity Low Key",
+            "source_name": "Toxtricity-Low-Key",
             "base_species_key": "toxtricity",
             "forme": "Low-Key",
             "is_mega": False,
@@ -261,3 +265,19 @@ def test_mega_stone_parser_extracts_target():
     assert _object_string_map(block, "megaStone") == {
         "Absol": "Absol-Mega-Z"
     }
+
+
+def test_registry_resolves_derived_source_name_alias():
+    registry = {
+        "species": {
+            "toxtricity": {
+                "display_name": "Toxtricity High Key",
+                "source_name": "Toxtricity",
+                "canonical_key": "toxtricity",
+            }
+        }
+    }
+    from champions.registry import get_species_by_display_name, get_species_key_by_display_name
+
+    assert get_species_by_display_name("Toxtricity", registry)["display_name"] == "Toxtricity High Key"
+    assert get_species_key_by_display_name("Toxtricity", registry) == "toxtricity"
