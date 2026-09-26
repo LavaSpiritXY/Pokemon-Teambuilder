@@ -56,43 +56,9 @@ def fetch_move_type(move_name):
     return "Normal"
 
 def get_champions_species_key(mon_name):
-    """Return the generated registry's canonical Champions key."""
-    if not mon_name:
-        return ""
-
-    name = str(mon_name).strip()
-    if not name:
-        return ""
-
-    from champions.registry import get_species_key_by_display_name, get_species
-
-    direct = get_species(name.casefold())
-    if direct.get("canonical_key"):
-        return str(direct["canonical_key"])
-
-    generated = get_species_key_by_display_name(name)
-    if generated:
-        return generated
-
-    clean = (
-        name.lower()
-        .replace("’", "")
-        .replace("'", "")
-        .replace(".", "")
-        .replace("♀", "f")
-        .replace("♂", "m")
-        .replace("_", "-")
-    )
-    clean = " ".join(clean.split())
-
-    if clean.startswith("mega "):
-        clean = clean[5:].strip()
-        parts = clean.split()
-        if parts and parts[-1] in {"x", "y", "z"}:
-            return f"{'-'.join(parts[:-1])}-{parts[-1]}"
-        return "-".join(parts)
-
-    return "-".join(clean.split())
+    """Compatibility wrapper around the generated species-key resolver."""
+    from champions.species_keys import canonical_species_key
+    return canonical_species_key(mon_name)
 
 def display_name_for_move(move_id):
     if not move_id:
