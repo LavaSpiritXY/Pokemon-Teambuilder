@@ -16,28 +16,16 @@ def _clamp(value: float, low: float = 0.0, high: float = 100.0) -> float:
 
 
 def form_candidates(name: str) -> List[str]:
-    """Expand the shared resolver with common Champions display spellings."""
+    """Return registry-backed exact/form/base lookup candidates."""
     raw = str(name or "").strip().lower().replace("_", " ").replace("-", " ")
     candidates = list(_candidate_keys(name) or [])
 
     def add(value: str) -> None:
-        value = " ".join(value.split()).strip()
+        value = " ".join(str(value or "").split()).strip()
         if value and value not in candidates:
             candidates.append(value)
 
     add(raw)
-    for prefix in ("alolan", "galarian", "hisuian", "paldean", "kantonian"):
-        if raw.startswith(prefix + " "):
-            add(raw[len(prefix) + 1:])
-    if raw.startswith("mega "):
-        base = raw[5:].strip()
-        add(base)
-        add(base.split(" ")[0])
-    if raw.startswith("rotom "):
-        form = raw[6:].strip()
-        add(f"rotom {form}")
-        add(f"rotom-{form}")
-        add("rotom")
     return candidates
 
 
