@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03T11:36:16.411839+00:00",
+  "generated_at": "2026-10-03T16:20:08.827531+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
     "champions_items": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/items.ts",
     "items": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/items.ts"
   },
-  "current_regulation": "M-B",
+  "current_regulation": "M-C",
   "detected_regulations": [
     "M-A",
     "M-B",
