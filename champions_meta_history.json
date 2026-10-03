@@ -45,7 +45,9 @@
           "win_rate": 0.4931377451797522,
           "top_cut_rate": 0.1423487544483986,
           "average_placement": 4.2,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2833,
@@ -56,7 +58,9 @@
           "win_rate": 0.488268156424581,
           "top_cut_rate": 0.15213554535827745,
           "average_placement": 47.44444444444444,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -233,7 +237,9 @@
           "win_rate": 0.5058038692461642,
           "top_cut_rate": 0.1664039630713803,
           "average_placement": 5.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1504,
@@ -244,7 +250,9 @@
           "win_rate": 0.5050737383304018,
           "top_cut_rate": 0.1595744680851064,
           "average_placement": 39.21153846153846,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 3,
@@ -255,7 +263,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -355,7 +365,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.14760508308895406,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 277,
@@ -366,7 +378,9 @@
           "win_rate": 0.49176646706586824,
           "top_cut_rate": 0.1552346570397112,
           "average_placement": 32.72222222222222,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -501,7 +515,9 @@
           "win_rate": 0.507972972972973,
           "top_cut_rate": 0.16500515641113786,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1105,
@@ -512,7 +528,9 @@
           "win_rate": 0.4708200412835429,
           "top_cut_rate": 0.1330316742081448,
           "average_placement": 41.666666666666664,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 3,
@@ -523,7 +541,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -623,7 +643,9 @@
           "win_rate": 0.4830970556161396,
           "top_cut_rate": 0.15270935960591134,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 197,
@@ -634,7 +656,9 @@
           "win_rate": 0.4807692307692308,
           "top_cut_rate": 0.14720812182741116,
           "average_placement": 55.86666666666667,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -748,7 +772,9 @@
           "win_rate": 0.48217815034416955,
           "top_cut_rate": 0.15013495276653172,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1291,
@@ -759,7 +785,9 @@
           "win_rate": 0.4882531564647595,
           "top_cut_rate": 0.15801704105344694,
           "average_placement": 37.75949367088607,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 4,
@@ -770,7 +798,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -972,7 +1002,9 @@
           "win_rate": 0.43742757821552725,
           "top_cut_rate": 0.1497175141242938,
           "average_placement": 8.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 113,
@@ -983,7 +1015,9 @@
           "win_rate": 0.4248496993987976,
           "top_cut_rate": 0.09734513274336283,
           "average_placement": 45.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1076,7 +1110,9 @@
           "win_rate": 0.4798670465337132,
           "top_cut_rate": 0.1432637571157495,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 383,
@@ -1087,7 +1123,9 @@
           "win_rate": 0.4723892837616184,
           "top_cut_rate": 0.15404699738903394,
           "average_placement": 36.857142857142854,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1187,7 +1225,9 @@
           "win_rate": 0.5024630541871922,
           "top_cut_rate": 0.1349206349206349,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 92,
@@ -1198,7 +1238,9 @@
           "win_rate": 0.5190156599552572,
           "top_cut_rate": 0.16304347826086957,
           "average_placement": 68.8,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1284,7 +1326,9 @@
           "win_rate": 0.49195459648247475,
           "top_cut_rate": 0.1360374414976599,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2298,
@@ -1295,7 +1339,9 @@
           "win_rate": 0.49651474530831097,
           "top_cut_rate": 0.17362924281984335,
           "average_placement": 35.646341463414636,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -1306,7 +1352,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1441,7 +1489,9 @@
           "win_rate": 0.4814072589623692,
           "top_cut_rate": 0.1592920353982301,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 185,
@@ -1452,7 +1502,9 @@
           "win_rate": 0.46986607142857145,
           "top_cut_rate": 0.13513513513513514,
           "average_placement": 37.625,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -1463,7 +1515,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1581,7 +1635,9 @@
           "win_rate": 0.47072072072072074,
           "top_cut_rate": 0.15503875968992248,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 165,
@@ -1592,7 +1648,9 @@
           "win_rate": 0.507323568575233,
           "top_cut_rate": 0.15151515151515152,
           "average_placement": 55.25,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1685,7 +1743,9 @@
           "win_rate": 0.4392033542976939,
           "top_cut_rate": 0.12,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 392,
@@ -1696,7 +1756,9 @@
           "win_rate": 0.5127670661803022,
           "top_cut_rate": 0.18112244897959184,
           "average_placement": 30.90909090909091,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1789,7 +1851,9 @@
           "win_rate": 0.49966442953020135,
           "top_cut_rate": 0.16071428571428573,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 915,
@@ -1800,7 +1864,9 @@
           "win_rate": 0.5053073861123397,
           "top_cut_rate": 0.15846994535519127,
           "average_placement": 46.18518518518518,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -1811,7 +1877,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -1904,7 +1972,9 @@
           "win_rate": 0.4785714285714286,
           "top_cut_rate": 0.16324324324324324,
           "average_placement": 1.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 598,
@@ -1915,7 +1985,9 @@
           "win_rate": 0.49161820047896,
           "top_cut_rate": 0.1705685618729097,
           "average_placement": 48.96153846153846,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2022,7 +2094,9 @@
           "win_rate": 0.5058179329226558,
           "top_cut_rate": 0.1786339754816112,
           "average_placement": 1.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 450,
@@ -2033,7 +2107,9 @@
           "win_rate": 0.5054249547920434,
           "top_cut_rate": 0.18,
           "average_placement": 49.11764705882353,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2133,7 +2209,9 @@
           "win_rate": 0.4810987903225806,
           "top_cut_rate": 0.1691919191919192,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 881,
@@ -2144,7 +2222,9 @@
           "win_rate": 0.49212233549582945,
           "top_cut_rate": 0.1872871736662883,
           "average_placement": 44.78947368421053,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2293,7 +2373,9 @@
           "win_rate": 0.4654775604142693,
           "top_cut_rate": 0.12602739726027398,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 539,
@@ -2304,7 +2386,9 @@
           "win_rate": 0.44122383252818037,
           "top_cut_rate": 0.12059369202226346,
           "average_placement": 49.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2432,7 +2516,9 @@
           "win_rate": 0.4657802111849824,
           "top_cut_rate": 0.10246679316888045,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 133,
@@ -2443,7 +2529,9 @@
           "win_rate": 0.4270650263620387,
           "top_cut_rate": 0.12030075187969924,
           "average_placement": 36.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2550,7 +2638,9 @@
           "win_rate": 0.501412429378531,
           "top_cut_rate": 0.1674898967220476,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 702,
@@ -2561,7 +2651,9 @@
           "win_rate": 0.5129236071223435,
           "top_cut_rate": 0.17236467236467237,
           "average_placement": 26.12,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -2572,7 +2664,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2700,7 +2794,9 @@
           "win_rate": 0.5122737860598459,
           "top_cut_rate": 0.17075386012715713,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 242,
@@ -2711,7 +2807,9 @@
           "win_rate": 0.539872408293461,
           "top_cut_rate": 0.1859504132231405,
           "average_placement": 15.444444444444445,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2811,7 +2909,9 @@
           "win_rate": 0.46755587599134824,
           "top_cut_rate": 0.11558669001751314,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 374,
@@ -2822,7 +2922,9 @@
           "win_rate": 0.5192612137203166,
           "top_cut_rate": 0.19786096256684493,
           "average_placement": 35.46153846153846,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -2833,7 +2935,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -2940,7 +3044,9 @@
           "win_rate": 0.3971774193548387,
           "top_cut_rate": 0.09615384615384616,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 102,
@@ -2951,7 +3057,9 @@
           "win_rate": 0.38095238095238093,
           "top_cut_rate": 0.09803921568627451,
           "average_placement": 22.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -2962,7 +3070,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -3133,7 +3243,9 @@
           "win_rate": 0.49501359927470534,
           "top_cut_rate": 0.1514161220043573,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 426,
@@ -3144,7 +3256,9 @@
           "win_rate": 0.5089641434262948,
           "top_cut_rate": 0.1596244131455399,
           "average_placement": 39.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -3258,7 +3372,9 @@
           "win_rate": 0.4059171597633136,
           "top_cut_rate": 0.08108108108108109,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 33,
@@ -3269,7 +3385,9 @@
           "win_rate": 0.3375,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -3311,7 +3429,9 @@
           "win_rate": 0.4086206896551724,
           "top_cut_rate": 0.15625,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 54,
@@ -3322,7 +3442,9 @@
           "win_rate": 0.4588235294117647,
           "top_cut_rate": 0.1111111111111111,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -3333,7 +3455,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -3397,7 +3521,9 @@
           "win_rate": 0.4968543046357616,
           "top_cut_rate": 0.13689482470784642,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 820,
@@ -3408,7 +3534,9 @@
           "win_rate": 0.4749685534591195,
           "top_cut_rate": 0.13414634146341464,
           "average_placement": 50.51724137931034,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -3419,7 +3547,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -3615,7 +3745,9 @@
           "win_rate": 0.49812734082397003,
           "top_cut_rate": 0.18867924528301888,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 24,
@@ -3626,7 +3758,9 @@
           "win_rate": 0.45689655172413796,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -3668,7 +3802,9 @@
           "win_rate": 0.37777777777777777,
           "top_cut_rate": 0.15384615384615385,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 14,
@@ -3679,7 +3815,9 @@
           "win_rate": 0.37142857142857144,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 11.0
+          "best_placement": 11.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -3721,7 +3859,9 @@
           "win_rate": 0.4280701754385965,
           "top_cut_rate": 0.15254237288135594,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 58,
@@ -3732,7 +3872,9 @@
           "win_rate": 0.4496124031007752,
           "top_cut_rate": 0.06896551724137931,
           "average_placement": 78.5,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -3818,7 +3960,9 @@
           "win_rate": 0.4625668449197861,
           "top_cut_rate": 0.1145374449339207,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 103,
@@ -3829,7 +3973,9 @@
           "win_rate": 0.4692144373673036,
           "top_cut_rate": 0.0970873786407767,
           "average_placement": 61.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -3922,7 +4068,9 @@
           "win_rate": 0.43425076452599387,
           "top_cut_rate": 0.10236220472440945,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 33,
@@ -3933,7 +4081,9 @@
           "win_rate": 0.35714285714285715,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -3944,7 +4094,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -3986,7 +4138,9 @@
           "win_rate": 0.49815649324047523,
           "top_cut_rate": 0.16806722689075632,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 267,
@@ -3997,7 +4151,9 @@
           "win_rate": 0.5075301204819277,
           "top_cut_rate": 0.16104868913857678,
           "average_placement": 60.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4069,7 +4225,9 @@
           "win_rate": 0.522883295194508,
           "top_cut_rate": 0.19246031746031747,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 66,
@@ -4080,7 +4238,9 @@
           "win_rate": 0.46153846153846156,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": 66.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4173,7 +4333,9 @@
           "win_rate": 0.49832850456875416,
           "top_cut_rate": 0.17563739376770537,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 785,
@@ -4184,7 +4346,9 @@
           "win_rate": 0.477854855923159,
           "top_cut_rate": 0.15159235668789808,
           "average_placement": 32.25,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -4195,7 +4359,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4295,7 +4461,9 @@
           "win_rate": 0.42061855670103093,
           "top_cut_rate": 0.05263157894736842,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -4306,7 +4474,9 @@
           "win_rate": 0.4411764705882353,
           "top_cut_rate": 0.05,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -4348,7 +4518,9 @@
           "win_rate": 0.48174366616989567,
           "top_cut_rate": 0.1520112254443405,
           "average_placement": 2.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1022,
@@ -4359,7 +4531,9 @@
           "win_rate": 0.4824886691388546,
           "top_cut_rate": 0.15851272015655576,
           "average_placement": 45.86206896551724,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -4370,7 +4544,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4568,7 +4744,9 @@
           "win_rate": 0.4141304347826087,
           "top_cut_rate": 0.09375,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 321,
@@ -4579,7 +4757,9 @@
           "win_rate": 0.4547738693467337,
           "top_cut_rate": 0.14641744548286603,
           "average_placement": 48.09090909090909,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -4590,7 +4770,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4739,7 +4921,9 @@
           "win_rate": 0.4652029826014913,
           "top_cut_rate": 0.11967545638945233,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 180,
@@ -4750,7 +4934,9 @@
           "win_rate": 0.4271070615034169,
           "top_cut_rate": 0.12222222222222222,
           "average_placement": 22.666666666666668,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -4789,7 +4975,9 @@
           "win_rate": 0.4789588907808319,
           "top_cut_rate": 0.13276492082825822,
           "average_placement": 8.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 275,
@@ -4800,7 +4988,9 @@
           "win_rate": 0.5170876671619614,
           "top_cut_rate": 0.16,
           "average_placement": 43.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -4942,7 +5132,9 @@
           "win_rate": 0.48581053491220905,
           "top_cut_rate": 0.15297741273100615,
           "average_placement": 4.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 376,
@@ -4953,7 +5145,9 @@
           "win_rate": 0.4569575471698113,
           "top_cut_rate": 0.13297872340425532,
           "average_placement": 31.466666666666665,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -4964,7 +5158,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5057,7 +5253,9 @@
           "win_rate": 0.43859649122807015,
           "top_cut_rate": 0.12,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 51,
@@ -5068,7 +5266,9 @@
           "win_rate": 0.44166666666666665,
           "top_cut_rate": 0.19607843137254902,
           "average_placement": 62.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5154,7 +5354,9 @@
           "win_rate": 0.30434782608695654,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 13,
@@ -5165,7 +5367,9 @@
           "win_rate": 0.42592592592592593,
           "top_cut_rate": 0.15384615384615385,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -5207,7 +5411,9 @@
           "win_rate": 0.417910447761194,
           "top_cut_rate": 0.14018691588785046,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 39,
@@ -5218,7 +5424,9 @@
           "win_rate": 0.4777777777777778,
           "top_cut_rate": 0.10256410256410256,
           "average_placement": 66.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5290,7 +5498,9 @@
           "win_rate": 0.4937142857142857,
           "top_cut_rate": 0.18716577540106952,
           "average_placement": 1.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 680,
@@ -5301,7 +5511,9 @@
           "win_rate": 0.49073792894017615,
           "top_cut_rate": 0.17058823529411765,
           "average_placement": 40.85,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5415,7 +5627,9 @@
           "win_rate": 0.43842364532019706,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 28,
@@ -5426,7 +5640,9 @@
           "win_rate": 0.37398373983739835,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": 25.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5498,7 +5714,9 @@
           "win_rate": 0.4953239812959252,
           "top_cut_rate": 0.13036020583190394,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 170,
@@ -5509,7 +5727,9 @@
           "win_rate": 0.44025157232704404,
           "top_cut_rate": 0.1411764705882353,
           "average_placement": 27.375,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -5520,7 +5740,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5627,7 +5849,9 @@
           "win_rate": 0.3170731707317073,
           "top_cut_rate": 0.18181818181818182,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -5638,7 +5862,9 @@
           "win_rate": 0.417910447761194,
           "top_cut_rate": 0.0625,
           "average_placement": 36.0,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5731,7 +5957,9 @@
           "win_rate": 0.48346055979643765,
           "top_cut_rate": 0.28,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 38,
@@ -5742,7 +5970,9 @@
           "win_rate": 0.4263157894736842,
           "top_cut_rate": 0.15789473684210525,
           "average_placement": 9.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -5814,7 +6044,9 @@
           "win_rate": 0.44,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -5825,7 +6057,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 40.0
+          "best_placement": 40.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -5867,7 +6101,9 @@
           "win_rate": 0.534437559580553,
           "top_cut_rate": 0.1838868388683887,
           "average_placement": 5.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 634,
@@ -5878,7 +6114,9 @@
           "win_rate": 0.5252006420545746,
           "top_cut_rate": 0.1719242902208202,
           "average_placement": 32.78947368421053,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -5917,7 +6155,9 @@
           "win_rate": 0.41494845360824745,
           "top_cut_rate": 0.0875,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 51,
@@ -5928,7 +6168,9 @@
           "win_rate": 0.4711111111111111,
           "top_cut_rate": 0.11764705882352941,
           "average_placement": 91.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -5939,7 +6181,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6011,7 +6255,9 @@
           "win_rate": 0.2727272727272727,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 50.0
+          "best_placement": 50.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -6022,7 +6268,9 @@
           "win_rate": 0.4166666666666667,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 22.0
+          "best_placement": 22.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -6064,7 +6312,9 @@
           "win_rate": 0.37894736842105264,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -6075,7 +6325,9 @@
           "win_rate": 0.16666666666666666,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 38.0
+          "best_placement": 38.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -6117,7 +6369,9 @@
           "win_rate": 0.4514038876889849,
           "top_cut_rate": 0.23809523809523808,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 51,
@@ -6128,7 +6382,9 @@
           "win_rate": 0.5038759689922481,
           "top_cut_rate": 0.19607843137254902,
           "average_placement": 22.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6207,7 +6463,9 @@
           "win_rate": 0.47368421052631576,
           "top_cut_rate": 0.2631578947368421,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -6218,7 +6476,9 @@
           "win_rate": 0.35135135135135137,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -6257,7 +6517,9 @@
           "win_rate": 0.37777777777777777,
           "top_cut_rate": 0.10714285714285714,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -6268,7 +6530,9 @@
           "win_rate": 0.46511627906976744,
           "top_cut_rate": 0.2222222222222222,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -6310,7 +6574,9 @@
           "win_rate": 0.4392857142857143,
           "top_cut_rate": 0.14606741573033707,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 46,
@@ -6321,7 +6587,9 @@
           "win_rate": 0.4528301886792453,
           "top_cut_rate": 0.17391304347826086,
           "average_placement": 20.333333333333332,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -6332,7 +6600,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6425,7 +6695,9 @@
           "win_rate": 0.46102021174205965,
           "top_cut_rate": 0.1493212669683258,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 131,
@@ -6436,7 +6708,9 @@
           "win_rate": 0.4951923076923077,
           "top_cut_rate": 0.16793893129770993,
           "average_placement": 54.8,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -6447,7 +6721,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6540,7 +6816,9 @@
           "win_rate": 0.4413793103448276,
           "top_cut_rate": 0.06896551724137931,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -6551,7 +6829,9 @@
           "win_rate": 0.45588235294117646,
           "top_cut_rate": 0.3125,
           "average_placement": 81.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6623,7 +6903,9 @@
           "win_rate": 0.4330543933054393,
           "top_cut_rate": 0.14678899082568808,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 54,
@@ -6634,7 +6916,9 @@
           "win_rate": 0.4340425531914894,
           "top_cut_rate": 0.14814814814814814,
           "average_placement": 29.2,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -6673,7 +6957,9 @@
           "win_rate": 0.4230769230769231,
           "top_cut_rate": 0.0273972602739726,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -6684,7 +6970,9 @@
           "win_rate": 0.4842105263157895,
           "top_cut_rate": 0.15,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6756,7 +7044,9 @@
           "win_rate": 0.44339622641509435,
           "top_cut_rate": 0.10606060606060606,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 151,
@@ -6767,7 +7057,9 @@
           "win_rate": 0.4879356568364611,
           "top_cut_rate": 0.15894039735099338,
           "average_placement": 35.357142857142854,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6895,7 +7187,9 @@
           "win_rate": 0.5384615384615384,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -6906,7 +7200,9 @@
           "win_rate": 0.37777777777777777,
           "top_cut_rate": 0.1111111111111111,
           "average_placement": 92.0,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -6978,7 +7274,9 @@
           "win_rate": 0.4085106382978723,
           "top_cut_rate": 0.04081632653061224,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -6989,7 +7287,9 @@
           "win_rate": 0.39325842696629215,
           "top_cut_rate": 0.0,
           "average_placement": 46.666666666666664,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -7089,7 +7389,9 @@
           "win_rate": 0.462819089900111,
           "top_cut_rate": 0.13966480446927373,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 154,
@@ -7100,7 +7402,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.16883116883116883,
           "average_placement": 65.8,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -7111,7 +7415,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -7197,7 +7503,9 @@
           "win_rate": 0.47513089005235604,
           "top_cut_rate": 0.14576271186440679,
           "average_placement": 4.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 155,
@@ -7208,7 +7516,9 @@
           "win_rate": 0.4558011049723757,
           "top_cut_rate": 0.14193548387096774,
           "average_placement": 28.285714285714285,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -7219,7 +7529,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -7312,7 +7624,9 @@
           "win_rate": 0.3684210526315789,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -7323,7 +7637,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -7365,7 +7681,9 @@
           "win_rate": 0.34615384615384615,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -7376,7 +7694,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -7415,7 +7735,9 @@
           "win_rate": 0.40714285714285714,
           "top_cut_rate": 0.06896551724137931,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -7426,7 +7748,9 @@
           "win_rate": 0.3157894736842105,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -7468,7 +7792,9 @@
           "win_rate": 0.2318840579710145,
           "top_cut_rate": 0.07142857142857142,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -7479,7 +7805,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 15.0
+          "best_placement": 15.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -7521,7 +7849,9 @@
           "win_rate": 0.35365853658536583,
           "top_cut_rate": 0.05714285714285714,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 10,
@@ -7532,7 +7862,9 @@
           "win_rate": 0.3695652173913043,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 11.0
+          "best_placement": 11.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -7604,7 +7936,9 @@
           "win_rate": 0.5278688524590164,
           "top_cut_rate": 0.2022346368715084,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1166,
@@ -7615,7 +7949,9 @@
           "win_rate": 0.5169446883230905,
           "top_cut_rate": 0.1646655231560892,
           "average_placement": 37.375,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -7654,7 +7990,9 @@
           "win_rate": 0.4539081668419208,
           "top_cut_rate": 0.1111111111111111,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 346,
@@ -7665,7 +8003,9 @@
           "win_rate": 0.4547158026233604,
           "top_cut_rate": 0.13872832369942195,
           "average_placement": 45.30769230769231,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -7676,7 +8016,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -7797,7 +8139,9 @@
           "win_rate": 0.4988662131519274,
           "top_cut_rate": 0.1511627906976744,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 21,
@@ -7808,7 +8152,9 @@
           "win_rate": 0.5185185185185185,
           "top_cut_rate": 0.23809523809523808,
           "average_placement": 93.0,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -8007,7 +8353,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 77.0
+          "best_placement": 77.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -8018,7 +8366,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8060,7 +8410,9 @@
           "win_rate": 0.2781954887218045,
           "top_cut_rate": 0.058823529411764705,
           "average_placement": 7.0,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 34,
@@ -8071,7 +8423,9 @@
           "win_rate": 0.40522875816993464,
           "top_cut_rate": 0.14705882352941177,
           "average_placement": 29.666666666666668,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -8164,7 +8518,9 @@
           "win_rate": 0.44542772861356933,
           "top_cut_rate": 0.12307692307692308,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -8175,7 +8531,9 @@
           "win_rate": 0.43137254901960786,
           "top_cut_rate": 0.18181818181818182,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8217,7 +8575,9 @@
           "win_rate": 0.46368715083798884,
           "top_cut_rate": 0.1504424778761062,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 67,
@@ -8228,7 +8588,9 @@
           "win_rate": 0.5124223602484472,
           "top_cut_rate": 0.14925373134328357,
           "average_placement": 27.75,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -8402,7 +8764,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -8441,7 +8805,9 @@
           "win_rate": 0.47560975609756095,
           "top_cut_rate": 0.2777777777777778,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -8452,7 +8818,9 @@
           "win_rate": 0.3125,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8550,7 +8918,9 @@
           "win_rate": 0.42857142857142855,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 7,
@@ -8561,7 +8931,9 @@
           "win_rate": 0.4418604651162791,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 16.0
+          "best_placement": 16.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8603,7 +8975,9 @@
           "win_rate": 0.3945945945945946,
           "top_cut_rate": 0.1951219512195122,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 18,
@@ -8614,7 +8988,9 @@
           "win_rate": 0.5402298850574713,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8656,7 +9032,9 @@
           "win_rate": 0.46107784431137727,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 217,
@@ -8667,7 +9045,9 @@
           "win_rate": 0.44044044044044045,
           "top_cut_rate": 0.14746543778801843,
           "average_placement": 55.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -8753,7 +9133,9 @@
           "win_rate": 0.46120689655172414,
           "top_cut_rate": 0.19148936170212766,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 21,
@@ -8764,7 +9146,9 @@
           "win_rate": 0.3698630136986301,
           "top_cut_rate": 0.047619047619047616,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -8806,7 +9190,9 @@
           "win_rate": 0.41712403951701427,
           "top_cut_rate": 0.0916030534351145,
           "average_placement": 5.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 363,
@@ -8817,7 +9203,9 @@
           "win_rate": 0.4693396226415094,
           "top_cut_rate": 0.1487603305785124,
           "average_placement": 55.333333333333336,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -8828,7 +9216,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -8998,7 +9388,9 @@
           "win_rate": 0.31666666666666665,
           "top_cut_rate": 0.05263157894736842,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 26,
@@ -9009,7 +9401,9 @@
           "win_rate": 0.40707964601769914,
           "top_cut_rate": 0.07692307692307693,
           "average_placement": 11.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9081,7 +9475,9 @@
           "win_rate": 0.4577572964669739,
           "top_cut_rate": 0.1413427561837456,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 115,
@@ -9092,7 +9488,9 @@
           "win_rate": 0.4746376811594203,
           "top_cut_rate": 0.1565217391304348,
           "average_placement": 14.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9213,7 +9611,9 @@
           "win_rate": 0.4584323040380047,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 38,
@@ -9224,7 +9624,9 @@
           "win_rate": 0.4935064935064935,
           "top_cut_rate": 0.13157894736842105,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -9235,7 +9637,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -9274,7 +9678,9 @@
           "win_rate": 0.43208430913348944,
           "top_cut_rate": 0.08433734939759036,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 175,
@@ -9285,7 +9691,9 @@
           "win_rate": 0.4485645933014354,
           "top_cut_rate": 0.08571428571428572,
           "average_placement": 57.625,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9392,7 +9800,9 @@
           "win_rate": 0.5008747813046738,
           "top_cut_rate": 0.15489467162329615,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 285,
@@ -9403,7 +9813,9 @@
           "win_rate": 0.5064935064935064,
           "top_cut_rate": 0.1824561403508772,
           "average_placement": 52.75,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -9414,7 +9826,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9521,7 +9935,9 @@
           "win_rate": 0.4790979097909791,
           "top_cut_rate": 0.14227086183310533,
           "average_placement": 6.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 360,
@@ -9532,7 +9948,9 @@
           "win_rate": 0.5126760563380282,
           "top_cut_rate": 0.14722222222222223,
           "average_placement": 27.4375,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9625,7 +10043,9 @@
           "win_rate": 0.5101959216313474,
           "top_cut_rate": 0.18368745716244003,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1470,
@@ -9636,7 +10056,9 @@
           "win_rate": 0.5190409026798307,
           "top_cut_rate": 0.17755102040816326,
           "average_placement": 31.984375,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9750,7 +10172,9 @@
           "win_rate": 0.5018226002430134,
           "top_cut_rate": 0.17073170731707318,
           "average_placement": 3.4,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1788,
@@ -9761,7 +10185,9 @@
           "win_rate": 0.5119115467912915,
           "top_cut_rate": 0.16946308724832215,
           "average_placement": 37.36363636363637,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9861,7 +10287,9 @@
           "win_rate": 0.4996986862721466,
           "top_cut_rate": 0.17733990147783252,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 683,
@@ -9872,7 +10300,9 @@
           "win_rate": 0.4942073170731707,
           "top_cut_rate": 0.16544655929721816,
           "average_placement": 40.294117647058826,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 2,
@@ -9883,7 +10313,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -9983,7 +10415,9 @@
           "win_rate": 0.4709562109025916,
           "top_cut_rate": 0.15178571428571427,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 54,
@@ -9994,7 +10428,9 @@
           "win_rate": 0.4315352697095436,
           "top_cut_rate": 0.14814814814814814,
           "average_placement": 47.333333333333336,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10101,7 +10537,9 @@
           "win_rate": 0.3888888888888889,
           "top_cut_rate": 0.05263157894736842,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -10112,7 +10550,9 @@
           "win_rate": 0.5798319327731093,
           "top_cut_rate": 0.4,
           "average_placement": 26.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10184,7 +10624,9 @@
           "win_rate": 0.45085995085995084,
           "top_cut_rate": 0.12654320987654322,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 106,
@@ -10195,7 +10637,9 @@
           "win_rate": 0.4192872117400419,
           "top_cut_rate": 0.09433962264150944,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -10206,7 +10650,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -10248,7 +10694,9 @@
           "win_rate": 0.4594594594594595,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -10259,7 +10707,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.125,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10331,7 +10781,9 @@
           "win_rate": 0.36466165413533835,
           "top_cut_rate": 0.12698412698412698,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 39,
@@ -10342,7 +10794,9 @@
           "win_rate": 0.36813186813186816,
           "top_cut_rate": 0.10256410256410256,
           "average_placement": 61.666666666666664,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10428,7 +10882,9 @@
           "win_rate": 0.40540540540540543,
           "top_cut_rate": 0.060240963855421686,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 39,
@@ -10439,7 +10895,9 @@
           "win_rate": 0.47342995169082125,
           "top_cut_rate": 0.20512820512820512,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -10478,7 +10936,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.22388059701492538,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -10489,7 +10949,9 @@
           "win_rate": 0.6666666666666666,
           "top_cut_rate": 0.4,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -10530,7 +10992,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -10572,7 +11036,9 @@
           "win_rate": 0.5278377211911955,
           "top_cut_rate": 0.16741071428571427,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 65,
@@ -10583,7 +11049,9 @@
           "win_rate": 0.4411764705882353,
           "top_cut_rate": 0.06153846153846154,
           "average_placement": 99.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -10622,7 +11090,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.1076923076923077,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 49,
@@ -10633,7 +11103,9 @@
           "win_rate": 0.5098814229249012,
           "top_cut_rate": 0.1836734693877551,
           "average_placement": 7.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10726,7 +11198,9 @@
           "win_rate": 0.43775100401606426,
           "top_cut_rate": 0.09316770186335403,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 367,
@@ -10737,7 +11211,9 @@
           "win_rate": 0.4614935822637106,
           "top_cut_rate": 0.11716621253405994,
           "average_placement": 72.63636363636364,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10844,7 +11320,9 @@
           "win_rate": 0.39814814814814814,
           "top_cut_rate": 0.2,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -10855,7 +11333,9 @@
           "win_rate": 0.7142857142857143,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -10897,7 +11377,9 @@
           "win_rate": 0.4433497536945813,
           "top_cut_rate": 0.05128205128205128,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -10908,7 +11390,9 @@
           "win_rate": 0.41304347826086957,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": 106.0,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -10980,7 +11464,9 @@
           "win_rate": 0.5069860279441117,
           "top_cut_rate": 0.09411764705882353,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 18,
@@ -10991,7 +11477,9 @@
           "win_rate": 0.44086021505376344,
           "top_cut_rate": 0.2222222222222222,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -11033,7 +11521,9 @@
           "win_rate": 0.4114285714285714,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -11044,7 +11534,9 @@
           "win_rate": 0.49206349206349204,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": 21.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -11083,7 +11575,9 @@
           "win_rate": 0.44673539518900346,
           "top_cut_rate": 0.11290322580645161,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 17,
@@ -11094,7 +11588,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.058823529411764705,
           "average_placement": 90.0,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11166,7 +11662,9 @@
           "win_rate": 0.4818181818181818,
           "top_cut_rate": 0.18126888217522658,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 294,
@@ -11177,7 +11675,9 @@
           "win_rate": 0.47334754797441364,
           "top_cut_rate": 0.15306122448979592,
           "average_placement": 51.05882352941177,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -11188,7 +11688,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11302,7 +11804,9 @@
           "win_rate": 0.4622356495468278,
           "top_cut_rate": 0.14492753623188406,
           "average_placement": 2.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 57,
@@ -11313,7 +11817,9 @@
           "win_rate": 0.5491525423728814,
           "top_cut_rate": 0.22807017543859648,
           "average_placement": 52.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11399,7 +11905,9 @@
           "win_rate": 0.3885350318471338,
           "top_cut_rate": 0.14705882352941177,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 27,
@@ -11410,7 +11918,9 @@
           "win_rate": 0.45161290322580644,
           "top_cut_rate": 0.18518518518518517,
           "average_placement": 62.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11496,7 +12006,9 @@
           "win_rate": 0.4975562072336266,
           "top_cut_rate": 0.12698412698412698,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 47,
@@ -11507,7 +12019,9 @@
           "win_rate": 0.4669603524229075,
           "top_cut_rate": 0.1276595744680851,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11579,7 +12093,9 @@
           "win_rate": 0.3977777777777778,
           "top_cut_rate": 0.0851063829787234,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 32,
@@ -11590,7 +12106,9 @@
           "win_rate": 0.5033112582781457,
           "top_cut_rate": 0.3125,
           "average_placement": 116.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11662,7 +12180,9 @@
           "win_rate": 0.3829787234042553,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -11673,7 +12193,9 @@
           "win_rate": 0.47368421052631576,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -11715,7 +12237,9 @@
           "win_rate": 0.37577639751552794,
           "top_cut_rate": 0.07352941176470588,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -11726,7 +12250,9 @@
           "win_rate": 0.41818181818181815,
           "top_cut_rate": 0.15,
           "average_placement": 23.333333333333332,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11826,7 +12352,9 @@
           "win_rate": 0.4090909090909091,
           "top_cut_rate": 0.10606060606060606,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 24,
@@ -11837,7 +12365,9 @@
           "win_rate": 0.512396694214876,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": 18.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -11923,7 +12453,9 @@
           "win_rate": 0.3670886075949367,
           "top_cut_rate": 0.15789473684210525,
           "average_placement": 3.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 18,
@@ -11934,7 +12466,9 @@
           "win_rate": 0.4025974025974026,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12006,7 +12540,9 @@
           "win_rate": 0.358695652173913,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -12017,7 +12553,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -12056,7 +12594,9 @@
           "win_rate": 0.4458204334365325,
           "top_cut_rate": 0.09523809523809523,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 28,
@@ -12067,7 +12607,9 @@
           "win_rate": 0.4222222222222222,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": 28.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12139,7 +12681,9 @@
           "win_rate": 0.3801980198019802,
           "top_cut_rate": 0.10619469026548672,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 46,
@@ -12150,7 +12694,9 @@
           "win_rate": 0.4811320754716981,
           "top_cut_rate": 0.13043478260869565,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12192,7 +12738,9 @@
           "win_rate": 0.48427672955974843,
           "top_cut_rate": 0.13333333333333333,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 14,
@@ -12203,7 +12751,9 @@
           "win_rate": 0.4533333333333333,
           "top_cut_rate": 0.21428571428571427,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12245,7 +12795,9 @@
           "win_rate": 0.43478260869565216,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 35,
@@ -12256,7 +12808,9 @@
           "win_rate": 0.4084507042253521,
           "top_cut_rate": 0.08571428571428572,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12298,7 +12852,9 @@
           "win_rate": 0.48362573099415207,
           "top_cut_rate": 0.14411764705882352,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 60,
@@ -12309,7 +12865,9 @@
           "win_rate": 0.47474747474747475,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": 43.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12402,7 +12960,9 @@
           "win_rate": 0.41333333333333333,
           "top_cut_rate": 0.08695652173913043,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -12413,7 +12973,9 @@
           "win_rate": 0.36,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 13.0
+          "best_placement": 13.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12455,7 +13017,9 @@
           "win_rate": 0.4158415841584158,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 16.0
+          "best_placement": 16.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -12466,7 +13030,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 20.0
+          "best_placement": 20.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12508,7 +13074,9 @@
           "win_rate": 0.4253393665158371,
           "top_cut_rate": 0.10256410256410256,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 36,
@@ -12519,7 +13087,9 @@
           "win_rate": 0.4206896551724138,
           "top_cut_rate": 0.0,
           "average_placement": 74.0,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12598,7 +13168,9 @@
           "win_rate": 0.2619047619047619,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -12609,7 +13181,9 @@
           "win_rate": 0.43478260869565216,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -12648,7 +13222,9 @@
           "win_rate": 0.3828125,
           "top_cut_rate": 0.0625,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -12659,7 +13235,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12731,7 +13309,9 @@
           "win_rate": 0.273972602739726,
           "top_cut_rate": 0.15789473684210525,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 14,
@@ -12742,7 +13322,9 @@
           "win_rate": 0.44285714285714284,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -12809,7 +13391,9 @@
           "win_rate": 0.4562798092209857,
           "top_cut_rate": 0.14634146341463414,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 48,
@@ -12820,7 +13404,9 @@
           "win_rate": 0.44583333333333336,
           "top_cut_rate": 0.10416666666666667,
           "average_placement": 15.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -12831,7 +13417,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -12942,7 +13530,9 @@
           "win_rate": 0.437125748502994,
           "top_cut_rate": 0.19117647058823528,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 86,
@@ -12953,7 +13543,9 @@
           "win_rate": 0.4664804469273743,
           "top_cut_rate": 0.1511627906976744,
           "average_placement": 40.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -12992,7 +13584,9 @@
           "win_rate": 0.3373493975903614,
           "top_cut_rate": 0.15789473684210525,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -13003,7 +13597,9 @@
           "win_rate": 0.48,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": 27.0,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -13075,7 +13671,9 @@
           "win_rate": 0.5147058823529411,
           "top_cut_rate": 0.1,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 53,
@@ -13086,7 +13684,9 @@
           "win_rate": 0.5020080321285141,
           "top_cut_rate": 0.18867924528301888,
           "average_placement": 35.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -13447,7 +14047,9 @@
           "win_rate": 0.4074074074074074,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 30.0
+          "best_placement": 30.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -13458,7 +14060,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 26.0
+          "best_placement": 26.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -13500,7 +14104,9 @@
           "win_rate": 0.3582089552238806,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -13511,7 +14117,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.25,
           "average_placement": 116.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -13583,7 +14191,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -13594,7 +14204,9 @@
           "win_rate": 0.16666666666666666,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 29.0
+          "best_placement": 29.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -13686,7 +14298,9 @@
           "win_rate": 0.3598130841121495,
           "top_cut_rate": 0.0392156862745098,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -13697,7 +14311,9 @@
           "win_rate": 0.5370370370370371,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": 11.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -13819,7 +14435,9 @@
           "win_rate": 0.43147208121827413,
           "top_cut_rate": 0.04878048780487805,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -13830,7 +14448,9 @@
           "win_rate": 0.52,
           "top_cut_rate": 0.125,
           "average_placement": 14.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -13869,7 +14489,9 @@
           "win_rate": 0.3576158940397351,
           "top_cut_rate": 0.03333333333333333,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -13880,7 +14502,9 @@
           "win_rate": 0.2631578947368421,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -13952,7 +14576,9 @@
           "win_rate": 0.4434782608695652,
           "top_cut_rate": 0.13043478260869565,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -13963,7 +14589,9 @@
           "win_rate": 0.40425531914893614,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14030,7 +14658,9 @@
           "win_rate": 0.3472222222222222,
           "top_cut_rate": 0.10526315789473684,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -14041,7 +14671,9 @@
           "win_rate": 0.4574468085106383,
           "top_cut_rate": 0.1875,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14083,7 +14715,9 @@
           "win_rate": 0.2972972972972973,
           "top_cut_rate": 0.1111111111111111,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -14094,7 +14728,9 @@
           "win_rate": 0.4117647058823529,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 15.0
+          "best_placement": 15.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14136,7 +14772,9 @@
           "win_rate": 0.44155844155844154,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 7,
@@ -14147,7 +14785,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.2857142857142857,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14189,7 +14829,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.1,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -14200,7 +14842,9 @@
           "win_rate": 0.39655172413793105,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14317,7 +14961,9 @@
           "win_rate": 0.2631578947368421,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -14328,7 +14974,9 @@
           "win_rate": 0.2,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14395,7 +15043,9 @@
           "win_rate": 0.24691358024691357,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 27,
@@ -14406,7 +15056,9 @@
           "win_rate": 0.49624060150375937,
           "top_cut_rate": 0.18518518518518517,
           "average_placement": 4.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -14445,7 +15097,9 @@
           "win_rate": 0.33884297520661155,
           "top_cut_rate": 0.038461538461538464,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -14456,7 +15110,9 @@
           "win_rate": 0.25675675675675674,
           "top_cut_rate": 0.1875,
           "average_placement": 21.0,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -14528,7 +15184,9 @@
           "win_rate": 0.42857142857142855,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -14539,7 +15197,9 @@
           "win_rate": 0.15384615384615385,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14581,7 +15241,9 @@
           "win_rate": 0.45038167938931295,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -14592,7 +15254,9 @@
           "win_rate": 0.40789473684210525,
           "top_cut_rate": 0.0,
           "average_placement": 19.0,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -14689,7 +15353,9 @@
           "win_rate": 0.2708333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -14700,7 +15366,9 @@
           "win_rate": 0.5555555555555556,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14742,7 +15410,9 @@
           "win_rate": 0.4520547945205479,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -14753,7 +15423,9 @@
           "win_rate": 0.6666666666666666,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -14795,7 +15467,9 @@
           "win_rate": 0.5203252032520326,
           "top_cut_rate": 0.15789473684210525,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 24,
@@ -14806,7 +15480,9 @@
           "win_rate": 0.4411764705882353,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": 3.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -14878,7 +15554,9 @@
           "win_rate": 0.359375,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -14889,7 +15567,9 @@
           "win_rate": 0.53125,
           "top_cut_rate": 0.8,
           "average_placement": 1.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -14961,7 +15641,9 @@
           "win_rate": 0.20833333333333334,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -14972,7 +15654,9 @@
           "win_rate": 0.5714285714285714,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 22.0
+          "best_placement": 22.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15013,7 +15697,9 @@
           "win_rate": 0.56,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15055,7 +15741,9 @@
           "win_rate": 0.2,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -15066,7 +15754,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15108,7 +15798,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -15119,7 +15811,9 @@
           "win_rate": 0.5128205128205128,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -15157,7 +15851,9 @@
           "win_rate": 0.5882352941176471,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15199,7 +15895,9 @@
           "win_rate": 0.42391304347826086,
           "top_cut_rate": 0.18181818181818182,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 15,
@@ -15210,7 +15908,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": 41.75,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -15249,7 +15949,9 @@
           "win_rate": 0.4262295081967213,
           "top_cut_rate": 0.04,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -15260,7 +15962,9 @@
           "win_rate": 0.2978723404255319,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 17.0
+          "best_placement": 17.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15301,7 +16005,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 27.0
+          "best_placement": 27.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15343,7 +16049,9 @@
           "win_rate": 0.3575757575757576,
           "top_cut_rate": 0.05555555555555555,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 15,
@@ -15354,7 +16062,9 @@
           "win_rate": 0.48148148148148145,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -15365,7 +16075,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15407,7 +16119,9 @@
           "win_rate": 0.3132530120481928,
           "top_cut_rate": 0.058823529411764705,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -15418,7 +16132,9 @@
           "win_rate": 0.2777777777777778,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 16.0
+          "best_placement": 16.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15459,7 +16175,9 @@
           "win_rate": 0.4794520547945205,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 29.0
+          "best_placement": 29.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15501,7 +16219,9 @@
           "win_rate": 0.2727272727272727,
           "top_cut_rate": 0.2,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -15512,7 +16232,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 37.0
+          "best_placement": 37.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15579,7 +16301,9 @@
           "win_rate": 0.4666666666666667,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -15590,7 +16314,9 @@
           "win_rate": 0.42105263157894735,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15632,7 +16358,9 @@
           "win_rate": 0.42592592592592593,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 31,
@@ -15643,7 +16371,9 @@
           "win_rate": 0.484375,
           "top_cut_rate": 0.06451612903225806,
           "average_placement": 43.0,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -15682,7 +16412,9 @@
           "win_rate": 0.3717948717948718,
           "top_cut_rate": 0.02564102564102564,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 15,
@@ -15693,7 +16425,9 @@
           "win_rate": 0.375,
           "top_cut_rate": 0.06666666666666667,
           "average_placement": 2.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -15744,7 +16478,9 @@
           "win_rate": 0.47696476964769646,
           "top_cut_rate": 0.1267605633802817,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 54,
@@ -15755,7 +16491,9 @@
           "win_rate": 0.46184738955823296,
           "top_cut_rate": 0.2222222222222222,
           "average_placement": 38.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -15848,7 +16586,9 @@
           "win_rate": 0.0625,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 58.0
+          "best_placement": 58.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -15859,7 +16599,9 @@
           "win_rate": 0.16666666666666666,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 56.0
+          "best_placement": 56.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15901,7 +16643,9 @@
           "win_rate": 0.391304347826087,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -15912,7 +16656,9 @@
           "win_rate": 0.21052631578947367,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 37.0
+          "best_placement": 37.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -15954,7 +16700,9 @@
           "win_rate": 0.2962962962962963,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -15965,7 +16713,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16007,7 +16757,9 @@
           "win_rate": 0.3613707165109034,
           "top_cut_rate": 0.05970149253731343,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 41,
@@ -16018,7 +16770,9 @@
           "win_rate": 0.3425414364640884,
           "top_cut_rate": 0.14634146341463414,
           "average_placement": 7.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -16090,7 +16844,9 @@
           "win_rate": 0.4375,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 26.0
+          "best_placement": 26.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -16101,7 +16857,9 @@
           "win_rate": 0.41379310344827586,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16143,7 +16901,9 @@
           "win_rate": 0.41333333333333333,
           "top_cut_rate": 0.05555555555555555,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 7,
@@ -16154,7 +16914,9 @@
           "win_rate": 0.43333333333333335,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16196,7 +16958,9 @@
           "win_rate": 0.17777777777777778,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 20.0
+          "best_placement": 20.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -16207,7 +16971,9 @@
           "win_rate": 0.4186046511627907,
           "top_cut_rate": 0.2222222222222222,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -16279,7 +17045,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.10526315789473684,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 20,
@@ -16290,7 +17058,9 @@
           "win_rate": 0.25555555555555554,
           "top_cut_rate": 0.0,
           "average_placement": 116.0,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -16362,7 +17132,9 @@
           "win_rate": 0.37254901960784315,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -16373,7 +17145,9 @@
           "win_rate": 0.5625,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -16384,7 +17158,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16426,7 +17202,9 @@
           "win_rate": 0.4344262295081967,
           "top_cut_rate": 0.08695652173913043,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -16437,7 +17215,9 @@
           "win_rate": 0.38181818181818183,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16479,7 +17259,9 @@
           "win_rate": 0.3877551020408163,
           "top_cut_rate": 0.075,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 19,
@@ -16490,7 +17272,9 @@
           "win_rate": 0.5268817204301075,
           "top_cut_rate": 0.21052631578947367,
           "average_placement": 19.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -16569,7 +17353,9 @@
           "win_rate": 0.4375,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -16580,7 +17366,9 @@
           "win_rate": 0.3,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 49.0
+          "best_placement": 49.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16622,7 +17410,9 @@
           "win_rate": 0.4930232558139535,
           "top_cut_rate": 0.13157894736842105,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 14,
@@ -16633,7 +17423,9 @@
           "win_rate": 0.23728813559322035,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16675,7 +17467,9 @@
           "win_rate": 0.3629032258064516,
           "top_cut_rate": 0.07142857142857142,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -16686,7 +17480,9 @@
           "win_rate": 0.5294117647058824,
           "top_cut_rate": 0.2,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16728,7 +17524,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 229.0
+          "best_placement": 229.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -16739,7 +17537,9 @@
           "win_rate": 0.14285714285714285,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 38.0
+          "best_placement": 38.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16781,7 +17581,9 @@
           "win_rate": 0.42948717948717946,
           "top_cut_rate": 0.16129032258064516,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -16792,7 +17594,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.25,
           "average_placement": 14.0,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -16864,7 +17668,9 @@
           "win_rate": 0.4387755102040816,
           "top_cut_rate": 0.09523809523809523,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -16875,7 +17681,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 23.0
+          "best_placement": 23.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16917,7 +17725,9 @@
           "win_rate": 0.4084507042253521,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -16928,7 +17738,9 @@
           "win_rate": 0.3953488372093023,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 16.0
+          "best_placement": 16.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -16970,7 +17782,9 @@
           "win_rate": 0.2702702702702703,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -16981,7 +17795,9 @@
           "win_rate": 0.2222222222222222,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17023,7 +17839,9 @@
           "win_rate": 0.3872053872053872,
           "top_cut_rate": 0.047619047619047616,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 124,
@@ -17034,7 +17852,9 @@
           "win_rate": 0.38391224862888484,
           "top_cut_rate": 0.08870967741935484,
           "average_placement": 42.0,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -17166,7 +17986,9 @@
           "win_rate": 0.25252525252525254,
           "top_cut_rate": 0.04,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -17177,7 +17999,9 @@
           "win_rate": 0.35,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 48.0
+          "best_placement": 48.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -17216,7 +18040,9 @@
           "win_rate": 0.42342342342342343,
           "top_cut_rate": 0.23809523809523808,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -17227,7 +18053,9 @@
           "win_rate": 0.26666666666666666,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17269,7 +18097,9 @@
           "win_rate": 0.6,
           "top_cut_rate": 0.5,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -17280,7 +18110,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 42.0
+          "best_placement": 42.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17322,7 +18154,9 @@
           "win_rate": 0.2916666666666667,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -17333,7 +18167,9 @@
           "win_rate": 0.058823529411764705,
           "top_cut_rate": 0.0,
           "average_placement": 21.0,
-          "best_placement": 21.0
+          "best_placement": 21.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -17405,7 +18241,9 @@
           "win_rate": 0.4489795918367347,
           "top_cut_rate": 0.3076923076923077,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -17416,7 +18254,9 @@
           "win_rate": 0.43333333333333335,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17458,7 +18298,9 @@
           "win_rate": 0.5263157894736842,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -17469,7 +18311,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 41.0
+          "best_placement": 41.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17511,7 +18355,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -17522,7 +18368,9 @@
           "win_rate": 0.3125,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 23.0
+          "best_placement": 23.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17564,7 +18412,9 @@
           "win_rate": 0.35294117647058826,
           "top_cut_rate": 0.07142857142857142,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -17575,7 +18425,9 @@
           "win_rate": 0.22727272727272727,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 20.0
+          "best_placement": 20.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -17647,7 +18499,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.07692307692307693,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -17658,7 +18512,9 @@
           "win_rate": 0.41379310344827586,
           "top_cut_rate": 0.125,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17700,7 +18556,9 @@
           "win_rate": 0.34615384615384615,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3,
@@ -17711,7 +18569,9 @@
           "win_rate": 0.46153846153846156,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 25.0
+          "best_placement": 25.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17753,7 +18613,9 @@
           "win_rate": 0.20833333333333334,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 6,
@@ -17764,7 +18626,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17806,7 +18670,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 10,
@@ -17817,7 +18683,9 @@
           "win_rate": 0.5434782608695652,
           "top_cut_rate": 0.1,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17859,7 +18727,9 @@
           "win_rate": 0.43333333333333335,
           "top_cut_rate": 0.2,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -17870,7 +18740,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -17909,7 +18781,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.5,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -17947,7 +18821,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -17988,7 +18864,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 0.6666666666666666,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18055,7 +18933,9 @@
           "win_rate": 0.34375,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 24.0
+          "best_placement": 24.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -18066,7 +18946,9 @@
           "win_rate": 0.36,
           "top_cut_rate": 0.2,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -18138,7 +19020,9 @@
           "win_rate": 0.45454545454545453,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 35.0
+          "best_placement": 35.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -18149,7 +19033,9 @@
           "win_rate": 0.2222222222222222,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 56.0
+          "best_placement": 56.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18191,7 +19077,9 @@
           "win_rate": 0.5434782608695652,
           "top_cut_rate": 0.2222222222222222,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -18202,7 +19090,9 @@
           "win_rate": 0.2727272727272727,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 31.0
+          "best_placement": 31.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18269,7 +19159,9 @@
           "win_rate": 0.2717391304347826,
           "top_cut_rate": 0.058823529411764705,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -18280,7 +19172,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 36.0
+          "best_placement": 36.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18321,7 +19215,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 65.0
+          "best_placement": 65.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -18359,7 +19255,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 68.0
+          "best_placement": 68.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -18398,7 +19296,9 @@
           "win_rate": 0.4222222222222222,
           "top_cut_rate": 0.058823529411764705,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -18409,7 +19309,9 @@
           "win_rate": 0.6538461538461539,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18451,7 +19353,9 @@
           "win_rate": 0.38461538461538464,
           "top_cut_rate": 0.1,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 14,
@@ -18462,7 +19366,9 @@
           "win_rate": 0.39622641509433965,
           "top_cut_rate": 0.07142857142857142,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -18501,7 +19407,9 @@
           "win_rate": 0.3652173913043478,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -18512,7 +19420,9 @@
           "win_rate": 0.4117647058823529,
           "top_cut_rate": 0.125,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18553,7 +19463,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 11.0
+          "best_placement": 11.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18594,7 +19506,9 @@
           "win_rate": 0.5526315789473685,
           "top_cut_rate": 0.1111111111111111,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18636,7 +19550,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -18647,7 +19563,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -18686,7 +19604,9 @@
           "win_rate": 0.3620689655172414,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -18697,7 +19617,9 @@
           "win_rate": 0.43902439024390244,
           "top_cut_rate": 0.0,
           "average_placement": 36.0,
-          "best_placement": 13.0
+          "best_placement": 13.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -18768,7 +19690,9 @@
           "win_rate": 0.375,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 10.0
+          "best_placement": 10.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18809,7 +19733,9 @@
           "win_rate": 0.5625,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18851,7 +19777,9 @@
           "win_rate": 0.36363636363636365,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 23.0
+          "best_placement": 23.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -18862,7 +19790,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 36.0
+          "best_placement": 36.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -18929,7 +19859,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -18940,7 +19872,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 50.0
+          "best_placement": 50.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -19135,7 +20069,9 @@
           "win_rate": 0.4548002803083392,
           "top_cut_rate": 0.13829787234042554,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 170,
@@ -19146,7 +20082,9 @@
           "win_rate": 0.5473684210526316,
           "top_cut_rate": 0.17058823529411765,
           "average_placement": 37.7,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -19288,7 +20226,9 @@
           "win_rate": 0.36403508771929827,
           "top_cut_rate": 0.017241379310344827,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -19299,7 +20239,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": 25.0,
-          "best_placement": 13.0
+          "best_placement": 13.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -19446,7 +20388,9 @@
           "win_rate": 0.5245901639344263,
           "top_cut_rate": 0.07692307692307693,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 4,
@@ -19457,7 +20401,9 @@
           "win_rate": 0.4666666666666667,
           "top_cut_rate": 0.25,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -19499,7 +20445,9 @@
           "win_rate": 0.42857142857142855,
           "top_cut_rate": 0.15625,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 19,
@@ -19510,7 +20458,9 @@
           "win_rate": 0.4772727272727273,
           "top_cut_rate": 0.21052631578947367,
           "average_placement": 54.5,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -19596,7 +20546,9 @@
           "win_rate": 0.38028169014084506,
           "top_cut_rate": 0.11764705882352941,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 16,
@@ -19607,7 +20559,9 @@
           "win_rate": 0.3387096774193548,
           "top_cut_rate": 0.0625,
           "average_placement": 20.0,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-A": {
           "appearances": 1,
@@ -19618,7 +20572,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -19716,7 +20672,9 @@
           "win_rate": 0.42105263157894735,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 85.0
+          "best_placement": 85.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -19758,7 +20716,9 @@
           "win_rate": 0.25925925925925924,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -19769,7 +20729,9 @@
           "win_rate": 0.5714285714285714,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -19811,7 +20773,9 @@
           "win_rate": 0.46859903381642515,
           "top_cut_rate": 0.02564102564102564,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -19822,7 +20786,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 29.0
+          "best_placement": 29.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -19988,7 +20954,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -20129,7 +21097,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 22.0
+          "best_placement": 22.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -20171,7 +21141,9 @@
           "win_rate": 0.43478260869565216,
           "top_cut_rate": 0.3,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 8,
@@ -20182,7 +21154,9 @@
           "win_rate": 0.23333333333333334,
           "top_cut_rate": 0.125,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -20495,7 +21469,9 @@
           "win_rate": 0.42857142857142855,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 28.0
+          "best_placement": 28.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -20537,7 +21513,9 @@
           "win_rate": 0.43478260869565216,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 30.0
+          "best_placement": 30.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1,
@@ -20548,7 +21526,9 @@
           "win_rate": 0.14285714285714285,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 68.0
+          "best_placement": 68.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       }
     },
@@ -20751,7 +21731,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 109.0
+          "best_placement": 109.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -20820,7 +21802,9 @@
           "win_rate": 0.5034965034965035,
           "top_cut_rate": 0.14638157894736842,
           "average_placement": 4.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 3837,
@@ -20831,7 +21815,9 @@
           "win_rate": 0.5001884861866551,
           "top_cut_rate": 0.1707062809486578,
           "average_placement": 34.17857142857143,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -21065,7 +22051,9 @@
           "win_rate": 0.48722316865417375,
           "top_cut_rate": 0.11382113821138211,
           "average_placement": 1.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 463,
@@ -21076,7 +22064,9 @@
           "win_rate": 0.4859855334538879,
           "top_cut_rate": 0.1771058315334773,
           "average_placement": 52.35294117647059,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -21360,7 +22350,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 77.0
+          "best_placement": 77.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {},
@@ -21429,7 +22421,9 @@
           "win_rate": 0.37362637362637363,
           "top_cut_rate": 0.06666666666666667,
           "average_placement": 44.4,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 8,
@@ -21440,7 +22434,9 @@
           "win_rate": 0.5833333333333334,
           "top_cut_rate": 0.375,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "move_counts": {
@@ -21581,7 +22577,9 @@
           "win_rate": 0.5030643513789581,
           "top_cut_rate": 0.1388888888888889,
           "average_placement": 3.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1914,
@@ -21592,7 +22590,9 @@
           "win_rate": 0.4939524838012959,
           "top_cut_rate": 0.1671891327063741,
           "average_placement": 41.794871794871796,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Salamence",
@@ -21733,7 +22733,9 @@
           "win_rate": 0.4499237417386884,
           "top_cut_rate": 0.1026252983293556,
           "average_placement": 4.5,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 1206,
@@ -21744,7 +22746,9 @@
           "win_rate": 0.45134465675866947,
           "top_cut_rate": 0.11774461028192372,
           "average_placement": 53.68292682926829,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Indeedee ♀",
@@ -21782,7 +22786,9 @@
           "win_rate": 0.4634146341463415,
           "top_cut_rate": 0.09016393442622951,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 940,
@@ -21793,7 +22799,9 @@
           "win_rate": 0.46262944619540747,
           "top_cut_rate": 0.1351063829787234,
           "average_placement": 58.333333333333336,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Golisopod",
@@ -21906,7 +22914,9 @@
           "win_rate": 0.4966292134831461,
           "top_cut_rate": 0.15053763440860216,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 196,
@@ -21917,7 +22927,9 @@
           "win_rate": 0.44,
           "top_cut_rate": 0.09693877551020408,
           "average_placement": 36.375,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Pawmot",
@@ -22030,7 +23042,9 @@
           "win_rate": 0.2894736842105263,
           "top_cut_rate": 0.125,
           "average_placement": null,
-          "best_placement": 7.0
+          "best_placement": 7.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 43,
@@ -22041,7 +23055,9 @@
           "win_rate": 0.47555555555555556,
           "top_cut_rate": 0.20930232558139536,
           "average_placement": 79.33333333333333,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Grapploct",
@@ -22126,7 +23142,9 @@
           "win_rate": 0.38562091503267976,
           "top_cut_rate": 0.08571428571428572,
           "average_placement": 29.5,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 18,
@@ -22137,7 +23155,9 @@
           "win_rate": 0.2602739726027397,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": 8.0,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Toxtricity",
@@ -22236,7 +23256,9 @@
           "win_rate": 0.35384615384615387,
           "top_cut_rate": 0.1,
           "average_placement": null,
-          "best_placement": 4.0
+          "best_placement": 4.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 6,
@@ -22247,7 +23269,9 @@
           "win_rate": 0.44,
           "top_cut_rate": 0.16666666666666666,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Pincurchin",
@@ -22288,7 +23312,9 @@
           "win_rate": 0.2988505747126437,
           "top_cut_rate": 0.043478260869565216,
           "average_placement": null,
-          "best_placement": 8.0
+          "best_placement": 8.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 6,
@@ -22299,7 +23325,9 @@
           "win_rate": 0.5882352941176471,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Cinderace",
@@ -22370,7 +23398,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 19.0
+          "best_placement": 19.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 1,
@@ -22381,7 +23411,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Farfetch'd",
@@ -22419,7 +23451,9 @@
           "win_rate": 0.3672316384180791,
           "top_cut_rate": 0.11904761904761904,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 14,
@@ -22430,7 +23464,9 @@
           "win_rate": 0.3787878787878788,
           "top_cut_rate": 0.14285714285714285,
           "average_placement": null,
-          "best_placement": 2.0
+          "best_placement": 2.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Sirfetch'd",
@@ -22468,7 +23504,9 @@
           "win_rate": 0.2857142857142857,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 3.0
+          "best_placement": 3.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 3,
@@ -22479,7 +23517,9 @@
           "win_rate": 0.47058823529411764,
           "top_cut_rate": 0.3333333333333333,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Mr Mime",
@@ -22517,7 +23557,9 @@
           "win_rate": 0.4074074074074074,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 11,
@@ -22528,7 +23570,9 @@
           "win_rate": 0.49019607843137253,
           "top_cut_rate": 0.09090909090909091,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Wigglytuff",
@@ -22599,7 +23643,9 @@
           "win_rate": 0.2903225806451613,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 25.0
+          "best_placement": 25.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 12,
@@ -22610,7 +23656,9 @@
           "win_rate": 0.39285714285714285,
           "top_cut_rate": 0.08333333333333333,
           "average_placement": 55.0,
-          "best_placement": 1.0
+          "best_placement": 1.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Alolan Persian",
@@ -22648,7 +23696,9 @@
           "win_rate": 0.5384615384615384,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 21.0
+          "best_placement": 21.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 9,
@@ -22659,7 +23709,9 @@
           "win_rate": 0.3902439024390244,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 11.0
+          "best_placement": 11.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Perrserker",
@@ -22730,7 +23782,9 @@
           "win_rate": 0.2,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 40.0
+          "best_placement": 40.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 5,
@@ -22741,7 +23795,9 @@
           "win_rate": 0.34615384615384615,
           "top_cut_rate": 0.0,
           "average_placement": 20.0,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Squawkabilly",
@@ -22812,7 +23868,9 @@
           "win_rate": 0.2631578947368421,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 12.0
+          "best_placement": 12.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 2,
@@ -22823,7 +23881,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 18.0
+          "best_placement": 18.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Swalot",
@@ -22864,7 +23924,9 @@
           "win_rate": 0.4,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 9.0
+          "best_placement": 9.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-C": {
           "appearances": 23,
@@ -22875,7 +23937,9 @@
           "win_rate": 0.3655913978494624,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 24.0
+          "best_placement": 24.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Low Key Toxtricity",
@@ -22913,7 +23977,9 @@
           "win_rate": 0.5,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 14.0
+          "best_placement": 14.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         },
         "M-B": {
           "appearances": 1,
@@ -22924,7 +23990,9 @@
           "win_rate": 0.0,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": null
+          "best_placement": null,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Gogoat",
@@ -22964,7 +24032,9 @@
           "win_rate": 0.3333333333333333,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 52.0
+          "best_placement": 52.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Mabosstiff",
@@ -23004,7 +24074,9 @@
           "win_rate": 0.5714285714285714,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 25.0
+          "best_placement": 25.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Persian",
@@ -23044,7 +24116,9 @@
           "win_rate": 0.2,
           "top_cut_rate": 0.0,
           "average_placement": null,
-          "best_placement": 15.0
+          "best_placement": 15.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Alomomola",
@@ -23084,7 +24158,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Ice Rider Calyrex",
@@ -23121,7 +24197,9 @@
           "win_rate": 0.25,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 5.0
+          "best_placement": 5.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Bloodmoon Ursaluna",
@@ -23158,7 +24236,9 @@
           "win_rate": 0.6666666666666666,
           "top_cut_rate": 1.0,
           "average_placement": null,
-          "best_placement": 6.0
+          "best_placement": 6.0,
+          "placement_sum": 0.0,
+          "placement_count": 0
         }
       },
       "display_name": "Thievul",
