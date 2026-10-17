@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T21:04:23.393705+00:00",
+  "generated_at": "2026-10-17T04:21:10.351654+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
@@ -29595,6 +29595,14 @@
       "item_users": [],
       "is_nonstandard": "Past"
     },
+    "blackaugurite": {
+      "display_name": "Black Augurite",
+      "legal": false,
+      "is_mega_stone": false,
+      "mega_stone_map": {},
+      "item_users": [],
+      "is_nonstandard": "Legends"
+    },
     "blackbelt": {
       "display_name": "Black Belt",
       "legal": true,
@@ -29618,6 +29626,14 @@
       "mega_stone_map": {},
       "item_users": [],
       "is_nonstandard": "Past"
+    },
+    "blankplate": {
+      "display_name": "Blank Plate",
+      "legal": false,
+      "is_mega_stone": false,
+      "mega_stone_map": {},
+      "item_users": [],
+      "is_nonstandard": "Legends"
     },
     "blastoisinite": {
       "display_name": "Blastoisinite",
@@ -31420,6 +31436,14 @@
       "item_users": [],
       "is_nonstandard": null
     },
+    "legendplate": {
+      "display_name": "Legend Plate",
+      "legal": false,
+      "is_mega_stone": false,
+      "mega_stone_map": {},
+      "item_users": [],
+      "is_nonstandard": "Legends"
+    },
     "leppaberry": {
       "display_name": "Leppa Berry",
       "legal": true,
@@ -32140,6 +32164,14 @@
       "mega_stone_map": {},
       "item_users": [],
       "is_nonstandard": null
+    },
+    "peatblock": {
+      "display_name": "Peat Block",
+      "legal": false,
+      "is_mega_stone": false,
+      "mega_stone_map": {},
+      "item_users": [],
+      "is_nonstandard": "Legends"
     },
     "pechaberry": {
       "display_name": "Pecha Berry",
