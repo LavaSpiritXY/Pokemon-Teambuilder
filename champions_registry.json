@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-18T15:49:35.819800+00:00",
+  "generated_at": "2026-10-18T20:38:14.437470+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
@@ -30101,7 +30101,7 @@
       "item_users": [
         "Darkrai"
       ],
-      "is_nonstandard": "Past"
+      "is_nonstandard": "Future"
     },
     "dawnstone": {
       "display_name": "Dawn Stone",
@@ -31115,7 +31115,7 @@
       "item_users": [
         "Heatran"
       ],
-      "is_nonstandard": "Past"
+      "is_nonstandard": "Future"
     },
     "heatrock": {
       "display_name": "Heat Rock",
