@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-16T21:58:24.029378+00:00",
+  "generated_at": "2026-11-17T07:50:54.336467+00:00",
   "sources": {
     "pokedex": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.ts",
     "champions_learnsets": "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods/champions/learnsets.ts",
